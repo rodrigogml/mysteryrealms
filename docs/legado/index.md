@@ -1,72 +1,71 @@
-# Documentação Legada
+# Página principal
 
-> Versão legada importada do wiki "Mystery Realms" (página: Página principal).
+**Mystery Realms** é um jogo de RPG focado em investigação, diálogos e batalhas, ambientado em um mundo fictício e místico de época medieval.
 
-## Índice da Documentação Legada
+O projeto é dividido em duas partes principais:
 
-- [Página principal](./index.md)
+- **PlayTale Engine** – A engine do sistema. Aqui estão concentradas as regras, cálculos e estruturas que regem o funcionamento de qualquer jogo de RPG. Esta engine é reutilizável e modular, servindo tanto para o mundo de *Mystery Realms* quanto para outros jogos. [PlayTale Engine](./PlayTale_Engine.md)
 
-### Tópicos (convertidos do wiki)
-
-- PlayTale Engine
- - Definições Gerais
- - Estrutura Temporal
- - Estrutura de Localização
- - Mapa e Movimentação
- - Economia
- - Raças e Classes
- - Danos e Aflições
- - Defesa e Bloqueio
- - Tipos de Resistências
- - Moral
- - Acampamentos
- - Itens
- - Itens de Mão
- - Tipos de Armas
-- Controle do Jogador
- - Modificadores
- - Fadiga, Fome e Sede
- - Recuperação
- - Morte e Desmaios
- - Ações do Jogador
-- Controle do Progresso do Jogo
- - Sistema de Marcadores
- - Testes de Jogo
- - Ficha do Jogador
-- Fluxo Narrativo
- - Diário do Jogador
- - Interação com NPCs
- - Estilos de Fala e Valoração
- - Estrutura de Diálogo
-- Modelos de Fichas
- - Modelo de Ficha de NPC
- - Modelo de Ficha de Personalidade
- - Modelo de Ficha de Diálogo
- - Modelo de Ficha de Tipo de Arma
- - Modelo de Ficha de Itens de Mão
- - Modelo de Ficha de Armas
- - Modelo de Ficha de Escudos
- - Modelos de Fichas de Lugares
- - Modelo de Ficha de Zonas
- - Modelo de Ficha de Ambientes
-- Ciclo de Batalha
-- Progressão do Jogo
-- Story Telling Mystery Realms
- - Modelos de Documentação
- - Fichas de Criação
-- Controle e Definições do Jogo
+- **Mystery Realms** – A aplicação da engine no universo específico deste jogo. Aqui definimos o cenário, personagens, facções, regiões e enredos, utilizando todas as mecânicas fornecidas pela PlayTale Engine.
 
 ---
 
-*Observação:* Este é um rascunho inicial gerado a partir do conteúdo da página principal do wiki. Posso:
+## Sumário (convertido do wiki)
 
-- Converter todas as páginas linkadas recursivamente e gerar arquivos .md correspondentes em /docs/legado/.
-- Baixar imagens referenciadas no conteúdo para /docs/legado/imgs/ mantendo a estrutura.
-- Atualizar este índice automaticamente com links internos (âncoras) para cada seção e sub-seção.
+- [PlayTale Engine](./PlayTale_Engine.md)
+ - [Definições Gerais](./PlayTale_Engine.md#defini%C3%A7%C3%B5es-gerais)
+ - [Estrutura Temporal](./Estrutura_Temporal.md)
+ - [Estrutura de Localização](./Estrutura_de_Localizacao.md)
+ - [Mapa e Movimentação](./Estrutura_de_Localizacao.md#mapa-e-movimenta%C3%A7%C3%A3o)
+ - [Economia](./PlayTale_Engine.md#economia)
+ - [Raças e Classes](./PlayTale_Engine.md#ra%C3%A7as-e-classes)
+ - [Danos e Aflições](./PlayTale_Engine.md#danos-e-afli%C3%A7%C3%B5es)
+ - [Defesa e Bloqueio](./PlayTale_Engine.md#defesa-e-bloqueio)
+ - [Tipos de Resistências](./PlayTale_Engine.md#tipos-de-resist%C3%AAncias)
+ - [Moral](./PlayTale_Engine.md#moral)
+ - [Acampamentos](./PlayTale_Engine.md#acampamentos)
+ - [Itens](./Itens_de_Mao.md)
+ - [Itens de Mão](./Itens_de_Mao.md)
+ - [Tipos de Armas](./Itens_de_Mao.md#tipos-de-armas)
 
-Deseja que eu já inicie a conversão recursiva de todas as páginas referenciadas pelo índice? Se sim, prefere que eu:
+- [Controle do Jogador](./PlayTale_Engine.md#controle-do-jogador)
+ - [Modificadores](./PlayTale_Engine.md#modificadores)
+ - [Fadiga, Fome e Sede](./PlayTale_Engine.md#fadiga-fome-e-sede)
+ - [Recuperação](./PlayTale_Engine.md#recupera%C3%A7%C3%A3o)
+ - [Morte e Desmaios](./PlayTale_Engine.md#morte-e-desmaios)
+ - [Ações do Jogador](./PlayTale_Engine.md#a%C3%A7%C3%B5es-do-jogador)
 
-1) Converta apenas as páginas de primeiro nível (links apontados diretamente na Página principal).
-2) Converta recursivamente todo o wiki (pode demorar, aviso antes de prosseguir).
+- [Controle do Progresso do Jogo](./PlayTale_Engine.md#controle-do-progresso-do-jogo)
+ - [Sistema de Marcadores](./PlayTale_Engine.md#sistema-de-marcadores)
+ - [Testes de Jogo](./PlayTale_Engine.md#testes-de-jogo)
+ - [Ficha do Jogador](./PlayTale_Engine.md#ficha-do-jogador)
 
-Também me confirme se quer que links internos ([[Página|Texto]]) sejam transformados em links relativos para os .md correspondentes e que as âncoras sejam preservadas.
+- [Fluxo Narrativo](./PlayTale_Engine.md#fluxo-narrativo)
+ - [Diário do Jogador](./PlayTale_Engine.md#di%C3%A1rio-do-jogador)
+ - [Interação com NPCs](./PlayTale_Engine.md#intera%C3%A7%C3%A3o-com-npcs)
+ - [Estilos de Fala e Valoração](./PlayTale_Engine.md#estilos-de-fala-e-valora%C3%A7%C3%A3o)
+ - [Estrutura de Diálogo](./PlayTale_Engine.md#estrutura-de-di%C3%A1logo)
+
+- [Modelos de Fichas](./PlayTale_Engine.md#modelos-de-fichas)
+ - [Modelo de Ficha de NPC](./PlayTale_Engine.md#modelo-de-ficha-de-npc)
+ - [Modelo de Ficha de Personalidade](./PlayTale_Engine.md#modelo-de-ficha-de-personalidade)
+ - [Modelo de Ficha de Diálogo](./PlayTale_Engine.md#modelo-de-ficha-de-di%C3%A1logo)
+ - [Modelo de Ficha de Tipo de Arma](./Itens_de_Mao.md#modelo-de-ficha-de-tipo-de-arma)
+ - [Modelo de Ficha de Itens de Mão](./Itens_de_Mao.md#modelo-de-ficha-de-itens-de-m%C3%A3o)
+ - [Modelo de Ficha de Armas](./Itens_de_Mao.md#modelo-de-ficha-de-armas)
+ - [Modelo de Ficha de Escudos](./Itens_de_Mao.md#modelo-de-ficha-de-escudos)
+
+- [Ciclo de Batalha](./PlayTale_Engine.md#ciclo-de-batalha)
+- [Progressão do Jogo](./PlayTale_Engine.md#progress%C3%A3o-do-jogo)
+
+= Story Telling Mystery Realms =
+
+O mundo de **Mystery Realms** inclui criaturas mágicas, feitiçaria, alquimia, forças elementais e tecnologias esquecidas. Embora tais forças existam, não é um mundo inteiramente mágico ou de ilusões — aproxima-se de um cenário como o de Dungeons & Dragons.
+
+## Modelos de Documentação
+
+- [Fichas de Criação](./PlayTale_Engine.md#fichas-de-cria%C3%A7%C3%A3o)
+
+---
+
+(Reprodução fiel do conteúdo da página principal do wiki convertida para Markdown. Links internos apontam para arquivos relativos dentro desta pasta.)
