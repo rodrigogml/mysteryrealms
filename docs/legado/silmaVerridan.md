@@ -1,0 +1,57 @@
+![Silma Verridan](images/SilmaVerridan.png)
+
+- **Identificação**
+:* **Nome:** Silma Verridan
+:* **Raça:** Humana
+:* **Idade:** 36 anos
+:* **Profissão/Ocupação:** Avaliadora de equipamentos e relíquias; ex-caçadora de artefatos
+:* **Local:** [Arsenal Três Lâminas](langurArsenalTresLaminas.md)
+:* **Bio:** Silma percorreu ruínas ao norte e pântanos ao sul em busca de artefatos raros, ganhando fama como rastreadora. Após quase morrer no Desfiladeiro de Ashkahl, abandonou as expedições e foi contratada por [Vareth Dolmar](personagensVarethDolmar.md) para avaliar os espólios trazidos ao [Arsenal Três Lâminas](langurArsenalTresLaminas.md). Com vasto conhecimento em história bélica, forjas antigas e magia aplicada, tornou-se essencial para o negócio e respeitada entre aventureiros e comerciantes.
+:* **Aparência:** Alta e atlética. Cabelos loiros curtos, olhos verdes penetrantes. Usa roupas de couro leve com bolsos para ferramentas. Carrega um óculo mágico antigo rachado e uma adaga de prata com entalhes rúnicos — presente de um aliado perdido.
+
+- **Relacionamentos**
+:* Leal a [Vareth Dolmar](personagensVarethDolmar.md), com quem mantém parceria sólida.
+:* Respeita [Kaela Runaveia](personagensKaelaRunaveia.md) por seu talento genuíno.
+:* Mantém distância respeitosa de [Thramur Ankuhl](personagensThramurAnkuhl.md).
+:* Recebe avisos de informantes do Mercado do Véu sobre itens perigosos.
+:* Tem um passado mal resolvido com alguém da Guilda de Magia — evita falar sobre isso.
+
+- **Personalidade**
+:* **Estilos Preferidos:** direto, lógico, respeitoso
+:* **Estilos Tolerados:** frio, literal, educado, empático
+:* **Estilos Rejeitados:** emocional, afetuoso, enigmático
+:* **Tolerância aos Estilos:**
+::* **educado:** 70
+::* **grosseiro:** 30
+::* **direto:** 85
+::* **enigmático:** 15
+::* **formal:** 60
+::* **informal:** 35
+::* **irônico:** 40
+::* **literal:** 75
+::* **empático:** 50
+::* **intimidativo:** 25
+::* **afetuoso:** 20
+::* **frio:** 65
+::* **lógico:** 90
+::* **emocional:** 15
+::* **respeitoso:** 80
+::* **desrespeitoso:** 10
+:* **Estilo de Fala Pessoal**
+::* **Dominante:** lógico
+::* **Secundários:** direto, respeitoso
+:* **Valores Apreciados (Valoração):** Verdade, Precisão, Independência
+:* **Frases de Reação Espontânea:**
+::* “Isso não vale nem o sangue que custou.”
+::* “Vejo rachaduras... na lâmina e na história.”
+::* “Se for amaldiçoado, me deve uma moeda por dedo perdido.”
+:* **Personalidade e Comportamento:** Reservada e precisa. Não tolera exageros e preza pela integridade da informação — mesmo contra interesses comerciais. Valoriza seu trabalho e o realiza com foco absoluto. Evita vínculos afetivos, mas é leal aos que respeita.
+:* **Expressões Típicas:**
+::* “Se quiser mentira, vá até a taverna.”
+::* “O que você chama de ‘encanto’, eu chamo de risco.”
+::* “Alguns artefatos deveriam continuar enterrados.”
+
+- **Mecânica do Jogo**
+:* Capaz de detectar maldições ou origens perigosas em itens — podendo gerar ganchos de missão.
+:* Pode se recusar a avaliar itens manipulados por magia caótica.
+:* Fornece contexto histórico e valor de artefatos únicos — importante para decisões narrativas ou comerciais.

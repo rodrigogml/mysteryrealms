@@ -1,0 +1,119 @@
+# Raças
+
+As **Raças** representam a origem biológica, étnica ou ancestral de um personagem dentro do universo de jogo. Elas determinam as características inatas do personagem — desde suas capacidades físicas e sensoriais até predisposições culturais, sociais ou mágicas. No contexto da engine **PlayTale**, as Raças são elementos fundamentais para reforçar a diversidade narrativa e mecânica dos mundos criados.
+
+## Definição de Raça em um Mundo
+
+Cada mundo desenvolvido com a engine PlayTale deve decidir:
+- Se haverá **uma única Raça** jogável (como em mundos humanos);
+- Ou múltiplas Raças com atributos distintos (como elfos, anões, alienígenas, autômatos, etc.).
+
+A presença de várias Raças permite uma personalização rica e favorece a construção de identidades únicas, criando narrativas que exploram diferenças culturais, conflitos raciais, mitologias, linhagens místicas, origens planetárias ou estruturas sociais.
+
+## Elementos que Compõem uma Raça
+
+Cada Raça definida deve conter:
+
+- **Nome da Raça**: ex: Elfo, Draconato, Xendari.
+- **Descrição Geral**: incluindo aparência, cultura dominante, habitat típico, papel social ou histórico.
+- **Bonificações de Atributos**: modificadores aplicados aos atributos-base (ex: +2 Destreza, -1 Constituição).
+- **Afinidades Culturais e Narrativas**: conhecimentos naturais (ex: natureza, tecnologia, magia), linguagens faladas, comportamentos típicos.
+- **Vantagens Raciais**: habilidades únicas como visão no escuro, resistência mágica, empatia com animais, respiração em ambientes hostis, etc.
+- **Desvantagens (opcional)**: fraquezas inerentes (ex: repulsa à luz solar, orgulho, desconfiança alheia).
+- **Aparência e Sinais Visuais**: formas, cores, tatuagens étnicas, marcas físicas, etc.
+
+## Personalização e Etnias
+
+Cada Raça pode ter subdivisões (como **etnias**, **linhagens**, **clãs**, **castas**, **planetas de origem**, etc.) que oferecem variações adicionais em atributos, cultura ou aparência. Isso enriquece a diversidade interna sem precisar criar novas Raças completas.
+
+Exemplo: Em um mundo de ficção científica, a raça humana pode incluir etnias terráqueas, marcianas e coloniais, cada uma com pequenas vantagens e histórias distintas.
+
+## Aplicação dos Bônus Raciais
+
+Os bônus de atributos raciais devem refletir:
+- Características físicas (ex: força, agilidade, visão);
+- Condicionamentos genéticos (ex: resistência ao frio, adaptação a voos espaciais);
+- Comportamentos herdados (ex: desconfiança, orgulho, paciência);
+- Saberes culturais (ex: conhecimento em herbologia, engenharia, cânticos rituais).
+
+Esses bônus são aplicados diretamente na criação do personagem e influenciam todos os testes e interações.
+
+## Vantagens Narrativas de Ter Raças
+
+- Cria diversidade entre os personagens.
+- Incentiva conflitos e alianças raciais.
+- Permite narrativas centradas em origens, exclusões ou redenções.
+- Estimula o mundo a reagir diferente a personagens de raças distintas.
+- Gera decisões mecânicas e emocionais logo na criação.
+
+## Mundos com Raça Única
+
+Ainda que um mundo tenha uma raça única, a PlayTale permite diversidade através de:
+- Clãs ou linhagens com bônus variados.
+- Estruturas culturais (tribos, castas, legiões).
+- Modificadores regionais ou espirituais.
+
+> **Nota:** A definição racial é uma ferramenta narrativa poderosa que ajuda a transformar mecânicas em identidade, permitindo que o jogador experimente o "ser outro".
+
+
+# Classes
+
+As **Classes** representam a vocação, função ou treinamento atual do personagem. Elas determinam o que ele **escolheu ser**, em oposição à sua raça, que representa **o que ele nasceu sendo**.
+
+No contexto da engine PlayTale, as Classes moldam o estilo de jogo do personagem, sua utilidade dentro de um grupo e sua evolução ao longo da campanha.
+
+## Elementos que Compõem uma Classe
+
+Cada Classe definida no mundo deve conter:
+
+- **Nome da Classe**: ex: Guerreiro, Tecelão de Runas, Mercador Espacial.
+- **Descrição Conceitual**: objetivo da classe, papel dentro de um grupo, como ela é treinada ou reconhecida.
+- **Atributos Favorecidos**: bônus aplicados ao personagem na criação.
+- **Estilo de Jogo**: ofensivo, furtivo, suporte, mágico, técnico, etc.
+- **Habilidades Iniciais**: capacidades exclusivas ou vantagens ao realizar certos tipos de ações.
+- **Limitações**: dificuldades com certos tipos de armas, magias ou situações.
+- **Caminhos de Progressão**: especializações ou caminhos de evolução futuros.
+
+## Escolha da Classe
+
+A classe é geralmente escolhida no início do jogo, mas mundos podem permitir múltiplas classes (multiclasse), mudanças ao longo do tempo, ou classes ocultas que são desbloqueadas com eventos narrativos.
+
+## Afinidade entre Raça e Classe
+
+Algumas raças possuem mais afinidade com certas classes. Isso pode ser representado de forma mecânica (bônus combinados) ou narrativa (tradições raciais).
+
+Exemplos:
+- Elfos tendem a ser arqueiros ou conjuradores devido à sua destreza e afinidade mágica.
+- Anões têm tradição como ferreiros e guerreiros.
+- Raças aquáticas podem favorecer batedores, navegadores ou manipuladores de água.
+
+Mundos futuristas também se beneficiam disso:
+- Humanos cibernéticos podem ter afinidade com classes tecnológicas.
+- Alienígenas mentais favorecem classes psíquicas.
+- Robôs ganham bônus em engenharia, mas não usam magia.
+
+## Afinidade com Armas
+
+Cada Classe pode ter domínio sobre certos tipos de arma, refletindo:
+- Estilo de combate (distância, precisão, impacto)
+- Treinamento recebido
+- Limitações físicas ou culturais
+
+Essa afinidade pode gerar bônus de dano, precisão, velocidade de ataque ou efeitos adicionais com tipos específicos de armamento.
+
+## Diferença entre Raça e Classe
+
+- **Raça** define **o que o personagem é por natureza**: sua origem, corpo, cultura, traços herdados.
+- **Classe** define **o que o personagem escolheu fazer com isso**: sua profissão, papel no mundo, estilo de vida e combate.
+
+Um mesmo Elfo pode ser um Guardião das Sombras (furtivo), um Tecelão de Cristal (mágico), ou um Bardo Nômade (social). A Raça dá o corpo e história, a Classe molda o caminho.
+
+## Vantagens Narrativas de Ter Classes
+
+- Oferece escolhas estratégicas para os jogadores.
+- Cria papéis distintos dentro do grupo.
+- Enriquece o mundo com guildas, facções, escolas e ordens específicas.
+- Estimula crescimento, progresso e conquistas.
+- Permite narrativas ligadas à profissão, treinamentos, mestres e tradições.
+
+> **Nota:** A combinação entre Raça e Classe transforma o personagem em um indivíduo único, integrando seu passado (raça) com seu presente e futuro (classe), abrindo espaço para conflitos internos, superações e jornadas de identidade.

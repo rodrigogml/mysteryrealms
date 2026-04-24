@@ -1,0 +1,17 @@
+A **PlayTale Engine** utiliza uma estrutura hierárquica para organizar todo o universo de jogo, permitindo consistência lógica na navegação, ambientação e nos eventos que ocorrem no mundo. Todas as ações — como exploração, combate, interação ou narrativa — ocorrem em algum ponto dessa hierarquia.
+
+# Hierarquia de Localização
+
+- **Mundo:** Representa planos ou realidades distintas. Cada mundo pode ter regras físicas, mágicas e temporais próprias (ex: número de sóis, ciclo lunar, fluxo do tempo).
+:* **Continente:** Grandes massas de terra ou zonas isoladas. Equivalem a continentes ou blocos territoriais amplos, mesmo em mundos sem mares.
+::* **Domínio:** Unidades político-culturais como reinos, federações, impérios ou territórios mágicos independentes.
+:::* **Região:** Segmentos naturais ou climáticos, como florestas, desertos, cadeias de montanha, tundras, etc.
+::::* **Localidade:** Pontos acessíveis e nomeados do mapa: cidades, vilas, fortalezas, torres, ruínas, cavernas, etc.
+:::::* **Zona:** Subdivisões funcionais de uma Localidade — como praças, tabernas, salas, corredores, áreas comerciais, etc.
+::::::* **Ambiente:** O espaço específico onde a ação acontece. É o nível mais detalhado — como um altar, balcão, sala, cela ou varanda.
+
+# Regras Gerais
+- A **Zona** é uma área dentro da cidade, e que pode ser subdividada em **ambientes** se houver mais de um local de iteração. Por exmeplo, uma Praça pode ser uma **Zona** sem **Ambientes**, por ser um local único, mas também pode ter **Ambientes** para dividir locais de interação, como o banco da praça, uma banca de jornal, a fonte, etc..
+- Também é possível considerar a **Zona** como o **Ambiente** externo de um lugar, e os **Ambientes** as divisões internas. Sendo que, os **Ambientes** de uma **Zona**, de forma geral, só são acessíveis a partir da própria **Zona**. Eventualmente, o **Ambiente** de uma **Zona**, pode eventualmente dar acesso ao **Ambiente** de outra **Zona**, como no caso de uma passagem secreta.
+- **Zonas** e **Ambientes** são o os locais navegaveis do mapa do usuário. Ele poe ir de uma **Zona** para outra, entrar e sair dos **Ambientes**, mas sua **Localidade** e as demais estruturas acima são definidas de acordo com a **Zona** ou **Ambiente** em que ele está. Em outras palavras, só se muda de **Localidade**, ao navegar de uma **Zona** de uma **Localidade** para a **Zona** de outra **Localidade**.
+- O termo genérico **Lugar** é usado para se referir a qualquer um dos níveis, servindo como abstração técnica para a engine e para scripts narrativos.

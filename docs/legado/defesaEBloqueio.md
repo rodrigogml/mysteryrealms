@@ -1,0 +1,43 @@
+Durante um combate em jogos desenvolvidos com a engine **PlayTale**, ataques seguem duas etapas distintas de verificação: a **Defesa do Ataque** e o **Bloqueio do Dano**. Esses dois conceitos são complementares e possuem funções diferentes no sistema de batalha.
+
+# Defesa
+
+A **Defesa** representa a capacidade do personagem de evitar completamente que um ataque o atinja. O valor de defesa é determinado por:
+
+- **Agilidade e reflexos** do personagem (ex: atributo de Destreza).
+- **Equipamentos de evasão** (ex: capas, botas leves, itens mágicos).
+- **Postura defensiva** ativa no turno.
+- **Habilidades ou feitiços de esquiva e camuflagem**.
+
+Se a **Precisão** do atacante (1d20 + modificadores) for inferior ao valor de **Defesa** do defensor, o ataque é evitado completamente — ou seja, nenhum dano é aplicado.
+
+
+# Bloqueio
+
+Quando um ataque supera a Defesa e acerta o alvo, aplica-se então o valor de **Bloqueio**. O bloqueio reduz o dano causado, representando a capacidade do personagem em resistir, absorver ou amortecer parte do impacto.
+
+Fontes comuns de bloqueio incluem:
+
+- **Armaduras** e equipamentos de proteção corporal.
+- **Escudos físicos** ou **barreiras mágicas**.
+- **Posturas defensivas**, como "preparar bloqueio".
+- **Habilidades ativas ou passivas** (ex: endurecimento, pele rochosa).
+- **Feitiços de proteção** ou bênçãos específicas.
+
+O bloqueio é calculado em valor percentual ou absoluto, dependendo das configurações do jogo. Os sistemas mais comuns utilizam:
+
+<math>\text{Dano Final} = \text{Dano Base} \times (1 - \frac{\text{Bloqueio Total}}{100})</math>
+
+Bloqueios podem ser gerais ou específicos por tipo de dano (ex: 30% contra Corte, 10% contra Fogo).
+
+
+# Diferença Prática
+- **Defesa do Ataque:** evita que o golpe acerte — anula totalmente o dano.
+- **Bloqueio do Dano:** reduz o dano sofrido após o golpe acertar.
+
+
+# Notas Técnicas
+- A Defesa é comparativa com a rolagem do atacante, enquanto o Bloqueio atua sobre o dano já confirmado.
+- Sistemas com penalidades por **Fadiga**, **Aflições** ou ambiente podem alterar Defesa ou Bloqueio dinamicamente.
+- Alguns efeitos ignoram bloqueio (ex: dano mágico puro) e devem ser definidos na ficha da habilidade.
+- Itens de proteção (armaduras, escudos) devem especificar se fornecem Defesa, Bloqueio ou ambos.

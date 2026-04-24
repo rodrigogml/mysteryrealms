@@ -1,0 +1,220 @@
+= Tipos de Armas do Jogo =
+As armas representam as ferramentas de combate utilizadas pelos personagens. Cada arma possui características distintas, como tipo de ataque, alcance, capacidade de acerto crítico, manuseio (uma ou duas mãos), e compatibilidade com atributos e classes. O domínio sobre determinado tipo de arma concede bônus importantes no cálculo de ataque e dano.
+
+A seguir, a lista oficial de tipos de armas disponíveis no jogo:
+
+
+== Adaga ==
+* '''Nome do Tipo:''' Adaga
+* '''Descrição Geral:''' Armas de lâmina curta e leve, projetadas para precisão em ataques rápidos, furtivos ou de curta distância. São fáceis de ocultar e manusear, sendo ideais para personagens ágeis ou sorrateiros.
+* '''Exemplos de Armas:''' Adaga Comum, Estilete, Adaga Serrilhada, Adaga Cerimonial
+* '''Função Estratégica:''' Ataques rápidos, uso furtivo, precisão em pontos vitais, suporte em situações de combate corpo a corpo restrito.
+* '''Estilo de Uso:''' Utilizada para perfuração ou cortes rápidos. Ideal para emboscadas, ataques furtivos ou lutas em ambientes apertados. Pode ser empunhada com velocidade e facilidade.
+* '''Atributo Primário Comum:''' Destreza
+* '''Mãos Comuns:''' 1
+* '''Alcance Padrão:''' Corpo a corpo (adjacente)
+* '''Chance Crítica Média:''' 19–20 / x2
+* '''Compatibilidade Comum por Classe:''' Ladrão, Assassino, Duelista, Bardo
+* '''Compatibilidade Comum por Raça:''' Meio-elfo, Tiefling, Elfo
+* '''Notas Técnicas:''' Armas deste tipo podem receber bônus de furtividade quando escondidas. Podem ser arremessadas a curta distância (até 5m) com penalidade reduzida (-1). Permitem ações de ataque furtivo e são frequentemente usadas como segunda arma (combate com duas armas leves).
+
+
+== Espada Curta ==
+* '''Nome do Tipo:''' Espada Curta
+* '''Descrição Geral:''' Armas de lâmina reta e média, projetadas para versatilidade e agilidade. São comuns entre aventureiros iniciantes e soldados, equilibrando precisão e mobilidade.
+* '''Exemplos de Armas:''' Espada Curta Comum, Gládio, Espada de Milícia, Espada Cerimonial
+* '''Função Estratégica:''' Versatilidade em combate corpo a corpo, ideal para situações de resposta rápida, ambientes apertados ou uso com escudo.
+* '''Estilo de Uso:''' Empunhada com uma mão, oferece equilíbrio entre velocidade e controle. Pode ser usada tanto para ataques precisos quanto para bloqueios rápidos.
+* '''Atributo Primário Comum:''' Destreza ou Força (utiliza o maior)
+* '''Mãos Comuns:''' 1
+* '''Alcance Padrão:''' Corpo a corpo (adjacente)
+* '''Chance Crítica Média:''' 20 / x2
+* '''Compatibilidade Comum por Classe:''' Guerreiro, Duelista, Caçador, Ladrão
+* '''Compatibilidade Comum por Raça:''' Humano, Elfo, Meio-elfo, Anão
+* '''Notas Técnicas:''' Pode ser usada com escudos. Armas deste tipo são comuns em guardas e patrulheiros por sua confiabilidade. Permite combate ágil e com maior controle de defesa.
+
+
+== Espada Longa ==
+* '''Nome do Tipo:''' Espada Longa
+* '''Descrição Geral:''' Armas de lâmina longa e robusta, símbolo clássico de guerreiros e soldados experientes. São utilizadas para causar dano consistente com maior alcance e força.
+* '''Exemplos de Armas:''' Espada Longa Comum, Montante Leve, Espada Cerimonial Longa, Lâmina de Patrulha
+* '''Função Estratégica:''' Ataques com força e estabilidade, controle de área e uso eficiente contra inimigos com armaduras leves ou médias.
+* '''Estilo de Uso:''' Geralmente usada com duas mãos, embora algumas variantes permitam uso com uma mão por personagens especializados. Ideal para combates frontais e duelos.
+* '''Atributo Primário Comum:''' Força
+* '''Mãos Comuns:''' 2 (ou 1 com especialização)
+* '''Alcance Padrão:''' Corpo a corpo (adjacente)
+* '''Chance Crítica Média:''' 20 / x2
+* '''Compatibilidade Comum por Classe:''' Guerreiro, Meio-orc, Draconato, Duelista
+* '''Compatibilidade Comum por Raça:''' Humano, Anão, Meio-orc, Draconato
+* '''Notas Técnicas:''' Por exigir maior força e precisão, é recomendada para personagens com treinamento militar. Armas deste tipo têm boa sinergia com habilidades de bloqueio e contra-ataque.
+
+
+== Machado ==
+
+* '''Nome do Tipo:''' Machado
+* '''Descrição Geral:''' Armas com lâminas pesadas fixadas a um cabo, projetadas para causar grande dano com impacto brutal. Especialmente eficazes contra inimigos robustos ou protegidos.
+* '''Exemplos de Armas:''' Machado de Batalha, Machado Duplo, Machado de Guerra, Machado Tribal
+* '''Função Estratégica:''' Golpes devastadores, quebra de escudos e armaduras, desestabilização do inimigo.
+* '''Estilo de Uso:''' Requer força bruta e ritmo mais cadenciado. Ideal para aberturas ofensivas ou finalizações rápidas. Menor precisão, mas dano elevado.
+* '''Atributo Primário Comum:''' Força
+* '''Mãos Comuns:''' 2 (ou 1 com penalidade ou arma leve)
+* '''Alcance Padrão:''' Corpo a corpo (adjacente)
+* '''Chance Crítica Média:''' 19–20 / x2
+* '''Compatibilidade Comum por Classe:''' Guerreiro, Anão, Meio-orc
+* '''Compatibilidade Comum por Raça:''' Anão, Meio-orc, Draconato
+* '''Notas Técnicas:''' Armas deste tipo podem ter penalidade de precisão contra inimigos muito ágeis. Costumam causar efeitos de “impacto pesado” ou atordoamento em sistemas que suportam essas regras.
+
+
+== Arco Curto ==
+
+* '''Nome do Tipo:''' Arco Curto
+* '''Descrição Geral:''' Armas de disparo rápido com alcance moderado. Favorecem mobilidade e são ideais para ataques à distância em movimento ou emboscadas em terrenos naturais.
+* '''Exemplos de Armas:''' Arco de Caça, Arco Recurvo Leve, Arco Tribal, Arco Simples
+* '''Função Estratégica:''' Ataques à distância com mobilidade, ideal para caçadas, combates em campo aberto e suporte ofensivo.
+* '''Estilo de Uso:''' Pode ser utilizado em movimento. Boa cadência de disparo e recarga rápida, com precisão razoável em curta e média distância.
+* '''Atributo Primário Comum:''' Destreza
+* '''Mãos Comuns:''' 2
+* '''Alcance Padrão:''' Curta distância (5m a 10m)
+* '''Chance Crítica Média:''' 20 / x2
+* '''Compatibilidade Comum por Classe:''' Caçador, Ladrão, Duelista
+* '''Compatibilidade Comum por Raça:''' Elfo, Meio-elfo, Humano
+* '''Notas Técnicas:''' Ideal para ataques rápidos em movimento e para caçar. Pode ser penalizado em espaços fechados ou densamente obstruídos. Ótima sinergia com habilidades de emboscada e furtividade.
+
+
+== Arco Longo ==
+
+* '''Nome do Tipo:''' Arco Longo
+* '''Descrição Geral:''' Armas de grande alcance e potência, utilizadas para ataques precisos à longa distância. Exigem treinamento e força para serem manuseadas com eficácia.
+* '''Exemplos de Armas:''' Arco Longo Comum, Arco Elfico, Arco de Guerra, Arco de Caçada Nobre
+* '''Função Estratégica:''' Ataques à distância de alta precisão e dano elevado. Ideal para emboscadas, combate em campo aberto ou posições elevadas.
+* '''Estilo de Uso:''' Exige preparo e estabilidade. Seu manuseio é mais lento, mas compensa com precisão e impacto a longa distância.
+* '''Atributo Primário Comum:''' Destreza
+* '''Mãos Comuns:''' 2
+* '''Alcance Padrão:''' Longa distância (15m ou mais)
+* '''Chance Crítica Média:''' 19–20 / x2
+* '''Compatibilidade Comum por Classe:''' Caçador, Duelista
+* '''Compatibilidade Comum por Raça:''' Elfo, Meio-elfo, Humano
+* '''Notas Técnicas:''' Ineficiente em ambientes fechados. Armas desse tipo possuem sinergia com talentos de mira, vantagem de terreno e habilidades de “iniciativa de combate”. Requer força mínima para uso eficaz em certos modelos.
+
+
+== Cajado ==
+
+* '''Nome do Tipo:''' Cajado
+* '''Descrição Geral:''' Armas de longo alcance físico e uso simbólico, utilizadas principalmente como canalizadores de energia mágica. Sua função como arma física é secundária.
+* '''Exemplos de Armas:''' Cajado Comum, Cajado Arcano, Cajado de Elementalista, Báculo Rúnico
+* '''Função Estratégica:''' Foco mágico e amplificação de feitiços. Pode servir como apoio defensivo ou arma improvisada em situações de risco.
+* '''Estilo de Uso:''' Empunhado com duas mãos. Serve como extensão da energia mágica do usuário. Raramente utilizado em combates corpo a corpo, exceto para empurrões ou defesas básicas.
+* '''Atributo Primário Comum:''' Intelecto
+* '''Mãos Comuns:''' 2
+* '''Alcance Padrão:''' Corpo a corpo mínimo (adjacente)
+* '''Chance Crítica Média:''' 20 / x2 (como arma física)
+* '''Compatibilidade Comum por Classe:''' Mago, Conjurador Elemental, Sábio, Alquimista
+* '''Compatibilidade Comum por Raça:''' Humano, Tiefling, Draconato
+* '''Notas Técnicas:''' Amplifica efeitos mágicos. Pode conceder bônus em testes de magia, alcance ou duração de feitiços dependendo do modelo. Ineficiente como arma de combate físico, mas essencial para conjuradores.
+
+
+== Lança ==
+
+* '''Nome do Tipo:''' Lança
+* '''Descrição Geral:''' Armas de haste longa com ponta perfurante, ideais para manter distância do inimigo em combate corpo a corpo ou para uso montado. Algumas variantes podem ser arremessadas.
+* '''Exemplos de Armas:''' Lança Comum, Azagaia, Lança de Caça, Lança Cerimonial
+* '''Função Estratégica:''' Controle de espaço, ataques com alcance estendido e combate montado. Pode ser usada tanto para empurrar quanto para perfurar com precisão.
+* '''Estilo de Uso:''' Segurada com duas mãos, permite atacar a inimigos sem se aproximar completamente. Modelos leves podem ser usados com uma mão ou arremessados.
+* '''Atributo Primário Comum:''' Força
+* '''Mãos Comuns:''' 2 (ou 1 em modelos leves ou com especialização)
+* '''Alcance Padrão:''' Corpo a corpo com alcance ampliado (adjacente +1)
+* '''Chance Crítica Média:''' 20 / x2
+* '''Compatibilidade Comum por Classe:''' Guerreiro, Caçador, Clérigo
+* '''Compatibilidade Comum por Raça:''' Anão, Draconato, Humano
+* '''Notas Técnicas:''' Armas deste tipo podem permitir ataque de oportunidade com alcance maior. Algumas lanças podem ser arremessadas com penalidade reduzida (-1). Forte sinergia com combate montado e formações defensivas.
+
+
+== Maça ==
+
+* '''Nome do Tipo:''' Maça
+* '''Descrição Geral:''' Armas de impacto contundente, projetadas para causar dano esmagador e eficazes contra inimigos com armadura pesada ou estruturas resistentes.
+* '''Exemplos de Armas:''' Maça Comum, Maça de Guerra, Maça Estrelada, Maça Sagrada
+* '''Função Estratégica:''' Quebra de armaduras, dano constante contra inimigos resistentes e combate direto com força bruta.
+* '''Estilo de Uso:''' Utilizada com uma ou duas mãos, a depender do modelo. Golpes diretos com intenção de esmagar e desequilibrar o inimigo.
+* '''Atributo Primário Comum:''' Força
+* '''Mãos Comuns:''' 1 (algumas variantes exigem 2 mãos)
+* '''Alcance Padrão:''' Corpo a corpo (adjacente)
+* '''Chance Crítica Média:''' 20 / x2
+* '''Compatibilidade Comum por Classe:''' Clérigo, Guerreiro, Conjurador Elemental
+* '''Compatibilidade Comum por Raça:''' Anão, Draconato, Meio-orc
+* '''Notas Técnicas:''' Dano esmagador é eficaz contra esqueletos, mortos-vivos e armaduras metálicas. Algumas maças sagradas podem aplicar bônus contra criaturas profanas. Excelente sinergia com habilidades de impacto ou interrupção.
+
+
+== Besta ==
+
+* '''Nome do Tipo:''' Besta
+* '''Descrição Geral:''' Armas de disparo mecânico com grande poder de perfuração, projetadas para combates de média a longa distância com alto impacto por disparo.
+* '''Exemplos de Armas:''' Besta Leve, Besta Pesada, Besta de Mão, Besta de Repetição
+* '''Função Estratégica:''' Perfuração de armaduras, ataque inicial poderoso e eliminação de alvos frágeis à distância.
+* '''Estilo de Uso:''' Requer recarga entre disparos, mas oferece grande precisão e dano por tiro. Ideal para preparar emboscadas ou iniciar confrontos.
+* '''Atributo Primário Comum:''' Destreza
+* '''Mãos Comuns:''' 2
+* '''Alcance Padrão:''' Longa distância (15m ou mais)
+* '''Chance Crítica Média:''' 19–20 / x2
+* '''Compatibilidade Comum por Classe:''' Caçador, Ladrão, Alquimista
+* '''Compatibilidade Comum por Raça:''' Elfo, Humano, Anão
+* '''Notas Técnicas:''' Necessita tempo de recarga após cada disparo (1 turno). Ótima arma para combates táticos ou ataques surpresa. Algumas bestas permitem o uso de virotes com efeitos especiais (veneno, explosivo, incendiário, etc.).
+
+= Catálogo de Armas do Jogo =
+
+O [[Catálogo de Armas]] do jogo está definido em uma página própria.
+
+= Tabela de Bônus de Dano por Tipo de Arma e Classe =
+A tabela de bônus de dano de tipo de arma por classe define vantagens/desvantagens de acordo com o tipo de classe para compensar o treinamento que o personagem teve com cada arma (considerando através da classe):
+
+<center>
+{| class="wikitable"
+! Classe !! Adaga !! Espada Curta !! Espada Longa !! Machado !! Arco Curto !! Arco Longo !! Cajado !! Lança !! Maça !! Besta
+|-
+| '''Guerreiro''' || +1 || +2 || +2 || +2 || +1 || – || – || +2 || +1 || +1
+|-
+| '''Caçador''' || +1 || +2 || +1 || +1 || +2 || +2 || – || +1 || – || +2
+|-
+| '''Duelista''' || +2 || +2 || +1 || – || +1 || – || – || +1 || – || +1
+|-
+| '''Mago''' || – || – || – || – || – || – || +2 || – || – || –
+|-
+| '''Alquimista''' || +1 || – || – || – || – || – || +1 || – || – || +1
+|-
+| '''Conjurador Elemental''' || – || – || – || – || – || – || +2 || – || – || –
+|-
+| '''Bardo''' || +2 || +1 || – || – || +1 || – || +1 || – || – || +1
+|-
+| '''Clérigo''' || – || – || – || – || – || – || +1 || +1 || +2 || –
+|-
+| '''Sábio''' || – || – || – || – || – || – || +2 || – || – || –
+|-
+| '''Ladrão''' || +2 || +2 || – || – || +2 || – || – || – || – || +1
+|-
+| '''Assassino''' || +3 || +2 || +1 || – || +1 || – || – || – || – || +1
+|-
+| '''Ilusionista''' || +1 || – || – || – || – || – || +2 || – || – || –
+|}
+</center>
+
+= Tabela de Bônus de Dano por Tipo de Arma e Raça =
+<center>
+{| class="wikitable"
+! Raça !! Adaga !! Espada Curta !! Espada Longa !! Machado !! Arco Curto !! Arco Longo !! Cajado !! Lança !! Maça !! Besta
+|-
+| '''Humano''' || +1 || +1 || +1 || +1 || +1 || +1 || +1 || +1 || +1 || +1
+|-
+| '''Elfo''' || +2 || +2 || +1 || – || +2 || +2 || +1 || – || – || +2
+|-
+| '''Meio-elfo''' || +1 || +1 || +1 || – || +2 || +1 || +1 || – || – || +1
+|-
+| '''Anão''' || – || +1 || +2 || +2 || – || – || – || +1 || +2 || +1
+|-
+| '''Meio-orc''' || – || +1 || +2 || +2 || – || – || – || +1 || +1 || –
+|-
+| '''Tiefling''' || +1 || +1 || – || – || – || – || +2 || – || – || –
+|-
+| '''Draconato''' || +1 || +1 || +2 || +2 || – || – || +1 || +1 || +1 || –
+|}
+
+</center>

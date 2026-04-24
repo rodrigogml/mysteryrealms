@@ -1,0 +1,147 @@
+O acampamento é uma estrutura temporária montada pelo jogador em regiões selvagens com o objetivo de melhorar as condições de descanso fora de estabelecimentos urbanos. Sua principal função é aumentar os níveis de '''Segurança (S)''' e '''Conforto (C)''' do local escolhido, diminuindo a '''chance de interrupções hostis''' durante o sono e melhorando a eficiência da recuperação.
+
+Ao montar um acampamento corretamente, o jogador reduz os efeitos adversos de ambientes naturalmente perigosos (com alto '''R - Risco de Hostilidade'''), aumentando a probabilidade de completar ciclos de sono e recuperar vida, moral ou energia conforme os parâmetros definidos para descanso.
+
+
+= Regras de Acampamento =
+* Um acampamento só pode ser montado se a ficha da zona ou ambiente onde os jogadores estão possuir o campo:
+:* '''Permite acampamento:''' Sim
+
+* Quando o acampamento é criado, ele calcula seus efeitos de forma '''individual para cada jogador do grupo''' (se houver um grupo), levando em consideração seus próprios itens e ações, e depois tira-se uma '''média aritmética dos índices''' para definir os valores finais de '''S''' e '''C''' do acampamento.
+
+* Os efeitos dos acampamentos são usados como modificadores nos testes e cálculos de [[Recuperação#Recuperação por Sono|Recuperação por Sono]] e [[Recuperação#Descanso Passivo|Descanso Passivo]].
+
+
+= Itens de Acampamento e Benefícios =
+Cada jogador soma os pontos de '''Segurança (S)''' e '''Conforto (C)''' com base nos itens válidos em seu inventário, respeitando as seguintes regras:
+* Um mesmo tipo de benefício não pode ser aplicado mais de uma vez (Ex: dois sacos de dormir não concedem bônus duplo).
+* Os itens devem estar categorizados corretamente em suas fichas com campos como:
+:* '''Fonte de Calor para Acampamentos''';
+:* '''Kit de Cocção para Acampamentos''';
+:* '''Camuflagem para Acampamentos''';
+:* '''Objeto para Sentar em Acampamentos''';
+:* '''Objeto para Dormir em Acampamentos'''.
+
+
+{{nota|O sistema pode prever em algum momento que itens são emprestáveis para pessoas do grupo. Exemplo, se alguém tem dois sacos de dormir, o jogador só tomará bônus do melhor saco. Porém ele pode emprestar para outro jogador do grupo, melhorando o índice do acampamento, caso esse saco sobrando seja melhor do que o disponível para outro jogador.}}
+
+
+Exemplo de itens e bônus:
+{| class="wikitable"
+! Item !! Categoria !! Bônus S !! Bônus C !! Observações
+|-
+| Saco de Dormir || Objeto para Dormir em Acampamentos || 0 || +2 || Conforto básico
+|-
+| Fonte de Calor (lenha, pedra encantada) || Fonte de Calor para Acampamentos || +1 || +1 || Essencial para regiões frias
+|-
+| Tenda portátil || Objeto para Dormir em Acampamentos || +1 || +2 || Substitui abrigo improvisado
+|-
+| Kit de cozinha || Kit de Cocção para Acampamentos || 0 || +1 || Permite preparar refeições simples
+|-
+| Itens de Camuflagem || Camuflagem para Acampamentos || +2 || 0 || Reduz visibilidade e risco de encontros
+|}
+
+
+= Teste de Qualidade do Acampamento =
+<pre>Esse teste ainda precisa ser validado em relação aos valores, já que S e C tem valores de 0 a 100, e a descrição aqui utiliza valores baixos de incremento/decremento. Quando o cálculo estiver definitivo, também ser migrado para a página de testes, para que fiquem todos concentrados</pre>
+
+Além dos itens, o grupo pode realizar um teste para avaliar a qualidade da montagem do acampamento. O resultado altera os valores finais de S e C.
+
+* Habilidade utilizada: '''Sobrevivência [Percepção]'''
+* Dificuldade base: 10
+
+Resultado do teste:
+
+* '''Falha (dif. -3 ou mais):''' −1 em S e C
+* '''Sucesso simples:''' sem modificador
+* '''Sucesso crítico (dif. +5 ou mais):''' +1 em S e C
+
+Modificadores contextuais:
+* +2 se alguém no grupo tiver habilidades especiais (Ex: perícia de Explorador)
+* −2 em terreno hostil (Neve, Pântano, Ruínas, etc.)
+
+
+= Tempo e Fadiga para Montagem =
+A montagem de um acampamento exige esforço físico e tempo. Os valores seguem a lógica de [[Ações do Jogador]]:
+* '''Tempo gasto:''' 15 minutos + 2d30. (Podemos prever alguma fórmula utilizando os pontos de habilidade do jogador)
+* '''Fadiga acumulada:''' de acordo com a definição na atividade.
+
+
+Variações:
+* O tempo pode ser reduzido de houver mais pessoas no grupo.
+* Condições adversas (clima, falta de luz) podem aumentar a fadiga acumulada em +5.
+
+
+
+= Efeitos sobre Recuperação =
+O acampamento melhora as condições de descanso e recuperação dos personagens.
+
+O acampamento influencia diretamente os índices '''S''' e '''C''' calculados, que refletem diretamente na atividade '''Dormir'''. O cálculo segue normalmente o definido em [[Recuperação#Recuperação por Sono]].
+
+Já o '''Descanso''' não é influenciado por esses índices. Mas sim pelo 'Fator da Atividade' sobre a fadiga, que deve levar em consideração o descanso em um acampamento tende a ser mais confortável do que um em qualquer lugar na mesma zona.
+
+
+= Abandono do Acampamento =
+<pre>@TODO</pre>
+Essa sessão será adicionada futuramente sobre abandono do acampamento, incluindo:
+* Chance de perda de itens.
+* Possibilidade de emboscadas.
+* Modificadores baseados no '''R (Risco de Hostilidade)''' da zona.
+
+O abandono do acampamento se refere tanto a ir embora e deixar tudo para trás, quanto sair do acampamento e deixá-lo desprotegido para caçar ou procurar água.
+
+
+= Interações Possíveis Durante o Acampamento =
+
+Durante o período de descanso, o jogador pode optar por:
+* Cozinhar refeições que aumentam recuperação.
+* Conversar com NPCs para aprofundar relacionamentos.
+* Meditar ou realizar feitiços de purificação.
+* Realizar manutenção de equipamentos.
+* Estudar livros ou realizar pesquisas (classe: sábio ou mago).
+* Realizar turnos de guarda para reduzir o risco de emboscadas.
+
+
+= Encontros Durante o Acampamento =
+<pre>@Todo Precisamos rever essa fórmula de encontros considerando os fatores de probabilidade de encontro por tempo de permanência da zona, pensar em algum atenuador utilizando os índices R e S do acampemento, etc..</pre>
+
+Enquanto um acampamento está montado, há chance de encontros com inimigos, animais selvagens ou NPCs errantes. A chance base de encontro é:
+<math>\text{Chance Base} = 10\% - (\text{Qualidade do Acampamento} \times 2\%)</math>
+* Acampamento precário: Qualidade = 0
+* Acampamento normal: Qualidade = 1
+* Acampamento bom: Qualidade = 2
+* Acampamento excelente: Qualidade = 3
+
+
+== Teste de Guarda ==
+<pre>@todo</pre>
+Tratar como será abordada a guarda do acampamento quando jogadores se revezam para guardar o acampamento durante o sono dos demais. Podemos apenas aumentar os índices de R e S quando temos alguém acordado, diminuindo a chance de interrupção do sono.
+
+
+= Bônus Específicos por Classe =
+<pre>@TODO sugestões a serem trabalhadas</pre>
+Durante o acampamento, as seguintes classes podem realizar ações especiais:
+* '''Caçador:''' Pode caçar para obter ingredientes e suprimentos. Teste de Sobrevivência para aumentar recuperação por alimentação.
+* '''Clérigo:''' Pode realizar bênçãos no acampamento, garantindo recuperação de pontos de vida adicional (+10%) e proteção espiritual.
+* '''Bardo:''' Pode tocar ou contar histórias para restaurar moral do grupo, removendo aflições leves ou restaurando afinidade.
+* '''Sábio:''' Pode estudar grimórios ou artefatos e oferecer bônus temporários (+1 em testes de magia ou conhecimento por 24h).
+* '''Alquimista:''' Pode fabricar poções simples ou itens temporários, se tiver os insumos.
+
+
+= Bônus Específicos por Raça =
+<pre>@TODO sugestões a serem trabalhadas</pre>
+Algumas raças têm vantagens em acampamentos:
+* '''Anões:''' Menor penalidade em terrenos difíceis (montanha, pedra, ruínas).
+* '''Elfos e Meio-elfos:''' Não precisam dormir completamente (apenas meditação), permitindo manter vigília com menor penalidade.
+* '''Halflings:''' Reduzem chance de encontros aleatórios em +5% (são discretos).
+* '''Draconatos:''' Produzem calor natural, podendo substituir fonte de calor em acampamentos pequenos.
+
+= Ambientes com Efeitos Especiais =
+<pre>@TODO sugestões a serem trabalhadas</pre>
+Alguns locais no mundo oferecem efeitos únicos ao acampar:
+* '''Ruínas Antigas:''' chance de sonhos proféticos.
+* '''Locais Sagrados:''' bônus de recuperação dobrados.
+* '''Florestas Místicas:''' presença de espíritos benevolentes que aceleram o descanso.
+* '''Áreas Amaldiçoadas:''' descanso é perturbado (metade da recuperação e risco de aflições).
+
+{{nota|Esses efeitos podem ser combinados com eventos narrativos ou quests especiais, criando interações imersivas com o ambiente.}}

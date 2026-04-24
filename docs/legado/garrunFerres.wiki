@@ -1,0 +1,57 @@
+[[Arquivo:GarrunFerres.png|thumb|right|300px|Garrun Ferres]]
+
+* '''Identificação'''
+:* '''Nome:''' Garrun Ferres
+:* '''Raça:''' Humano
+:* '''Idade:''' 48 anos
+:* '''Profissão/Ocupação:''' Criador, vendedor e treinador de montarias; proprietário do [[Langur#Estábulo_Ferradura_Partida|Estábulo Ferradura Partida]]
+:* '''Local:''' [[Langur#Estábulo_Ferradura_Partida|Estábulo Ferradura Partida]], Anel Exterior de [[Langur]]
+:* '''Bio:''' Ex-batedor de caravanas comerciais, passou décadas cruzando rotas perigosas e territórios esquecidos. Após uma emboscada nas Montanhas Cinzentas que lhe custou a perna esquerda, retirou-se da estrada e fundou o Estábulo Ferradura Partida. Hoje, é uma referência em montarias e rotas de viagem. Seu conhecimento de terreno rivaliza com o de cartógrafos veteranos.
+:* '''Aparência:''' Robusto, pele queimada de sol, barba espessa e desalinhada. Usa trajes de couro simples e sempre cobertos de poeira. A perna esquerda é uma prótese de madeira com metal, feita por ele mesmo. Olhos castanhos escuros, atentos. Carrega chicote leve e costuma mastigar palha.
+
+* '''Relacionamentos'''
+:* Prestou serviços ao Conselho de [[Langur]] em missões de transporte emergencial.
+:* Mantém laços comerciais com [[Personagens#Vareth_Dolmar|Vareth Dolmar]] — troca suprimentos e informações.
+:* Evita encantadores e magos após incidente com criatura disfarçada.
+:* Tem um filho desaparecido — que partiu com um grupo de aventureiros numa de suas montarias — assunto sensível que evita comentar.
+:* Relaciona-se com [[Personagens#Madalin_Crestamar|Madalin Crestamar]] em trocas de suprimentos e apoio às caravanas.
+
+* '''Personalidade'''
+:* '''Estilos Preferidos:''' direto, respeitoso, literal
+:* '''Estilos Tolerados:''' lógico, frio, educado, empático
+:* '''Estilos Rejeitados:''' emocional, afetuoso, enigmático
+:* '''Tolerância aos Estilos:'''
+::* '''educado:''' 60
+::* '''grosseiro:''' 45
+::* '''direto:''' 85
+::* '''enigmático:''' 15
+::* '''formal:''' 40
+::* '''informal:''' 50
+::* '''irônico:''' 35
+::* '''literal:''' 75
+::* '''empático:''' 55
+::* '''intimidativo:''' 25
+::* '''afetuoso:''' 10
+::* '''frio:''' 65
+::* '''lógico:''' 70
+::* '''emocional:''' 20
+::* '''respeitoso:''' 80
+::* '''desrespeitoso:''' 15
+:* '''Estilo de Fala Pessoal'''
+::* '''Dominante:''' direto
+::* '''Secundários:''' literal, respeitoso
+:* '''Valores Apreciados (Valoração):''' Honestidade, Justiça, Independência
+:* '''Frases de Reação Espontânea:'''
+::* “Se não sabe montar, não sabe comprar.”
+::* “Cavalo que relincha demais, esconde dente podre.”
+::* “A sela diz mais do dono do que o nome.”
+:* '''Personalidade e Comportamento:''' Prático, desconfiado e calado. Valoriza ações, não palavras. Premia viajantes honestos e pune arrogância. Protetor com animais, expulsa quem os maltrata. Sabe rir — quando relaxado — mas nunca esquece um rosto, nem por bem nem por mal.
+:* '''Expressões Típicas:'''
+::* “Estrada é madrasta. Trate bem a montaria ou ela vai te enterrar.”
+::* “Tem rastro que até mula cega evita.”
+::* “Essa é boa... mas vai te testar.”
+
+* '''Mecânica do Jogo'''
+:* Vende, compra e aluga montarias (convencionais e especiais).
+:* Pode oferecer informações sobre rotas, clima e perigos de viagem.
+:* Atua como ponto de partida para contratos de transporte e resgate de montarias desaparecidas.

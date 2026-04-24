@@ -1,0 +1,135 @@
+
+As **classes** definem o estilo de jogo do personagem, suas aptidões em combate, habilidades sociais, domínio mágico ou capacidade de exploração. Ao contrário das **raças**, que representam origem e fisiologia, as **classes** representam função, treinamento e papel ativo na jornada.
+
+A escolha da classe impacta diretamente nos **atributos iniciais**, **habilidades secundárias**, **recursos disponíveis**, e na forma como o personagem interage com o mundo — tanto nos diálogos quanto em combate ou na resolução de problemas.
+
+O crescimento de atributos após a criação será feito pelo sistema de progressão do jogo. Cada classe fornece um bônus inicial fixo, conforme a tabela ao final do tópico.
+
+# Classes de Combate
+
+## Guerreiro
+
+Especialista em armas de corpo a corpo e em resistir a ataques. Capaz de usar armaduras pesadas e escudos, sendo o pilar defensivo de qualquer grupo.
+
+**Pontos Fortes:** Força, Constituição, resistência física.
+**Pontos Fracos:** Pouca habilidade social e nenhuma aptidão mágica.
+
+## Caçador
+
+Mestre da natureza, rastreamento e sobrevivência. Usa arcos, bestas ou lanças, e conhece bem o terreno selvagem.
+
+**Pontos Fortes:** Destreza, Percepção, Habilidade com armadilhas e animais.
+**Pontos Fracos:** Baixa presença social e nenhum uso mágico direto.
+
+## Duelista
+
+Lutador ágil, focado em combate individual. Favorece velocidade, precisão e contra-ataques em vez de força bruta.
+
+**Pontos Fortes:** Destreza, Furtividade, ataque preciso.
+**Pontos Fracos:** Pouca resistência prolongada e fraco em lutas caóticas.
+
+# Classes de Magia
+
+## Mago
+
+Usuário da magia arcana em sua forma mais pura. Possui acesso a uma vasta gama de feitiços de ataque, defesa, controle e utilidade.
+
+**Pontos Fortes:** Intelecto, Conhecimento (Arcano), variedade mágica.
+**Pontos Fracos:** Fragilidade física e dependência de preparo.
+
+## Alquimista
+
+Mistura magia e ciência, criando poções, bombas e artefatos. Serve como suporte tático e manipulador de terreno.
+
+**Pontos Fortes:** Intelecto, Conhecimento (Relíquias), versatilidade.
+**Pontos Fracos:** Fraco em combate direto e frágil fisicamente.
+
+## Conjurador Elemental
+
+Canaliza forças da natureza (fogo, gelo, relâmpago, terra). Um mago combativo e destrutivo.
+
+**Pontos Fortes:** Intelecto, Vontade, dano massivo.
+**Pontos Fracos:** Consome muita energia e é vulnerável ao ser pego desprevenido.
+
+# Classes Sociais e de Suporte
+
+## Bardo
+
+Encanta, manipula e inspira por meio da arte. Influencia diálogos, melhora aliados e confunde inimigos com sons e palavras.
+
+**Pontos Fortes:** Carisma, Persuasão, suporte tático.
+**Pontos Fracos:** Frágil fisicamente e com foco indireto em combate.
+
+## Clérigo
+
+Canaliza energia divina. É curandeiro, protetor e, em certos casos, executor do julgamento celestial.
+
+**Pontos Fortes:** Vontade, conhecimento religioso, cura e proteção.
+**Pontos Fracos:** Baixa iniciativa, dependente de alinhamento.
+
+## Sábio
+
+Especialista em lógica, leitura de pistas e análise de artefatos e ambientes. Não é um combatente direto, mas essencial em investigações.
+
+**Pontos Fortes:** Intelecto, Percepção, conhecimento geral.
+**Pontos Fracos:** Pouca resistência e sem aptidão combativa.
+
+# Classes Furtivas e de Manipulação
+
+## Ladrão
+
+Perito em infiltrações, armadilhas e abertura de fechaduras. Move-se sem ser visto e sobrevive no submundo.
+
+**Pontos Fortes:** Furtividade, Destreza, Sobrevivência.
+**Pontos Fracos:** Pouca força e nenhuma magia.
+
+## Assassino
+
+Especialista em eliminar alvos rapidamente. Alta letalidade, especialmente em ataques surpresa.
+
+**Pontos Fortes:** Furtividade, Dano Crítico, precisão.
+**Pontos Fracos:** Frágil fora do stealth, pouco versátil em grupo.
+
+## Ilusionista
+
+Manipula ilusões, criando distrações, camuflagens e confusão. Serve como suporte, espia e controlador.
+
+**Pontos Fortes:** Intelecto, Furtividade, manipulação.
+**Pontos Fracos:** Baixo impacto direto, vulnerável se exposto.
+
+# Tabela de Bônus por Classe
+<center>
+{| class="wikitable"
+! Atributos / Classe || Guerreiro || Caçador || Duelista || Mago || Alquimista || Conjurador || Bardo || Clérigo || Sábio || Ladrão || Assassino || Ilusionista
+|-
+| **Força** || style="text-align:center"|+3 || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|–
+|-
+| **Destreza** || style="text-align:center"|+1 || style="text-align:center"|+2 || style="text-align:center"|+3 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|+2 || style="text-align:center"|+2
+|-
+| **Constituição** || style="text-align:center"|+2 || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Intelecto** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+4 || style="text-align:center"|+3 || style="text-align:center"|+2 || style="text-align:center"|+1 || style="text-align:center"|+1 || style="text-align:center"|+3 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2
+|-
+| **Percepção** || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|+2 || style="text-align:center"|+1 || style="text-align:center"|+1
+|-
+| **Carisma** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+3 || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Vontade** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|+1 || style="text-align:center"|+3 || style="text-align:center"|+1 || style="text-align:center"|+3 || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2
+|-
+| **Total de Atributos** || style="text-align:center; background:#f2f2f2;"|9 || style="text-align:center; background:#f2f2f2;"|8 || style="text-align:center; background:#f2f2f2;"|8 || style="text-align:center; background:#f2f2f2;"|5 || style="text-align:center; background:#f2f2f2;"|5 || style="text-align:center; background:#f2f2f2;"|6 || style="text-align:center; background:#f2f2f2;"|6 || style="text-align:center; background:#f2f2f2;"|6 || style="text-align:center; background:#f2f2f2;"|6 || style="text-align:center; background:#f2f2f2;"|4 || style="text-align:center; background:#f2f2f2;"|6 || style="text-align:center; background:#f2f2f2;"|6
+|-
+| **Persuasão** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1
+|-
+| **Conhecimento (Arcano)** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+3 || style="text-align:center"|+1 || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2
+|-
+| **Conhecimento (Natureza)** || style="text-align:center"|– || style="text-align:center"|+3 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|+1 || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Conhecimento (Relíquias)** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|+3 || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|+1 || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1
+|-
+| **Sobrevivência** || style="text-align:center"|– || style="text-align:center"|+3 || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|+2 || style="text-align:center"|+2 || style="text-align:center"|+1 || style="text-align:center"|–
+|-
+| **Furtividade** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|+3 || style="text-align:center"|+3
+|-
+| **Intimidação** || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|+2 || style="text-align:center"|–
+|}
+</center>

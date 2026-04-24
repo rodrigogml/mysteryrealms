@@ -1,0 +1,13 @@
+= Terras Centrais =
+
+== Langur ==
+
+=== Clusters ===
+
+==== Cluster de Langur ====
+* '''Nome:''' Cluster de Langur
+* '''Localidade:''' Langur
+* '''Zonas:''' Todas
+* '''Penalidade de Rota (%):''' 6
+* '''Tabelas de Interrupções:''' 
+* '''Notas Narrativas:'''

@@ -1,0 +1,65 @@
+A Ficha de Diálogo é um formulário narrativo-técnico que deve ser preenchido antes da criação de qualquer novo diálogo no sistema. Seu objetivo é orientar a criação de diálogos coesos, emocionantes e funcionais, alinhados com a narrativa, as mecânicas de jogo e a personalidade do NPC envolvido.
+
+Esta ficha '''não é parte do conteúdo que o jogador verá''' — ela serve como planejamento prévio para que o criador ou a IA gerem o diálogo de forma precisa e inspiradora.
+
+Todas as novas fichas devem seguir '''exatamente''' o modelo de indentação e formatação do bloco <code>pre</code> ao final desta página.
+
+= Campos da Ficha =
+* '''NPC:''' Informar o nome completo do NPC com o qual o diálogo ocorrerá. Exemplo: ''Elvarin do Silêncio''.
+
+* '''Título do Diálogo:''' Um nome amigável de título do diálogo para ajudar a referenciar na documentação e identificar sobre o que é abordado no diálogo. Deve ser único por NPC.
+
+* '''Condição:''' Define a condição necessária para que esse diálogo seja exibido. Pode incluir marcadores, variáveis, eventos anteriores, etc.. Não se deve colocar a condição de que o NPC esteja ouvindo, pois ao definir que o diálogo é com ele já temos essa condição por padrão automaticamente. Exemplo: ''!hasMarcador("SABE_QUEM_É_ELVARIN_DO_SILENCIO")''. Quando não houver condições adicionais definir apenas como '-'.
+
+* '''Marco do Diálogo:''' Marcador criado a partir da junção do prefixo ''''DIALOGO'''; seguido do nome do NPC sem espaços ou acentos; Título do Diálogo também sem espaço ou acentos. Cada parâmetro em letra maiúscula e separado por '_'.  Exemplo: '''DIALOGO_ELVARINDOSILENCIO_QUEMEVOCE'''. O 'Marco do Diálogo' é automaticamente adicionado aos marcos do jogador ao final do diálogo e evitará que o diálogo ocorra novamente. Não se deve escrever esse marco nas condições nem adicioná-lo manualmente nos comandos das trilhas — esse comportamento é padrão.
+
+* '''Objetivo do Diálogo:''' Explica qual o propósito principal do diálogo — o que ele deve atingir no final de cada trilha. Exemplo: ''Este diálogo tem o objetivo de apresentar o NPC Elvarin do Silêncio ao jogador e informar que ele estará sempre na praça para ajudar com conselhos ou direções.''
+
+* '''Metas Obrigatórias:''' São requisitos que devem ser cumpridos em '''todas as trilhas''' do diálogo. Devem garantir coerência mínima, progresso narrativo ou efeitos mecânicos. Exemplos:
+:* O NPC deve ter se apresentado.
+:* O jogador deve entender que o NPC estará disponível para ajuda futura.
+:* O diálogo deve inserir o marcador: '''[Inserir Marcador; SABE_QUEM_É_ELVARIN_DO_SILENCIO]'''
+
+* '''Metas Secundárias:''' Objetivos que podem ou não acontecer dependendo das escolhas do jogador. Servem para aprofundar a narrativa ou gerar consequências alternativas. Exemplo:
+:* Se a conversa fluir bem, Elvarin pode revelar que pertence à Ordem dos Caminhantes Silenciosos, o que insere o marcador: '''[Inserir Marcador; SABE_SOBRE_ORDEM_DOS_CAMINHANTES_SILENCIOSOS]'''
+
+* '''Outras Expectativas do Diálogo:''' Incluir qualquer especificação adicional relevante, como:
+:* Testes esperados (e.g., teste de intuição).
+:* Mudanças emocionais no NPC.
+:* Temas delicados que devem ser tratados com cuidado.
+
+* '''Tons Narrativos Desejados:''' Define o tom emocional e atmosférico do diálogo. Exemplo: ''contemplativo, acolhedor, misterioso''.
+
+* '''Estilos de Fala Esperados do Jogador:''' Indica quais estilos devem ser abordados ou provocados ao longo do diálogo, para criar variação e desafio expressivo. Exemplo: ''empático, direto, respeitoso''.
+
+* '''Reações Esperadas do NPC:''' Define comportamentos emocionais esperados do NPC diante de estilos do jogador. Exemplo: ''se o jogador for irônico, o NPC responde friamente''.
+
+* '''Ponto de Entrada do Diálogo:''' Contexto narrativo ou mecânico em que o diálogo começa. Exemplo: ''primeira visita à praça''.
+
+* '''Consequência Final Esperada:''' Estado desejado ao fim do diálogo: marcadores, mudanças de relação, novas opções desbloqueadas etc.
+
+* '''Variações de Personalidade do Jogador Esperadas:''' Se o diálogo deve se adaptar à personalidade ou estilo de jogo do jogador, isso pode ser indicado aqui.
+
+= Modelo da Ficha =
+
+<pre>
+* '''NPC:''' Elvarin do Silêncio
+* '''Condição:''' isNPCListening("Elvarin do Silêncio")
+* '''Marco do Diálogo:''' DIALOGO_ELVARINDOSILENCIO_QUEMEVOCE
+* '''Objetivo do Diálogo:''' Este diálogo tem o objetivo de apresentar o NPC Elvarin do Silêncio ao jogador. Passar de alguma forma a instrução de que ele estará sempre por alí na praça e que pode ajudar com informações e outras ajudas que o jogador precisar.
+* '''Metas Obrigatórias:'''
+:* O NPC deve se apresentar.
+:* Deixar claro que estará sempre por alí para ajudar com informações sempre que o jogador se sentir perdido.
+:* Devem ter o comando: [Inserir Marcador; CONHECE_ELVARINDOSILENCIO]
+* '''Metas Secundárias:'''
+:* Se a conversa fluir bem, no meio do diálogo o Elvarin comentar sobre a sua ordem, nesses caso deve adicionar o comando: [Inserir Marcador; SABESOBRE_ORDEMDOSCAMINHANTESSILENCIOSOS]
+* '''Outras Expectativas do Diálogo:'''
+:* Teste de intuição pode ser usado para confiar ou não em Elvarin.
+:* Jogador que se mostrar impaciente pode receber respostas mais vagas.
+* '''Tons Narrativos Desejados:''' Contemplativo, acolhedor
+* '''Estilos de Fala Esperados do Jogador:''' empático, direto, respeitoso
+* '''Reações Esperadas do NPC:''' Rejeita ironia com silêncio. Responde com mais profundidade se for tratado com respeito.
+* '''Ponto de Entrada do Diálogo:''' Primeira visita do jogador à Praça das Vozes
+* '''Consequência Final Esperada:''' Jogador passa a conhecer e reconhecer Elvarin como figura de orientação. Desbloqueia interações futuras com dicas e conselhos.
+* '''Variações de Personalidade do Jogador Esperadas:''' Estilos impacientes ou grosseiros geram respostas evasivas ou desconexas.
+</pre>

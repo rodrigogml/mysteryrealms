@@ -1,0 +1,60 @@
+![Dargan Harth](images/DarganHarth.png)
+
+- **Identificação**
+:* **Nome:** Dargan Harth
+:* **Raça:** Humano
+:* **Idade:** Cerca de 55 anos (aparência condizente com a idade)
+:* **Profissão/Ocupação:** Dono e guardião da [Taverna Asa Quebrada](langurTavernaAsaQuebrada.md); ex-soldado veterano do Exército de [Langur](langur.md)
+:* **Local:** [Taverna Asa Quebrada](langurTavernaAsaQuebrada.md), Anel Exterior de [Langur](langur.md)
+:* **Bio:** Dargan Harth é um ex-combatente da Batalha do Desfiladeiro de Varnor, onde perdeu a perna direita ao segurar sozinho um flanco contra bestas da névoa, salvando seu destacamento. Após anos desaparecido, reapareceu mancando, com uma prótese de madeira e ferro forjada por anões. Fundou a Taverna Asa Quebrada em uma viela discreta de [Langur](langur.md), que hoje é conhecida como um ponto de encontro seguro para forasteiros e negociadores à margem do sistema.
+:* **Aparência:** Corpo forte e gasto pela vida militar. Rosto marcado por uma cicatriz que cruza do supercílio até a mandíbula. Barba rala e malcuidada, olhos pequenos e atentos. Usa roupas de couro reforçado, geralmente escuras. A prótese da perna é visível, mas firme. Mantém uma espada curva de guerra — chamada *Verônica* — escondida atrás do balcão. Há quem diga que ela carrega um encantamento sombrio.
+
+- **Relacionamentos**
+:* Possui uma rixa velada com [Lirianne Morth](personagensLirianneMorth.md) da [Biblioteca Varnak](langurBibliotecaVarnak.md).
+:* Respeitado por [Thramur Ankuhl](personagensThramurAnkuhl.md), que compartilha o fardo de veterano de guerra.
+:* Tolerado com curiosa gentileza por [Kaela Runaveia](personagensKaelaRunaveia.md).
+:* Mantém uma relação de respeito contido com [Elvarin do Silêncio](personagensElvarinDoSilencio.md), a quem já ajudou discretamente.
+:* É respeitado por mercenários, viajantes e informantes, que o veem como confiável — até certo limite.
+:* Tem um corvo preto chamado *Ferroada*, que parece entender tudo o que se passa na taverna.
+
+- **Personalidade**
+:* **Estilos Preferidos:** direto, respeitoso, lógico
+:* **Estilos Tolerados:** formal, literal, frio, irônico
+:* **Estilos Rejeitados:** empático, afetuoso, emocional
+:* **Tolerância aos Estilos:**
+::* **educado:** 45
+::* **grosseiro:** 60
+::* **direto:** 95
+::* **enigmático:** 25
+::* **formal:** 40
+::* **informal:** 35
+::* **irônico:** 55
+::* **literal:** 65
+::* **empático:** 15
+::* **intimidativo:** 70
+::* **afetuoso:** 10
+::* **frio:** 75
+::* **lógico:** 80
+::* **emocional:** 20
+::* **respeitoso:** 85
+::* **desrespeitoso:** 10
+:* **Estilo de Fala Pessoal**
+::* **Dominante:** direto
+::* **Secundários:** frio, lógico
+:* **Valores Apreciados (Valoração):** Lealdade, Coragem, Discrição
+:* **Frases de Reação Espontânea:**
+::* “Isso é conversa fiada.”
+::* “Se veio arrumar problema, vai sair quebrado.”
+::* “Não pergunte o que não está pronto pra ouvir.”
+:* **Personalidade e Comportamento:** Direto, bruto e sem rodeios. Dargan fala pouco, observa muito e resolve problemas com ação. É ríspido, mas justo. Ajuda discretamente quem precisa, especialmente veteranos ou pessoas em situação vulnerável, embora nunca admita boas intenções. Detesta política, magos e fofoqueiros.
+:* **Expressões Típicas:**
+::* "Hmph.”
+::* “Fala logo.”
+::* “Isso não é da sua conta.”
+::* “Vi coisa pior.”
+::* “Quartos são dois de ouro. Tem ou não?”
+::* “Ferroada não erra. Se ele grasnou, alguém vai sangrar.”
+
+- **Mecânica do Jogo**
+:* Pode intervir em conflitos dentro da [Taverna Asa Quebrada](langurTavernaAsaQuebrada.md), encerrando eventos violentos com ameaça ou força bruta.
+:* Funciona como ponto de contato para rumores, missões clandestinas ou aquisição de informações sigilosas — mediante pagamento e confiança.

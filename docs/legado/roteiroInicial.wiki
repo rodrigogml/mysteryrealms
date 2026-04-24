@@ -1,0 +1,51 @@
+= Roteiro: Abertura do Jogo =
+<code>ID do Roteiro: R1</code>
+
+{{nota|Este roteiro não inclui quests, mas estabelece o início da jornada, a ambientação inicial e as possibilidades de conversas livres com personagens da cidade.}}
+
+O jogo se inicia na cidade de [[Langur]], especificamente na [[Langur#Praça_das_Vozes|Praça das Vozes]], em uma manhã cinzenta. O jogador não possui memórias claras de como chegou até ali, mas logo é abordado por um misterioso sábio: [[Personagens#Elvarin_do_Silêncio|Elvarin do Silêncio]], um membro da [[Facções#Ordem_dos_Caminhantes_Silenciosos|Ordem dos Caminhantes Silenciosos]], cuja função é ajudar aqueles que buscam por eles, oferecendo sabedoria, escuta e orientação.
+
+== Cenas ==
+
+=== Cena 1: O Despertar ===
+* '''Descrição da cena:''' Céu nublado visto de baixo. O chão de pedra da praça ocupa parte do campo de visão. Fragmentos da fonte aparecem próximos. A torre de Langur se ergue distante. A luz é fria e suave.
+
+* '''Pensando:'''
+<blockquote>
+Há algo estranho no ar. O som da água parece distante e o corpo... pesado.
+
+Por que está tão difícil lembrar...?
+</blockquote>
+
+=== Cena 2: A Sombra que se Aproxima ===
+* '''Descrição da cena:''' A imagem continua tremida, embaçada pelo olhar ainda tonto do jogador. Uma figura se aproxima lentamente pela borda da visão — apenas um vulto indistinto com silhueta alongada e uma bengala. A luz ao redor parece ondular levemente, como se a realidade ainda estivesse se ajustando.
+
+* '''Pensando:'''
+<blockquote>
+Tem... alguém vindo?
+
+A sombra parece andar devagar... usa uma bengala?  
+
+Quem será...?
+</blockquote>
+
+=== Cena 3: O Primeiro Contato ===
+* '''Descrição da cena:''' A visão clareia aos poucos. Elvarin se aproxima, agora visível com mais nitidez — um homem de vestes simples, apoiado em uma bengala, seus olhos serenos fixos no jogador. Ele para a poucos passos de distância, inclina levemente o corpo como quem examina com calma, e fala em tom baixo e grave. Ao fundo, a praça revela detalhes: pessoas caminhando vagarosamente, sons suaves da fonte, e o eco distante da cidade despertando.
+
+* '''Elvarin do Silêncio:'''
+<blockquote>
+Está ferido? Não... não por fora, ao menos.
+
+Mas há algo ausente em seu olhar. Memórias? Um propósito?
+
+Não tema. A Praça das Vozes acolhe os desorientados.
+</blockquote>
+
+* '''Transição para Diálogo:''' A partir deste ponto, inicia-se a interação padrão com o sistema de diálogos, iniciando o [[Diálogos:_Elvarin_do_Silêncio#Diálogo:_Quem_é_você?|Diálogo: Quem é você?]] do Elvarin.
+
+== Ilustrações das Cenas ==
+<gallery mode="packed" widths="250" heights="250">
+Arquivo:inicial_r1c1.png|Cena 1 (Marculino)
+Arquivo:inicial_r1c1_Mulher.png|Cena 1 (Feminino)
+Arquivo:inicial_r1c2.png|Cena 2
+</gallery>

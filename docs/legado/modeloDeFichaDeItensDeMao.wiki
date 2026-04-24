@@ -1,0 +1,20 @@
+Esta página define os campos obrigatórios comuns a todos os itens classificados como '''Itens de Mão'''. Esses campos devem sempre aparecer no topo de qualquer ficha de item de mão, independentemente do subtipo (Arma, Escudo, Foco Mágico, Relíquia, etc.).
+
+
+<pre>
+[[Arquivo:NomeDoItem.png|thumb|right|300px|Nome Do Item]]
+'''Atributos do Itens de Mão:'''
+* '''Nome:''' Nome completo do item. Ex: Espada Longa de Aethyr, Escudo de Carvalho, Grimório Rúnico do Norte
+* '''Subtipo de Item:''' Classificação funcional do item. Valores Válidos: Arma, Escudo, Foco Mágico, Relíquia, Lanterna, Ferramenta.
+* '''Mãos Necessárias:''' Número de mãos exigidas para empunhar o item. Usar números inteiros: 1 ou 2.
+* '''Requisitos de Uso:''' Condições mínimas para o personagem utilizar o item. Pode incluir classe, raça, nível, ou atributos específicos. Ex: Força 3, Classe: Clérigo
+* '''Categoria de Uso:''' Define a função primária do item. Usar uma das categorias padronizadas: Ataque, Defesa, Suporte, Iluminação, Manipulação, Interação Narrativa.
+* '''Peso (g):''' Peso total do item em gramas. Ex: 3200
+* '''Descrição Narrativa:''' Texto ambientado que explique o papel, a origem, a história ou o uso típico do item no mundo do jogo. Deve ter tom imersivo, evocativo e coerente com o cenário.
+* '''Descrição Visual:''' Descrição objetiva e detalhada da aparência do item. Deve incluir formato, materiais, detalhes físicos, texturas e cores. Este campo será utilizado para geração da imagem do item.
+</pre>
+
+
+= Observações Técnicas =
+* A ordem dos campos deve ser sempre respeitada.
+* A '''Descrição Visual''' deve ser escrita com precisão, evitando adjetivos vagos ou termos poéticos.

@@ -1,0 +1,135 @@
+O sistema de recuperação prevê como o jogador recupera seus '''Pontos de Vida (PV)''' e '''Fadiga'''.
+
+
+Existem algumas formas de recuperar esses atributos, aqui vamos tratar as formas como eles podem ser recuperados.
+
+
+= Recuperação por Descanso =
+O descanso pode ser ativado quando o jogador inicia efetivamente a ação de descansar, ou quando é "cosiderado" automaticamente ao iniciar tarefas de baixa movimentação física, como por exemplo quando ele está parado covnersando com um NPC, comendo, lendo, rezando, meditando, até mesmo cavalgando.
+
+
+'''Recuperação (por minuto):'''
+* '''Fadiga:''' <math>\text{Recuperação}_{Fadiga} = -(0{,}10% \text{ da Fadiga Máxima}) \times \text{Fator da Atividade}</math>
+** '''Fator da Atividade''' é definido pela atividade que gerou o descanso. Sendo que o valor máximo deve ser 1, representando o valor máximo absoluto de recuperação, enquanto que outras atividades podem ter um rendimento menor. Por exemplo, cavalgar pode ser considerado como descansar, mas não igual ao descanso de estar sentado em uma cadeira com encosto, assim Cavalgar pode ter um '''Fator da Atividade''' de '''0,5''' (representando que cavalga "só descansa metade do descanso padrão").
+**: Para efeitos de referência considera o fator 1 um descanso absoluto (não dormindo), como: ''Sentado com encosto à sobra em temperatura e umidade agradável''.
+
+
+* '''Fadiga Mínima''' e '''Pontos de Vida'''  não são recuperador durante o descanso. Ao contrário, o tempo de descanso continua consumindo a '''Fadiga Mínima'''.
+
+* '''Regras para Descansar'''
+:* Atividades consdideradas como descanso não incrementam a Fadiga, pelo contrário tem um Fator da Atividade [de Recuperação da Fadiga].
+:* Não há local específico, pode ser feito inclusiva em pé.
+:* Não há tempo mínimo.
+
+= Recuperação por Dormir =
+Dormir é uma atividade que o jogador escolhe realizar. É necessário um local para deitar (ou mesmo sentar) para que possa dormir. Dormir tem uma recuperação muito maior do que descansar, mas tem condições mais restritas, pois o jogador fica inconciente.
+
+'''Recuperação (por minuto):'''
+* '''Fadiga:''' <math>\text{Recuperação}_{Fadiga} = -0{,}21% \text{ da Fadiga Máxima} \times \text{Fator de Qualidade do Sono}</math>
+* '''Fadiga Mínima:''' <math>\text{Recuperação}_\text{Fadiga Mínima} = -0{,}21% \text{ da Fadiga Máxima} \times \text{Fator de Qualidade do Sono}</math>
+* '''Pontos de Vida:''' <math>\text{Recuperação}_{Pontos de Vida} = \frac{CON}{120} \times \text{Fator de Qualidade do Sono}</math>
+
+{{nota|
+1=O valor de 0,21% foi obtido considerando uma reuperação de 100% em 8h dormidas: 100 / (8 x 60) = 0,208333% por minuto.
+}}
+
+
+'''Regras para Dormir'''
+* É preciso te algum '''local para se sentar ou deitar'''.
+* É necessário no '''mínimo 1 hora ininterrupta''' para obter a recuperação de Dormir, caso contrário são consideradas as recuperações de '''Descanso'''.
+* Os modificadores que perdem efeito com dormir precisam de no mínimo 4 horas sem interrupção para serem removidos e o jogador ter mais de 90% dos Pontos de Vida.
+* Para completar cada hora de sono deve ser realizado o [[Testes de Jogo#Teste do Sono|Teste do Sono]].
+
+
+== Qualidade do Sono ==
+A qualidade do sono influencia a taxa de recuperação e a probabilidade do sono ser interrompido por algum evento, derrubando a eficiência da recuperação do jogador.
+
+São definidos os seguintes atributos:
+
+* '''C - Conforto da Acomodação:''' Valor entre 0 e 100. Definindo o conforto da acomodação em geral, sendo 100 a melhor acomodação possível e 0 um local impossível de dormir. Considere o conforto da cama, barulhos (que não sejam ruído branco), luzes (inclusive a do sol e lua), etc.. Quanto pior for o conforto, poir será a taxa de recuperação.
+:* Exemplos de Referência:
+::* Suíte de luxo em mansão nobre = 100
+::* Quarto privativo em pousada confortável = 85
+::* Pousada comum com cama simples = 70
+::* Abrigo com colchão firme no chão = 50
+::* Acampamento improvisado em zona calma = 40
+::* Saco de dormir sobre solo firme e iluminado = 30
+::* Dormindo encostado em árvore ao relento = 15
+::* Em pedras ou local hostil (raiz, rocha, molhado) = 5
+::* Impossível dormir (chuva direta, barulho alto, luz intensa) = 0
+
+
+* '''R - Risco de Hostilidade do Ambiente:''' Valor entre 0 e 100. Probabilidade base da ocorrência de uma hostilidade enquanto dorme (furto, ataque, sequestro, etc.), considerando exclusivamente o ambiente. Circunstâncias externas (vigias, feitiços, etc.) são tratadas separadamente no atributo '''S - Segurança'''. '''Este valor pode ser definido diretamente na ficha do Ambiente'''.
+:* Exemplos de Referência:
+::* Floresta Assombrada ou Caverna de Bandidos = 90
+::* Floresta Perigosa / Ruínas Abandonadas = 75
+::* Acampamento em estrada deserta = 60
+::* Vilarejo isolado com pouca patrulha = 45
+::* Praça pública em cidade grande = 30
+::* Albergue ou Pousada simples em cidade média = 20
+::* Pousada protegida com vigilância = 10
+::* Castelo fortificado / Santuário seguro = 0
+
+
+* '''S – Segurança (Modificadores de Segurança):''' Valor entre -50 e 100 e sempre menor que R. Representa o quanto a situação atual reduz os riscos de hostilidade ou distúrbios durante o descanso. Ao contrário do atributo '''R – Risco de Hostilidade''', que depende unicamente do local, '''S''' é influenciado por ações do jogador, itens, magias ou condições temporárias.
+:* Este valor será utilizado para diminuir diretamente a chance de um evento hostil ocorrer, sendo aplicado como redutor ao valor de '''R''' durante o cálculo da chance real de interrupção do descanso.
+:* Caso seja fornecido um valor negativo, ele se somará a '''R''' agravando a segurança do ambiente.
+:* Exemplos de Referência:
+::* Vigia de confiança acordado (jogador ou NPC) = +20
+::* Vigia distraído ou sonolento = 10
+::* Vigia mágico (encantamento de alerta) = 25
+::* Magia de proteção contra intrusos = 30
+::* Cão de guarda treinado = 15
+::* Grupo dormindo em formação circular defensiva = 10
+::* Portas trancadas com tranca simples = 5
+::* Portas reforçadas com proteção mágica = 20
+::* Itens rituais de proteção (amuleto, círculo mágico, etc.) = +10 a +25 (dependendo do item)
+
+
+{{nota|O cálculo do Risco final é calculado a partir da expressão '''(R-S)''', pois abate do Risco de Hostilidade do Ambiente os fatores de Segurança providos. A intenção de ter os dois argumentos é justamente manter um R fixo no cadastro do ambiente e um S para definição de segurança das circunstâncias, sendo que se negativo atua como um agravante ddo Risco e não um atenuador.
+
+Ao afirmar que S deve ser sempre menor que R é evitar que a expressão '''(R-S)''' resulte negativa. Além dos criadores do jogo se preocuparem com essas definições, é importante que esse fator não seja negativo, pois indicaria que a segurança conseguiu mitigar mais que 100% do risco do ambiente.}}
+
+
+A partir desses parâmetros calculamos:
+
+
+=== Fator de Qualidade do Sono ===
+Esse fator define o aproveitamenteo da recuperação com o sono do jogador de acordo com suas acomodações e preocupações com a segurança (relaxamento ou tensão causada com a preocupação do risco).
+'''Seu valor final estar sempre entre 1 (Recuperação completa) e 0,5 (Recuperação mínima em 50% do estipulado).'''
+
+* Como os atributos são considerados entre 0 e 100, a fórmula normaliza para que o resultado seja retornado entre 1 e 0,5.
+
+'''Fórmula:'''
+<math>\text{Fator de Qualidade do Sono} = 0{,}5 + \frac{3 \times C + (100 - Max(0;R - S))}{800}</math>
+
+
+=== Interrupção do Sono ===
+Durante a ação de '''Dormir''', o jogador realiza uma série de [[Testes de Jogo#Teste de Sono|Teste de Sono]] para verificar se conseguirá dormir a noite inteira sem interrupções.
+
+Ao começar a dormir já é realizado um [[Testes de Jogo#Teste de Sono|Teste de Sono]], e:
+* Se passar no teste:
+:* Contabiliza 1h de sono e recupera a pontuação de recuperação definida.
+:* Se as condições de remover os modificadores já estiverem atendidas, eles devem ser removidos.
+:* Segue para um novo teste para a próxima hora.
+* Se falhar no teste:
+:* O jogador acorda e entra no evento que o fez acordar.
+:* Rolamos 1d60 para saber em que minuto dessa hora o evento de interrupção começa, e o relógio é avançado nesse tempo.
+::* Se for era a primeira hora de sono, só será concedido a recuperação do tempo passado como um '''Descanso'''
+::* Se já havia ao menos 1h de sono completada com sucesso (passado em um teste anterior), é concedido a recuperação dos minutos dormidos até o momento do evento.
+
+= Recuperação por Itens e Ações =
+
+A recuperação de '''Fadiga''', '''Pontos de Vida''', '''Sede''', '''Fome''' são possíveis através de itens específicos que permitem a recuperação desses atributos.
+
+'''Fadiga Mínima''' não é recuperável por item, o jogador obrigatoriamente terá que dormir para recuperá-la. No entanto, é permitido itens que que dêem um boost temporário na '''Fadiga Mínima''', algo como um energético, que durante X tempo abaixe a '''Fadiga Mínima''' em X por cento, mas, acabado seu tempo, ela volta, e que durante o período ela pare de incrementar (evitando que ao passar o efeito o jogador caia imediatamente em desmaio). 
+
+
+= Banho Termal =
+* Pode existir em locais específicos, ou casas de banhos nas cidades mais nobres.
+* Efeito: -15% Fadiga, +5 Moral
+
+
+= Eventos Narrativos =
+* NPCs salvadores, artefatos mágicos, bênçãos
+* Podem restaurar completamente o personagem em momentos de enredo

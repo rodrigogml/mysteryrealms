@@ -1,0 +1,173 @@
+= Controle do Tempo =
+
+A '''PlayTale Engine''' utiliza um sistema padronizado de controle temporal baseado em unidades absolutas de tempo, medido em '''minutos inteiros'''. Internamente, o tempo é representado como um contador crescente que inicia em '''0''' no momento em que o jogador começa sua jornada.
+
+Esse sistema serve como base para o funcionamento de eventos temporais, ciclos naturais, variações ambientais, efeitos biológicos, e a sincronização de ações e comportamentos do mundo.
+
+== Unidade de Tempo ==
+
+* '''Unidade base:''' 1 minuto (inteiro)
+* '''Tempo inicial:''' 0 minutos (momento em que o mundo é iniciado)
+
+Toda conversão para formatos legíveis (como ano, dia, hora e minuto) deve ser feita a partir desse valor absoluto, utilizando os parâmetros definidos pelo mundo específico.
+
+== Definição Temporal por Mundo ==
+
+Cada '''Mundo''' definido na engine deve obrigatoriamente declarar os seguintes parâmetros para seu funcionamento temporal:
+
+* '''Minutos por Hora''' – Quantos minutos compõem uma hora no mundo.
+* '''Horas por Dia''' – Quantas horas existem por dia.
+* '''Dias por Ano''' – Quantos dias existem em um ano completo.
+* '''Fases do Dia''' – Os hosários em que cada fase do dia começa ou termina. Mundos podem ter dias ou noite mais compridos. No futuro esse atributo pode ter sobreposição em escopos menores de Lugares, garantindo diferenças dentro do mesmo mundo. As fases do dia são utilizadas para controlar visibilidade, encontros, spawn de criaturas e funcionamento de locais. A lista de Fases do dia são: '''Amanhecer''', '''Dia''', '''Anoitecer''', '''Noite'''.
+* '''Estações do Ano''' – Número de estações e a duração de cada uma (em dias ou intervalo de datas).
+* '''Ciclos Lunares (opcional)''' – Parâmetros que definem a existência e comportamento de ciclos lunares, incluindo duração, fases e efeitos associados.
+
+Essas informações permitem converter a contagem absoluta de minutos em um formato como:
+<pre>Ano X, Dia Y, HH:MM</pre>
+
+== Exemplo de Mundo Padrão ==
+
+'''Parâmetros de Tempo''':
+* 60 minutos por hora
+* 24 horas por dia
+* 365 dias por ano (sem anos bissextos)
+
+'''Estações do Ano:'''
+O ano dividido em quatro estações:
+{| class="wikitable"
+! Estação !! Dias !! Início
+|-
+| Verão || 1–91 || Ano X, Dia 1
+|-
+| Outono || 92–182 || Ano X, Dia 92
+|-
+| Inverno || 183–273 || Ano X, Dia 183
+|-
+| Primavera || 274–365 || Ano X, Dia 274
+|}
+
+'''Fases do Dia:'''
+O dia fica dividido em quatro fases principais:
+{| class="wikitable"
+! Fase do Dia !! Horário
+|-
+| Amanhecer || 05:00 – 07:59
+|-
+| Dia || 08:00 – 17:59
+|-
+| Anoitecer || 18:00 – 19:59
+|-
+| Noite || 20:00 – 04:59
+|}
+
+
+'''Fases da Lua:'''
+A lua segue um ciclo de '''28 dias''', com quatro fases principais. Cada fase dura 7 dias:
+{| class="wikitable"
+! Fase da Lua !! Dias do Ciclo
+|-
+| Nova || 1–7
+|-
+| Crescente || 8–14
+|-
+| Cheia || 15–21
+|-
+| Minguante || 22–28
+|}
+O ciclo reinicia a cada 28 dias, retornando à Lua Nova no Dia 29. Diversas magias e rituais têm efeitos influenciados pela fase atual da lua.
+
+
+'''Exemplo de Contagem:'''
+* Converte o minuto 0 em:
+:* '''Ano:''' 0
+:* '''Dia:''' 1
+:* '''Hora:''' 00:00
+
+* E o minuto 1500 em:
+:* '''Ano:''' 0
+:* '''Dia:''' 2
+:* '''Hora:''' 01:00
+
+
+Essa estrutura permite compatibilidade com mundos diversos, desde realistas até fantásticos ou futuristas, cada um com seu próprio ritmo temporal e lógica sazonal.
+
+
+{{nota|A contagem interna por minutos garante precisão, simplicidade matemática e flexibilidade de ambientação, tornando a PlayTale Engine aplicável a qualquer universo narrativo.}}
+
+
+
+
+= Aspectos Controlados pelo Tempo =
+
+A '''PlayTale Engine''' permite que cada mundo associe eventos, condições e comportamentos diretamente à passagem do tempo. Esses aspectos podem ser configurados para reagir a ciclos naturais (dia/noite, estações, fases lunares) ou a valores absolutos de tempo.
+
+A seguir estão os principais elementos que podem ser controlados temporalmente:
+
+== Clima Dinâmico ==
+Cada estação ou fase do dia pode alterar as condições climáticas predominantes de uma região. Mundos podem definir tabelas de clima por estação ou zona, influenciando:
+* Visibilidade
+* Temperatura (afetando conforto e fadiga)
+* Probabilidade de encontros aleatórios
+* Dificuldade de movimentação
+
+== Ciclo de Plantas e Colheitas ==
+Recursos naturais (ervas, cogumelos, frutas, etc.) podem ter ciclos de aparecimento definidos por:
+* Estação do ano
+* Fase da lua (em mundos que possuam lua)
+* Tempo absoluto (ex: X dias após o início do jogo)
+
+== Eventos Temporais ==
+É possível agendar eventos específicos que ocorrem em datas ou ciclos definidos:
+* Festivais e celebrações
+* Eclipses ou fenômenos celestes
+* Períodos de invasões, surtos ou migrações
+* Missões sazonais ou temporárias
+
+== Migração de Criaturas e NPCs ==
+NPCs e monstros podem ter comportamento vinculado ao tempo:
+* Aparecem apenas em certas estações
+* Movimentam-se entre regiões em datas específicas
+* Mudam de rotina ou disponibilidade de acordo com o ciclo do dia
+
+== Ritmos Biológicos ==
+Personagens e criaturas podem ter respostas baseadas no tempo:
+* Penalidades leves ao contrariar o ciclo natural (ex: ficar ativo à noite)
+* Habilidades que variam de efeito conforme o horário ou fase lunar
+* Efeitos mágicos ou biológicos ajustados a calendários (ex: regeneração aumentada na lua cheia)
+
+{{nota|Essas conexões entre tempo e mundo permitem criar universos vivos, com dinâmicas que evoluem ao longo dos dias e reagem à passagem natural do tempo. Cada mundo deve configurar esses elementos de forma coerente com sua narrativa e ambientação.}}
+
+= Passagem do Tempo =
+
+Na '''PlayTale Engine''', o tempo avança exclusivamente com base nas '''ações do jogador''' ou por eventos narrativos disparados. Não existe passagem automática de tempo em segundo plano — cada minuto só avança quando algo é feito ou acontece. Em outras palavras, o jogo acontece em turnos de ações o tempo todo.
+
+== Avanço de Tempo por Ação ==
+Cada ação executada pelo jogador (como caminhar, lutar, descansar, conversar, etc.) deve ter um '''tempo de duração definido (em minutos)'''. Esse valor é somado ao contador interno de tempo absoluto, atualizando a posição temporal do mundo.
+
+Para ações típicas, veja [[Ações_do_Jogador|Ações do Jogador]].
+
+== Eventos Narrativos Temporais ==
+Narrativas, cutscenes ou deslocamentos rápidos podem consumir blocos de tempo maiores. Nestes casos, o tempo também avança explicitamente conforme definido no evento.
+
+== Variações Temporais Especiais ==
+Mundos podem definir regras específicas que afetam o tempo:
+* Regiões onde o tempo flui de forma diferente (mais rápido/lento)
+* Magias ou efeitos que alteram ou congelam o tempo local
+* Saltos temporais como viagens no tempo, sonhos ou lapsos mágicos
+
+== Sincronização de Estados ==
+A passagem do tempo afeta diretamente:
+* Aumento da [[Fadiga,_Fome_e_Sede#Fadiga_Mínima|Fadiga Mínima]]
+* Acúmulo de [[Fadiga,_Fome_e_Sede#Sede|Sede]]
+* Reposição de cooldowns e recarga de habilidades
+* Avanço de ciclos naturais (dia/noite, estações, lua)
+* Ocorrência ou expiração de eventos programados
+
+== Tempo Inicial ==
+Cada mundo define seu ponto inicial:
+* Ano, Dia, Hora
+* Estação e fase lunar (se aplicável)
+
+O valor inicial do contador de minutos absolutos será sempre 0, e a engine cuidará da conversão para a data e hora definidas.
+
+{{nota|O sistema de tempo da engine oferece controle preciso e narrativamente útil, permitindo que a progressão do mundo seja sempre coerente com as ações do jogador e os ritmos naturais configurados pelo mundo.}}

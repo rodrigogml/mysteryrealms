@@ -1,0 +1,196 @@
+= Ficha do Jogador =
+
+== Identidade ==
+Atributos de identificação do jogador:
+* '''Nome:''' Nome escolhido pelo jogador
+* '''Sobrenome:''' Pode ser escolhido ou atribuído (ex: nome de clã, família ou origem cultural)
+* '''Gênero:''' Define o gênero do personagem entre Masculino, Feminino e Outros.
+* '''Raça:''' Define aparência, bônus iniciais e interações sociais
+* '''Classe:''' Define a classe do jogador
+* '''Idade Inicial:''' Pode influenciar resistência, conhecimento ou reações sociais"
+
+
+== Atributos Principais ==
+Os '''atributos principais''' representam os fundamentos da capacidade física, mental e social do personagem. Eles definem o potencial bruto do jogador em diferentes aspectos e influenciam diretamente as habilidades especializadas.
+
+Esses atributos são definidos automaticamente com base na '''Raça''' e '''Classe''' escolhidas durante a criação do personagem. Eles não podem ser distribuídos livremente, mas evoluem conforme o personagem sobe de nível.
+
+Os atributos principais são:
+* '''Força:''' Mede a potência física do personagem. Define sua capacidade de levantar peso, causar dano corporal, empurrar objetos, e carregar mais equipamentos. Influencia testes de combate corpo a corpo e resistência física bruta.
+* '''Destreza:''' Representa agilidade, reflexos e precisão motora. Afeta furtividade, esquiva, uso de armas leves, travessia de terrenos difíceis e ações que exigem coordenação refinada.
+* '''Constituição:''' Avalia a resistência física e robustez. Determina a quantidade de pontos de vida, resistência à fadiga, doenças, venenos, fome e sede.
+* '''Intelecto:''' Reflete raciocínio lógico, memória e conhecimento. É essencial para interpretar runas, resolver enigmas, realizar alquimia e manipular tecnologias antigas.
+* '''Percepção:''' Capacidade de observar e detectar o ambiente. Influencia a detecção de armadilhas, ouvir sons distantes, perceber mentiras e reconhecer ameaças ocultas.
+* '''Carisma:''' Mede o magnetismo pessoal e empatia. Utilizado em interações sociais, como persuadir, enganar, liderar, inspirar ou negociar.
+* '''Vontade:''' Representa disciplina, estabilidade emocional e foco mental. Afeta resistência contra efeitos mentais, medo, possessões e controla o fluxo de energia mágica.
+
+
+== Habilidades ==
+
+As '''habilidades''' refletem a perícia prática do personagem em ações específicas. Elas são derivadas dos atributos principais, mas evoluem com o uso direto, prática constante e condições externas.
+
+A pontuação final de uma habilidade é composta por:
+* '''Atributo Principal Associado:''' Cada habilidade é ligada a um atributo principal que serve de base para seus testes. Exemplo: '''Persuasão [Carisma]''' usa o valor de '''Carisma''' como base.
+* '''Experiência Direta (Prática):''' A utilização frequente de uma habilidade pode melhorar sua eficácia com o tempo, representando prática e domínio crescente.  Essa evolução é melhor explicada na página [[Página sobre a progressão do jogo]].
+* '''Bônus e Modificadores:''' Itens, magias, condições ambientais e estados emocionais podem conceder bônus ou penalidades temporárias à habilidade.
+
+
+Sempre que uma habilidade existir para representar uma ação, ela deve ser usada em vez do teste direto do atributo principal. Caso não haja habilidade apropriada, realiza-se um teste baseado diretamente no atributo.
+
+As habilidades disponíveis no jogo são:
+* '''Persuasão [Carisma]:''' Usada para convencer NPCs, melhorar acordos, acalmar situações e gerar empatia.
+* '''Intimidação [Carisma]:''' Impõe respeito ou medo, força obediência ou dissuade ações hostis.
+* '''Enganação [Carisma]:''' Manipula percepções, mente, forja informações ou dissimula intenções.
+* '''Conhecimento (Arcano, História, Relíquias) [Intelecto]:''' Utilizada para leitura e interpretação de grimórios, artefatos, inscrições antigas ou eventos históricos.
+* '''Herbalismo / Alquimia [Intelecto]:''' Produção e aplicação de poções, venenos, bálsamos e compostos químicos ou naturais.
+* '''Furtividade [Destreza]:''' Permite deslocamento silencioso, dissimulação, furtos e fugas sem ser detectado.
+* '''Sobrevivência [Percepção]:''' Abrange caça, rastreamento, orientação geográfica, preparo de acampamentos e avaliação de riscos naturais.
+* '''Manuseio de Armas [Força ou Destreza]:''' Representa o domínio com diferentes tipos de armas, podendo variar conforme o estilo (pesadas usam Força, leves usam Destreza).
+* '''Uso de Magia [Vontade ou Intelecto]:''' Determina a capacidade de canalizar, controlar e conjurar magias. O atributo associado varia conforme a origem mágica (ex: Vontade para fé, Intelecto para magia arcana).
+
+== Estado ==
+Informações que salvam o estado atual do jogador.
+* '''XP Acumulado:''' Total de XP que o jogador já acumulou.
+* '''Pontos de Vida:''' Pontos de Vida.
+* '''Fadiga:''' Pontos de Fadiga do Jogador. A fadiga é incrementada a cada atividade executada pelo jogador. Algumas atividades, consideradas tipos de '''Descanso''' podem restaurar a Fadiga ao invés de incrementá-la. Esse atirbuto deve sempre estar acima de '''Fadiga Mínima''', e ser observado em relação aos valores de '''Fadiga Máxima''' para estado de exaustão e desmaio.
+* '''Moral:''' Pontos de Moral do Jogador, conforme definido em [[Moral]]. Valores de 0 a 100.
+
+
+== Inventário e Recursos ==
+* '''Moedas:''' Valor monetário disponível, contado apenas por moedas, sem nome ou tipo.
+* '''Itens Equipados:''' Armas, armaduras, acessórios mágicos. (Ainda a ser trabalhado)
+* '''Itens na Mochila:''' Comida, ferramentas, livros, chaves, relíquias
+* '''Montaria:''' Sim/Não — caso sim, define capacidade adicional de carga e transporte
+
+
+== Ficha Técnica ==
+A '''Ficha Técnica''' do jogador é a ficha com os atributos e dados finais do jogador que são utilizados durante o jogo. Esses atributos são calculados com base nos '''Atributos Principais''' e '''Habilidades Secundárias''' do jogador, mas podem sofrer influência de itens, equipamentos, ambiente (hora, clima, visibilidade), entre outros. São calculados dinâmicamente durante o jogo, conforme definições a seguir:
+
+
+=== Atributos de Carga ===
+==== Capacidade de Carga Máxima Jogador (Kg) ====
+* '''Definição:''' Peso total máximo que o jogador pode carregar sem penalidades em Kg.
+* '''Formula:'''
+<math> \text{Capacidade de Carga Máxima (kg)} = \text{Força} \times 10 </math>
+
+
+* '''Exemplo:''' Um personagem com Força 5 pode carregar até 50kg sem penalidades.
+
+
+==== Capacidade de Carga Máxima da Montaria (Kg) ====
+* '''Definição:''' Peso total máximo que a montaria (se houver) do jogador pode carregar sem penalidades em Kg. Se não houver montaria retorna 0.
+* '''Fórmula:'''
+*: Essa informação vêm da montaria que o jogador possui.
+
+
+==== Capacidade de Carga Atual (Kg) ====
+* '''Definição:''' Retorna a capacidade de carga que o jogador tem atualmente, considerando todos os modificadores.
+*: '''''Para a definição correta o cálculo desse atributo pode mudar a medida que novos modificadores sejam criados evolui.'''''
+* '''Fórmula:'''
+** Se montado a Capacidade de carga é apenas a da montaria, descontado o peso do jogador:
+<math>\text{Capacidade de Carga Atual} = (\text{Carga Máxima Montaria} - \text{Peso do Jogador}) + \text{Modificadores que incidem sobre a montaria}</math>
+** Se não montado, a Capacidade de carga do jogador e da montaria agem em conjunto:
+<math>\text{Capacidade de Carga Atual} = (\text{Carga Máxima Jogador} + \text{Carga Máxima Montaria}) + \text{Modificadores}</math>
+
+
+'''Penalidades a serem Consideradas:'''
+* Fadiga / Cansaço
+* Efeitos Mágicos e Entorpecentes
+
+
+==== Carga Crítica Atual (Kg) ====
+* '''Definição:''' Indica qual o limite de carga crítica do jogador em Kg.
+*: Quando o jogador está carregando entre a [[#Capacidade de Carga Atual (Kg)]] e a [[#Carga Crítica Atual (Kg)]] o personagem está com '''Sobrecarga''', mas ainda pode se mover, mas com penalidades (veja mais em [[Sobrecarga]]).
+*: Quando o personagem está carrendo acima da [[#Carga Crítica Atual (Kg)]], o personagem está com Carga Crícita e não poderá se mover até se livrar do sobrepeso.
+*'''Fórmula:'''
+<math> \text{Carga Crítica Atual (Kg)} = \text{Capacidade de Carga Atual (Kg)} \times 1{,}5 </math>
+
+* '''Exemplo:''' Se a capacidade máxima é 50kg, o personagem pode carregar até 75kg em sobrecarga, mas sofre as penalidades de sobrecarga.
+
+
+==== Carga Atual (Kg) ====
+* '''Definição:''' Somatório de todos os itens que estão com o jogador em Kg
+*: O jogo não separa "o que está na montaria" e "o que está com o jogador", o peso da carga é somado junto, assim como a capacidade de carga de jogador e montaria.
+*: Absolutamente tudo que é carregado é somado. Alguns itens podem ser tão leves que tenham um peso risório mas devem sempre ter um peso atribuído. Qualquer coisa em grande quantidade pode representar muito peso.
+* '''Formula:''' Composta do somatório do peso de:
+** itens equipados (armas, escudos, amuletos, cintos, etc);
+** itens no inventário;
+** moedas (conforme definido em [[Economia]]);
+
+=== Peso (Kg) ===
+* '''Definição: ''' Indica o peso do jogador em Kg.
+*: O peso do jogador é calculado de forma automatica considerando sua Raça e Genero (Veja em [[Raças#Tabela_de_Pesos_por_Gênero|Tabela de Pesos por Gênero]]), e ajusta seu peso de acordo com a pontuação de constituição.
+* '''Formula:'''
+<math>\text{Peso (Kg)} = \text{Peso Base (Kg)} \times (1 + ((CON - 3) \times 0,05))</math>
+
+
+=== Pontos de Vida Máximo ===
+* '''Definição:''' Quantidade máxima de pontos de vida que o personagem pode ter. Os pontos de vida são unitários e consumidos de acordo com os danos recebidos ou outras situações, como '''Fadiga'''.
+* '''Fórmula:'''
+<math>\text{Pontos de Vida} = (CON \times 10)</math>
+
+
+=== Fadiga Máxima ===
+* '''Definição:''' Pontos de Fadiga máxima até que o jogador pode ter até entrar em '''Exaustão'''. Medida em pontos conforme definido em [[Fadiga, Fome e Sede#Fadiga Máxima|Fadiga Máxima]].
+
+=== Fadiga Mínima ===
+* '''Definição:''' Valor mínimo de Fadiga que não pode ser reduzido por '''Descanso'''. Medido em percentual da '''Fadiga Máxima''' (Começa em 0 e incrementa até o jogador dormir ou desmaiar para se recuperar).
+
+Segue a definição e cálculo definidos em [[Fadiga, Fome e Sede#Fadiga Mínima|Fadiga Mínima]].
+
+=== Exaustão ===
+* '''Definição:''' Define a pontução máxima de Fadiga antes que o jogador desmais e exaustão. Sempre ser maior que a '''Fadiga Máxima''', calculado conforme definido em [[Fadiga, Fome e Sede#Exaustão|Exaustão]].
+
+=== Precisão ===
+* '''Definição: ''' Define a precisão do ataque do jogador. Esse valor é testado contra a defesa do alvo para validar se o ataque acerta o alvo.
+* '''Fórmula:'''
+<math>\text{Precisão} = 1d20 + \text{Destreza} + \text{Bônus de Precisão da Arma} + \text{Modificadores}</math>
+
+
+=== Dano Base ===
+* '''Definição:''' Retorna o dano base do jogador, simplesmente calculado por: '''Dano da Arma''', '''Atributo de Uso da Arma''' e '''Bônus de Dano de Raça/Classe''' (oferecido para o tipo da arma).
+* '''Fórmula:'''
+<math>\text{Dano Base} = \text{Dado da Arma} + \text{Modificador de Atributo} + \text{Bônus de Raça/Classe}</math>
+
+
+Outros atributos e modificadores são calculados no atributo '''Dano Atual'''.
+
+=== Dano ===
+* '''Definição:''' Considera o '''Dano Base''' e aplica todos os modificadores existentes, como penalidades por '''Fadiga''', '''Aflições''', etc..
+** Este é o valor de dano que é utilizado para calcular o ano nos testes de batalha.
+** Não considera multiplicadores de acerto críticos e outros modificadores relacionados ao evento/batalha, apenas os modificadores presentes na Ficha do Jogador.
+* '''Formula:'''
+<math>\text{Dano} = \text{Dano Base} + ?</math>
+
+=== Defesa ===
+* '''Definição:'''
+* '''Formula:'''
+** Soma Destreza (considerando a habilidade de se esquivar do ataque);
+** Soma todos o pontos de defesa fornecido por armaduras, elmo, luvas, etc.;
+** Aplica os modificadores ativos (poções, magias, etc.) da ficha do jogador;
+
+
+=== Bloqueio ===
+* '''Definição:''' O bloqueio é a pontuação que o jogador tem para mitigar o dano sofrido por um ataque certeiro.
+** O bloqueio é medido em pontos e é utilizado para subtrair dos pontos de dano do agressor.
+* '''Formula:'''
+** O resultado da somatória dos bonus de bloqueio de todos os itens vestidos, como escudos, elmos, luvas;
+** Mais modificadores que dêem incremento de bloqueio.
+
+== Relacionamentos e Reputação ==
+
+A medida e a maneira que o jogador escolhe interagir com os NPCs do jogo, ele melhora ou piora seu relacionamento com eles. Quanto melhor o relacionamento, mais facilmente o jogador ganha a colaboração do personagem. No entanto, alguns personagens podem não ser muito 'sucetíveis a amizade', e o caminho mais rápido (as vezes único) pode ser uma interação negativa com o NPC. As escolhas vão influenciando toda a vida do jogador, não apenas para um Quest. O relacionamento internamente é calculado em pontos indo de -100 a 100. Sendo a Escala final:
+* '''Inimigo Mortal:''' -100 a -90 - Você ganha um inimigo. Uma vez nesta escala, nunca mais o jogador será capaz de mudar o relacionamento.
+* '''Hostil:''' -90 a -60 - O NPC terá pouca vontade em te ajudar, testes mais difíceis e pouca colaboração além de mentiras e enganação.
+* '''Neutra:''' -60 a 60 (120pts) - Comum entre a maioria dos relacionamentos, há o tratamento normal como qualquer desconhecidos, influenciado apenas pela personalidade do NPC.
+* '''Favorável:''' 60 a 90 - Você tem o respeito do NPC, facilitando negociações, obtenção de informações entre outros favores.
+* '''Aliado:''' 90 a 100 - Você tem o mais profundo respeito do NPC, neste relacioanmento o jogador e o NPC tem uma confiança mútua similar de uma amizade antiga. Mas tudo pode azedar facilmente com uma traição, uma ação inesperada ou negação de favores e solicitações do NPC.
+
+
+A '''Reputação de um Jogador''' é o nome (fama) que ele cria em uma determinada localidade do jogo (Por exemplo cidade ou região) a partir do resultado do seu relacionamento com os NPCs da localidade. Ele pode, por exemplo, ser bem quisto em uma região e inimigo de outra. A reputação influencia nos NPC, quests e outras opções que são exibidas ao jogador. Lembrando que não ter uma boa reputação não é necessariamente ruim no jogo, apenas muda o caminho e as oportunidades do jogo.
+
+
+A '''Reputação com Grupos (Ordens/Tribos/Etc.)''' tem o mesmo efeito das explicadas acima, facilitando ou dificultando o relacionamento com ela.
+
+
+Em geral o bom relacionamento trás recompensas narrativas, desbloqueio de informações e benefícios práticos surgem com níveis mais altos de afinidade.

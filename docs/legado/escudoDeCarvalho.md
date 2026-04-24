@@ -1,0 +1,22 @@
+![Escudo de Carvalho](images/EscudoDeCarvalho.png)
+
+**Atributos do Item de Mão:**
+- **Nome:** Escudo de Carvalho
+- **Subtipo de Item:** Escudo
+- **Mãos Necessárias:** 1
+- **Requisitos de Uso:** Força 3 ou Classe: Guerreiro, Clérigo
+- **Categoria de Uso:** Defesa
+- **Peso (g):** 5000
+- **Descrição Narrativa:** Comum entre sentinelas e milicianos de vilas fronteiriças, este escudo simples sobreviveu a décadas de escaramuças e invasões. Sua madeira enegrecida já conteve lanças, garras e até flechas encantadas. Embora rudimentar, transmite uma sensação de segurança ancestral, como se as batalhas do passado ainda ecoassem por suas fibras.
+- **Descrição Visual:** Escudo redondo de madeira escurecida, com rebites de ferro escuro reforçando toda a borda. No centro, um brasão rústico gravado à faca representa um carvalho estilizado. A empunhadura interna é feita com couro cru bem ajustado, com tiras cruzadas para estabilização no braço.
+
+**Atributos Específicos do Subtipo Escudo:**
+- **Qualidade:** Comum
+- **Valor de Bloqueio:** +2
+- **Cobertura:** Parcial (torso e braços)
+- **Penalidade de Destreza:** -1 para usuários sem proficiência
+- **Bônus Adicional:** +1 de resistência contra projéteis físicos
+- **Interações Especiais:** Pode ser usado para empurrar inimigos (teste de Força contra Dificuldade 12, uma vez por rodada)
+- **Classes e Raças com Bônus:**
+:* **Classes:** Guerreiro (+1 Bloqueio), Clérigo (+1 resistência contra magia profana)
+:* **Raças:** Anão (+1 resistência ao impacto)

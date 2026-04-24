@@ -1,0 +1,444 @@
+'''Mystery Realms''' é um jogo de RPG focado em investigação, diálogos e batalhas, ambientado em um mundo fictício e místico de época medieval.
+
+O projeto é dividido em duas partes principais:
+
+* '''[[#PlayTale Engine|PlayTale Engine]]''' – A engine do sistema. Aqui estão concentradas as regras, cálculos e estruturas que regem o funcionamento de qualquer jogo de RPG. Essa engine é pensada para ser reutilizável e modular, servindo tanto para o mundo de ''Mystery Realms'' quanto para outros jogos de estilos diferentes, como um RPG cyberpunk futurista ou uma aventura espacial. Nesta seção, documentamos o funcionamento da engine, suas regras fundamentais e como ela pode ser aplicada a diferentes mundos e gêneros.
+
+* '''[[#Mystery Realms|Mystery Realms]]''' – A aplicação da engine no universo específico deste jogo. Aqui definimos o cenário, personagens, facções, regiões e enredos, utilizando todas as mecânicas fornecidas pela [[#PlayTale_Engine|PlayTale Engine]].
+
+
+= PlayTale Engine =
+Aqui tratamos do funcionamento do jogo, como as partes do jogo se encaixam e interagem entre si. Fórmulas e regras são registradas aqui. Em outras palavras as engrenagens do jogo, que seriam comuns, por exemplo, para o funcionamento de outro universo e jogo.
+
+
+{{nota|Itens marcados com '!' precisam de uma revisão desde que o '''PlayTale''' foi destacado do '''Mystery Realms'''.}}
+
+
+# '''Definições Gerais''' - Sessão dedicada as definições gerais da '''Mecânica do PlayTale''', que explica os cálculos e funcionamento geral do sistema, independente do tipo de jogo criado.
+## '''[[Estrutura Temporal]]''' - Definição de controle do tempo, estações do ano, calendário lunar, eventos sazonais, e muito mais.
+## '''[[Estrutura de Localização]]''' - A estrutura de localização define como os "lugares" do jogo são organizados e suas funções estratégicas.
+### '''[[Mapa e Movimentação]]''' - Conceitos sobre o mapa e especificações sobre a movimentação do jogador.
+## '''[[Economia]]''' - Definição e controle do sistema monetário do jogo.
+## '''[[Raças e Classes]]''' - Conceitos sobre definições de Raças e Classes do mundo. Ideiase para diferentes jogos.
+## '''[[Danos e Aflições]]''' - Definição e explicação dos '''tipos de dano''' e dos '''tipos de aflição''' que suportados pela engine.
+## '''[[Defesa e Bloqueio]]''' - Explicações da diferença entre 'Defesa do Ataque' e 'Bloqueio do Dano', entre outras definições relacionadas.
+## '''[[Tipos de Resistências]]''' - Explicações sobre os diferentes tipos de Resistências (Física, Elementais, Mágicas, Aflições, Mentais e Espirituais).
+## '''[[Moral]]''' - Definição sobre o estado mental do jogador.
+## '''[[Acampamentos]]''' - Definições e conceitos sobre o funcionamento dos acampamentos.
+## '''Itens''' - Chamamos de Itens todos os objetos do jogo, como a classe principal da hierarquia. São Itens: Elmos, Escudos, Botas, Comida, Ferramentas, Armas, Objetos, Runas e muito mais. Em geral qualquer objeto é referido aqui na documentação como 'Itens' de modo genérico. Ainda que os Itens sejam subdividos mas categorias abaixo para organizar o funcionamento pela engine.
+### '''[[Itens de Mão]]''' - Itens de mão são todos os objetos que podem ser empunhados, carregados ou utilizados diretamente pelas mãos do personagem, seja em combate, exploração, interação social ou mágica. Esta categoria inclui armas, escudos, ferramentas, instrumentos e outros objetos funcionais, permitindo flexibilidade total de combinação e uso conforme o contexto de jogo.
+#### '''[[Tipos de Armas]]''' - Para os itens de mão da categoria 'arma', permite que o jogo agrupe as armas em tipos, como Arcos, Bestas, Espadas, Maças, etc., facilitando um controle de definições pelo tipo de arma, ao invés apenas de cada arma individualmente.
+# '''Controle do Jogador''' - Definições dos controles do jogador.
+## '''[[Modificadores]]''' - Explicação sobre os modificadores que podem ser aplicados ao jogo para alterar as condições padrão do jogo de forma temporária.
+## '''[[Fadiga, Fome e Sede]]''' - Conceito e funcionamento sobre a Fadiga, Fome e Sede.
+## '''[[Recuperação]]''' - Explicação dos diferentes tipos de descansos e recuperação possíveis do personagem.
+## '''[[Morte e Desmaios]]''' - Definições sobre morte e desmaio do jogador.
+## !'''[[Ações do Jogador]]''' - Definição dos detalhes das ações que podem ser tomadas pelo jogador.
+# '''Controle do Progresso do Jogo''' - Definições relacionadas ao controle de progressão do jogo.
+## '''[[Sistema de Marcadores]]''' - Explicação do que é e como funciona o sistema de marcadores/marcos/''milestones'' no controle do progresso do jogo.
+## '''[[Testes de Jogo]]''' - Documentação dos diferentes tipos de testes realizados durante o jogo, que determinam o sucesso ou insucesso do jogador em suas ações (ou mesmo de eventos e acontecimentos do jogo).
+## '''[[Ficha do Jogador]]''' - Nesta página é abordada a ficha do jogador, explicados seus atributos, seu matemática, e todo o controle das informações do jogador.
+# '''Fluxo Narrativo''' - Funcionamento do controle de fluxo narrativo e suas ramificações.
+## '''[[Diário do Jogador]]''' - Fundamentos e sugestão do Diário do Jogador.
+## '''Interação com NPCs''' - Bloco com as definições da mecânica das interações e relacionamento entre o jogador e os NPCs.
+### '''[[Estilos de Fala e Valoração]]''' - Os '''Estilos de Fala''' definem o tom, abordagem e linguagem utilizados pelo jogador ao interagir com NPCs, assim como os estilos preferenciais e tolerados por cada NPC. Eles servem como base para o sistema de '''Tolerância de Personalidade''', afetando diretamente as chances de sucesso de uma fala, bem como sua influência no relacionamento com o NPC.
+### '''[[Estrutura de Diálogo]]''' - Definições de como criar, organizar e documentar os fluxos de diálogo.
+# '''Modelos de Fichas''' - Sessão com os modelos de fichas para criação e controle de diversos elementos do Jogo.
+## '''[[Modelo de Ficha de NPC]]''' - Modelo de ficha para NPC define as informações que precisam ser definidas para cada NPC para um boa imersão de personalização do NPC.
+## '''[[Modelo de Ficha de Personalidade]]''' - Modelo de ficha utilizada para guiar a criação de personalidades do jogo.
+## '''[[Modelo de Ficha de Diálogo]]''' - Modelo de ficha utilizada para guiar a criação de um diálogo.
+## '''[[Modelo de Ficha de Tipo de Arma]]''' - Modelo de ficha utilizada para gruiar a crição dos tipos de armas do jogo.
+## '''[[Modelo de Ficha de Itens de Mão]]''' - Modelo de ficha utilizada como base na criação de qualquer uma das fichas a seguir dos itens de mão.
+### '''[[Modelo de Ficha de Armas]]''' - Modelo de ficha utilizada para guiar a criação do Item de Mão do Subtipo 'arma' para o jogo.
+### '''[[Modelo de Ficha de Escudos]]''' - Modelo de ficha utilizada para guiar a criação do Item de Mão do Subtipo 'escudo' para o jogo.
+## '''Modelos de Fichas de Lugares'''
+### '''[[Modelo de Ficha de Zonas]]''' - Modelo de ficha utilizada para gruiar a criação de uma Zona.
+### '''[[Modelo de Ficha de Ambientes]]''' - Modelo de ficha utilizada para gruiar a criação de um Ambiente.
+<hr>
+# '''[[Ciclo de Batalha]]''' - Aqui é documentado e explicado os passos e funcionamento das batalhas do jogo.
+# '''[[Progressão do Jogo]]''' - Métricas e regras sobre como o jogo progride, o jogador evolui, etc..
+
+= Story Telling Mystery Realms =
+O mundo de '''Mystery Realms''' inclui criaturas mágicas, feitiçaria, alquimia, forças elementais e tecnologias esquecidas fazem parte da realidade. Embora tais forças existam, não é um mundo mágico e de ilusões. Um ambiente parecido como o criado nos mundo de D&D.
+
+# '''Modelos de Documentação:'''
+## '''![[Fichas de Criação]]''' - Modelos de Fichas de Criação a serem seguidos para criar "tudo" em Mystery Realms. Ex: Ficha de NPCs, Lugares, Personalidades, Itens, etc..
+##: ''As fichas de criação estão sendo migradas para a estrutura de fichas modelo do PlayTale, e saindo do Mystery Realms.''
+# '''Controle e Definições do Jogo'''
+## '''[[Marcadores do Jogo]]''' - Marcadores utilizados entro do jogo de Mystery Realms.
+# '''Criação do Mundo Mystery Realms:'''
+## '''[[Raças]]''' - Definições das Raçcas e seus atributos.
+## '''[[Classes]]''' - Classes dos aventureiros.
+## '''Lugares''' - Lugares é a expressão utilizada para todo e qualquer tipo de lugar físico do jogo. No entando cada lugar representa um escopo diferente de agrupamento e regras.
+### '''[[Thámyros]]''' - Primeiro Mundo (Realm) do Jogo Definição do plano / planeta de localização.
+#### '''[[Terras Centrais]]''' - Continente Central de Thámyros
+##### '''[[Reino de Althar]]''' - Nação conquistada e regida pela linhagem de Althar.
+###### '''[[Floresta de Arvalem]]''' - Região de Floresta do Reino de Althar.
+####### '''[[Langur]]''' - Uma das cidades mais icônicas das Terras Centrais, dividida em três anéis principais que representam conhecimento, poder e comércio.
+######## '''[[Taverna Asa Quebrada]]''' - Estabelecimento discreto e denso em atmosfera, ponto de encontros sigilosos e vigilância de seu misterioso proprietário.
+######### '''[[Salão da Asa Quebrada]]''' - Ambiente principal da taverna, usado para socialização tensa, vigilância e interações discretas entre NPCs de múltiplos interesses.
+######## '''[[Biblioteca Varnak]]''' - Torre arcana viva onde o conhecimento se molda ao visitante. Contém seções mutáveis e guardiões mágicos.
+######### '''[[Sala de Recepção]]''' - Área de entrada onde [[Lirianne_Morth|Lirianne Morth]] avalia as intenções dos visitantes e decide seu acesso às áreas superiores da biblioteca.
+######## '''[[Forja dos Ecos]]''' - Forja ancestral onde itens são imbuídos com identidade, operada por [[Thramur_Ankuhl|Thramur]] e sua aprendiz rúnica.
+######### '''[[Sala de Fundição]]''' - Centro produtivo da forja, onde itens mágicos são criados, pedidos são aceitos e as propriedades rúnicas são manipuladas.
+######## '''[[Arsenal Três Lâminas]]''' - Loja especializada em itens recuperados de ruínas e campos de batalha, respeitada por sua neutralidade comercial.
+######### '''[[Salão da Loja]]''' - Área de exibição e negociação, com armas e armaduras à mostra, onde [[Silma_Verridan|Silma]] e [[Vareth_Dolmar|Vareth]] conduzem suas atividades.
+######## '''[[Praça das Vozes]]''' - Coração público e comercial de Langur, repleto de vozes, comércio, rumores e manifestações diversas.
+######### '''[[Círculo dos Três Ecos]]''' - Fonte sagrada ao centro da praça, marco simbólico da união entre povo, magia e força. Ponto de partida do jogo.
+######## '''[[Casa de Custódia]]''' - Instituição bancária e mágica onde são guardados itens, contratos e segredos dos poderosos.
+######### '''[[Salão de Atendimento]]''' - Área formal e vigiada onde ocorrem interações bancárias e decisões contratuais monitoradas magicamente.
+######## '''[[Mercado da Pedra Branca]]''' - Principal centro de suprimentos e artigos básicos de Langur, sempre ativo e cercado de boatos e ofertas.
+## '''[[Conexões de Mystery Realms]]''' - Mapa de navegação do Mystery Realms (conexões das Zonas e Ambientes) .
+## '''Personagens''' - Ficha de Personagens (NPCs, Personalidades e outros) existentes no jogo.
+### '''NPCs''' - Lista de NPCs do Jogo.
+#### '''[[Dargan Harth]]''' - é um ex-soldado veterano do exército de [[Langur]], que perdeu a perna direita ao conter sozinho um ataque de bestas da névoa. Atualmente é o dono da [[Langur#Taverna_Asa_Quebrada|Taverna Asa Quebrada]], reconhecida como um refúgio seguro para forasteiros e negócios discretos​.
+#### '''[[Elvarin do Silêncio]]''' - é um sábio andarilho, membro da [[Facções#Ordem_dos_Caminhantes_Silenciosos|Ordem dos Caminhantes Silenciosos]], que atua como guia filosófico e conselheiro na [[Langur#Praça_das_Vozes|Praça das Vozes]]. Com fala metafórica e olhar contemplativo, representa uma âncora narrativa para o jogador logo no início da jornada em [[Roteiro_Inicial|Mystery Realms]].
+#### '''[[Garrun Ferres]]''' - é um ex-batedor de caravanas que perdeu parte da perna em uma emboscada e agora é dono do [[Langur#Estábulo_Ferradura_Partida|Estábulo Ferradura Partida]]. É referência em montarias e conhece como ninguém as rotas e os perigos das estradas que cercam [[Langur]]​.
+#### '''[[Kaela Runaveia]]''' - é uma jovem aprendiz de ferreiro rúnico acolhida por [[Thramur_Ankuhl|Thramur Ankuhl]] na [[Langur#Forja_dos_Ecos|Forja dos Ecos]]. Apesar de sem formação mágica formal, possui uma conexão misteriosa com runas, que parecem reconhecê-la​.
+#### '''[[Lirianne Morth]]''' - é a enigmática Alta Guardiã da [[Langur#Biblioteca_Varnak|Biblioteca Varnak]], conhecida por sua disciplina inabalável, memória perfeita e habilidade em detectar mentiras. Vive reclusa na biblioteca, onde rumores indicam que nasceu e nunca saiu​.
+#### '''[[Madalin Crestamar]]''' é a coordenadora do [[Langur#Mercado_da_Pedra_Branca|Mercado da Pedra Branca]], uma figura respeitada e temida no comércio de Langur. Herdou o cargo do pai e controla tudo o que entra e sai do mercado com mão firme, olhos atentos e senso apurado de justiça e preço justo​.
+#### '''[[Oskar Brünn]]''' - é o severo tesoureiro-chefe da [[Langur#Casa_de_Custódia|Casa de Custódia]] de Langur, respeitado por sua integridade inflexível e por ter criado o sistema de vedação rúnica mais seguro do continente. Ex-criptógrafo de guerra, atua como guardião arcano-financeiro da cidade​.
+#### '''[[Silma Verridan]]''' é uma ex-caçadora de artefatos que quase morreu em uma expedição e agora trabalha no [[Langur#Arsenal_Três_Lâminas|Arsenal Três Lâminas]] como avaliadora de relíquias, sendo temida por sua precisão, franqueza e integridade inflexível​.
+#### '''[[Thramur Ankuhl]]''' - é um mestre ferreiro anão da [[Langur#Forja_dos_Ecos|Forja dos Ecos]], último herdeiro da Tradição de Dhurrak. Sobrevivente de uma tragédia rúnica, forja armas que reagem à alma do portador e despreza magos e clientes vaidosos​.
+#### '''[[Vareth Dolmar]]''' - é um ex-mercenário que fundou o [[Langur#Arsenal_Três_Lâminas|Arsenal Três Lâminas]] em Langur, onde negocia armas e artefatos de zonas de guerra com lábia afiada e um olhar preciso para o valor oculto dos itens​.
+### '''Personalidades''' - Personalidades é como são chamados os personagens ou nomes de pessoas que aparecem no jogo mas não são NPCs. Por exemplo, um reu antigo, um Lord que deu nome a uma cidade ou ponte, etc., alguma personalidade que é citada ou tem história no jogo, mas não é possível interagir  no jogo.
+#### '''[[Archom Varnak]]''' - foi um lendário arcanista e fundador da [[Langur#Biblioteca_Varnak|Biblioteca Varnak]], desaparecido há séculos durante experimentos arcanos. Muitos acreditam que sua consciência permanece fundida à torre, influenciando os encantamentos vivos do local​.
+## '''[[Facções]]''' - Detalhes sobre as Facções (Grupos, Guildas, Odens, Tributos, Seitas, etc.) existentes no jogo.
+# '''Itens de Mão'''
+## '''[[Armas]]''' - Definições das Armas do jogo. Desde especificações de tipos e atributos gerais até a ficha individual de cada arma.
+### '''Adagas''' - Lista de Armas do tipo Adagas criadas para o jogo.
+#### '''[[Adaga Comum]]''' - Uma lâmina simples, afiada e discreta, típica de aventureiros e ladrões.
+## '''Escudos'''
+### '''[[Escudo de Carvalho]]'''
+# '''Roteiros de Mystery Realms''' - Registro dos Roteiros de Mystery Reals.
+## '''[[Modelo de Criação do Roteiro]]''' - Define as diretrizes do jogo para a criação do Roteiro de forma a montar um padrão visual e fotografia contante para todo o jogo.
+## '''[[Roteiro Inicial]]''' - Roteiro inicial base do jogo, contando a história base do jogo, com diálogos dos NPCs e outras narrações.
+# '''Diálogos Gerais''' - Relação de Diálogos Gerais que o jogador pode ter com NPCs de forma geral do jogo, para explorar os locais, melhorar relacionamento, ''small talk'' e outros. Não são diálogos relacionados a quests.
+## '''[[Diálogos: Elvarin do Silêncio]]''' - Diálogos com o Elvarin do Silêncio.
+
+= Implementação do Código =
+Sessão focada na documentação e definições da implementação do código fonte da Engine e do Mystery Realms.
+
+* '''[[Padrão Geral do Código Fonte]]''' - Definições gerais sobre o código fonte que devem ser seguidos em todo o desenvolvimento. Leitura obrigatória antes do desenvolvimento de qualquer código.
+* '''[[API do Servidor]]''' - Página com a documentação da implementação da API do Servidor do Jogo para acesso da interface ou integração com o jogo.
+
+= Mecânica Geral do Jogo =
+* O gameplay se baseia em vencer quests, mistérios e aventuras que são descobertas ao se movimentar pelos ambientes do jogo, conversar com os personagens e descobrir pistas. Para conquistar o quest poderão haver múltiplos caminhos a serem tomados de acordo com o conjunto de habilidades do personagem. Uma mistura de RPGs de mesa com o jogo de mesa 'Interpol' e 'Scotland Yard', com dedução e estratégia.
+* O jogo terá ação que será baseada em duelos em turnos (típicos de D&D), e que permitem a evolução do personagem por XP. Como por exemplo a dinâmica de duelos do jogo RPG de Console: Lord (Legend of the red Dragon).
+* As áreas do jogo serão classificados como:
+** '''Pacificado:''' Áreas em que o jogador não é atacado de surpresa por nenhum outro player, monstro, etc.;
+** '''Selvagem:''' Áreas em que habitam monstros selvagens que podem atacar o jogador, ou mesmo outros NPCs como ladrões e bandidos;
+** '''Hostil:''' Área em que pode ser atacado ou intimidado por NPCs, Monstros e outros jogadores."
+**: Nas áres Selvagem e Hotís, o jogador poderá batalhar e ganhar XP, moedas e diversos itens.
+
+= Mundo de '''Mystery Realms''' =
+Sessão dedicada as informações que compõe o mundo '''Mystery Realms'''. O ideal é que toda a informação sobre o mundo (cidade, ruínas, locais, etc.) citado em qualquer parte do jeto seja reigstrada e catalogada nesta seção para que não haja durante a evolução da história do jogo informações contraditórias.
+
+== Criaturas e Monstros ==
+
+=== Introdução ===
+
+As criaturas e monstros de Mystery Realms compõem a vida selvagem, os perigos mágicos e os inimigos ocultos que habitam o continente. Elas podem ser encontradas em áreas selvagens, ruínas, cidades corrompidas, mas também podem ter função narrativa, como guardiões ou provas vivas de antigas magias.
+
+Nem todas são hostis. Algumas podem ser neutras, fugir ao ver o jogador ou até mesmo oferecer interação com certas habilidades ou níveis de conhecimento. Outras são entidades únicas — chefes, protetores, ou mesmo criaturas raríssimas ligadas a relíquias e quests específicas.
+
+A criação e o equilíbrio de criaturas seguem uma lógica padronizada, explicada a seguir.
+
+=== Escalonamento de Atributos ===
+
+Para manter o desafio dinâmico, as criaturas possuem atributos que escalam com seu nível, garantindo que batalhas se mantenham equilibradas independentemente da progressão do jogador.
+
+A fórmula para calcular qualquer atributo de uma criatura é:
+
+<center><math>A_{\text{final}} = \left\lfloor A_{\text{base}} \times (1 + N \times F) \right\rfloor</math></center>
+
+'''Onde:'''
+
+<math>A_{\text{final}}</math>: Atributo final da criatura
+
+<math>A_{\text{base}}</math>: Valor base do atributo da criatura (definido por tipo)
+
+<math>N</math>: Nível da criatura
+
+<math>F</math>: Fator de crescimento ('''F = 0,2''')
+
+{{nota|Com esse fator, o atributo da criatura dobra a cada 5 níveis.}}
+
+==== Nível e Dificuldade ====
+
+As criaturas podem variar seu nível dependendo do local em que são encontradas:
+* '''Áreas fáceis:''' até 2 níveis abaixo do jogador
+* '''Áreas comuns:''' mesmo nível do jogador
+* '''Áreas perigosas:''' até 3 níveis acima do jogador
+* '''Zonas de elite:''' 4 ou mais níveis acima, com chance de habilidades especiais, efeitos mágicos e loot raro
+
+=== Tipos de Criaturas ===
+
+Cada tipo de criatura possui um bloco fixo de atributos base e uma ficha própria que define seus comportamentos, resistências, vulnerabilidades e áreas típicas de ocorrência.
+
+==== Fera Selvagem ====
+
+'''Descrição:''' Criaturas comuns da fauna local, geralmente irracionais, mas perigosas. Inclui lobos, javalis, felinos e bestas nativas da região. Costumam agir por instinto, caçar em grupos ou emboscar viajantes.
+
+'''Atributos Base:'''
+
+Força: 4
+
+Destreza: 3
+
+Constituição: 4
+
+Intelecto: 1
+
+Percepção: 3
+
+Carisma: 1
+
+Vontade: 2
+
+'''Habilidades Secundárias:'''
+
+Furtividade: +2
+
+Sobrevivência: +1
+
+'''Comportamento:'''
+
+Hostis em áreas selvagens, mas podem evitar confronto em áreas pacificadas
+
+Costumam atacar presas solitárias ou feridas
+
+Fogem ao sofrerem muito dano, a menos que estejam protegendo ninhadas ou territórios
+
+'''Resistências:'''
+
+Resistência natural a venenos leves e doenças comuns
+
+==== Aberração ====
+
+Pendente
+
+==== Morto-Vivo ====
+
+Pendente
+
+==== Humanoide Hostil ====
+
+Pendente
+
+==== Besta Mística ====
+
+Pendente
+
+==== Guardião Elemental ====
+
+Pendente
+
+==== Criatura Demoníaca ====
+
+Pendente
+
+==== Criatura Lendária ====
+
+Pendente
+
+=== Criaturas Comuns ===
+
+==== Tatu-Pedra Selvagem ====
+
+'''Nome:''' Tatu-Pedra Selvagem
+
+'''Categoria:''' Fera Selvagem
+
+'''Aparência:''' Criatura de médio porte com corpo alongado e coberto por placas duras de aspecto rochoso, cinza-escuro, que refletem a luz de forma irregular. Possui garras largas adaptadas à escavação e um focinho curto com bigodes sensíveis. Seus olhos pequenos, âmbar, brilham levemente no escuro. Quando enrolado, torna-se praticamente indistinguível de uma pedra entre musgos ou entulhos da floresta.
+
+'''Comportamento e Estilo de Combate:''' É territorial e solitário, patrulha pequenas áreas onde cava tocas e busca alimento. Costuma evitar conflitos, mas torna-se agressivo se ameaçado ou acuado. Em combate, investe com força bruta usando seu corpo enrolado, tentando atordoar ou afastar o inimigo. Se muito ferido, se enrola e resiste passivamente até o perigo passar. Costuma surgir de tocas ou pedras em emboscadas curtas.
+
+'''História ou Origem (opcional):''' Originário de áreas montanhosas ao norte do continente, foi adaptando-se às florestas densas próximas a Langur. Sua carapaça mineral é resultado de alimentação contínua de substâncias subterrâneas, como sais rúnicos e pedras ricas em magia residual. Alguns alquimistas acreditam que sua origem esteja ligada à contaminação mágica de uma antiga mina.
+
+'''Habilidades Especiais:'''
+* '''Enrolar-se (passiva):''' Ao atingir 50% de vida ou menos, tem 50% de chance de se enrolar. Reduz o dano físico recebido em 75% por 2 turnos. Recarga: 3 turnos após desfazer-se.
+* '''Investida de Pedra (ativa):''' Ataca rolando em alta velocidade. Causa dano físico moderado com chance de empurrar o inimigo para trás e atordoá-lo por 1 turno. Recarga: 3 turnos.
+* '''Camuflagem Mineral (passiva):''' Se estiver imóvel por 1 turno, torna-se difícil de detectar em terrenos rochosos ou florestais (-30% chance de ser notado por testes de Percepção).
+
+'''Resistências e Fraquezas:'''
+* '''Resistências:''' +50% resistência a dano físico cortante, imune a veneno
+* '''Fraquezas:''' Vulnerável a magia do tipo trovejante e ataques perfurantes
+
+'''Loot:'''
+* '''Fragmentos de Carapaça de Pedra (comum):''' Usado em crafting de armaduras ou escudos reforçados
+* '''Garra Calcificada (incomum):''' Componente alquímico para poções de resistência
+* '''Coração Mineralizado (raro):''' Material mágico com propriedades de camuflagem e dureza, usado em artefatos
+
+'''Modificadores de Atributo:'''
+
+{| class="wikitable"
+! Atributo !! Modificador
+|-
+| Força || +2
+|-
+| Destreza || +1
+|-
+| Constituição || +2
+|-
+| Intelecto || -2
+|-
+| Percepção || +1
+|-
+| Carisma || -3
+|-
+| Vontade || 0
+|}
+
+'''Imagens:'''
+<gallery mode="packed" widths="300" heights="300">
+File:Tatu-Pedra Selvagem.webp|Tatu-Pedra em posição ofensiva
+</gallery>
+
+=== Criaturas Especiais ===
+
+Pendente
+
+=== Criação e Geração de Criaturas no Mapa ===
+
+Pendente
+
+
+
+== Outras Informações e Sabedorias ==
+
+Nesta sessão registramos informações e biografias sobre outras informações menores do jogo que não entram nos tópicos anterioes.
+
+= Mecânica do Jogo =
+
+Sessão destinada a documentação sobreo o funcinoamento do jogo: tabelas, cálculos, regras, etc..
+
+== Sistema de Encontro e Duelo: Etapas Lógicas ==
+=== 1. Entrada em Área Selvagem ===
+Verifica-se o tipo de área: Selvagem.
+
+Define-se a probabilidade de encontro com criatura hostil. Exemplo:
+
+30% a 50% por movimento/passo relevante (definível por região).
+
+Pode ser ajustada por hora do dia, clima, rotas seguras, etc.
+
+=== 2. Teste de Encontro ===
+Rola-se um teste de encontro (ex: 1d100 < chance) para ver se um combate ocorre.
+
+Se SIM → segue para geração de criatura.
+
+=== 3. Geração da Criatura ===
+Sorteia uma criatura compatível com a área (ex: Tatu-Pedra Selvagem, no caso da Floresta de Langur).
+
+Define-se o nível da criatura com base em:
+
+Nível do jogador.
+
+Dificuldade da área (ex: fácil: -2 a +0 níveis; normal: -1 a +2; difícil: 0 a +3).
+
+Sorte pode influenciar para gerar um "evento raro" (ex: criatura mais forte).
+
+=== 4. Teste de Percepção Mútua (Iniciativa Narrativa) ===
+
+Este teste define '''como o encontro começa''': quem percebe quem primeiro, se há chance de '''evitar o combate''', iniciar com '''vantagem tática''', ou ser '''surpreendido'''.
+
+Passo 1: Verificar Condição do Jogador
+
+Antes de qualquer rolagem, o sistema deve verificar se o jogador está:
+
+* Em '''modo furtivo''' (escondido, se movendo em silêncio).
+* Em '''modo aberto''' (andando normalmente, correndo, carregando tocha, etc).
+
+Essas condições afetam as rolagens seguintes (com bônus ou penalidades).
+
+Passo 2: Jogador realiza rolagem de Furtividade (se aplicável)
+
+Se estiver tentando evitar ser notado:
+
+''Furtividade  Destreza + bônus racial/class + modificadores + 1d20''
+
+Penalidades possíveis:
+* Armadura barulhenta
+* Excesso de carga
+* Condições como fome, sede ou fadiga
+
+Se o jogador não estiver tentando se esconder, esse passo é ignorado.
+
+Passo 3: Criatura realiza rolagem de Percepção
+
+''Percepção  Atributo base da criatura + modificador da categoria + 1d20''
+
+Pode receber bônus naturais (olfato aguçado, visão noturna, etc).
+Se superar a furtividade do jogador, a criatura '''detecta sua presença'''.
+
+Passo 4: Jogador realiza rolagem de Percepção
+
+''Percepção  Atributo + bônus racial/class + modificadores + 1d20''
+
+Permite detectar a criatura antes de ser surpreendido.
+Penalidades por ambiente (escuridão, neblina, ruído externo, etc).
+
+'''Passo 5:''' Comparação dos Resultados
+
+
+{| class"wikitable"
+! Situação !! Resultado
+|-
+| Jogador percebe a criatura '''antes''' dela perceber o jogador || Jogador pode evitar o combate, preparar ataque surpresa, fugir ou tentar se aproximar.
+|-
+| Ambos se percebem ao mesmo tempo (empate ou rolagens próximas) || Encontro direto. Seguir para rolagem de iniciativa.
+|-
+| Criatura percebe o jogador, mas o jogador '''não percebe a criatura''' || Criatura realiza '''ataque surpresa''' (ganha um turno gratuito).
+|-
+| Nenhum dos dois percebe o outro (raro) || Nada acontece. Ambos seguem sem se notar.
+|}
+
+'''Passo 6:''' Decisão Narrativa
+
+Com base no resultado da comparação:
+
+* Jogador pode escolher entre '''lutar, fugir ou observar''' (caso tenha detectado a criatura).
+* Se a criatura tiver comportamento '''agressivo, predatório ou territorial''', ela atacará imediatamente após detectar o jogador.
+
+=== 5. Rolagem de Iniciativa ===
+Baseado geralmente na Destreza + rolagem (ex: 1d20 + modificador).
+
+Define a ordem dos turnos de ataque e ação.
+
+=== 6. Combate ===
+Turnos alternados com as seguintes etapas por personagem:
+
+Verificação de condições (efeitos ativos, venenos, buffs).
+
+Escolha de ação (ataque, defender, usar item, fugir, habilidade).
+
+Teste de ataque e defesa:
+
+Ataque físico → baseado em Força/Destreza + arma.
+
+Defesa → pode ser passiva (Constituição ou armadura).
+
+Magias usam outros atributos e regras.
+
+Cálculo de dano.
+
+Aplicação de efeitos (envenenamento, perda de moral, etc.)
+
+Verificação de morte/retirada.
+
+=== 7. Fim do Combate ===
+Define-se:
+
+XP recebido com base no nível da criatura.
+
+Loot obtido (conforme ficha da criatura).
+
+Condições persistentes (ferimentos, efeitos negativos).
+
+Atualização de moral, sede, energia, etc.
+
+Observações Importantes:
+Jogador pode usar itens ou habilidades específicas que influenciam cada uma dessas fases.
+
+Em áreas mais complexas, criaturas podem agir em grupo, ou emboscar o jogador.

@@ -1,0 +1,210 @@
+# Ficha de Lugar
+As fichas de lugares mudam de acordo com o tipo do lugar. A seguir os modelos e descrição de como elas devem ser criadas.
+
+
+## Ficha de Mundo
+Ao criar a ficha de um **Mundo** é obrigatório a definição dos seguintes campos:
+
+- **Nome:** Nome do Mundo. **Não crie um tópico com o nome do mundo** — a própria página já representa o Mundo.
+
+- **Descrição Geral:**
+:* Breve descrição sobre o mundo como um todo — seu tom, temas centrais, tipo de realidade (mágica, científica, mista).
+:* Pode incluir a natureza de sua criação, equilíbrio entre luz e trevas, ou seu papel dentro de uma cosmologia maior.
+
+- **Regras Fundamentais:**
+:* Definir se o mundo possui leis físicas e mágicas próprias.
+:* Quantidade de sóis e luas, comportamento do tempo, existência de magia natural ou arcana, fluxo de energias, etc.
+
+- **Planos Existenciais e Conexões:**
+:* Relação com outros planos (espirituais, infernais, elementais, sonhos).
+:* Portais, fendas, ou locais de transição entre planos.
+
+- **Forças Primordiais ou Entidades Maiores:**
+:* Presença de deuses, entidades cósmicas, criaturas originárias ou forças que moldam o equilíbrio do mundo.
+
+- **História e Curiosidades:**
+:* Eventos de escala mundial, guerras ancestrais, ciclos de destruição e renascimento, pactos globais, etc.
+
+- **Parâmetros da Engine:**
+:* **Fator Monetário:** Defina sempre o valor 1.
+:* **Ciclos Cósmicos e Temporais:**
+::* **Minutos por Hora:** Defina quantos minutos compõem uma hora no mundo.
+::* **Horas por Dia:** Defina quantas horas existem por dia.
+::* **Dias por Ano:** Defina 'uantos dias existem em um ano completo.
+::* **Fases do Dia:** Defina o horário das fases do dia.
+::* **Estações do Ano:** Defina o número de dias e a duração de cada estação do ano em dias. **O total de dias de cada estação deve coincidir com o número de dias por ano.**
+::* **Ciclos Lunares:** Se houver lua, definir comportamento de ciclos lunares, incluindo duração, fases e efeitos associados. Se não houver, deixar em branco.
+::* **Outros eventos:** Se existir, descrever eventos astronômicos recorrentes, influência das luas e marés, e impactos narrativos. Se não houver, deixar em branco.
+
+- **Notas Narrativas:**
+:* Direcionamentos para mestres e IA sobre como utilizar o mundo como estrutura-base de campanhas, incluindo possibilidades de expansão, mundos paralelos, e conexões com histórias alternativas.
+
+## Ficha de Continente
+Ao criar a ficha de um **Continente** é obrigatório a definição dos seguintes campos:
+
+- **Nome:** Nome do Continente. **Não crie um tópico com o nome do Continente** — a própria página já representa o Continente.
+
+- **Descrição Geral:**
+:* Breve descrição narrativa do Continente, sua importância geopolítica ou mágica no mundo e papel nas histórias do jogo.
+:* Pode conter elementos sobrenaturais, lendas ou atmosferas únicas.
+
+- **Características Geográficas:**
+:* Tipos de relevo predominantes, presença de oceanos, desertos, cordilheiras, ilhas, rios místicos, etc.
+:* Informações sobre acessibilidade e isolamento de certas regiões.
+
+- **Povos e Culturas:**
+:* Resumo das civilizações, povos nativos, etnias dominantes ou migratórias.
+:* Idiomas, tradições e conflitos culturais.
+
+- **Ameaças Naturais ou Sobrenaturais:**
+:* Perigos específicos que afetam o Continente: maldições, monstros colossais, zonas instáveis, tempestades arcanas, etc.
+
+- **Biomas Predominantes:**
+:* Listar os principais biomas que formam o Continente (selvas tropicais, desertos de sal, tundras mágicas etc.).
+
+- **Clima Global:**
+:* Descrever se há estações, extremos climáticos, interferência mágica no clima, etc.
+
+- **Conexões com Outros Continentes:**
+:* Caminhos, portais, zonas de transição, oceanos navegáveis ou rupturas planares.
+:* Caso o Continente seja isolado ou esquecido, isso deve ser destacado aqui.
+
+- **Notas Narrativas:**
+:* Direcionamentos para mestres e IA sobre como usar esse Continente em campanhas amplas, exploração intercontinental ou construção de mundos.
+
+- **Parâmetros da Engine:**
+:* **Fator Monetário:** Defina sempre o valor 1.
+
+
+## Ficha de Domínio
+Ao criar a ficha de um **Domínio** é obrigatório a definição dos seguintes campos:
+- **Nome:** Nome do Domínio. **Não crie um tópico com o nome do domínio** — a própria página já representa o Domínio.
+
+- **Descrição Geral:**
+:* Visão ampla sobre a identidade cultural, política e histórica do domínio.
+:* Contexto narrativo sobre sua influência no mundo, ideologias predominantes, modo de vida, e sua importância geopolítica.
+- **Tipo de Governo:**
+:* Forma de governo predominante: monarquia, conselho, império, teocracia, confederação tribal, etc.
+:* Nome da liderança, cargos relevantes e formas de sucessão (hereditária, eleita, mística, etc.).
+- **Composição Territorial:**
+:* Quantidade aproximada de regiões e localidades sob seu controle.
+:* Características territoriais marcantes (montanhas sagradas, rios divisores, muralhas ancestrais etc.).
+- **Sociedade e Cultura:**
+:* Costumes, tradições, idioma(s), arquitetura, calendário próprio (se houver), religião predominante.
+:* Relações entre classes sociais, presença de castas, e estrutura urbana-rural.
+- **Relações Políticas:**
+:* Relação com outros domínios (alianças, rivalidades, neutralidade).
+:* Cidades ou regiões disputadas, tratados de paz ou zonas militares.
+- **Economia e Recursos Estratégicos:**
+:* Principais produtos, fontes de riqueza (magia, minério, agricultura, comércio etc.).
+:* Itens de valor especial que possam motivar conflitos ou atração de aventureiros.
+- **Riscos e Conflitos Internos:**
+:* Facções rebeldes, corrupção, disputas sucessórias, tensões culturais ou regionais.
+- **História e Eventos Marcantes:**
+:* Fundação, guerras importantes, mudanças de poder, momentos sobrenaturais ou mágicos.
+:* Personagens históricos notáveis ligados ao domínio.
+- **Notas Narrativas:**
+:* Direcionamento para uso em quests de larga escala, eventos políticos, heranças disputadas, diplomacia e guerras.
+:* Referência útil para IA sobre tom e estilo narrativo das interações com o domínio.
+
+- **Parâmetros da Engine:**
+:* **Fator Monetário:** Defina sempre o valor 1.
+
+
+## Ficha de Região
+Ao criar a ficha de um **Região** é obrigatório a definição dos seguintes campos:
+- **Nome:** Nome da Região. **Não crie um tópico com o nome da Região** — a própria página já representa a Região.
+
+- **Descrição Geral:** Breve descrição da região e suas características marcantes.
+- **Bioma:**
+:* Tipo de bioma predominante (ex: floresta, tundra, deserto, pântano, montanha, etc.).
+:* Composição de fauna e flora características.
+- **Clima:**
+:* Presença de estações, variações térmicas, umidade, neblinas, ventos, incidência de chuvas e temperatura média.
+:* Influência do clima na ambientação e na vida da região.
+- **Recursos Naturais e Ambientais:**
+:* Elementos únicos da região (plantas raras, minerais, fontes mágicas, criaturas específicas).
+- **Riscos e Ameaças:** Criaturas selvagens, clima hostil, zonas corrompidas, conflitos ativos etc.
+- **História e Curiosidades:**
+:* Eventos históricos importantes, lendas locais, ruínas esquecidas.
+- **Notas Narrativas:** Direcionamento para uso em quests, ambientação da IA, e construção de histórias.
+
+- **Parâmetros da Engine:**
+:* **Fator Monetário:** Defina sempre o valor 1.
+
+
+## Ficha de Localidade
+A ficha de localidade deve incluir a imagem da localidade com o seguinte código wiki (sem as tags 'pre'): <pre>> **Imagem de referência indisponível no export:** `NomeDaCidade.png`</pre>
+Ao criar a ficha de um **Localidade** é obrigatório a definição dos seguintes campos:
+- **Nome:** Nome da Localidade. **Não crie um tópico com o nome da Localidade** — a própria página já representa o Localidade.
+
+- **Tipo:** Cidade, vila, fortaleza, templo, torre, ruína, caverna, etc.
+- **Localização no Mapa:** Coordenadas (Ex: [10;15]), conforme descrito no página [Mapa e Movimentação](mapaEMovimentacao.md) da documentação do projeto.
+- **Descrição:** Texto descritivo e imersivo sobre a localidade, incluindo:
+:* Aspectos físicos (arquitetura, terreno, clima)
+:* Estrutura social (governo, castas, organização)
+:* Destaques históricos ou mágicos
+:* Divisão de zonas principais, se houver (ex: anéis, setores, alas)
+:* Notas de Ambientação - Informações úteis para IA e narrativa (ritmo da cidade, eventos recorrentes, etc.)
+- **Acesso e Rotas:** Descrição das rotas principais de chegada e saída. Incluir:
+:* Portos, estradas, trilhas, etc.
+:* Condições dessas rotas (seguras, patrulhadas, bloqueadas, perigosas, sazonais etc.)
+- **Clima:** - Instruções para preenchimento:
+:* Indicar se há ciclo de dia/noite.
+:* Indicar se existem estações do ano ou se o clima é fixo.
+:* Temperaturas médias (em °C) no verão/inverno ou dia/noite.
+:* Presença ou ausência de: chuvas, neblinas, ventos fortes, umidade elevada, seca, etc.
+:* Outros efeitos atmosféricos relevantes (auroras, poeira mágica, geadas, tempestades sazonais).
+- **Índice de Risco - R ( Risco de Hostilidade do Ambiente):** Valor de 0 a 100, que representa a probabilidade base de ocorrência de eventos hostis enquanto o jogador dorme nessa localidade. Conforme descrito na página [Recuperação](recuperacao.md) da documentação do projeto.
+
+- **Parâmetros da Engine:**
+:* **Fator Monetário:** Defina sempre o valor 1.
+
+
+# Ficha de Criatura
+Toda Criatura criada deve ter as seguintes características:
+
+- **Nome:** Nome da criatura. Pode ser inventado ou descritivo, mas deve ser exclusivo no jogo.
+- **Categoria:** Categoria-base da criatura (ex: Fera Selvagem, Aberração, Morto-Vivo, etc.). Define os atributos e comportamento padrão.
+- **Aparência:** Descrição física da criatura: forma, cor, movimentos, som, textura, olhos, etc. Deve ser vívida, para uso em narrativa e ambientação.
+- **Comportamento e Estilo de Combate:** Define se é agressiva, defensiva, caçadora, territorial, solitária, etc. Deve indicar como age em combate ou quando ameaçada. Pode conter táticas (ex: embosca, recua com pouco HP, ataca pontos vitais).
+- **História ou Origem (opcional):** Explica a natureza da criatura. Pode ser natural, mágica, corrompida, criada, ancestral, etc. Deve ser incluído se houver relevância narrativa ou se a criatura fizer parte de um mistério ou quest.
+- **Habilidades Especiais:** Efeitos únicos da criatura em batalha. Exemplos: causar envenenamento, hipnose, grito paralisante, regeneração, voo temporário, etc. Cada habilidade deve ter nome, efeito e se possui tempo de recarga.
+- **Resistências e Fraquezas:** Indicar se possui resistência (total ou parcial) a tipos de dano (físico, mágico, fogo, veneno, etc.) ou se é vulnerável a algum efeito. Pode conter imunidades ou sensibilidades.
+- **Loot:** Itens que podem ser obtidos ao derrotar a criatura. Podem ter raridade, chance de drop e função no jogo (ex: crafting, quests, venda, alquimia, etc.). Devem ser narrativos e compatíveis com a criatura.
+- **Modificadores de Atributo:** Tabela com modificadores individuais por atributo principal. Os valores devem ser somados à progressão da categoria com base no nível da criatura.
+
+Exemplo de tabela:
+
+{|class="wikitable" ! Atributo !! Modificador
+|-
+| Força || +2
+|-
+| Destreza || +1
+|-
+| Constituição || 0
+|-
+| Intelecto || -1
+|-
+| Percepção || +1
+|-
+| Carisma || -2
+|-
+| Vontade || 0
+|}
+
+# Ficha de Arma
+Toda arma criada deve ter as seguintes características:
+- **Nome:** Nome único da arma. Pode ser genérico (Espada Longa) ou personalizado (Lâmina de Varnok).
+- **Tipo de Arma:** Categoria principal, como Espada Curta, Machado, Arco Longo, Adaga, etc. De acordo com os tipos de armas definidos do jogo em [Armas](armas.md)).
+- **Classe de Dano:** Tipo de dano que causa: Corte, Perfuração, Contusão, Elemental (Novamente, de acordo com os tipos de dados definidos do jogo em [Tipos de Danos](tiposDeDanos.md)).
+- **Dado de Dano Base:** Ex: 1d6, 1d8, 2d4 — representa o dado que será rolado para calcular o dano bruto.
+- **Atributo Primário:** Define se usa Força, Destreza ou outro atributo para calcular modificadores de ataque/dano.
+- **Alcance:** Define o alcance de ataque da arma em metros. Se é uma arma corpo a corpo (0m).
+- **Mãos Necessárias:** Número de mãos necessárias para uso: 1, 2 ou variável (1-2).
+- **Crítico:** Faixa de crítico e multiplicador. Ex: 19–20 (de acordo com o dado rolado) / x2.
+- **Peso (g):** Peso da arma em gramas, relevante para a carga do jogador.
+- **Requisitos (opcional):** Atributos mínimos para uso efetivo (ex: Força 3, Destreza 4). Caso não atendidos, penalidades são aplicadas.
+- **Propriedades Especiais (opcional):** Detalhes como: *arma leve*, *arma silenciosa*, *ignora armadura leve*, *atordoante*, etc.
+- **Classes e Raças com Bônus:** Lista das classes/raças que possuem bônus com essa arma (extraído daquelas duas tabelas de bônus).
+- **Descrição Narrativa:** Texto livre, descritivo da arma — aparência, origem, sensação ao empunhá-la, etc.

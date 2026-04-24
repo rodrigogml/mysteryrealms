@@ -1,0 +1,32 @@
+A ficha de ambiente deve incluir a imagem do ambiente com o seguinte código wiki (sem as tags 'pre'):
+<pre>[[Arquivo:NomeDaZona_NomeDoAmbiente.png|thumb|right|300px|Nome do Ambiente da Nome da Zona]]</pre>
+
+Ao criar a ficha de um '''Ambiente''' é obrigatório a definição dos seguintes campos:
+<pre>
+* '''Nome:''' Nome do Ambiente.
+* '''Função Narrativa:'''
+:* Objetivo principal do ambiente no jogo (ex: dormitório, cofre, altar, câmara de julgamento, campo de batalha, etc.).
+* '''Permite Acampamentos:''' (Valores aceitos Sim|Não). Utilizar sempre o valor Não ao criar a ficha, exceto se o criador definir explicitamente que Sim.
+* '''Possível Dormir:''' Define se o jogador pode usar ativamente a ação "Dormir" neste ambiente. Os únicos valores válidos são '''Sim''' ou '''Não'''. Se o valor for '''Não''', os atributos de Condições de Sono não devem ser informados, pois a recuperação será sempre tratada como a pior possível em casos de sono forçado (como desmaio, feitiços, etc.). É possível dormir em qualquer ambiente que tenha uma cadeira com encosto, uma cama, rede, etc., em resumo qualquer local "dormível' por pior que sejam as condições.
+* '''Condições de Sono (quando Possível Dormir = Sim):'''
+:* '''C (Conforto):''' Valor de 0 a 100 que representa o quão apropriado o ambiente é para descanso. Considera fatores como cama, temperatura, barulho, iluminação e sensação geral de abrigo. Quanto maior o valor, melhor a recuperação ao dormir. Exemplos:
+::* 100 – Cama de luxo em aposento nobre
+::* 70 – Beliche simples em pousada
+::* 30 – Chão firme com saco de dormir
+::* 0 – Solo molhado sob tempestade ou lugar absolutamente inóspito
+:* '''R (Risco de Hostilidade):''' Valor de 0 a 100 que representa a chance base de ocorrerem interrupções hostis (ataques, furtos, monstros, etc.) enquanto o jogador dorme. É fixo para cada ambiente e não muda com o tempo. Exemplos:
+::* 90 – Floresta infestada ou covil inimigo
+::* 45 – Vila desprotegida com pouca vigilância
+::* 10 – Estalagem vigiada ou acampamento controlado
+::* 0 – Câmara protegida em templo sagrado
+:* '''S (Segurança):''' Sempre 0 na ficha de ambiente; representa apenas modificadores temporários aplicados de acordo com a narração, não do ambiente em si.
+* '''Descrição:'''
+:* Texto narrativo e descritivo do ambiente (exceto descrição visual, que deve se concentrar no campo '''Detalhamento Visual''').
+:* Incluir aspectos sensoriais (cheiros, sons), estrutura, objetos marcantes e sensações que o local desperta.
+:* Se houver presença de criaturas, armadilhas, passagens secretas ou rituais, eles devem ser mencionados aqui.
+* '''Detalhamento Visual:'''  
+: Descrição detalhada da aparência do ambiente com foco em aspectos visuais — arquitetura, iluminação, materiais, objetos decorativos, elementos do cenário, ambientação cinematográfica e atmosfera. Este campo serve como base para artistas e IA visual compreenderem exatamente como representar o ambiente graficamente.
+* '''Notas Narrativas:'''
+:* Recomendações para mestres e IA sobre uso narrativo do ambiente.
+:* Pode incluir sugestões de eventos aleatórios, interações comuns, climas emocionais ou reações esperadas de NPCs e jogadores no espaço.
+</pre>

@@ -1,0 +1,17 @@
+![Salão da Asa Quebrada da Taverna Asa Quebrada](images/TavernaAsaQuebrada_SalaoDaAsaQuebrada.png)
+
+- **Nome:** Salão da Asa Quebrada
+
+- **Função Narrativa:**
+:* Local de interação social, obtenção de informações, encontros secretos e confrontos contidos.
+
+- **Possível Dormir:** Não
+
+- **Descrição:**
+:* Ambiente escuro e carregado. Cheiro de madeira velha, álcool forte e fumaça constante da lareira central. O som ambiente é composto por murmúrios, tilintar de copos e estalos da lenha encantada. Armas antigas e troféus adornam as paredes. As mesas são rústicas, e clientes evitam contato visual. Um balcão largo domina o fundo do salão, onde [Dargan Harth](darganHarth.md) observa tudo com olhos atentos.
+
+- **Detalhamento Visual:**
+:* O salão tem pé-direito médio, com apenas 3 metros de largura e 15 de profundidade, sustentado por vigas de madeira escura desgastadas pelo tempo, com marcas de cortes e brasões queimados que sugerem histórias antigas. A iluminação é quente, irregular e dramática — vinda de candelabros de ferro pendurados por correntes, com velas derretidas. As paredes são de pedra bruta cobertas por painéis de madeira e decoradas com armas enferrujadas e estandartes desbotados. O chão é de tábuas grossas, com manchas escuras e sulcos, rangendo a cada passo. As mesas são pesadas, feitas de carvalho antigo, algumas com marcas de canecas e cortes de facas. Cadeiras rústicas e bancos longos estão dispostos na lateral direita ao longo da parede. Há um balcão largo no fundo, de madeira rústica e bem gasta, onde costuma ficar o [Dargan Harth](darganHarth.md). Atrás dele, uma estante cobre toda a parede do fundo com garrafas das mais diferentes e exóticas bebidas.
+
+- **Notas Narrativas:**
+:* Excelente ponto para eventos sociais tensos, investigações disfarçadas ou espionagem.

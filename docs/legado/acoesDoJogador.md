@@ -1,0 +1,77 @@
+Cada ação obrigatoriamente deve conter a informação:
+- **Tempo gasto** (em minutos)
+- **Custo de Vigor** (positivo = consome, negativo = recupera)
+
+{| class="wikitable"
+! Ação || Tempo (min) || Vigor
+|-
+| 1' Caminhar || 5 || 3
+|-
+| 1' Correr || 2 || 10
+|-
+| 1' Batalha Exaustiva || 2 || 22
+|-
+| Conversar com NPC || 3 || 0
+|-
+| Descansar sentado || 10 || -3
+|-
+| Dormir || 480 || -50
+|-
+| Combate (1 turno) || 1 || 3
+|}
+
+
+> **Nota:** Esses valores podem ser ajustados por atributos, clima, equipamentos, efeitos mágicos e penalidades. Ações de menor duração ou execução única devem usar frações desses valores.
+
+
+Para mais detalhes sobre a passagem do tempo e Vigor veja os tópicos [Estrutura Temporal](estruturaTemporal.md) e [Ficha do Jogador#Vigor](fichaDoJogadorVigor.md).
+
+### Tipos de Ações
+- **Passivas**: como falar, observar, ler. Geralmente não consomem Vigor.
+- **Moderadas**: andar, interagir com objetos. Consumo leve de Vigor.
+- **Exigentes**: correr, lutar, nadar. Alto consumo de Vigor.
+- **Recuperativas**: dormir, sentar, comer. Reduzem o cansaço (Vigor negativo).
+
+
+### Custo de Fadiga por Ação do Jogador
+
+Toda ação executada pelo personagem gera acúmulo de **Fadiga**. A quantidade acumulada depende da intensidade da atividade, e é calculada em **pontos por minuto** (ou por execução, quando aplicável).
+
+O valor total de Fadiga acumulada será somado ao status do personagem. Ao atingir a **Fadiga Máxima**, o personagem entra em **exaustão**. (Mais informações sobre Fadiga e Exaustão em [Ficha_do_Jogador#Fadiga](fichaDoJogadorFadiga.md))
+
+
+#### Memória do Cálculo Utilizado
+
+A definição da Fadiga por minuto para cada ação foi feita com base no seguinte cenário de referência:
+
+- Jogador: Nível 1
+- Raça: Humano
+- Classe: Guerreiro
+- Constituição (CON): 7
+- Vontade (VON): 6
+- Fadiga Máxima = (CON + VON) × 100
+- Fadiga Máxima = (7 + 6) × 100 = **1300 pontos**
+
+Com essa base, estimamos as ações a partir de um cenário de exaustão:
+
+- ** 1' Caminhada leve:** Um ser humano saudável caminha cerca de 8 horas até a exaustão → 1300 / (8 × 60) ≈ 2,71 → arredondado para **3** para dar margem à sobrecarga e peso.
+- ** 1' Corrida:** Estimamos exaustão em cerca de 2 horas de corrida contínua → 1300 / (2 × 60) ≈ 10,3 → arredondado para **10** considerando maior esforço e penalidades por carga.
+- ** 1' Batalha exaustiva:** Consideramos 1 hora de combate extremo até a exaustão → 1300 / 60 = **21,6**, mas elevamos para **22** por representar esforço intenso, adrenalina, tensão e desgaste acelerado.
+
+As demais ações foram balanceadas proporcionalmente, levando em conta o esforço físico, mental e o contexto prático do jogo, mantendo a coerência com a proposta do atributo Fadiga como medida central da resistência diária do personagem.
+
+#### Recuperação da Fadiga
+
+Algumas ações provocam efeito de **recuperação de Fadiga**, ou seja, reduzem a pontuação atual. Exemplo:
+
+Sentar para descansar: −4 por minuto
+
+Dormir: −30 por hora
+
+Meditação (com habilidade): −10 por minuto
+
+Consumo de alimento restaurador: variável (de −10 a −100)
+
+Banho quente / ambiente confortável: −6 por minuto
+
+A recuperação é mais eficaz em ambientes seguros, confortáveis ou com suporte (como acampamentos, camas, templos, etc.). Ações de descanso durante o estado de **exaustão** possuem eficiência reduzida até que se saia da zona de sobrecarga.

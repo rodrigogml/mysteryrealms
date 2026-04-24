@@ -1,0 +1,67 @@
+Itens de mão são todos os objetos que podem ser empunhados, carregados ou utilizados diretamente pelas mãos do personagem, seja em combate, exploração, interação social ou mágica. Esta categoria inclui armas, escudos, ferramentas, instrumentos e outros objetos funcionais, permitindo flexibilidade total de combinação e uso conforme o contexto de jogo.
+
+= Conceito Universal =
+
+Ao invés de restringir a mão do personagem a categorias fixas como “arma” ou “escudo”, a PlayTale Engine define que qualquer objeto que o personagem possa segurar em uma das mãos será considerado um '''Item de Mão'''. O jogo definirá os limites e efeitos de cada combinação, respeitando classe, raça e atributos do personagem.
+
+= Atributos Comuns dos Itens de Mão =
+
+Cada item desta categoria deve conter os seguintes atributos básicos, independentemente de sua função:
+
+* '''Nome'''
+* '''Subtipo de Item''': arma, escudo, foco mágico, lanterna, ferramenta, relíquia, etc. Conforme descrito em [[#Subtipos de Itens de Mão]].
+* '''Mãos Necessárias''': 1 ou 2 mãos (modificável por talentos, habilidades ou raça)
+* '''Requisitos de Uso''': atributos mínimos, classe, raça, especializações
+* '''Categoria de Uso''': ataque, defesa, suporte, iluminação, manipulação, etc.
+* '''Peso / Carga'''
+
+
+= Efeitos Mecânicos =
+Os efeitos de um Item de Mão são definidos pela sua natureza e propósito. Abaixo os efeitos comuns por categoria de uso:
+:* '''Ataque''': atributos como '''Dano''', '''Tipo de Dano''', '''Crítico''', e interações com habilidades ofensivas.
+:* '''Defesa''': '''Bloqueio''', '''Cobertura Parcial/Total''', '''Bônus contra projéteis ou magias'''.
+:* '''Suporte''': amplificação de efeitos mágicos, bônus de perícia, condução de energia.
+:* '''Iluminação''': raio de luz, duração, tipo de iluminação (foco, área, intermitente).
+:* '''Manipulação''': ferramentas, ganchos, chaves, artefatos, usados em perícias ou exploração.
+:* '''Interação Narrativa''': símbolos, relíquias, grimórios ou objetos com função espiritual, social ou investigativa.
+
+
+= Subtipos de Itens de Mão =
+Para fins de organização, os Itens de Mão são subdivididos em '''Subtipos''', que definem atributos específicos adicionais:
+* '''Armas''': definem dano, tipo de acerto, alcance e atributos principais.
+* '''Escudos''': definem valores de bloqueio, penalidades, resistência, e bônus situacionais.
+* '''Focos Mágicos''': objetos usados para canalizar magias (ex: bastões, orbes, cristais).
+* '''Relíquias Divinas''': usados por classes espirituais, como clérigos ou paladinos.
+* '''Instrumentos Musicais''': usados por bardos ou artistas para ativar efeitos sonoros ou mágicos.
+* '''Lanternas / Fontes de Luz''': usados para iluminar ambientes escuros.
+* '''Ferramentas de Precisão''': ferramentas utilizadas em testes de perícia (ex: kits de ladrão, engrenagens de relojoeiro, bisturis alquímicos).
+* '''Itens de Combate Rápido''': poções de mão, bombas, pós, que podem ser usados com uma ação simples.
+* '''Objetos Especiais''': grimórios, insígnias, símbolos mágicos, artefatos narrativos e únicos.
+
+
+= Regras de Uso e Equipamento =
+* Cada personagem pode utilizar até '''duas mãos''' para empunhar itens.
+* Armas ou itens de '''duas mãos''' ocupam ambas simultaneamente.
+* Personagens podem alternar entre itens nas mãos como '''ação de pré-turno''' (ver [[Ciclo de Batalha]]).
+* O uso combinado de dois itens está sujeito às suas características. Ex: escudo + tocha é possível; grimório + bastão pode não ser.
+
+
+= Integração com Classes e Raças =
+A possibilidade de uso de certos itens de mão pode ser afetada por:
+* Classe do personagem (ex: clérigos podem usar relíquias com efeitos espirituais)
+* Raça (ex: anões podem usar escudos pesados com menor penalidade)
+* Talentos ou perícias especiais (ex: Lutar com Duas Armas)
+
+
+= Expansão por Jogo =
+Cada universo que utilize a PlayTale Engine é livre para definir os '''tipos de item''' permitidos em seu mundo, bem como os efeitos e atributos específicos de cada um. Recomenda-se que cada subtipo receba uma ficha própria com definições padronizadas.
+
+Exemplo: o universo define fichas específicas para os seguintes subtipos:
+* Tipos de Armas
+* Tipos de Escudos
+* Focos Arcanos
+* Relíquias Ancestrais
+
+
+= Considerações Finais =
+A estrutura de Itens de Mão busca oferecer uma base genérica, modular e expansível para qualquer universo narrativo, sem limitar a criatividade dos designers de jogo. Ao centralizar o conceito em torno da '''função do item nas mãos do personagem''', a engine permite que objetos distintos sejam usados de maneira coerente, integrada e equilibrada.
