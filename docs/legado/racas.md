@@ -1,0 +1,128 @@
+As **raças** definem vários aspectos do personagem (NPCs e Jogadores), e embora o universo de **Mystery Realms** tenha diversas Raças, nem todas são **jogáveis**. As classes que são **jogáveis** estão marcadas.
+
+As **raças** são escolhidas na criação do personagem e definem parte de sua identidade, capacidades físicas, afinidade mágica, reputação social e relações com NPCs.
+Elas influenciam diretamente os **atributos iniciais**, **habilidades secundárias**, **resistências naturais** e **limites físicos**.
+
+A pontuação inicial será definida em conjunto pela **raça** e **classe** escolhida — não há distribuição livre de pontos. O crescimento posterior dos atributos será controlado pelo sistema de progressão do jogo.
+
+
+# Humano
+- **Pontos Fortes:** Versátil, adaptável, respeitado em quase todos os lugares.
+- **Pontos Fracos:** Nenhuma habilidade especial notável.
+- **Resistências:** Nenhuma.
+- **Observações:** Ótima escolha para quem deseja equilíbrio.
+
+
+# Elfo
+- **Pontos Fortes:** Rápido, atento, com afinidade mágica e longevidade.
+- **Pontos Fracos:** Pouca resistência física.
+- **Resistências:**
+- Imunidade a sono mágico
+- Visão no escuro (12m)
+
+
+# Meio-elfo
+- **Pontos Fortes:** Flexível, com empatia social e intuição mágica.
+- **Pontos Fracos:** Dificuldade de aceitação plena em algumas culturas.
+- **Resistências:**
+- Resistência a encantamentos mágicos
+
+
+# Anão
+- **Pontos Fortes:** Robusto, determinado, imune a venenos e fadiga.
+- **Pontos Fracos:** Lento, desconfiado, pouco sociável.
+- **Resistências:**
+- Resistência total a venenos
+- Capacidade de carga +25%
+
+
+# Meio-orc
+- **Pontos Fortes:** Potência física, instinto de combate.
+- **Pontos Fracos:** Pouco carisma e racismo social.
+- **Resistências:**
+- Sobrevive com 1 ponto de vida a um golpe fatal 1 vez por dia
+
+
+# Tiefling
+- **Pontos Fortes:** Magia inata, resistência a fogo, carisma sombrio.
+- **Pontos Fracos:** Sofre preconceito, aparência incomum.
+- **Resistências:**
+- Resistência a fogo
+- Magia menor inata (escolhida pelo jogador entre opções limitadas)
+
+
+# Draconato
+- **Pontos Fortes:** Poder físico ou arcano, resistência elementar, presença marcante.
+- **Pontos Fracos:** Difícil de esconder ou disfarçar.
+- **Resistências:**
+- Resistência ao tipo de elemento da linhagem (escolhido na criação)
+- Sopro elemental 1x por descanso
+
+
+# Halfling
+- **Pontos Fortes:** Sorte natural, furtividade, escapismo.
+- **Pontos Fracos:** Baixa força e pouca presença social.
+- **Resistências:**
+- Imunidade a medo mágico
+- Pode rerrolar uma falha crítica por dia
+
+# Tabela de Atributos e Habilidades
+<center>
+{| class="wikitable"
+! Atributos / Raça !! Humano !! Elfo !! Meio-elfo !! Anão !! Meio-orc !! Tiefling !! Draconato !! Halfling
+|-
+| **Força** || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|2 || style="text-align:center"|3 || style="text-align:center"|5 || style="text-align:center"|2 || style="text-align:center"|4 || style="text-align:center"|1
+|-
+| **Destreza** || style="text-align:center"|3 || style="text-align:center"|4 || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|3 || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|5
+|-
+| **Constituição** || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|3 || style="text-align:center"|5 || style="text-align:center"|4 || style="text-align:center"|2 || style="text-align:center"|4 || style="text-align:center"|3
+|-
+| **Intelecto** || style="text-align:center"|3 || style="text-align:center"|4 || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|1 || style="text-align:center"|4 || style="text-align:center"|3 || style="text-align:center"|2
+|-
+| **Percepção** || style="text-align:center"|3 || style="text-align:center"|4 || style="text-align:center"|3 || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|2 || style="text-align:center"|2 || style="text-align:center"|3
+|-
+| **Carisma** || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|4 || style="text-align:center"|2 || style="text-align:center"|1 || style="text-align:center"|4 || style="text-align:center"|3 || style="text-align:center"|2
+|-
+| **Vontade** || style="text-align:center"|3 || style="text-align:center"|3 || style="text-align:center"|3 || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|3 || style="text-align:center"|2 || style="text-align:center"|4
+|-
+| **Total de Atributos** || style="text-align:center; background:#f2f2f2;"|21 || style="text-align:center; background:#f2f2f2;"|23 || style="text-align:center; background:#f2f2f2;"|21 || style="text-align:center; background:#f2f2f2;"|20 || style="text-align:center; background:#f2f2f2;"|18 || style="text-align:center; background:#f2f2f2;"|20 || style="text-align:center; background:#f2f2f2;"|20 || style="text-align:center; background:#f2f2f2;"|20
+|-
+| **Persuasão** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Conhecimento (Arcano)** || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Conhecimento (Natureza)** || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Conhecimento (Relíquias)** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Sobrevivência** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2 || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|–
+|-
+| **Furtividade** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+2
+|-
+| **Intimidação** || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|– || style="text-align:center"|+1 || style="text-align:center"|–
+|}
+
+</center>
+
+# Tabela de Pesos por Gênero
+<center>
+{| class="wikitable"
+! Raça        !! Masculino (kg) !! Feminino (kg) !! Não-binário / Outro (kg)
+|-
+| Humano      || 75             || 65             || 70
+|-
+| Elfo        || 60             || 50             || 55
+|-
+| Meio-elfo   || 67             || 57             || 62
+|-
+| Anão        || 85             || 75             || 80
+|-
+| Meio-orc    || 95             || 85             || 90
+|-
+| Tiefling    || 70             || 60             || 65
+|-
+| Draconato   || 100            || 90             || 95
+|-
+| Halfling    || 40             || 35             || 37
+|}
+</center>

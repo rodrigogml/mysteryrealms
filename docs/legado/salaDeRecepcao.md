@@ -1,0 +1,19 @@
+> **Imagem de referência indisponível no export:** `BibliotecaVarnak_SalaDeRecepcao.png`
+
+- **Nome:** Sala de Recepção
+
+- **Função Narrativa:**
+:* Ponto de controle e acolhimento da biblioteca, onde a guardiã avalia os visitantes. Serve como triagem mágica e introdução narrativa à inteligência viva da biblioteca.
+
+- **Possível Dormir:** Não
+
+- **Descrição:**
+:* O visitante é recebido por um salão circular com teto abobadado, sustentado por pilares entalhados com runas pulsantes. Ao centro, um balcão de pedra negra com veios prateados se estende em meia-lua, onde a Guardiã [Lirianne Morth](lirianneMorth.md) costuma permanecer. O chão, de mármore escuro, reflete a luz das chamas azuladas que flutuam nos cantos. Toda a sala emana um silêncio encantado, interrompido apenas pelos ecos distantes de folhas virando.
+
+- **Detalhamento Visual:**
+:* O balcão possui inscrições que se acendem com a presença dos visitantes. Atrás dele, flutua um grimório aberto, que registra magicamente os nomes e intenções dos recém-chegados. Prateleiras com livros de protocolos antigos circundam as paredes. Uma única porta atrás do balcão leva às divisões internas da biblioteca, abrindo apenas sob comando da Guardiã ou por vontade da própria Varnak.
+
+- **Notas Narrativas:**
+:* Local para testes de intenção ou alinhamento mágico.
+:* A Guardiã pode conceder ou negar acesso a áreas da biblioteca.
+:* Possíveis eventos mágicos espontâneos, como livros que se movem ou mensagens ocultas reveladas.

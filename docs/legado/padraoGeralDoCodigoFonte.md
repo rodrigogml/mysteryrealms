@@ -1,0 +1,97 @@
+# Organização do Projeto
+Essa sessão define os conceitos e organização da implementação do código, tanto da engine PlayTale, quanto do primeiro jogo sendo desenvolvido para ela, o Mystery Realms.
+
+## Estrutura de Projeto
+- O sistema é dividido em dois projetos Maven separados:
+:* **PlayTale:** biblioteca independente da engine, reusável em outros jogos.
+:* **MysteryRealms:** jogo que utiliza a engine PlayTale.
+
+## Base dos Pacotes
+- **br.eng.rodrigogml.playtale** - Pacote base da Engine
+:* **.vos** - Pacote base para alocação dos VOs da Engine.
+
+- **br.eng.rodrigogml.mysteryrealms** - Pacote base do jogo Mystery Realms
+:* **.vos** - Pacote base para alocação dos VOs do jogo.
+
+## Estrutura Maven
+- Diretórios:
+:* **src** - arquivos fonte do jogo e da engine.
+:* **srcTest** - arquivos fonte de testes unitários.
+:* **etc** - estrutura para documentos, scripts e outros materiais do projeto.
+
+## Configurações de Build
+- Codificação de arquivos: **UTF-8**
+- Versão Java: **Java 1.8**
+- Gerenciador de build: **Maven**
+- Geração de pacotes JAR com estrutura modular por projetos.
+
+# Tecnologias Utilizadas
+
+## Engine (Back-end)
+- **Java 8+** – linguagem principal da engine PlayTale
+- **GSON** – manipulação de JSON
+- **Servidor HTTP Java (com.sun.net.httpserver)** – servidor leve embutido para API
+- **RFW Framework** – framework proprietário com:
+:* Estrutura de VOs
+:* Validações e Exceptions
+:* Serialização e Persistência
+:* Logger e Pré-processamento
+- **Serialização por arquivos locais** – persistência dos objetos do jogo em disco, usando estrutura organizada por diretórios.
+
+## Interface (Front-end)
+- **Vue.js 3** – framework reativo para criação da interface
+- **Quasar Framework** – framework baseado em Vue que permite:
+:* Criação de UI Web responsiva
+:* Exportação para Android/iOS (via Cordova ou Capacitor)
+:* Componentes customizáveis para visual de jogo (barras de vida, botões personalizados etc.)
+- **JavaScript ES6+** – lógica de chamada de APIs
+- **Fetch API** – comunicação com servidor via JSON
+
+## Ferramentas de Desenvolvimento
+- **Visual Studio Code (VS Code)** – IDE principal de desenvolvimento
+:* Plugins: Volar (Vue 3), Debugger for Chrome, Quasar Extension Pack
+- **Vue Devtools** – extensão de navegador para debug em tempo real
+- **Quasar CLI** – ferramenta para desenvolvimento, empacotamento e publicação da interface
+
+# Padrões de Código Desenvolvimento
+
+## JavaDoc
+- Sempre gere javadoc em português nos atributos, classes e métodos utilizando as informações presentes na documentação wiki com explicação mais detalhada possível sobre sua finalidade, funcionamento e limitações. Pode inclusive colocar referências para as páginas wiki com mais informações.
+:* No javadoc a referência para os links deve ser a url completa e não o modelo de link wiki. Exemplo: no wiki a página [Ficha_do_Jogador](fichaDoJogador.md) deve ser escrita com a tag <a href> com o link 'https://mysteryrealms.rodrigogml.eng.br/index.php?title=Ficha_do_Jogador', e target para abertura em nova janela.
+
+- **JavaDoc de Classe**
+:* Nos javadoc de classe devem ser inclusas a tag '@author' com o nome Rodrigo Leitão, e a tag '@since' com a data atual no formato 'YYYY-MM-DD' (Ex: 2025-04-22)
+
+
+## Regras de Escrita de Código
+- Sempre escrever código em inglês.
+- Não gere os métodos getter e setter nos Beans/VOs.
+- Utilizar sempre BigDecimal para números decimais, nunca utilizar float.
+- Sempre utilizar LocalDate, LocalDateTime e LocalTime para os atributos de tempo/data.
+- Atributos que tem uma quantidade limitada de valores aceitos (enumerações como tipos de armas, raridades, etc.) procure criar estrutura de 'enum' estática e pública dentro da própria classe, quando não reaproveita enum de outra classe.
+
+
+## Nomeação e Estrutura de Classes
+- Todos objetos de dados devem usar o sufixo **VO** (ex: `PlayerVO`).
+- VOs devem estender obrigatoriamente a classe base: **RFWVO**.
+
+
+## Exceções
+- Toda exceção deve ser uma subclasse de **RFWException**.
+- **RFWException** é abstrata — use subclasses específicas.
+- Subclasses válidas:
+:* **RFWCriticalException** – erros críticos ou inesperados.
+:* **RFWWarningException** – falhas de ambiente, não de lógica.
+:* **RFWSecurityException** – violação de segurança ou acesso.
+:* **RFWValidationException** – validações de entrada ou estado.
+:* **RFWValidationGroupException** – múltiplas validações agrupadas.
+- A única exceção fora dessa hierarquia permitida é **RFWRunTimeException**, para usos forçados por APIs externas (ex: interfaces que não permitem `throws`).
+
+## Construtores de Exceções
+- Usar sempre que possível:
+<pre>
+new RFWValidationException("CAMPOS_INVALIDOS", new String[]{"nome"}, originalException);
+</pre>
+- Sempre passar o código de erro seguindo padrão: `[A-Z0-9_]+`.
+- Parâmetros para i18n devem ser informados via `String[]`.
+- Sempre passar a `Throwable` original quando disponível.

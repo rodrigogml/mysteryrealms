@@ -1,0 +1,56 @@
+![Thramur Ankuhl](images/ThramurAnkuhl.png)
+
+- **Identificação**
+:* **Nome:** Thramur Ankuhl
+:* **Raça:** Anão
+:* **Idade:** 143 anos (aparência análoga a um humano de 60 anos)
+:* **Profissão/Ocupação:** Mestre ferreiro rúnico da [Forja dos Ecos](langurForjaDosEcos.md); membro da extinta seita Dhurrak
+:* **Local:** [Forja dos Ecos](langurForjaDosEcos.md)
+:* **Bio:** Um dos últimos representantes vivos da Tradição de Dhurrak, linhagem de ferreiros anões que uniam metalurgia e magia elemental. Sobreviveu a uma explosão rúnica que destruiu sua fortaleza natal nas Montanhas Grislak e exilou-se em Langur, onde fundou a Forja dos Ecos sobre uma fenda mágica. Forja armamentos que reagem à alma do portador. Evita fama e atua em silêncio, honrando sua linhagem.
+:* **Aparência:** Baixo, robusto, pele bronzeada, barba espessa e avermelhada trançada com anéis de cobre. Usa avental de couro queimado com runas bordadas à mão. Braços tatuados com símbolos anões de batalhas e linhagem. Voz grave, sotaque anão carregado. Olhar duro, mas não cruel.
+
+- **Relacionamentos**
+:* Mentor e protetor de [Kaela Runaveia](personagensKaelaRunaveia.md), a quem trata como filha, mesmo sem admitir.
+:* Respeita [Dargan Harth](personagensDarganHarth.md), veterano de guerra como ele — dividem o silêncio do sofrimento.
+:* Tem rixa velada com [Lirianne Morth](personagensLirianneMorth.md), por ver a Biblioteca como prisão de saberes mágicos.
+:* Já forjou armas para antigos membros do Conselho dos Cinco — evita envolvimento político direto.
+
+- **Personalidade**
+:* **Estilos Preferidos:** direto, frio, respeitoso
+:* **Estilos Tolerados:** lógico, literal, empático, formal
+:* **Estilos Rejeitados:** irônico, informal, afetuoso
+:* **Tolerância aos Estilos:**
+::* **educado:** 60
+::* **grosseiro:** 20
+::* **direto:** 80
+::* **enigmático:** 40
+::* **formal:** 55
+::* **informal:** 10
+::* **irônico:** 5
+::* **literal:** 70
+::* **empático:** 50
+::* **intimidativo:** 25
+::* **afetuoso:** 10
+::* **frio:** 85
+::* **lógico:** 75
+::* **emocional:** 15
+::* **respeitoso:** 90
+::* **desrespeitoso:** 5
+:* **Estilo de Fala Pessoal**
+::* **Dominante:** direto
+::* **Secundários:** frio, lógico
+:* **Valores Apreciados (Valoração):** Honra, Tradição, Silêncio
+:* **Frases de Reação Espontânea:**
+::* “Traga propósito, ou leve seu ouro de volta.”
+::* “O aço fala. O tolo grita.”
+::* “Runas não são enfeite, garoto. Elas sentem.”
+:* **Personalidade e Comportamento:** Ranzinza, direto, orgulhoso de sua arte. Despreza superficialidade, honra o silêncio do trabalho. Avalia os outros mais pelo sofrimento que carregam do que pelas palavras. Exige respeito, e oferece sabedoria aos que o merecem — em forma de aço e runa.
+:* **Expressões Típicas:**
+::* “Se a arma não ecoa... é porque você não tem voz.”
+::* “Respeite o martelo. Ele lembra.”
+::* “A forja não mente.”
+
+- **Mecânica do Jogo**
+:* Serve como forjador de armas rúnicas únicas e pode criar itens que evoluem conforme o jogador.
+:* Pode testar o caráter do jogador antes de aceitar um pedido.
+:* Atua como guardião de saberes antigos — oferece fragmentos de lore anão e da Tradição de Dhurrak.

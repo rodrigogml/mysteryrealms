@@ -1,0 +1,21 @@
+Esta página documenta todos os marcadores utilizados no jogo *Mystery Realms*. Ela serve como referência para desenvolvedores, roteiristas e colaboradores que precisem consultar quais eventos, relações e descobertas podem ser rastreadas pelo sistema de marcadores.
+
+Para informações sobre a estrutura e funcionamento dos marcadores, consulte a página [Sistema de Marcadores](sistemaDeMarcadores.md).
+
+# CONHECE_
+Este prefixo indica que o jogador conheceu ou foi apresentado a um personagem, criatura ou entidade.
+
+{| class="wikitable"
+! Marcador !! Indica que... !! Onde pode ser adquirido
+|-
+| CONHECE_ELVARINDOSILENCIO || O jogador conheceu Elvarin do Silêncio, um personagem guia na Praça das Vozes. || * [Diálogo do Elvarin do Silêncio, Quem é você?](dialogosElvarinDoSilencioDialogoQuemEVoce.md)
+|}
+
+# SABESOBRE_
+Este prefixo indica que o jogador descobriu ou aprendeu sobre uma organização, evento, local ou informação relevante.
+
+{| class="wikitable"
+! Marcador !! Indica que... !! Onde pode ser adquirido
+|-
+| SABESOBRE_ORDEMDOSCAMINHANTESSILENCIOSOS || O jogador descobriu sobre a existência da Ordem dos Caminhantes Silenciosos. || * [Diálogo do Elvarin do Silêncio, Quem é você?](dialogosElvarinDoSilencioDialogoQuemEVoce.md)
+|}

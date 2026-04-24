@@ -1,0 +1,56 @@
+![Oskar Brünn](images/OskarBrunn.png)
+
+- **Identificação**
+:* **Nome:** Oskar Brünn
+:* **Raça:** Humano
+:* **Idade:** 62 anos
+:* **Profissão/Ocupação:** Tesoureiro-chefe da [Casa de Custódia](langurCasaDeCustodia.md); especialista em contratos mágicos e segurança arcano-financeira
+:* **Local:** [Casa de Custódia](langurCasaDeCustodia.md), Anel Central
+:* **Bio:** Figura de máxima confiança na elite de [Langur](langur.md), Oskar é o arquiteto do sistema de cofres mágicos de segurança progressiva usado em diversas cidades. Ex-criptógrafo militar, atuou como conselheiro financeiro do Conselho dos Cinco antes de assumir a Casa de Custódia. Reconhecido por sua integridade implacável, tornou-se sinônimo de confiabilidade arcana.
+:* **Aparência:** Alto, robusto, pele clara e cabelos grisalhos bem aparados. Usa trajes azul-escuros com bordados prateados e luvas encantadas que ativam selos rúnicos. Seu olhar é severo, e raramente sorri. Carrega uma cicatriz discreta na sobrancelha — legado de sua vida pré-burocrática.
+
+- **Relacionamentos**
+:* Comunicação direta com o [Conselho dos Cinco](faccoesConselhoDosCinco.md).
+:* Mantém respeito formal com [Thramur Ankuhl](thramurAnkuhl.md), com quem colaborou em reforços mágicos.
+:* Recusa armazenar itens não catalogados — inclusive de [Vareth Dolmar](varethDolmar.md).
+:* Mantém cautela com [Lirianne Morth](lirianneMorth.md) e a [Biblioteca Varnak](langurBibliotecaVarnak.md) por ausência de registros verificáveis.
+
+- **Personalidade**
+:* **Estilos Preferidos:** formal, lógico, direto
+:* **Estilos Tolerados:** literal, frio, respeitoso, educado
+:* **Estilos Rejeitados:** emocional, informal, grosseiro
+:* **Tolerância aos Estilos:**
+::* **educado:** 70
+::* **grosseiro:** 10
+::* **direto:** 60
+::* **enigmático:** 40
+::* **formal:** 95
+::* **informal:** 20
+::* **irônico:** 25
+::* **literal:** 65
+::* **empático:** 35
+::* **intimidativo:** 15
+::* **afetuoso:** 10
+::* **frio:** 70
+::* **lógico:** 85
+::* **emocional:** 10
+::* **respeitoso:** 90
+::* **desrespeitoso:** 5
+:* **Estilo de Fala Pessoal**
+::* **Dominante:** formal
+::* **Secundários:** lógico, direto
+:* **Valores Apreciados (Valoração):** Ordem, Disciplina, Precisão
+:* **Frases de Reação Espontânea:**
+::* “Confiança se prova com consistência.”
+::* “Erros têm preço. E juros.”
+::* “O tempo é patrimônio. E você acabou de perder parte do seu.”
+:* **Personalidade e Comportamento:** Frio, meticuloso e inflexível. Enxerga desorganização como ameaça. Protege seus subordinados, mas exige excelência. É resistente a bajulações e rigoroso com falhas — porém justo.
+:* **Expressões Típicas:**
+::* “Cada selo é um voto de sangue.”
+::* “Segurança é prioridade. Emoções, um risco.”
+::* “Magia falha. Rigor, não.”
+
+- **Mecânica do Jogo**
+:* Pode liberar ou bloquear cofres com base em conduta do jogador.
+:* Atua como validador de contratos mágicos e registros de propriedade.
+:* Pode ser chave narrativa para intrigas financeiras ou crimes sofisticados.

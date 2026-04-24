@@ -1,0 +1,16 @@
+Para criar uma ficha de Personalidade (personagem histórico, lendário ou notável que não interage diretamente com o jogador), deve-se utilizar o modelo a seguir, preenchendo cada campo conforme instruções:
+
+<pre>
+== Nome da Personalidade ==
+[[Arquivo:NomeDaPersonalidade.png|thumb|right|300px|Nome da Personalidade]] (O nome do arquivo não deve conter acentos ou espaços, deve ser o nome da personalidade em CamelCase.)
+* '''Bio:''' Descreve quem foi a personalidade, sua importância e relevância histórica, cultural ou simbólica no mundo de [[Mystery Realms]]. A biografia deve ser objetiva e conectada à ambientação do jogo. Pode ser expandida futuramente com histórias, lendas ou quests.
+* '''Aparência:''' (Opcional, porém '''recomendado''' para criação de arte visual) — Detalhes físicos, trajes, postura, adereços e expressões que definem visualmente a personalidade. Essencial para uso de IA de geração de imagem.
+* '''Local:''' (Opcional) — Informar onde a personalidade viveu, reinou, atuou ou deixou sua marca. Use apenas se for relevante para o lore ou localização atual do jogador.
+* '''Relacionamentos:''' (Opcional) — Citar outras personalidades, NPCs ou instituições com os quais teve vínculo importante, rivalidade ou influência. Use apenas se forem relevantes para contexto histórico ou político.
+* '''Legado:''' (Opcional) — Explicita a influência duradoura da personalidade: fundações, ordens, monumentos, leis, magias ou eventos que resultaram de sua existência.
+</pre>
+
+
+'''Observações:'''
+* Todas as personalidades devem ter impacto narrativo claro, mesmo que sutil.
+* Esta ficha serve para enriquecer o mundo e oferecer base para futuras tramas, mas não gera interações diretas no jogo.

@@ -1,0 +1,25 @@
+![Sala da Fundição da Forja dos Ecos](images/ForjaDosEcos_SalaDaFundicao.png)
+
+- **Nome:** Sala da Fundição
+
+- **Função Narrativa:**
+:* Sala principal de trabalho e criação da forja. Local onde [Thramur](thramurAnkuhl.md) e [Kaela](kaelaRunaveia.md) realizam suas criações, avaliam pedidos e interagem com clientes brevemente no balcão de atendimento.
+
+- **Possível Dormir:** Não
+
+- **Descrição:**
+:* Um amplo salão semicircular, tomado por calor e reverberações metálicas constantes. À entrada, um pequeno balcão de madeira gasta, repleto de marcas de impacto e queimaduras, serve como ponto de atendimento improvisado — onde clientes deixam encomendas ou aguardam resposta.
+:* O interior da sala é dominado pela fornalha encantada, operada por Thramur com golpes ritmados e poderosos, enquanto Kaela manipula moldes rúnicos e runas flutuantes.
+:* Ganchos, ferramentas, moldes e peças inacabadas cobrem as paredes em um caos ordenado. O som ecoa múltiplas vezes a cada martelada, criando uma trilha sonora rítmica e quase hipnótica.
+
+- **Detalhamento Visual:**
+:* Chamas oscilantes em tons de âmbar e cobalto iluminam o salão entre colunas marcadas por fuligem e runas vibrantes.
+:* Um canal de lava mágica corre discretamente entre as pedras do chão.
+:* O balcão à frente está rachado e gasto, evidenciando anos de uso intenso.
+:* Kaela manipula runas que dançam no ar enquanto ajusta armas sobre uma bancada reforçada.
+
+- **Notas Narrativas:**
+:* Ambiente onde jogadores podem realizar pedidos especiais de armas ou armaduras.
+:* Possíveis interações com encantamentos rúnicos ou testes de afinidade mágica dos itens.
+:* Thramur pode testar o caráter do jogador antes de aceitar qualquer pedido.
+:* O campo mágico do ambiente interfere levemente em magias lançadas, podendo gerar efeitos colaterais curiosos.

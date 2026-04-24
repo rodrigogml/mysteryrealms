@@ -1,0 +1,67 @@
+Modificadores representam condições aplicadas ao jogador ou criatura que alteram temporariamente seu desempenho no jogo. Eles podem representar estados físicos, mentais, mágicos ou ambientais, e gerar '''bônus''', '''penalidades''', ou '''ambos''' ao mesmo tempo.
+
+Modificadores podem ser aplicados por ações, falhas, sucessos, efeitos de itens, habilidades, condições climáticas ou mágicas. Cada modificador possui efeitos definidos, e deve ser registrado com nome e descrição clara de suas consequências mecânicas.
+
+Eles tem a finalidade para centralizar as definições desse '''bônus''' ou '''penalidades''' para simplificar a gestão de balanceamento do jogo. Alguns modificadores tem definições absolutas, que indicam que mesmo que a mecânica do jogo se altere, o cálculo do modificador será alterado para continuar entregando o que foi definido, por isso '''é muito importante que a definição do modificador seja clara, direta e objetiva!'''
+
+
+= Lista de Modificadores Padrão da Engine =
+== Exaustão ==
+* '''Definição:''' Modificador que define as penalidades de se estar em exaustão, este modificador é aplicado automaticamente quando os pontos de Fadiga estão acima de Fadiga Máxima.
+* '''Efeitos:'''
+:* Redução proporcional da '''Força'''. Para cada 1% de fadiga acima da fadiga máxima a força é penalizada em 1%. (ex: Fadiga em 110% = -10% de força)
+:* Redução da '''velocidade de movimento''' em 60%.
+:* Redução da '''precisão de ataques''' em 50%.
+
+
+== Sede ==
+* '''Definição:''' Aplica penalidades físicas e mentais quando a barra de Sede atinge '''25%''' ou mais.
+:* O personagem começa a apresentar sintomas de desidratação leve, como cansaço precoce e dificuldade de concentração. Esse modificador pode ser causado pela ausência prolongada de ingestão de líquidos, calor extremo ou atividades desgastantes sem hidratação.
+* '''Efeitos:'''
+:* Reduz Precisão de ataques em 5%
+:* Aumenta o consumo de Fadiga em 10%
+:* Reduz a eficácia da recuperação de descansos e sono em 30%.
+
+
+== Sede Agravada ==
+* '''Definição:''' Aplica penalidades severas quando a barra de Sede atinge '''65%''' ou mais.
+:* O corpo entra em colapso gradual pela desidratação intensa. Este estado é extremamente perigoso e pode levar o personagem a desmaiar. Geralmente resulta de negligência prolongada da hidratação.
+* '''Efeitos:'''
+:* Todos os efeitos do modificador '''SEDE'''
+:* Redução de Força e Percepção em '''–2 pontos'''
+:* Chance de confusão ou tontura em combate (Que causa o que? Rever esse efeito).
+:* Recuperação por descanso e sono é anulada.
+
+
+== Fome ==
+* '''Definição:''' Aplica penalidades de desempenho quando a barra de Fome atinge '''43%''' ou mais.
+*: Representa a falta prolongada de alimentação, afetando a força física e clareza mental. Pode surgir após dias sem refeições adequadas, especialmente se combinada com esforço físico constante.
+* '''Efeitos:'''
+:* Reduz Força e Intelecto em '''1 ponto'''.
+:* Reduz chance de acerto crítico em '''5%'''.
+:* Reduz Vontade e Percepção em '''2 pontos'''.
+
+
+== Fome Agravada ==
+* '''Definição:''' Aplica efeitos intensos de fraqueza e lentidão quando a barra de Fome atinge '''85%''' ou mais.
+*: Esse estado representa o colapso do corpo pela inanição. O personagem sofre severamente em todas as suas ações e pode desmaiar se continuar nesse estado por muito tempo.
+* '''Efeitos:'''
+:* Todos os efeitos do modificador '''FOME'''
+:* Redução de Constituição e Vontade em '''2 pontos''' (total de Pontos de Vontade perdidos 4 somando o modificador '''Fome''').
+:* Aumento de consumo de Fadiga em '''20%'''.
+:* Redução da velocidade de movimento em '''20%'''.
+
+
+== Fadiga Elevada ==
+* '''Definição:''' Multiplica o ganho de '''Fadiga''' por '''2x'''.
+:* O personagem afetado por esse modificador se cansa duas vezes mais rápido que o normal. Este efeito pode ser causado por doenças, fome extrema, feitiços de exaustão ou ambientes adversos.
+
+
+== Mal-Estar Temporário ==
+* '''Definição:''' Aplica uma penalidade de '''–1 ponto em todos os Atributos Principais''': Força, Destreza, Constituição, Intelecto, Percepção, Carisma e Vontade.
+:* Pode ser causado por efeitos mágicos, envenenamento leve, ressaca, clima extremo ou situações de estresse físico/mental transitório.
+
+
+== Recuperação Reduzida ==
+* '''Definição:''' Reduz em 50% a eficácia da recuperação de '''Pontos de Vida (PV)''' de qualquer método de [[Recuperação]]. Seja mágico, por itens, habilidades ou descanso.
+:* Pode ser causado por efeitos mágicos, venenos, estados mentais debilitantes, entre outros. Enquanto ativo, o jogador deverá considerar sempre a metade do valor normalmente restaurado por qualquer ação de cura.

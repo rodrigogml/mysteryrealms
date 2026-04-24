@@ -1,0 +1,134 @@
+Esta página documenta as interfaces públicas (HTTP Handlers) expostas pelo servidor da Engine e do Jogo. A API segue o padrão RESTful com comunicação via JSON padronizada através do modelo **ApiResponseDTO**.
+
+# Organização dos Handlers
+- **Handlers da Engine** – Responsáveis por funcionalidades comuns a qualquer jogo usando a Engine PlayTale.
+- **Handlers do Jogo** – Responsáveis pelas lógicas específicas do jogo *Mystery Realms*.
+
+# Formato Geral
+- **Base URL:** `http://<host>:<porta>/api`
+- **Formato de resposta:** JSON no padrão:
+<pre>
+{
+  "success": true | false,
+  "code": "código interno",
+  "message": "descrição",
+  "data": { ... }
+}
+</pre>
+- **Cabeçalhos adicionais:**
+:* Quando requerido: `X-Session-Token: <token>`
+
+# Handlers da Engine
+
+## /api/status
+- **Descrição:** Verifica se a API da Engine está online e retorna sua versão.
+- **Método:** GET
+- **Autenticação:** Não requer
+- **Parâmetros:** Nenhum
+- **Resposta:**
+<pre>
+{
+  "success": true,
+  "code": "SUCCESS",
+  "message": "OK",
+  "data": {
+    "status": "online",
+    "version": "1.0.0"
+  }
+}
+</pre>
+
+## /api/register
+- **Descrição:** Registra um novo usuário no sistema com nome de usuário, senha e e-mail. O usuário será criado com status de e-mail não confirmado e deverá confirmar o e-mail antes de realizar login.
+- **Método:** POST
+- **Autenticação:** Não requer
+- **Corpo da requisição:**
+<pre>
+{
+  "userName": "string",
+  "password": "string",
+  "email": "string"
+}
+</pre>
+- **Resposta (sucesso):**
+<pre>
+{
+  "success": true,
+  "code": "SUCCESS",
+  "message": "Usuário registrado com sucesso",
+  "data": null
+}
+</pre>
+- **Resposta (erro - campos obrigatórios):**
+<pre>
+{
+  "success": false,
+  "code": "(PTE_000005|PTE_000006|PTE_000007)",
+  "message": "(Usuário|Senha|Email) não preenchido",
+  "data": null
+}
+</pre>
+- **Resposta (erro - e-mail inválido):**
+<pre>
+{
+  "success": false,
+  "code": "RFW_000059",
+  "message": "Formato de e-mail inválido",
+  "data": null
+}
+</pre>
+- **Resposta (erro - usuário já existente):**
+<pre>
+{
+  "success": false,
+  "code": "(MRS_000007)",
+  "message": "Nome de usuário já registrado",
+  "data": null
+}
+</pre>
+
+
+## /api/login
+- **Descrição:** Realiza a autenticação do usuário. Retorna um token de sessão válido para acesso autenticado.
+- **Método:** POST
+- **Autenticação:** Não requer
+- **Corpo da requisição:**
+<pre>
+{
+  "username": "string",
+  "password": "string"
+}
+</pre>
+- **Resposta (sucesso):**
+<pre>
+{
+  "success": true,
+  "code": "SUCCESS",
+  "message": "OK",
+  "data": {
+    "token": "UUID"
+  }
+}
+</pre>
+- **Resposta (erro - campos obrigatórios):**
+<pre>
+{
+  "success": false,
+  "code": "PTE_000003",
+  "message": "Campo obrigatório ausente",
+  "data": null
+}
+</pre>
+- **Resposta (erro - autenticação inválida):**
+<pre>
+{
+  "success": false,
+  "code": "MRS_000001",
+  "message": "Usuário ou senha incorretos",
+  "data": null
+}
+</pre>
+
+# Handlers do Jogo
+
+<pre>@TODO – Esta seção será preenchida com os endpoints definidos na lógica específica do jogo *Mystery Realms*.</pre>

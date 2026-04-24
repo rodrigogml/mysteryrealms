@@ -1,0 +1,77 @@
+Para criar uma ficha de NPC deve ser utilizado modelo a seguir (sem utilizar as tags 'pre') preenchendo cada campo conforme instruções:
+
+<pre>
+== Nome do NPC ==
+[[Arquivo:NomeDoNPC.png|thumb|right|300px|Nome do NPC]] (O nome do arquivo não deve conter acentos ou espaços, deve ser o nome do NPC em CamelCase.)
+* '''Identificação'''
+:* '''Nome:''' Informar Nome e Sobrenome do NPC. Todo NPC deve ter nome e sobre nome
+:* '''Raça:''' Definir a raça do NPC. De acordo com a lista de raças permitidas pelo jogo.
+:* '''Idade:''' Fornecer a idade exata, aproximada ou desconhecida com a definição da idade aparente (para povos que vivem muito).
+:* '''Profissão/Ocupação''': Definir a profissão, ocupação, e nível de instrução/conhecimento caso seja acadêmico.
+:* '''Local:''' Lugar onde é encontrado.
+:* '''Bio:''' Definir uma pequena biografia inicial sobre o personagem. A biografia e sua história será enriquicida depois durante a criação dos quests. Ao criar basta uma introdução inicial de base.
+:* '''Aparência:''' Definir a aparência do personagem em detalhes, desde aparência física com detalhes sobre cabelo, olhos, boca, sobrancelhas, pelos, marcas, cicatrizes, estatura, postura, roupas, acessórios, expressão, etc.
+* '''Relacionamentos''': Listar relacionamento com outros personagens da mesma Localidade, Zona e Ambiente, que ajudem a criar uma base melhor para os quests.
+* '''Personalidade'''
+:* '''Estilos Preferidos:''' Indique de 1 a 3 estilos de fala que o NPC considera agradáveis e que geram empatia. Utilize apenas estilos presentes na [[Estilos_de_Fala_e_Valoração#Tabela_de_Estilos|Tabela de Estilos]].
+:* '''Estilos Tolerados:''' Liste até 4 estilos que o NPC aceita ou ignora sem reações positivas ou negativas. Utilize apenas estilos válidos da [[Estilos_de_Fala_e_Valoração#Tabela_de_Estilos|Tabela de Estilos]].
+:* '''Estilos Rejeitados:''' Indique de 1 a 3 estilos que o NPC não tolera bem. O uso deles pode reduzir afinidade, especialmente se ultrapassarem o limite de tolerância. Utilize apenas estilos da [[Estilos_de_Fala_e_Valoração#Tabela_de_Estilos|Tabela de Estilos]].
+:* '''Tolerância aos Estilos:''' Defina um valor de 0 a 100 para cada estilo listado abaixo, representando o quanto o NPC tolera ou aceita cada forma de comunicação, sendo: 0 a 20 – Extremamente intolerante; 21 a 50 – Baixa tolerância; 51 a 70 – Média tolerância; 71 a 90 – Alta tolerância; 91 a 100 – Admiração ou apreciação.
+::* '''educado:''' 
+::* '''grosseiro:''' 
+::* '''direto:''' 
+::* '''enigmático:''' 
+::* '''formal:''' 
+::* '''informal:''' 
+::* '''irônico:''' 
+::* '''literal:''' 
+::* '''empático:''' 
+::* '''intimidativo:''' 
+::* '''afetuoso:''' 
+::* '''frio:''' 
+::* '''lógico:''' 
+::* '''emocional:''' 
+::* '''respeitoso:''' 
+::* '''desrespeitoso:''' 
+:* '''Estilo de Fala Pessoal''' Indicam os estilos de fala do NPC. Todos os estilos devem ser escolhidos da [[Estilos_de_Fala_e_Valoração#Tabela_de_Estilos|Tabela de Estilos]].
+::* '''Dominante:''' Indique o estilo de fala do dominante do NPC
+::* '''Secundários:''' Indique 1 ou 2 estilos de fala secundários como o NPC se expressa.
+:* '''Valores Apreciados (Valoração):''' Liste de 1 a 3 valores que o NPC admira e respeita acima de tudo. Fala com esse conteúdo aumenta a afinidade com o NPC, independentemente do estilo. Os valores devem ser escolhidos da [[Estilos_de_Fala_e_Valoração#Tabela_de_Valoração|Tabela de Valoração]].
+:* '''Frases de Reação Espontânea:''' Crie de 1 a 3 frases que o NPC pode dizer após falas que coincidem ou confrontam seus estilos e valores. Ex: “Você fala como eu penso.” ou “Se continuar com esse tom, nossa conversa termina por aqui.”
+:* '''Personalidade e Comportamento''': Instruções extras sobre seu comportamento, alinhamento, etc. além do já definido nos atributos acima.
+:* '''Expressões Típicas''': Tipos de falas e expressões comuns do personagem para dar maoir característica ao personagem.
+* '''Mecânica do Jogo''': Quando houver alguma instrução sobre como o NPC deverá proceder no jogo, informações em relação a programação e funcionamento do jogo, não sobre sua personalidade ou pessoais.
+</pre>
+
+
+Atualmente a lista de '''Estilos de Fala''' permitidos são: 
+* '''educado:''' Usa gentileza, boas maneiras e cortesia.
+* '''grosseiro:''' Fala áspera, ofensiva ou rude.
+* '''direto:''' Vai ao ponto, sem rodeios ou floreios.
+* '''enigmático:''' Usa ambiguidade, simbolismo ou misticismo.
+* '''formal:''' Fala estruturada, respeitosa, com compostura social.
+* '''informal:''' Descontraída, casual, uso de gírias.
+* '''irônico:''' Zombaria sutil, sarcasmo ou humor ácido.
+* '''literal:''' Objetiva, direta, sem duplo sentido.
+* '''empático:''' Demonstra empatia, escuta e consideração.
+* '''intimidativo:''' Impõe pressão, ameaça ou dominação.
+* '''afetuoso:''' Usa calor emocional, carinho, afabilidade.
+* '''frio:''' Distante, impessoal, racional.
+* '''lógico:''' Argumentativo, analítico, racional.
+* '''emocional:''' Fala baseada em sentimentos, impulsos ou paixões.
+* '''respeitoso:''' Demonstra reverência, deferência ou honra.
+* '''desrespeitoso:''' Rompe etiqueta, insulta ou debocha abertamente.
+
+
+Atualmente a lista de '''Valores''' permitidos são: 
+* '''Honra:''' - Respeita a verdade, promessas e conduta justa.
+* '''Liberdade:''' - Valoriza a escolha individual, odeia opressão.
+* '''Conhecimento:''' - Preza por sabedoria, descoberta e estudo.
+* '''Lealdade:''' - Admira fidelidade a amigos, clãs ou causas.
+* '''Espiritualidade:''' - Acredita no valor da fé e do sagrado.
+* '''Força:''' - Respeita coragem, poder e determinação.
+* '''Compaixão:''' - Empatia e cuidado com o outro.
+* '''Pragmatismo:''' - Valoriza resultados, não aparências.
+* '''Tradição:''' - Defende costumes, hierarquias e cultura.
+* '''Desobediência:''' - Aprecia rebeldia contra autoridades.
+* '''Autossuficiência:''' - Valoriza independência e autonomia.

@@ -1,0 +1,24 @@
+[[Arquivo:ArsenalTresLaminas_SalaoDaLoja.png|thumb|right|300px|Salão da Loja da Arsenal Três Lâminas]]
+
+* '''Nome:''' Salão da Loja
+
+* '''Função Narrativa:'''  
+:* Espaço principal de interação comercial com NPCs, visualização de equipamentos, rumores e avaliação de espólios.
+
+* '''Possível Dormir:''' Não
+
+* '''Descrição:'''  
+:* O Salão da Loja é o ambiente central do Arsenal Três Lâminas, onde os clientes entram em contato direto com a atmosfera marcial do comércio. Um espaço amplo, impregnado pelo cheiro metálico de aço, couro curtido e um leve aroma de óleo de conservação. A entrada se dá por uma porta de madeira pesada, guarnecida por ferragens entalhadas com símbolos de guerra. Logo ao cruzar o limiar, os olhos são capturados por dezenas de armas reluzentes expostas por todo lado.  
+:* O som metálico de lâminas tilintando e o rangido das tábuas sob os pés acompanham a movimentação constante de visitantes e mercadores. O local emana uma energia contida — como se cada arma ali estivesse à espera de sua próxima batalha.
+
+* '''Detalhamento Visual:'''  
+:* As paredes de pedra bruta estão quase totalmente cobertas por suportes e ganchos que sustentam espadas, lanças, escudos e elmos, organizados por estilo, origem ou condição. Há peças reluzentes recém-forjadas ao lado de armas antigas cobertas de ferrugem cerimonial.  
+:* Colunas de madeira sustentam o teto alto, e entre elas surgem expositores improvisados feitos de caixotes e barris, onde adagas, bestas e punhais estão dispostos de forma quase caótica. No canto esquerdo, uma pilha de armaduras enferrujadas se mistura com peças ainda utilizáveis.  
+:* Ao fundo, um balcão largo de madeira escura percorre toda a largura da parede, fazendo uma curva em "L". No lado esquerdo do balcão, [[Silma_Verridan|Silma Verridan]] examina itens trazidos por clientes com sua lupa de lentes duplas e mãos ágeis. No lado direito, [[Vareth_Dolmar|Vareth Dolmar]] se apoia com os cotovelos na madeira, observando os visitantes com ar de desafio e ironia, pronto para barganhar com quem ousar.  
+:* Tochas fixas nas colunas e candelabros de ferro pendem do teto, oferecendo uma iluminação quente, que destaca o brilho do metal polido e lança sombras dançantes entre os corredores improvisados.
+
+* '''Notas Narrativas:'''  
+:* Ideal para interações comerciais com recompensas e ganchos de missão baseados em itens raros.  
+:* Pode ser usado como ponto de informação sobre rumores e conflitos.  
+:* A sala trancada dos fundos pode servir como gatilho para uma missão especial ou interação com cliente influente.  
+:* [[Silma_Verridan|Silma Verridan]] pode reconhecer itens raros e oferecer quests relacionadas.
