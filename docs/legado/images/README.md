@@ -9,3 +9,8 @@ python download_legacy_images.py
 ```
 
 O script busca todas as referências de imagem em `docs/legado/*.wiki` e baixa os arquivos disponíveis da wiki para este diretório.
+
+Comportamentos adicionais do script:
+
+- Ignora automaticamente placeholders de modelos (`NomeDo*.png` / `NomeDa*.png`).
+- Para referências de ambientes no formato `Zona_Ambiente.png`, tenta fallback para `Zona.png` quando o arquivo específico não existe no wiki.
