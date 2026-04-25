@@ -1,106 +1,106 @@
-# Recuperacao do Personagem
+# Recuperação do Personagem
 
-## Objetivo Mecanico
+## Objetivo Mecânico
 
-Definir um protocolo unico de recuperacao de **PV**, **Fadiga**, **Fadiga Minima**, **Moral**, **Fome** e **Sede** para atividades fora de combate.
+Definir um protocolo único de recuperação de **PV**, **Fadiga**, **Fadiga Mínima**, **Moral**, **Fome** e **Sede** para atividades fora de combate.
 
-Este documento consolida descanso, sono e recuperacao por itens/eventos em regras operacionais.
+Este documento consolida descanso, sono e recuperação por itens/eventos em regras operacionais.
 
 ---
 
-## Modos de Recuperacao
+## Modos de Recuperação
 
 1. **Descanso curto** (baixo risco, ganho moderado)
-2. **Dormir** (alto ganho, requer janela de tempo e seguranca)
-3. **Consumo de itens/acoes** (ganho imediato sob custo de recurso)
-4. **Eventos narrativos** (recuperacao excepcional, controlada por design)
+2. **Dormir** (alto ganho, requer janela de tempo e segurança)
+3. **Consumo de itens/ações** (ganho imediato sob custo de recurso)
+4. **Eventos narrativos** (recuperação excepcional, controlada por design)
 
 ---
 
 ## Descanso Curto
 
-Recuperacao base por minuto:
+Recuperação base por minuto:
 
 <math>\Delta\text{Fadiga}_{min} = -0{,}10\%\times\text{Fadiga}_{max}\times\text{FatorAtividade}</math>
 
 Regras:
 - `FatorAtividade` entre 0 e 1.
-- Descanso curto nao recupera `FadigaMinima`.
-- Descanso curto nao recupera PV por padrao.
-- Se houver atividade leve (ex.: conversa, leitura, meditacao), usar `FatorAtividade` reduzido.
+- Descanso curto não recupera `FadigaMinima`.
+- Descanso curto não recupera PV por padrão.
+- Se houver atividade leve (ex.: conversa, leitura, meditação), usar `FatorAtividade` reduzido.
 
 ---
 
 ## Dormir
 
-Recuperacao base por minuto:
+Recuperação base por minuto:
 
 - <math>\Delta\text{Fadiga}_{min} = -0{,}21\%\times\text{Fadiga}_{max}\times\text{FatorSono}</math>
 - <math>\Delta\text{FadigaMinima}_{min} = -0{,}21\%\times\text{Fadiga}_{max}\times\text{FatorSono}</math>
 - <math>\Delta\text{PV}_{min} = (\text{CON}/120)\times\text{FatorSono}</math>
 
 Regras operacionais:
-- Minimo de **1h ininterrupta** para contar como sono.
-- Interrupcao antes de 1h converte o periodo em descanso curto.
-- Remocao de modificadores de sono exige janela longa (baseline: 4h ininterruptas + condicao de PV estavel).
+- Mínimo de **1h ininterrupta** para contar como sono.
+- Interrupção antes de 1h converte o período em descanso curto.
+- Remoção de modificadores de sono exige janela longa (baseline: 4h ininterruptas + condição de PV estável).
 
 ---
 
 ## Fator de Qualidade do Sono
 
-Parametros:
+Parâmetros:
 - `C` (Conforto): 0..100
 - `R` (Risco ambiente): 0..100
-- `S` (Seguranca aplicada): -50..100
+- `S` (Segurança aplicada): -50..100
 
-Formula:
+Fórmula:
 
 <math>\text{FatorSono} = 0{,}5 + \frac{3\times C + (100 - Max(0; R-S))}{800}</math>
 
-Saida alvo:
-- Minimo pratico: `0,5`
-- Maximo: `1,0`
+Saída alvo:
+- Mínimo prático: `0,5`
+- Máximo: `1,0`
 
 ---
 
-## Interrupcao do Sono
+## Interrupção do Sono
 
 Por bloco de 1h:
-1. Executar teste de sono/interrupcao.
-2. Se sucesso: computar 1h de recuperacao.
+1. Executar teste de sono/interrupção.
+2. Se sucesso: computar 1h de recuperação.
 3. Se falha: interromper sono e disparar evento de risco.
 
 Regra de tempo parcial em falha:
-- Rolar minuto da interrupcao no bloco e aplicar recuperacao proporcional.
-- Se nenhuma hora completa foi concluida, tratar recuperacao acumulada como descanso curto.
+- Rolar minuto da interrupção no bloco e aplicar recuperação proporcional.
+- Se nenhuma hora completa foi concluída, tratar recuperação acumulada como descanso curto.
 
 ---
 
-## Recuperacao por Itens e Acoes
+## Recuperação por Itens e Ações
 
 - Itens podem recuperar PV, Fadiga, Fome e Sede.
-- `FadigaMinima` nao deve ser recuperada por item de forma permanente.
-- E permitido buff temporario em `FadigaMinima` com duracao e efeito reversivel.
+- `FadigaMinima` não deve ser recuperada por item de forma permanente.
+- É permitido buff temporário em `FadigaMinima` com duração e efeito reversível.
 
-Regras de seguranca:
+Regras de segurança:
 - Definir cooldown/custo para evitar cadeia infinita de consumo.
-- Priorizar limites por categoria (pocao, alimento, tonico etc.).
+- Priorizar limites por categoria (poção, alimento, tônico etc.).
 
 ---
 
-## Recuperacao Especial (Narrativa)
+## Recuperação Especial (Narrativa)
 
-Eventos de historia podem restaurar parcial ou totalmente o personagem.
+Eventos de história podem restaurar parcial ou totalmente o personagem.
 
 Diretriz:
-- Uso excepcional e rastreavel.
-- Registrar origem e impacto para nao quebrar metas de balanceamento.
+- Uso excepcional e rastreável.
+- Registrar origem e impacto para não quebrar metas de balanceamento.
 
 ---
 
-## Criterios de "Pronto para Requisito"
+## Critérios de "Pronto para Requisito"
 
-- Fechar tabela oficial de `FatorAtividade` por tipo de acao.
-- Fechar teste de sono (entrada, dificuldade, consequencias).
-- Definir limites finais de itens de recuperacao por janela de tempo.
-- Integrar com `recursosVitaisERecuperacao.md` e `descansoEAcampamento.md` sem sobreposicao de regras.
+- Fechar tabela oficial de `FatorAtividade` por tipo de ação.
+- Fechar teste de sono (entrada, dificuldade, consequências).
+- Definir limites finais de itens de recuperação por janela de tempo.
+- Integrar com `recursosVitaisERecuperacao.md` e `descansoEAcampamento.md` sem sobreposição de regras.

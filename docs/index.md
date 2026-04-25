@@ -17,12 +17,12 @@
 
 - [Status do Desenvolvimento](statusDoDesenvolvimento.md)
     - [Objetivo deste documento](statusDoDesenvolvimento.md#objetivo-deste-documento)
-    - [Visao geral do projeto](statusDoDesenvolvimento.md#visao-geral-do-projeto)
+    - [Visão geral do projeto](statusDoDesenvolvimento.md#visao-geral-do-projeto)
     - [Progresso da fase atual](statusDoDesenvolvimento.md#progresso-da-fase-atual)
-    - [Criterio de \"pronto\" por topico migrado](statusDoDesenvolvimento.md#criterio-de-pronto-por-topico-migrado)
-    - [Criterio para encerrar a fase atual](statusDoDesenvolvimento.md#criterio-para-encerrar-a-fase-atual)
-    - [Riscos e atencoes](statusDoDesenvolvimento.md#riscos-e-atencoes)
-    - [Proximas fases (macro)](statusDoDesenvolvimento.md#proximas-fases-macro)
+    - [Critério de \"pronto\" por tópico migrado](statusDoDesenvolvimento.md#criterio-de-pronto-por-topico-migrado)
+    - [Critério para encerrar a fase atual](statusDoDesenvolvimento.md#criterio-para-encerrar-a-fase-atual)
+    - [Riscos e atenções](statusDoDesenvolvimento.md#riscos-e-atencoes)
+    - [Próximas fases (macro)](statusDoDesenvolvimento.md#proximas-fases-macro)
 
 - [Ciclo de Combate](mecanica-do-jogo/combate/cicloDeCombate.md)
     - [Fluxo Oficial](mecanica-do-jogo/combate/cicloDeCombate.md#fluxo-oficial)
@@ -88,16 +88,16 @@
     - [Integração com Moral e Combate](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#integracao-com-moral-e-combate)
     - [Critérios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#criterios-de-pronto-para-requisito)
 
-- [Recuperacao do Personagem](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md)
-    - [Objetivo Mecanico](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#objetivo-mecanico)
-    - [Modos de Recuperacao](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#modos-de-recuperacao)
+- [Recuperação do Personagem](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md)
+    - [Objetivo Mecânico](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#objetivo-mecanico)
+    - [Modos de Recuperação](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#modos-de-recuperacao)
     - [Descanso Curto](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#descanso-curto)
     - [Dormir](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#dormir)
     - [Fator de Qualidade do Sono](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#fator-de-qualidade-do-sono)
-    - [Interrupcao do Sono](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#interrupcao-do-sono)
-    - [Recuperacao por Itens e Acoes](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#recuperacao-por-itens-e-acoes)
-    - [Recuperacao Especial (Narrativa)](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#recuperacao-especial-narrativa)
-    - [Criterios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#criterios-de-pronto-para-requisito)
+    - [Interrupção do Sono](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#interrupcao-do-sono)
+    - [Recuperação por Itens e Ações](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#recuperacao-por-itens-e-acoes)
+    - [Recuperação Especial (Narrativa)](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#recuperacao-especial-narrativa)
+    - [Critérios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#criterios-de-pronto-para-requisito)
 
 - [Descanso e Acampamento](mecanica-do-jogo/combate/descansoEAcampamento.md)
     - [Objetivo Mecânico](mecanica-do-jogo/combate/descansoEAcampamento.md#objetivo-mecanico)
@@ -108,6 +108,16 @@
     - [Risco de Interrupção Noturna](mecanica-do-jogo/combate/descansoEAcampamento.md#risco-de-interrupcao-noturna)
     - [Regras de Conflito e Limites](mecanica-do-jogo/combate/descansoEAcampamento.md#regras-de-conflito-e-limites)
     - [Critérios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/descansoEAcampamento.md#criterios-de-pronto-para-requisito)
+
+- [Tipos de Armas](mecanica-do-jogo/equipamentos/tiposDeArmas.md)
+    - [Objetivo Mecânico](mecanica-do-jogo/equipamentos/tiposDeArmas.md#objetivo-mecanico)
+    - [Definição Operacional](mecanica-do-jogo/equipamentos/tiposDeArmas.md#definicao-operacional)
+    - [Estrutura Canônica de um Tipo de Arma](mecanica-do-jogo/equipamentos/tiposDeArmas.md#estrutura-canonica-de-um-tipo-de-arma)
+    - [Catálogo Inicial (Baseline da Fase)](mecanica-do-jogo/equipamentos/tiposDeArmas.md#catalogo-inicial-baseline-da-fase)
+    - [Regras de Classificação e Conflito](mecanica-do-jogo/equipamentos/tiposDeArmas.md#regras-de-classificacao-e-conflito)
+    - [Impacto Sistêmico](mecanica-do-jogo/equipamentos/tiposDeArmas.md#impacto-sistemico)
+    - [Limites e Casos de Borda](mecanica-do-jogo/equipamentos/tiposDeArmas.md#limites-e-casos-de-borda)
+    - [Pronto para Requisito](mecanica-do-jogo/equipamentos/tiposDeArmas.md#pronto-para-requisito)
 
 ## Documentação Legada
 
