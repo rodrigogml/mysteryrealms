@@ -21,6 +21,16 @@ WIKI_GLOB = "*.wiki"
 IMAGES_DIR = LEGADO_DIR / "images"
 
 IMAGE_TAG_RE = re.compile(r"\[\[(?:Arquivo|File|Imagem|Image):([^\]|]+)(?:\|[^\]]*)?\]\]", re.IGNORECASE)
+PLACEHOLDER_IMAGE_RE = re.compile(r"^NomeDa|^NomeDo", re.IGNORECASE)
+
+# Mapeamentos validados na wiki atual para casos em que o nome referenciado
+# segue padrão de subambiente, mas apenas a imagem do ambiente pai está
+# publicada.
+IMAGE_ALIASES: dict[str, str] = {
+    "PracaDasVozes_CirculoDosTresEcos.png": "PracaDasVozes.png",
+    "BibliotecaVarnak_SalaDeRecepcao.png": "BibliotecaVarnak.png",
+    "ArsenalTresLaminas_SalaoDaLoja.png": "ArsenalTresLaminas.png",
+}
 
 
 def collect_referenced_images() -> list[str]:
@@ -65,16 +75,48 @@ def mediawiki_image_url(image_name: str) -> str | None:
     return image_info[0].get("url")
 
 
+def image_candidates(image_name: str) -> list[str]:
+    candidates: list[str] = [image_name]
+
+    alias = IMAGE_ALIASES.get(image_name)
+    if alias and alias not in candidates:
+        candidates.append(alias)
+
+    if "_" in image_name:
+        parent_name = f"{image_name.split('_', 1)[0]}.png"
+        if parent_name not in candidates:
+            candidates.append(parent_name)
+
+    return candidates
+
+
 def download_image(image_name: str) -> tuple[bool, str]:
-    image_url = mediawiki_image_url(image_name)
+    if PLACEHOLDER_IMAGE_RE.match(image_name):
+        return False, f"placeholder de modelo (ignorado): {image_name}"
+
+    tried_names: list[str] = []
+    image_url: str | None = None
+    selected_name = image_name
+
+    for candidate in image_candidates(image_name):
+        tried_names.append(candidate)
+        image_url = mediawiki_image_url(candidate)
+        if image_url:
+            selected_name = candidate
+            break
+
     if not image_url:
-        return False, f"indisponível no wiki: {image_name}"
+        tried = ", ".join(tried_names)
+        return False, f"indisponível no wiki: {image_name} (tentativas: {tried})"
 
     file_name = unquote(Path(urlsplit(image_url).path).name).replace(" ", "_")
     destination = IMAGES_DIR / file_name
 
     with urllib.request.urlopen(image_url, timeout=60) as response:
         destination.write_bytes(response.read())
+
+    if selected_name != image_name:
+        return True, f"{file_name} (resolvido via alias: {selected_name})"
 
     return True, file_name
 
