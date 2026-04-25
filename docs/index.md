@@ -1,4 +1,49 @@
-# Documentação Legada
+# Índice da Documentação
+
+## Mecânica do Jogo
+
+- [Glossário](mecanica-do-jogo/glossario.md)
+    - [Rodada](mecanica-do-jogo/glossario.md#rodada)
+    - [Turno](mecanica-do-jogo/glossario.md#turno)
+    - [Ação de Pré-Turno](mecanica-do-jogo/glossario.md#acao-de-pre-turno)
+    - [Ação Principal](mecanica-do-jogo/glossario.md#acao-principal)
+    - [Reação](mecanica-do-jogo/glossario.md#reacao)
+    - [Estado](mecanica-do-jogo/glossario.md#estado)
+    - [Aflição](mecanica-do-jogo/glossario.md#aflicao)
+    - [Resistência](mecanica-do-jogo/glossario.md#resistencia)
+    - [Defesa](mecanica-do-jogo/glossario.md#defesa)
+    - [Bloqueio](mecanica-do-jogo/glossario.md#bloqueio)
+    - [CD (Classe de Dificuldade)](mecanica-do-jogo/glossario.md#cd-classe-de-dificuldade)
+
+- [Ciclo de Combate](mecanica-do-jogo/combate/ciclo-de-combate.md)
+    - [Fluxo Oficial](mecanica-do-jogo/combate/ciclo-de-combate.md#fluxo-oficial)
+    - [Regras de Conflito](mecanica-do-jogo/combate/ciclo-de-combate.md#regras-de-conflito)
+    - [Pós-Combate](mecanica-do-jogo/combate/ciclo-de-combate.md#pos-combate)
+
+- [Fórmulas de Combate](mecanica-do-jogo/combate/formulas-de-combate.md)
+    - [Convenções](mecanica-do-jogo/combate/formulas-de-combate.md#convencoes)
+    - [Iniciativa](mecanica-do-jogo/combate/formulas-de-combate.md#iniciativa)
+    - [Acerto vs Defesa](mecanica-do-jogo/combate/formulas-de-combate.md#acerto-vs-defesa)
+    - [Dano Base](mecanica-do-jogo/combate/formulas-de-combate.md#dano-base)
+    - [Redução por Bloqueio](mecanica-do-jogo/combate/formulas-de-combate.md#reducao-por-bloqueio)
+    - [Redução por Resistência](mecanica-do-jogo/combate/formulas-de-combate.md#reducao-por-resistencia)
+    - [Aplicação de Aflição](mecanica-do-jogo/combate/formulas-de-combate.md#aplicacao-de-aflicao)
+    - [Exemplo Numérico](mecanica-do-jogo/combate/formulas-de-combate.md#exemplo-numerico)
+
+- [Aflições e Estados](mecanica-do-jogo/combate/aflicoes-e-estados.md)
+    - [Modelo de Estado](mecanica-do-jogo/combate/aflicoes-e-estados.md#modelo-de-estado)
+    - [Regras Padrão](mecanica-do-jogo/combate/aflicoes-e-estados.md#regras-padrao)
+    - [Estados Base (catálogo inicial)](mecanica-do-jogo/combate/aflicoes-e-estados.md#estados-base-catalogo-inicial)
+    - [Prioridade de Processamento](mecanica-do-jogo/combate/aflicoes-e-estados.md#prioridade-de-processamento)
+
+- [Metas de Balanceamento](mecanica-do-jogo/combate/metas-de-balanceamento.md)
+    - [Métricas-Alvo](mecanica-do-jogo/combate/metas-de-balanceamento.md#metricas-alvo)
+    - [Orçamento de Poder por Turno (baseline)](mecanica-do-jogo/combate/metas-de-balanceamento.md#orcamento-de-poder-por-turno-baseline)
+    - [Cenários de Referência](mecanica-do-jogo/combate/metas-de-balanceamento.md#cenarios-de-referencia)
+    - [Critérios de Alerta](mecanica-do-jogo/combate/metas-de-balanceamento.md#criterios-de-alerta)
+
+## Documentação Legada
+
 
 Esta seção mantém referência para a documentação legada do jogo. Esse conteúdo não deve ser alterado sem solicitação explícita e deve ser consultado apenas como referência.
 
