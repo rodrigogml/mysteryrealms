@@ -31,7 +31,7 @@ Nesta fase, o foco é:
 
 ## Estado atual da documentação
 
-A documentação foi organizada com um índice único (`docs/index.md`) e com uma seção dedicada à mecânica revisada em `docs/mecanica-do-jogo/`.
+A documentação foi organizada com um índice único (`docs/index.md`) e com uma seção dedicada à mecânica revisada em `docs/mecanicaDoJogo/`.
 
 A pasta `docs/legado/` permanece como referência histórica para consulta e migração progressiva de tópicos.
 

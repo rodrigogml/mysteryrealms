@@ -39,25 +39,26 @@ Este documento também funciona como **canal de continuidade entre agentes autô
 - Recursos vitais e recuperação.
 - Descanso e acampamento.
 - Tipos de Armas (taxonomia mecânica e impacto sistêmico).
+- Itens de Mão (slots, categorias, regras de uso, combinação e troca por turno).
 
 ### Em andamento
 
 - Refinamento de cobertura de tópicos legados fora do núcleo de combate.
-- Integração do eixo de equipamentos (Tipos de Armas concluído; Itens de Mão em preparação).
+- Integração do eixo de equipamentos (Tipos de Armas e Itens de Mão concluídos; refinamento quantitativo em andamento).
 
 ### Pendente prioritário
 
-1. Itens de Mão (slots, categorias, regras de uso e efeitos).
-2. Raças e Classes (recorte mecânico separado da narrativa).
-3. Progressão do Jogo (curva de poder e marcos por faixa).
-4. Refinamento quantitativo de Tipos de Armas (matriz numérica e afinidades).
+1. Raças e Classes (recorte mecânico separado da narrativa).
+2. Progressão do Jogo (curva de poder e marcos por faixa).
+3. Refinamento quantitativo de Tipos de Armas (matriz numérica e afinidades).
+4. Refinamento quantitativo de Itens de Mão (penalidades, exceções e builds de referência).
 
 ### Próxima ação recomendada (para agente sem contexto)
 
-Iniciar por **Itens de Mão**, pois esse tópico reaproveita imediatamente Tipos de Armas e desbloqueia:
-- validação de combinações de empunhadura e troca por turno;
-- integração com escudos, focos e ferramentas;
-- base para afinidades de Raças e Classes por configuração de equipamento.
+Iniciar por **Raças e Classes** (recorte mecânico), aproveitando o eixo de equipamentos já consolidado para:
+- definir proficiências e afinidades por tipo/subtipo de equipamento;
+- mapear restrições mecânicas sem narrativa obrigatória;
+- preparar a matriz de progressão por faixas de poder.
 
 ---
 
@@ -85,6 +86,16 @@ Objetivo do loop: garantir progresso incremental sem depender de memória extern
 
 > Formato: adicionar sempre no topo (mais recente primeiro).
 
+- **Iteração:** 005
+  **Concluído:** Renomeação estrutural da pasta de mecânica revisada para `docs/mecanicaDoJogo/` (padrão camelCase) com atualização das referências cruzadas em índice, guia, status e instruções operacionais.
+  **Próxima ação recomendada:** Retomar o pendente prioritário em **Raças e Classes** mantendo os novos caminhos em camelCase nas futuras páginas mecânicas.
+  **Riscos/Bloqueios:** Revisão sistêmica executada nesta iteração (coerência global entre `docs/index.md`, `docs/guide.md`, `docs/statusDoDesenvolvimento.md` e páginas mecânicas); não foram identificados conflitos de terminologia/fórmula, mas links externos antigos para `docs/mecanica-do-jogo/` podem quebrar fora do repositório.
+
+- **Iteração:** 004
+  **Concluído:** Tópico **Itens de Mão** migrado para `docs/mecanicaDoJogo/equipamentos/itensDeMao.md`, com definição operacional de slots, subtipos, matriz de combinação, economia de ações para troca e integração com Tipos de Armas/Ciclo de Combate.
+  **Próxima ação recomendada:** Iniciar **Raças e Classes** com foco em proficiências e afinidades mecânicas por subtipo/tag de equipamento.
+  **Riscos/Bloqueios:** Tabelas numéricas de penalidade (dupla empunhadura e falta de proficiência) ainda estão pendentes e podem impactar balanceamento posterior.
+
 - **Iteração:** 003
   **Concluído:** Revisão ampliada de acentuação em arquivos `.md` do repositório com validação de consistência textual; não foram encontrados novos blocos críticos de ortografia fora dos ajustes já aplicados.
   **Próxima ação recomendada:** Retomar o fluxo mecânico em **Itens de Mão**, aproveitando a base de Tipos de Armas e o índice atualizado.
@@ -96,7 +107,7 @@ Objetivo do loop: garantir progresso incremental sem depender de memória extern
   **Riscos/Bloqueios:** Ainda há páginas legadas extensas com estilo textual heterogêneo; revisar acentuação completa do legado pode exigir um ciclo dedicado sem avanço mecânico.
 
 - **Iteração:** 001
-  **Concluído:** Tópico **Tipos de Armas** migrado para `docs/mecanica-do-jogo/equipamentos/tiposDeArmas.md`, com taxonomia mecânica, regras de classificação, impacto sistêmico e seção de pronto para requisito.
+  **Concluído:** Tópico **Tipos de Armas** migrado para `docs/mecanicaDoJogo/equipamentos/tiposDeArmas.md`, com taxonomia mecânica, regras de classificação, impacto sistêmico e seção de pronto para requisito.
   **Próxima ação recomendada:** Migrar **Itens de Mão** conectando slots, combinações válidas e regras de conflito com o tipo de arma.
   **Riscos/Bloqueios:** Ainda faltam tabelas numéricas oficiais (acerto/dano/crítico por tipo) e matriz de afinidade Classe/Raça para fechar requisito funcional.
 

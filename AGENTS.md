@@ -25,7 +25,7 @@ Prioridades:
 1. Ler os 4 arquivos da seção “Leitura obrigatória”.
 2. Em `docs/statusDoDesenvolvimento.md`, escolher o próximo tópico em “Pendente prioritário”.
 3. Consultar `docs/legado/` apenas como fonte histórica.
-4. Criar/atualizar página em `docs/mecanica-do-jogo/` (camelCase sem acentos).
+4. Criar/atualizar página em `docs/mecanicaDoJogo/` (camelCase sem acentos).
 5. Atualizar `docs/index.md` com links e âncoras da nova página.
 6. Atualizar `docs/statusDoDesenvolvimento.md` (concluído/em andamento/pendente).
 7. Registrar handoff no `docs/statusDoDesenvolvimento.md` com:
