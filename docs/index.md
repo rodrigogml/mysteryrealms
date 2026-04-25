@@ -30,6 +30,13 @@
     - [Aplicação de Aflição](mecanica-do-jogo/combate/formulas-de-combate.md#aplicacao-de-aflicao)
     - [Exemplo Numérico](mecanica-do-jogo/combate/formulas-de-combate.md#exemplo-numerico)
 
+- [Resistências](mecanica-do-jogo/combate/resistencias.md)
+    - [Papel das Resistências no Sistema](mecanica-do-jogo/combate/resistencias.md#papel-das-resistencias-no-sistema)
+    - [Limites Mecânicos](mecanica-do-jogo/combate/resistencias.md#limites-mecanicos)
+    - [Taxonomia de Resistências](mecanica-do-jogo/combate/resistencias.md#taxonomia-de-resistencias)
+    - [Regras Operacionais](mecanica-do-jogo/combate/resistencias.md#regras-operacionais)
+    - [Diretrizes de Balanceamento](mecanica-do-jogo/combate/resistencias.md#diretrizes-de-balanceamento)
+
 - [Aflições e Estados](mecanica-do-jogo/combate/aflicoes-e-estados.md)
     - [Modelo de Estado](mecanica-do-jogo/combate/aflicoes-e-estados.md#modelo-de-estado)
     - [Regras Padrão](mecanica-do-jogo/combate/aflicoes-e-estados.md#regras-padrao)
