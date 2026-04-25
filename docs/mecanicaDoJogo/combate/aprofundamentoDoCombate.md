@@ -52,9 +52,9 @@ O tópico de combate pode ser considerado pronto para virar requisito quando:
 - **Passo 2 (em paralelo):** iniciar migração de novos tópicos legados mais acoplados ao combate.
 
 ### Próximos tópicos recomendados (ordem)
-1. **Tipos de Resistências** (`docs/legado/tiposDeResistencias.md`)
-2. **Modificadores** (`docs/legado/modificadores.md`)
-3. **Moral** (`docs/legado/moral.md`)
+1. **Tipos de Resistências** (`docs/legado/tiposDeResistencias.wiki`)
+2. **Modificadores** (`docs/legado/modificadores.wiki`)
+3. **Moral** (`docs/legado/moral.wiki`)
 4. **Recuperação** (`docs/legado/recuperacao.md`)
 
 Essa ordem reduz retrabalho, porque esses temas influenciam diretamente as decisões já tomadas em combate.

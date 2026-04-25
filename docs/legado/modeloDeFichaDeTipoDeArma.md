@@ -1,4 +1,4 @@
-Esta ficha deve ser utilizada para registrar um novo **tipo de arma**. Um tipo de arma é uma categoria conceitual criada pelo desenvolvedor para agrupar armas semelhantes em estilo, função e uso técnico. A engine utiliza esse agrupamento para aplicar bônus, penalidades, afinidades raciais e classistas, além de simplificar tabelas e automatizações. Veja as definições em [Tipos de Armas](tiposDeArmas.md).
+Esta ficha deve ser utilizada para registrar um novo **tipo de arma**. Um tipo de arma é uma categoria conceitual criada pelo desenvolvedor para agrupar armas semelhantes em estilo, função e uso técnico. A engine utiliza esse agrupamento para aplicar bônus, penalidades, afinidades raciais e classistas, além de simplificar tabelas e automatizações. Veja as definições em [Tipos de Armas](tiposDeArmas.wiki).
 
 # Ficha
 

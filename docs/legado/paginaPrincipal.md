@@ -26,8 +26,8 @@ Aqui tratamos do funcionamento do jogo, como as partes do jogo se encaixam e int
   1. **[Moral](moral.md)** - Definição sobre o estado mental do jogador.
   1. **[Acampamentos](acampamentos.md)** - Definições e conceitos sobre o funcionamento dos acampamentos.
   1. **Itens** - Chamamos de Itens todos os objetos do jogo, como a classe principal da hierarquia. São Itens: Elmos, Escudos, Botas, Comida, Ferramentas, Armas, Objetos, Runas e muito mais. Em geral qualquer objeto é referido aqui na documentação como 'Itens' de modo genérico. Ainda que os Itens sejam subdividos mas categorias abaixo para organizar o funcionamento pela engine.
-    1. **[Itens de Mão](itensDeMao.md)** - Itens de mão são todos os objetos que podem ser empunhados, carregados ou utilizados diretamente pelas mãos do personagem, seja em combate, exploração, interação social ou mágica. Esta categoria inclui armas, escudos, ferramentas, instrumentos e outros objetos funcionais, permitindo flexibilidade total de combinação e uso conforme o contexto de jogo.
-      1. **[Tipos de Armas](tiposDeArmas.md)** - Para os itens de mão da categoria 'arma', permite que o jogo agrupe as armas em tipos, como Arcos, Bestas, Espadas, Maças, etc., facilitando um controle de definições pelo tipo de arma, ao invés apenas de cada arma individualmente.
+    1. **[Itens de Mão](itensDeMao.wiki)** - Itens de mão são todos os objetos que podem ser empunhados, carregados ou utilizados diretamente pelas mãos do personagem, seja em combate, exploração, interação social ou mágica. Esta categoria inclui armas, escudos, ferramentas, instrumentos e outros objetos funcionais, permitindo flexibilidade total de combinação e uso conforme o contexto de jogo.
+      1. **[Tipos de Armas](tiposDeArmas.wiki)** - Para os itens de mão da categoria 'arma', permite que o jogo agrupe as armas em tipos, como Arcos, Bestas, Espadas, Maças, etc., facilitando um controle de definições pelo tipo de arma, ao invés apenas de cada arma individualmente.
 1. **Controle do Jogador** - Definições dos controles do jogador.
   1. **[Modificadores](modificadores.md)** - Explicação sobre os modificadores que podem ser aplicados ao jogo para alterar as condições padrão do jogo de forma temporária.
   1. **[Fadiga, Fome e Sede](fadigaFomeESede.md)** - Conceito e funcionamento sobre a Fadiga, Fome e Sede.
@@ -56,7 +56,7 @@ Aqui tratamos do funcionamento do jogo, como as partes do jogo se encaixam e int
     1. **[Modelo de Ficha de Ambientes](modeloDeFichaDeAmbientes.md)** - Modelo de ficha utilizada para gruiar a criação de um Ambiente.
 <hr>
 1. **[Ciclo de Batalha](cicloDeBatalha.md)** - Aqui é documentado e explicado os passos e funcionamento das batalhas do jogo.
-1. **[Progressão do Jogo](progressaoDoJogo.md)** - Métricas e regras sobre como o jogo progride, o jogador evolui, etc..
+1. **[Progressão do Jogo](progressaoDoJogo.wiki)** - Métricas e regras sobre como o jogo progride, o jogador evolui, etc..
 
 # Story Telling Mystery Realms
 O mundo de **Mystery Realms** inclui criaturas mágicas, feitiçaria, alquimia, forças elementais e tecnologias esquecidas fazem parte da realidade. Embora tais forças existam, não é um mundo mágico e de ilusões. Um ambiente parecido como o criado nos mundo de D&D.
@@ -67,8 +67,8 @@ O mundo de **Mystery Realms** inclui criaturas mágicas, feitiçaria, alquimia, 
 1. **Controle e Definições do Jogo**
   1. **[Marcadores do Jogo](marcadoresDoJogo.md)** - Marcadores utilizados entro do jogo de Mystery Realms.
 1. **Criação do Mundo Mystery Realms:**
-  1. **[Raças](racas.md)** - Definições das Raçcas e seus atributos.
-  1. **[Classes](classes.md)** - Classes dos aventureiros.
+  1. **[Raças](racas.wiki)** - Definições das Raçcas e seus atributos.
+  1. **[Classes](classes.wiki)** - Classes dos aventureiros.
   1. **Lugares** - Lugares é a expressão utilizada para todo e qualquer tipo de lugar físico do jogo. No entando cada lugar representa um escopo diferente de agrupamento e regras.
     1. **[Thámyros](thamyros.md)** - Primeiro Mundo (Realm) do Jogo Definição do plano / planeta de localização.
       1. **[Terras Centrais](terrasCentrais.md)** - Continente Central de Thámyros
