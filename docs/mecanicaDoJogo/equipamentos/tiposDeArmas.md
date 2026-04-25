@@ -90,6 +90,65 @@ Cada tipo deve declarar, no mínimo:
 
 ---
 
+
+## Matriz Quantitativa Baseline
+
+Escala utilizada nesta fase:
+
+- `acertoTipo`: modificador aditivo aplicado em `acertoTotal`.
+- `danoTipo`: multiplicador aplicado sobre `danoBase` da fórmula canônica.
+- `critico`: janela e multiplicador padrão do tipo.
+- `custoDeAcao`: custo base para ataque padrão com o tipo (`1.0` = ação padrão inteira).
+
+| Tipo de Arma | acertoTipo | danoTipo | crítico | custoDeAcao | faixa mínima para especialização |
+|---|---:|---:|---|---:|---|
+| Corpo a Corpo Leve | +2 | 0.90 | 19-20/x2 | 0.90 | F2 |
+| Corpo a Corpo Pesada | -1 | 1.20 | 20/x3 | 1.10 | F2 |
+| Haste/Alcance Estendido | +0 | 1.00 | 20/x2 | 1.00 | F3 |
+| Distância de Projétil | +1 | 0.95 | 20/x2 | 1.00 | F2 |
+| Foco Arcano | +0* | 1.00* | por habilidade | 1.00 | F2 |
+
+\* No `focoArcano`, acerto/dano são herdados principalmente da habilidade; os valores acima são neutros por padrão de tipo.
+
+Regras de aplicação:
+1. `acertoTipo` e `danoTipo` entram como parâmetros de tipo antes de modificadores situacionais.
+2. `custoDeAcao` acima de `1.0` exige compensação por efeito de maior impacto (ruptura, controle forte ou dano alto).
+3. Especialização só libera bônus adicionais quando a faixa mínima for alcançada em `Progressão do Jogo`.
+
+---
+
+## Matriz de Afinidade por Grupo de Classe e Faixa
+
+Escala de afinidade desta fase:
+- `+2` afinidade forte;
+- `+1` afinidade funcional;
+- `0` neutro;
+- `-1` uso ineficiente;
+- `-2` uso restrito.
+
+### F1 (fundamentos)
+
+| Grupo de Classe | C.C. Leve | C.C. Pesada | Haste | Distância | Foco Arcano |
+|---|---:|---:|---:|---:|---:|
+| Combate | +1 | +2 | +1 | +1 | -2 |
+| Magia | 0 | -2 | -1 | -1 | +2 |
+| Suporte | +1 | -1 | 0 | 0 | +1 |
+| Furtividade | +2 | -2 | -1 | +1 | 0 |
+
+### F2+ (com especialização habilitada)
+
+| Grupo de Classe | C.C. Leve | C.C. Pesada | Haste | Distância | Foco Arcano |
+|---|---:|---:|---:|---:|---:|
+| Combate | +2 | +2 | +2 | +1 | -1 |
+| Magia | +1 | -1 | 0 | 0 | +2 |
+| Suporte | +1 | 0 | +1 | 0 | +2 |
+| Furtividade | +2 | -1 | 0 | +2 | +1 |
+
+Regra de progressão:
+- Na transição F1 -> F2, cada classe pode elevar no máximo **2 eixos de tipo** para não gerar salto excessivo de poder.
+
+---
+
 ## Regras de Classificação e Conflito
 
 1. **Regra do comportamento dominante:** tipo é decidido pelo padrão de uso mais frequente da arma, não por exceções ocasionais.
@@ -141,9 +200,9 @@ Cada tipo deve declarar, no mínimo:
 
 Para este tópico ser considerado pronto para requisito funcional, ainda falta:
 
-1. Consolidar tabela numérica oficial de parâmetros por tipo (acerto, dano, crítico, custo de ação).
-2. Fechar matriz de afinidade Classe/Raça por tipo de arma.
+1. Validar e calibrar numericamente a matriz baseline em simulações de combate (F1–F4).
+2. Expandir a matriz de afinidade para recorte por classe individual e modificador racial consolidado.
 3. Definir lista mínima de tipos obrigatórios por cenário (fantasia, sci-fi, híbrido).
 4. Formalizar protocolo de criação de novos tipos sem quebrar baseline.
-5. Vincular o tópico a `Itens de Mão` com exemplos completos de combinações válidas.
+5. Vincular o tópico a `Itens de Mão` com exemplos completos de combinações válidas por faixa de progressão.
 

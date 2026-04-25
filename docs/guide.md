@@ -65,4 +65,4 @@ Se houver dúvida entre “detalhar mecânica” e “propor implementação”,
 
 Para onboarding sem contexto, siga também o fluxo rápido definido em `AGENTS.md`.
 
-Como regra de continuidade, cada iteração deve deixar handoff explícito em `docs/statusDoDesenvolvimento.md` para o próximo agente.
+Como regra de continuidade, cada ciclo de trabalho deve deixar handoff explícito em `docs/statusDoDesenvolvimento.md` para o próximo agente.

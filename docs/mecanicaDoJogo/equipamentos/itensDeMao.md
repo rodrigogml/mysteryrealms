@@ -105,6 +105,52 @@ Cada item de mão deve possuir, no mínimo:
 
 ---
 
+## Matriz Quantitativa de Penalidades e Exceções
+
+Escala desta fase:
+- penalidades em `acerto`, `dano` e `bloqueio` são aditivas;
+- custo adicional de troca é expresso em fração de ação (`0.5`, `1.0`);
+- valores são baseline para calibração posterior por simulação.
+
+### Penalidades de combinação
+
+| Situação | Penalidade de acerto | Penalidade de dano | Penalidade de bloqueio | Observação |
+|---|---:|---:|---:|---|
+| Dupla empunhadura sem proficiência | -3 | -1 | 0 | aplica na arma secundária e em reações ofensivas derivadas |
+| Dupla empunhadura com proficiência | -1 | 0 | 0 | mantém custo de execução tática |
+| Arma (1M) + Foco sem habilidade compatível | -2 | -1 | 0 | foco permanece passivo, sem canalização ativa |
+| Uso de item sem proficiência de subtipo | -2 | -2 | -1 | efeitos avançados do item ficam bloqueados |
+| Mão secundária lesionada com item ativo | -2 | -1 | -2 | apenas ações de baixa complexidade são permitidas |
+
+### Exceções por faixa de progressão
+
+| Faixa | Exceção liberada | Impacto |
+|---|---|---|
+| F1 | nenhuma exceção estrutural | mantém custo integral das combinações |
+| F2 | redução de 1 ponto na penalidade de dupla empunhadura | abre builds de combate ágil |
+| F3 | permite `arma(1M)+foco(1M)` sem penalidade de dano quando houver especialização | fortalece híbridos de combate/magia |
+| F4 | segunda troca condicional por turno (1x por combate) | aumenta flexibilidade sem remover custo base |
+
+Regra de teto:
+- nenhuma exceção de item de mão pode reduzir simultaneamente penalidade e custo a ponto de anular trade-off de configuração.
+
+---
+
+## Builds de Referência por Faixa
+
+| Build | Configuração | Faixa mínima | Vantagem principal | Trade-off principal |
+|---|---|---|---|---|
+| Sentinela | `arma(1M)+escudo(1M)` | F1 | estabilidade defensiva | menor pico de dano |
+| Duelista Ágil | `arma(1M)+arma(1M)` | F2 | volume ofensivo por turno | penalidade de precisão residual |
+| Arcano Tático | `arma(1M)+foco(1M)` | F3 | pressão híbrida com utilidade | dependência de especialização |
+| Especialista de Campo | `ferramenta(1M)+lanterna(1M)` | F1 | controle situacional e exploração | baixa resposta ofensiva direta |
+
+Critério de uso de build de referência:
+1. Build não substitui ficha de item; funciona como cenário de validação sistêmica.
+2. Cada build deve ser testado contra metas de duração de combate e consumo de recursos.
+
+---
+
 ## Integração com Outros Sistemas
 
 ### Tipos de Armas
@@ -142,8 +188,8 @@ Cada item de mão deve possuir, no mínimo:
 
 Para este tópico ser considerado pronto para requisito funcional, ainda falta:
 
-1. Fechar tabela numérica oficial de penalidade por dupla empunhadura e por falta de proficiência.
+1. Validar em simulação a matriz quantitativa de penalidades/exceções por faixa (F1–F4).
 2. Definir catálogo mínimo de escudos, focos e ferramentas por faixa de progressão.
 3. Especificar protocolo de interação entre `consumivelRapido` e troca simples no mesmo turno.
-4. Consolidar exemplos completos de build (arma + escudo, arma + foco, ferramenta + lanterna).
+4. Converter builds de referência em cenários de teste formal com métricas de sucesso/falha.
 
