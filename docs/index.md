@@ -37,6 +37,13 @@
     - [Regras Operacionais](mecanica-do-jogo/combate/resistencias.md#regras-operacionais)
     - [Diretrizes de Balanceamento](mecanica-do-jogo/combate/resistencias.md#diretrizes-de-balanceamento)
 
+- [Modificadores](mecanica-do-jogo/combate/modificadores.md)
+    - [Objetivo Mecânico](mecanica-do-jogo/combate/modificadores.md#objetivo-mecanico)
+    - [Modelo Canônico de Modificador](mecanica-do-jogo/combate/modificadores.md#modelo-canonico-de-modificador)
+    - [Regras de Resolução](mecanica-do-jogo/combate/modificadores.md#regras-de-resolucao)
+    - [Catálogo Inicial Revisado](mecanica-do-jogo/combate/modificadores.md#catalogo-inicial-revisado)
+    - [Relação com Outros Sistemas](mecanica-do-jogo/combate/modificadores.md#relacao-com-outros-sistemas)
+
 - [Aflições e Estados](mecanica-do-jogo/combate/aflicoes-e-estados.md)
     - [Modelo de Estado](mecanica-do-jogo/combate/aflicoes-e-estados.md#modelo-de-estado)
     - [Regras Padrão](mecanica-do-jogo/combate/aflicoes-e-estados.md#regras-padrao)
