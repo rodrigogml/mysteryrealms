@@ -1,4 +1,116 @@
-# Documentação Legada
+# Índice da Documentação
+
+## Mecânica do Jogo
+
+- [Glossário](mecanica-do-jogo/glossario.md)
+    - [Rodada](mecanica-do-jogo/glossario.md#rodada)
+    - [Turno](mecanica-do-jogo/glossario.md#turno)
+    - [Ação de Pré-Turno](mecanica-do-jogo/glossario.md#acao-de-pre-turno)
+    - [Ação Principal](mecanica-do-jogo/glossario.md#acao-principal)
+    - [Reação](mecanica-do-jogo/glossario.md#reacao)
+    - [Estado](mecanica-do-jogo/glossario.md#estado)
+    - [Aflição](mecanica-do-jogo/glossario.md#aflicao)
+    - [Resistência](mecanica-do-jogo/glossario.md#resistencia)
+    - [Defesa](mecanica-do-jogo/glossario.md#defesa)
+    - [Bloqueio](mecanica-do-jogo/glossario.md#bloqueio)
+    - [CD (Classe de Dificuldade)](mecanica-do-jogo/glossario.md#cd-classe-de-dificuldade)
+
+- [Status do Desenvolvimento](statusDoDesenvolvimento.md)
+    - [Objetivo deste documento](statusDoDesenvolvimento.md#objetivo-deste-documento)
+    - [Visao geral do projeto](statusDoDesenvolvimento.md#visao-geral-do-projeto)
+    - [Progresso da fase atual](statusDoDesenvolvimento.md#progresso-da-fase-atual)
+    - [Criterio de \"pronto\" por topico migrado](statusDoDesenvolvimento.md#criterio-de-pronto-por-topico-migrado)
+    - [Criterio para encerrar a fase atual](statusDoDesenvolvimento.md#criterio-para-encerrar-a-fase-atual)
+    - [Riscos e atencoes](statusDoDesenvolvimento.md#riscos-e-atencoes)
+    - [Proximas fases (macro)](statusDoDesenvolvimento.md#proximas-fases-macro)
+
+- [Ciclo de Combate](mecanica-do-jogo/combate/cicloDeCombate.md)
+    - [Fluxo Oficial](mecanica-do-jogo/combate/cicloDeCombate.md#fluxo-oficial)
+    - [Regras de Conflito](mecanica-do-jogo/combate/cicloDeCombate.md#regras-de-conflito)
+    - [Pós-Combate](mecanica-do-jogo/combate/cicloDeCombate.md#pos-combate)
+
+- [Fórmulas de Combate](mecanica-do-jogo/combate/formulasDeCombate.md)
+    - [Convenções](mecanica-do-jogo/combate/formulasDeCombate.md#convencoes)
+    - [Iniciativa](mecanica-do-jogo/combate/formulasDeCombate.md#iniciativa)
+    - [Acerto vs Defesa](mecanica-do-jogo/combate/formulasDeCombate.md#acerto-vs-defesa)
+    - [Dano Base](mecanica-do-jogo/combate/formulasDeCombate.md#dano-base)
+    - [Redução por Bloqueio](mecanica-do-jogo/combate/formulasDeCombate.md#reducao-por-bloqueio)
+    - [Redução por Resistência](mecanica-do-jogo/combate/formulasDeCombate.md#reducao-por-resistencia)
+    - [Aplicação de Aflição](mecanica-do-jogo/combate/formulasDeCombate.md#aplicacao-de-aflicao)
+    - [Exemplo Numérico](mecanica-do-jogo/combate/formulasDeCombate.md#exemplo-numerico)
+
+- [Resistências](mecanica-do-jogo/combate/resistencias.md)
+    - [Papel das Resistências no Sistema](mecanica-do-jogo/combate/resistencias.md#papel-das-resistencias-no-sistema)
+    - [Limites Mecânicos](mecanica-do-jogo/combate/resistencias.md#limites-mecanicos)
+    - [Taxonomia de Resistências](mecanica-do-jogo/combate/resistencias.md#taxonomia-de-resistencias)
+    - [Regras Operacionais](mecanica-do-jogo/combate/resistencias.md#regras-operacionais)
+    - [Diretrizes de Balanceamento](mecanica-do-jogo/combate/resistencias.md#diretrizes-de-balanceamento)
+
+- [Modificadores](mecanica-do-jogo/combate/modificadores.md)
+    - [Objetivo Mecânico](mecanica-do-jogo/combate/modificadores.md#objetivo-mecanico)
+    - [Modelo Canônico de Modificador](mecanica-do-jogo/combate/modificadores.md#modelo-canonico-de-modificador)
+    - [Regras de Resolução](mecanica-do-jogo/combate/modificadores.md#regras-de-resolucao)
+    - [Catálogo Inicial Revisado](mecanica-do-jogo/combate/modificadores.md#catalogo-inicial-revisado)
+    - [Relação com Outros Sistemas](mecanica-do-jogo/combate/modificadores.md#relacao-com-outros-sistemas)
+
+- [Aflições e Estados](mecanica-do-jogo/combate/aflicoesEEstados.md)
+    - [Modelo de Estado](mecanica-do-jogo/combate/aflicoesEEstados.md#modelo-de-estado)
+    - [Regras Padrão](mecanica-do-jogo/combate/aflicoesEEstados.md#regras-padrao)
+    - [Estados Base (catálogo inicial)](mecanica-do-jogo/combate/aflicoesEEstados.md#estados-base-catalogo-inicial)
+    - [Prioridade de Processamento](mecanica-do-jogo/combate/aflicoesEEstados.md#prioridade-de-processamento)
+
+- [Aprofundamento do Combate](mecanica-do-jogo/combate/aprofundamentoDoCombate.md)
+    - [O que ainda vale melhorar neste tópico](mecanica-do-jogo/combate/aprofundamentoDoCombate.md#o-que-ainda-vale-melhorar-neste-topico)
+    - [Critério de “pronto” para encerrar Combate](mecanica-do-jogo/combate/aprofundamentoDoCombate.md#criterio-de-pronto-para-encerrar-combate)
+    - [Recomendação de sequência](mecanica-do-jogo/combate/aprofundamentoDoCombate.md#recomendacao-de-sequencia)
+
+- [Metas de Balanceamento](mecanica-do-jogo/combate/metasDeBalanceamento.md)
+    - [Métricas-Alvo](mecanica-do-jogo/combate/metasDeBalanceamento.md#metricas-alvo)
+    - [Orçamento de Poder por Turno (baseline)](mecanica-do-jogo/combate/metasDeBalanceamento.md#orcamento-de-poder-por-turno-baseline)
+    - [Cenários de Referência](mecanica-do-jogo/combate/metasDeBalanceamento.md#cenarios-de-referencia)
+    - [Critérios de Alerta](mecanica-do-jogo/combate/metasDeBalanceamento.md#criterios-de-alerta)
+
+- [Moral](mecanica-do-jogo/combate/moral.md)
+    - [Objetivo Mecânico](mecanica-do-jogo/combate/moral.md#objetivo-mecanico)
+    - [Escala e Faixas de Estado](mecanica-do-jogo/combate/moral.md#escala-e-faixas-de-estado)
+    - [Regra de Atualização de Moral](mecanica-do-jogo/combate/moral.md#regra-de-atualizacao-de-moral)
+    - [Interações com outros sistemas](mecanica-do-jogo/combate/moral.md#interacoes-com-outros-sistemas)
+    - [Critérios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/moral.md#criterios-de-pronto-para-requisito)
+
+- [Recursos Vitais e Recuperação](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md)
+    - [Objetivo Mecânico](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#objetivo-mecanico)
+    - [Modelo Unificado](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#modelo-unificado)
+    - [Fadiga](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#fadiga)
+    - [Sede](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#sede)
+    - [Fome](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#fome)
+    - [Ordem de Processamento por Tick (tempo)](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#ordem-de-processamento-por-tick-tempo)
+    - [Recuperação](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#recuperacao)
+    - [Integração com Moral e Combate](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#integracao-com-moral-e-combate)
+    - [Critérios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/recursosVitaisERecuperacao.md#criterios-de-pronto-para-requisito)
+
+- [Recuperacao do Personagem](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md)
+    - [Objetivo Mecanico](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#objetivo-mecanico)
+    - [Modos de Recuperacao](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#modos-de-recuperacao)
+    - [Descanso Curto](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#descanso-curto)
+    - [Dormir](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#dormir)
+    - [Fator de Qualidade do Sono](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#fator-de-qualidade-do-sono)
+    - [Interrupcao do Sono](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#interrupcao-do-sono)
+    - [Recuperacao por Itens e Acoes](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#recuperacao-por-itens-e-acoes)
+    - [Recuperacao Especial (Narrativa)](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#recuperacao-especial-narrativa)
+    - [Criterios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/recuperacaoDoPersonagem.md#criterios-de-pronto-para-requisito)
+
+- [Descanso e Acampamento](mecanica-do-jogo/combate/descansoEAcampamento.md)
+    - [Objetivo Mecânico](mecanica-do-jogo/combate/descansoEAcampamento.md#objetivo-mecanico)
+    - [Premissas de Sistema](mecanica-do-jogo/combate/descansoEAcampamento.md#premissas-de-sistema)
+    - [Estrutura do Acampamento](mecanica-do-jogo/combate/descansoEAcampamento.md#estrutura-do-acampamento)
+    - [Fases do Acampamento](mecanica-do-jogo/combate/descansoEAcampamento.md#fases-do-acampamento)
+    - [Recuperação por Hora de Descanso](mecanica-do-jogo/combate/descansoEAcampamento.md#recuperacao-por-hora-de-descanso)
+    - [Risco de Interrupção Noturna](mecanica-do-jogo/combate/descansoEAcampamento.md#risco-de-interrupcao-noturna)
+    - [Regras de Conflito e Limites](mecanica-do-jogo/combate/descansoEAcampamento.md#regras-de-conflito-e-limites)
+    - [Critérios de \"Pronto para Requisito\"](mecanica-do-jogo/combate/descansoEAcampamento.md#criterios-de-pronto-para-requisito)
+
+## Documentação Legada
+
 
 Esta seção mantém referência para a documentação legada do jogo. Esse conteúdo não deve ser alterado sem solicitação explícita e deve ser consultado apenas como referência.
 
