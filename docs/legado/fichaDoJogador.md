@@ -70,7 +70,7 @@ A **Ficha Técnica** do jogador é a ficha com os atributos e dados finais do jo
 ### Atributos de Carga
 #### Capacidade de Carga Máxima Jogador (Kg)
 - **Definição:** Peso total máximo que o jogador pode carregar sem penalidades em Kg.
-- **Formula:**
+- **Fórmula:**
 <math> \text{Capacidade de Carga Máxima (kg)} = \text{Força} \times 10 </math>
 
 
@@ -112,7 +112,7 @@ A **Ficha Técnica** do jogador é a ficha com os atributos e dados finais do jo
 - **Definição:** Somatório de todos os itens que estão com o jogador em Kg
 - : O jogo não separa "o que está na montaria" e "o que está com o jogador", o peso da carga é somado junto, assim como a capacidade de carga de jogador e montaria.
 - : Absolutamente tudo que é carregado é somado. Alguns itens podem ser tão leves que tenham um peso risório mas devem sempre ter um peso atribuído. Qualquer coisa em grande quantidade pode representar muito peso.
-- **Formula:** Composta do somatório do peso de:
+- **Fórmula:** Composta do somatório do peso de:
   - itens equipados (armas, escudos, amuletos, cintos, etc);
   - itens no inventário;
   - moedas (conforme definido em [Economia](economia.md));
@@ -120,7 +120,7 @@ A **Ficha Técnica** do jogador é a ficha com os atributos e dados finais do jo
 ### Peso (Kg)
 - **Definição: ** Indica o peso do jogador em Kg.
 - : O peso do jogador é calculado de forma automatica considerando sua Raça e Genero (Veja em [Tabela de Pesos por Gênero](racasTabelaDePesosPorGenero.md)), e ajusta seu peso de acordo com a pontuação de constituição.
-- **Formula:**
+- **Fórmula:**
 <math>\text{Peso (Kg)} = \text{Peso Base (Kg)} \times (1 + ((CON - 3) \times 0,05))</math>
 
 
@@ -159,12 +159,12 @@ Outros atributos e modificadores são calculados no atributo **Dano Atual**.
 - **Definição:** Considera o **Dano Base** e aplica todos os modificadores existentes, como penalidades por **Fadiga**, **Aflições**, etc..
   - Este é o valor de dano que é utilizado para calcular o ano nos testes de batalha.
   - Não considera multiplicadores de acerto críticos e outros modificadores relacionados ao evento/batalha, apenas os modificadores presentes na Ficha do Jogador.
-- **Formula:**
+- **Fórmula:**
 <math>\text{Dano} = \text{Dano Base} + ?</math>
 
 ### Defesa
 - **Definição:**
-- **Formula:**
+- **Fórmula:**
   - Soma Destreza (considerando a habilidade de se esquivar do ataque);
   - Soma todos o pontos de defesa fornecido por armaduras, elmo, luvas, etc.;
   - Aplica os modificadores ativos (poções, magias, etc.) da ficha do jogador;
@@ -173,7 +173,7 @@ Outros atributos e modificadores são calculados no atributo **Dano Atual**.
 ### Bloqueio
 - **Definição:** O bloqueio é a pontuação que o jogador tem para mitigar o dano sofrido por um ataque certeiro.
   - O bloqueio é medido em pontos e é utilizado para subtrair dos pontos de dano do agressor.
-- **Formula:**
+- **Fórmula:**
   - O resultado da somatória dos bonus de bloqueio de todos os itens vestidos, como escudos, elmos, luvas;
   - Mais modificadores que dêem incremento de bloqueio.
 
