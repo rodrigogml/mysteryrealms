@@ -36,6 +36,11 @@
     - [Estados Base (catálogo inicial)](mecanica-do-jogo/combate/aflicoes-e-estados.md#estados-base-catalogo-inicial)
     - [Prioridade de Processamento](mecanica-do-jogo/combate/aflicoes-e-estados.md#prioridade-de-processamento)
 
+- [Aprofundamento do Combate](mecanica-do-jogo/combate/aprofundamento-do-combate.md)
+    - [O que ainda vale melhorar neste tópico](mecanica-do-jogo/combate/aprofundamento-do-combate.md#o-que-ainda-vale-melhorar-neste-topico)
+    - [Critério de “pronto” para encerrar Combate](mecanica-do-jogo/combate/aprofundamento-do-combate.md#criterio-de-pronto-para-encerrar-combate)
+    - [Recomendação de sequência](mecanica-do-jogo/combate/aprofundamento-do-combate.md#recomendacao-de-sequencia)
+
 - [Metas de Balanceamento](mecanica-do-jogo/combate/metas-de-balanceamento.md)
     - [Métricas-Alvo](mecanica-do-jogo/combate/metas-de-balanceamento.md#metricas-alvo)
     - [Orçamento de Poder por Turno (baseline)](mecanica-do-jogo/combate/metas-de-balanceamento.md#orcamento-de-poder-por-turno-baseline)
