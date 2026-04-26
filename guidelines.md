@@ -20,6 +20,21 @@ Este documento reúne as definições que devem ser seguidas integralmente em to
 - Toda criação ou alteração de arquivos de documentação, bem como de seções e subseções, deve ser refletida imediatamente em `index.md`.
 - Todos os arquivos de documentação devem ter nome normalizado em estilo camelCase, sem acentos e sem uso de `-` ou `_`. Exemplo: `guiaDeCombate.md`.
 
+## Estrutura de Pastas
+Cada tipo de documento tem uma pasta fixa dentro de `/docs`. O agente nunca deve inferir nem criar pastas fora deste mapeamento sem autorização:
+
+| Tipo de documento | Pasta |
+|---|---|
+| Mecânica do Jogo | `/docs/mecanica/` |
+| Definições do Mundo (classes, atributos, localidades, NPCs etc.) | `/docs/mundo/` |
+| Requisitos do Sistema | `/docs/requisitos/` |
+| Documentação de apoio da implementação | `/docs/implementacao/` |
+| Documentação legada (somente leitura, nunca alterar) | `/docs/legado/` |
+| Índice central de toda a documentação | `/docs/index.md` |
+
+- Se a pasta do tipo necessário ainda não existir, criá-la antes de criar o arquivo.
+- Nunca criar arquivos de documentação na raiz de `/docs` (exceto `index.md`).
+
 ## Índice da Documentação
 - Dentro de `/docs` deve ser mantido o arquivo `index.md`, com o objetivo de centralizar um índice único e geral de toda a documentação da pasta, independentemente das subpastas e da divisão interna do conteúdo.
 - O índice pode conter seções e subseções para separar as páginas por assuntos e tópicos, sempre visando facilitar a navegação.
