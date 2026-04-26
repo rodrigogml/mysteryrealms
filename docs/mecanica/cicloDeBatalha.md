@@ -50,6 +50,25 @@ Conforme a ação, aplicar:
 - aplicação de aflições;
 - mitigação por resistências.
 
+### 5.1) Pipeline de resolução
+
+Executar as etapas abaixo **na ordem** para manter consistência entre sistemas:
+
+1. validar ação e alvo;
+2. teste de acerto;
+3. mitigação ativa (bloqueio/defesa);
+4. cálculo de dano bruto;
+5. aplicação de resistência por tipo;
+6. aplicação de aflições e testes associados;
+7. atualização de estado (PV, fadiga, duração de modificadores).
+
+Referências obrigatórias de fórmula para evitar dupla aplicação de modificadores:
+- usar **Precisão**, **Defesa (final)** e **Bloqueio (final)** conforme `docs/mecanica/definicaoDePersonagem.md`;
+- usar **Dano (final)** conforme `docs/mecanica/definicaoDePersonagem.md`;
+- aplicar resistências e compatibilidades de tipo conforme `docs/mecanica/danosAflicoesResistencias.md`.
+
+Regra de integração: modificadores percentuais/flat já considerados nas fórmulas finais de `definicaoDePersonagem.md` **não** devem ser reaplicados nas etapas 5 a 7; nessas etapas aplicar apenas mitigação por resistência, aflições e atualizações de estado.
+
 Terminologia canônica de efeitos:
 - danos: `corte`, `perfuracao`, `esmagamento`, `fogo`, `gelo`, `raio`, `acido`, `magia_pura`, `sangramento`, `veneno_letal`;
 - aflições: `psiquica`, `espiritual`, `medo`, `paralisia`, `cegueira`, `surdez_mudez`, `fadiga`, `doenca_magica`, `alucinacao_ilusao_persistente`, `sono_torpor`.
