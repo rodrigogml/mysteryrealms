@@ -83,6 +83,13 @@
 - [Estrutura de Localização](./mundo/estruturaDeLocalizacao.md)
 - [Estrutura Temporal](./mundo/estruturaTemporal.md)
 - [Mapa e Movimentação](./mundo/mapaEMovimentacao.md)
+- [Modelos de Ficha](./mundo/modelosDeFicha.md)
+  - [Hierarquia canônica coberta](./mundo/modelosDeFicha.md#hierarquia-canônica-coberta)
+  - [Regras de nomenclatura e IDs](./mundo/modelosDeFicha.md#regras-de-nomenclatura-e-ids)
+  - [Template mínimo por nível](./mundo/modelosDeFicha.md#template-mínimo-por-nível)
+  - [Campos obrigatórios, opcionais e validações](./mundo/modelosDeFicha.md#campos-obrigatórios-opcionais-e-validações)
+  - [Validações de consistência entre níveis](./mundo/modelosDeFicha.md#validações-de-consistência-entre-níveis)
+  - [Exemplos reduzidos em YAML/Markdown por tipo](./mundo/modelosDeFicha.md#exemplos-reduzidos-em-yamlmarkdown-por-tipo)
 
 ## [Economia](./mecanica/economia.md)
 - [Sistema monetário](./mecanica/economia.md#sistema-monetário)
