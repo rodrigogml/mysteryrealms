@@ -61,6 +61,12 @@
 - [Morte e Desmaio](./mecanica/morteDesmaio.md)
 - [Moral](./mecanica/moral.md)
 
+- [Ações do Jogador](./mecanica/acoesDoJogador.md)
+  - [Catálogo de ações](./mecanica/acoesDoJogador.md#catálogo-de-ações)
+  - [Tabela padrão de custos e impacto fisiológico](./mecanica/acoesDoJogador.md#tabela-padrão-de-custos-e-impacto-fisiológico)
+  - [Regras de ajuste por contexto](./mecanica/acoesDoJogador.md#regras-de-ajuste-por-contexto)
+  - [Integrações obrigatórias](./mecanica/acoesDoJogador.md#integrações-obrigatórias)
+
 ## [Mecânica de Combate e Testes](./mecanica/testesDeJogo.md)
 - [Testes de Jogo](./mecanica/testesDeJogo.md)
   - [Fórmula de teste](./mecanica/testesDeJogo.md#fórmula-do-teste)
