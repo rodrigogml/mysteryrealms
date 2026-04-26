@@ -78,7 +78,53 @@ Cada classe deve declarar:
 | Draconato | `impacto` ou `canalizadora` (escolha de linhagem) | `discreta` |
 | Halfling | `leve`, `discreta`, `rapido` | `pesada`, `alcance` de haste pesada |
 
-> A tabela define baseline da fase. Valores numéricos de bônus/penalidade ficam para o refinamento quantitativo.
+> A tabela define baseline da fase para tags. A calibração numérica por classe individual está definida nas matrizes abaixo.
+
+### Matriz por Classe Individual (baseline quantitativo)
+
+Escala desta fase (alinhada a `tiposDeArmas` e `itensDeMao`):
+- afinidade por tipo: `+2` forte, `+1` funcional, `0` neutro, `-1` ineficiente, `-2` restrito;
+- custo de versatilidade: atraso de marco (`+0` sem atraso, `+1` atraso de 1 marco da classe);
+- ajuste de penalidade de item: valor aditivo aplicado sobre penalidades base de `itensDeMao`.
+
+| Classe | C.C. Leve | C.C. Pesada | Haste | Distância | Foco Arcano | Itens de Mão preferenciais | custo de versatilidade | ajuste de penalidade de item |
+|---|---:|---:|---:|---:|---:|---|---:|---:|
+| Guerreiro | +1 | +2 | +2 | 0 | -2 | `arma+escudo`, `arma(2M)` | +0 | -1 em `arma+escudo` |
+| Caçador | +1 | 0 | +1 | +2 | -1 | `arma(distância)+ferramenta` | +0 | -1 em troca para `distância` |
+| Duelista | +2 | -1 | 0 | +1 | -1 | `arma(1M)+arma(1M)` | +1 (se usar foco) | -1 na penalidade de dupla empunhadura |
+| Mago | 0 | -2 | -1 | 0 | +2 | `foco+arma(1M)` situacional | +0 | -1 em `foco+arma` (somente F3+) |
+| Alquimista | +1 | -1 | 0 | +1 | +1 | `ferramenta+foco` | +0 | -1 em uso de `ferramenta` |
+| Conjurador Elemental | 0 | -2 | 0 | 0 | +2 | `foco(2M)` ou `foco+reliquia` | +1 (se usar distância) | -1 em custo de ativação de foco |
+| Bardo | +1 | -1 | 0 | 0 | +2 | `instrumento+foco` | +0 | -1 em ações de suporte com instrumento |
+| Clerigo | +1 | 0 | +1 | -1 | +2 | `arma(1M)+escudo` ou `foco+escudo` | +0 | -1 em bloqueio com escudo |
+| Sabio | 0 | -1 | 0 | 0 | +2 | `foco+ferramenta` | +0 | -1 em testes utilitários com ferramenta |
+| Ladrao | +2 | -2 | -1 | +1 | 0 | `arma(1M)+ferramenta` | +0 | -1 em penalidade de item sem proficiência leve |
+| Assassino | +2 | -2 | 0 | +1 | 0 | `arma(1M)+arma(1M)` | +0 | -1 em penalidade de execução discreta |
+| Ilusionista | +1 | -2 | -1 | 0 | +2 | `foco+arma(1M)` leve | +1 (se usar pesada) | -1 em penalidade de foco sob furtividade |
+
+Regras de uso da matriz:
+1. A classe define o valor base por tipo na criação; raça apenas desloca esse valor dentro do intervalo `[-2, +2]`.
+2. O campo `ajuste de penalidade de item` só reduz penalidades já existentes; nunca cria bônus líquido acima do baseline de `itensDeMao`.
+3. Quando a classe assumir configuração fora de assinatura (coluna `custo de versatilidade`), aplicar atraso de 1 marco da classe no próximo desbloqueio de especialização.
+4. Nenhuma classe pode iniciar F1 com mais de dois tipos em `+2`.
+
+### Matriz de deslocamento racial sobre a classe
+
+| Raça | deslocamento positivo | deslocamento negativo | limite por criação |
+|---|---|---|---|
+| Humano | +1 em 1 tipo à escolha | nenhum obrigatório | não pode elevar tipo já em `+2` |
+| Elfo | +1 em `C.C. Leve` ou `Distância` | -1 em `C.C. Pesada` | aplica 1 positivo + 1 negativo |
+| Meio-elfo | +1 em `Foco Arcano` ou `Distância` | nenhum obrigatório | apenas 1 deslocamento |
+| Anão | +1 em `C.C. Pesada` ou `Haste` | -1 em `Distância` | aplica 1 positivo + 1 negativo |
+| Meio-orc | +1 em `C.C. Pesada` | -1 em `Foco Arcano` | fixo |
+| Tiefling | +1 em `Foco Arcano` | -1 em `C.C. Pesada` | fixo |
+| Draconato | +1 em `C.C. Pesada` **ou** `Foco Arcano` | -1 em `C.C. Leve` | escolhe 1 linhagem |
+| Halfling | +1 em `C.C. Leve` ou `Distância` | -1 em `C.C. Pesada` e `Haste` | aplica 1 positivo + 1 negativo |
+
+Regras de deslocamento racial:
+1. O deslocamento racial acontece após aplicar a classe e antes de validar teto da faixa em `progressaoDoJogo`.
+2. Se deslocamento positivo e negativo incidirem no mesmo tipo por combinação rara, prevalece o valor mais restritivo (mínimo).
+3. O deslocamento não altera proficiência; altera apenas eficiência (`afinidade`) e custo de adaptação.
 
 ---
 
@@ -121,7 +167,7 @@ Cada classe deve declarar:
 Para este tópico ser considerado pronto para requisito funcional, ainda falta:
 
 1. Converter afinidades por tag em matriz numérica oficial (`bônus`, `penalidade`, `custo extra`) por faixa.
-2. Formalizar lista final de proficiências iniciais por classe individual (não apenas por grupo).
+2. Validar por simulação a lista final de proficiências iniciais por classe individual (já descrita em baseline).
 3. Definir protocolo fechado para desbloqueio de especialização e maestria por tipo de arma.
 4. Integrar este documento com a página de **Progressão do Jogo** (gatilhos exatos por nível/faixa).
 5. Validar coerência final com catálogo mínimo de builds de referência (combate, magia, suporte e furtividade).
