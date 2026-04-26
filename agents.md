@@ -50,7 +50,15 @@ Toda tarefa deve seguir estas etapas em ordem:
 
 # Tarefas do Agente
 - Quando o usuário não explicitar uma ação, o agente deve escolher uma das tarefas a seguir, conforme julgar mais prioritária.
-- Considerar, sempre que possível, concluir a implementação do sistema antes de criar mais documentação ou ampliar a complexidade dos requisitos.
+- Dar prioridade à implementação de código antes de criar nova documentação ou ampliar os requisitos, **exceto** quando algum requisito necessário ainda não existir.
+
+## Critério de Implementação Concluída
+A implementação do sistema é considerada concluída quando **todas** as condições abaixo forem verdadeiras:
+1. Cada requisito funcional documentado em `/docs/requisitos/` tem ao menos um caso de teste automatizado cobrindo o comportamento esperado.
+2. Todos os testes automatizados do projeto passam sem erros.
+3. Nenhum requisito em `/docs/requisitos/` está marcado como pendente de implementação ou possui lacuna identificada no código.
+
+Enquanto qualquer uma dessas condições **não** for atendida, a implementação é considerada **incompleta** e deve ser priorizada.
 
 ## Evolução dos `Requisitos do Sistema`
 - Analisar a documentação da `Mecânica do Jogo` e verificar quais pontos dos `Requisitos do Sistema` precisam ser complementados ou evoluídos para manter alinhamento.
