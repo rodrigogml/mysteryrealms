@@ -243,6 +243,12 @@ Sistema social da ficha contempla:
 - Faixas: Inimigo Mortal, Hostil, Neutra, Favorável, Aliado
 - Reputação por localidade e por grupos/facções
 
+Subpáginas canônicas do sistema social:
+- [Estrutura de Diálogo](./estruturaDeDialogo.md)
+- [Estilos de Fala e Valoração](./estilosDeFalaEValoracao.md)
+- [Diário do Jogador](./diarioDoJogador.md)
+- [Sistema de Marcadores](./sistemaDeMarcadores.md)
+
 ## Referências legadas consultadas
 
 - `docs/legado/fichaDoJogador.wiki`

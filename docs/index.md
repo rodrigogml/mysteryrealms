@@ -22,6 +22,37 @@
 - [Referências legadas consultadas](./mecanica/definicaoDePersonagem.md#referências-legadas-consultadas)
 
 
+
+## [Estrutura de Diálogo](./mecanica/estruturaDeDialogo.md)
+- [Objetivo](./mecanica/estruturaDeDialogo.md#objetivo)
+- [Ciclo social padronizado](./mecanica/estruturaDeDialogo.md#ciclo-social-padronizado)
+- [Estrutura mínima de um nó de diálogo](./mecanica/estruturaDeDialogo.md#estrutura-mínima-de-um-nó-de-diálogo)
+- [Estrutura de opção (referência)](./mecanica/estruturaDeDialogo.md#estrutura-de-opção-referência)
+- [Regras de consistência](./mecanica/estruturaDeDialogo.md#regras-de-consistência)
+- [Integrações](./mecanica/estruturaDeDialogo.md#integrações)
+
+## [Estilos de Fala e Valoração](./mecanica/estilosDeFalaEValoracao.md)
+- [Objetivo](./mecanica/estilosDeFalaEValoracao.md#objetivo)
+- [Estilos canônicos](./mecanica/estilosDeFalaEValoracao.md#estilos-canônicos)
+- [Matriz de valoração social](./mecanica/estilosDeFalaEValoracao.md#matriz-de-valoração-social)
+- [Aplicação no ciclo social](./mecanica/estilosDeFalaEValoracao.md#aplicação-no-ciclo-social)
+- [Convenções de escrita](./mecanica/estilosDeFalaEValoracao.md#convenções-de-escrita)
+
+## [Diário do Jogador](./mecanica/diarioDoJogador.md)
+- [Objetivo](./mecanica/diarioDoJogador.md#objetivo)
+- [Quando registrar](./mecanica/diarioDoJogador.md#quando-registrar)
+- [Estrutura mínima de entrada](./mecanica/diarioDoJogador.md#estrutura-mínima-de-entrada)
+- [Convenções de escrita](./mecanica/diarioDoJogador.md#convenções-de-escrita)
+- [Integração obrigatória com o ciclo](./mecanica/diarioDoJogador.md#integração-obrigatória-com-o-ciclo)
+
+## [Sistema de Marcadores](./mecanica/sistemaDeMarcadores.md)
+- [Objetivo](./mecanica/sistemaDeMarcadores.md#objetivo)
+- [Tipos de marcador](./mecanica/sistemaDeMarcadores.md#tipos-de-marcador)
+- [Convenção de IDs](./mecanica/sistemaDeMarcadores.md#convenção-de-ids)
+- [Operações canônicas](./mecanica/sistemaDeMarcadores.md#operações-canônicas)
+- [Uso no ciclo social](./mecanica/sistemaDeMarcadores.md#uso-no-ciclo-social)
+- [Convenções para evitar inconsistência](./mecanica/sistemaDeMarcadores.md#convenções-para-evitar-inconsistência)
+
 ## [Estados do Personagem](./mecanica/fadigaFomeSede.md)
 - [Fadiga, Fome e Sede](./mecanica/fadigaFomeSede.md)
   - [Faixas e efeitos](./mecanica/fadigaFomeSede.md#faixas-e-efeitos-por-sistema)
