@@ -21,6 +21,15 @@
 - [Relacionamento e reputação](./mecanica/definicaoDePersonagem.md#relacionamento-e-reputação)
 - [Referências legadas consultadas](./mecanica/definicaoDePersonagem.md#referências-legadas-consultadas)
 
+
+## [Estados do Personagem](./mecanica/fadigaFomeSede.md)
+- [Fadiga, Fome e Sede](./mecanica/fadigaFomeSede.md)
+  - [Faixas e efeitos](./mecanica/fadigaFomeSede.md#faixas-e-efeitos-por-sistema)
+  - [Tabela de precedência de estados](./mecanica/fadigaFomeSede.md#tabela-de-precedência-de-estados)
+- [Recuperação](./mecanica/recuperacao.md)
+- [Morte e Desmaio](./mecanica/morteDesmaio.md)
+- [Moral](./mecanica/moral.md)
+
 ## [Mecânica de Combate e Testes](./mecanica/testesDeJogo.md)
 - [Testes de Jogo](./mecanica/testesDeJogo.md)
   - [Fórmula de teste](./mecanica/testesDeJogo.md#fórmula-do-teste)
