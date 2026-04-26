@@ -1,0 +1,92 @@
+package br.eng.rodrigogml.mysteryrealms.domain.character.enums;
+
+import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
+import br.eng.rodrigogml.mysteryrealms.domain.character.model.SkillBonuses;
+
+/**
+ * Raças jogáveis, conforme RF-FP-07.
+ *
+ * Atributos base e bônus de habilidades derivados da documentação legada (docs/legado/racas.wiki).
+ *
+ * Nota: O legado registra total=23 para Elfo, mas a soma das colunas resulta em 21.
+ * Os valores das células foram preservados (fonte de verdade da tabela), não o total.
+ *
+ * "Conhecimento (Natureza)" existe no legado de raças apenas como referência textual;
+ * não há bônus numérico de raça para essa habilidade na tabela. A habilidade canônica
+ * mais próxima, Sobrevivência, é usada onde aplicável.
+ */
+public enum Race {
+
+    HUMANO("Humano",
+            new AttributeSet(3, 3, 3, 3, 3, 3, 3),
+            new int[]{75, 65, 70},
+            SkillBonuses.empty()),
+
+    ELFO("Elfo",
+            new AttributeSet(2, 4, 2, 4, 4, 2, 3),
+            new int[]{60, 50, 55},
+            SkillBonuses.of(Skill.CONHECIMENTO_ARCANO, 2)),
+
+    MEIO_ELFO("Meio-elfo",
+            new AttributeSet(2, 3, 3, 3, 3, 4, 3),
+            new int[]{67, 57, 62},
+            SkillBonuses.of(Skill.PERSUASAO, 1)),
+
+    ANAO("Anão",
+            new AttributeSet(3, 2, 5, 2, 3, 2, 3),
+            new int[]{85, 75, 80},
+            SkillBonuses.of(Skill.SOBREVIVENCIA, 2)),
+
+    MEIO_ORC("Meio-orc",
+            new AttributeSet(5, 3, 4, 1, 2, 1, 2),
+            new int[]{95, 85, 90},
+            SkillBonuses.of(Skill.INTIMIDACAO, 1)),
+
+    TIEFLING("Tiefling",
+            new AttributeSet(2, 3, 2, 4, 2, 4, 3),
+            new int[]{70, 60, 65},
+            SkillBonuses.of(Skill.CONHECIMENTO_RELIQUIAS, 2)),
+
+    DRACONATO("Draconato",
+            new AttributeSet(4, 2, 4, 3, 2, 3, 2),
+            new int[]{100, 90, 95},
+            SkillBonuses.of(Skill.INTIMIDACAO, 1)),
+
+    HALFLING("Halfling",
+            new AttributeSet(1, 5, 3, 2, 3, 2, 4),
+            new int[]{40, 35, 37},
+            SkillBonuses.of(Skill.FURTIVIDADE, 2));
+
+    private final String nome;
+    private final AttributeSet atributosBase;
+    /** Peso base em kg: índice 0=MASCULINO, 1=FEMININO, 2=OUTRO */
+    private final int[] pesoBaseKg;
+    private final SkillBonuses bonusHabilidades;
+
+    Race(String nome, AttributeSet atributosBase, int[] pesoBaseKg, SkillBonuses bonusHabilidades) {
+        this.nome = nome;
+        this.atributosBase = atributosBase;
+        this.pesoBaseKg = pesoBaseKg;
+        this.bonusHabilidades = bonusHabilidades;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public AttributeSet getAtributosBase() {
+        return atributosBase;
+    }
+
+    public int getPesoBaseKg(Gender gender) {
+        return switch (gender) {
+            case MASCULINO -> pesoBaseKg[0];
+            case FEMININO -> pesoBaseKg[1];
+            case OUTRO -> pesoBaseKg[2];
+        };
+    }
+
+    public SkillBonuses getBonusHabilidades() {
+        return bonusHabilidades;
+    }
+}
