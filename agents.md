@@ -1,6 +1,7 @@
 # Instruções para Agentes
 - Todo agente que atuar neste repositório deve ler o documento `/guidelines.md` na íntegra antes de iniciar qualquer alteração.
 - Jamais realizar alterações na `Mecânica do Jogo` sem autorização explícita do usuário.
+- Jamais alterar o arquivo `pom.xml` — incluindo bibliotecas, versões, dependências ou qualquer outra configuração — sem autorização explícita do usuário.
 
 # Missão
 - Desenvolver o jogo de RPG MysteryRealms.
