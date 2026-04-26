@@ -95,7 +95,10 @@ Campos previstos:
 - **Carga Crítica Atual:**
   - Fórmula: `Capacidade de Carga Atual × 1,5`
 - **Carga Atual:**
-  - Soma dos pesos de equipados + mochila + moedas
+  - Fórmula canônica: `PesoEquipadosKg + PesoMochilaKg + PesoMoedasKg`
+  - `PesoMoedasKg` deve seguir `docs/mecanica/economia.md`:
+    - `PesoMoedasKg = ((QtdMP × 6) + (QtdMS × 5)) / 1000`
+  - Esta regra substitui interpretações genéricas de “peso de moedas” para remover ambiguidade.
 
 ### Peso do personagem
 
@@ -106,24 +109,24 @@ Campos previstos:
 
 - **Pontos de Vida Máximo:** `CON × 10`
 - **Fadiga Máxima / Fadiga Mínima / Exaustão:** definidos no sistema de Fadiga, Fome e Sede
-- **Precisão:** `1d20 + Destreza + Bônus de Precisão da Arma + Modificadores`
+- **Precisão:** `1d20 + Destreza + BonusItemPrecisao + Modificadores`
 - **Dano Base:** `Dado da Arma + Modificador de Atributo + Bônus de Raça/Classe`
 
 #### Dano (final)
 
 1. **Fórmula matemática final**
 
-   `DanoFinal = max(0, arred( (DadoArma + ModAtributo + BonusRacaClasse + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
+   `DanoFinal = max(0, arred( (DadoArma + ModAtributo + BonusRacaClasse + BonusItemDano + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
 
    **Ordem de aplicação de modificadores (obrigatória):**
-   1) rolar/computar base (`DadoArma + ModAtributo + BonusRacaClasse + BonusPlano`),  
-   2) aplicar modificadores percentuais,  
-   3) aplicar modificadores flat (fixos),  
+   1) rolar/computar base (`DadoArma + ModAtributo + BonusRacaClasse + BonusItemDano + BonusPlano`),
+   2) aplicar modificadores percentuais,
+   3) aplicar modificadores flat (fixos),
    4) truncar no mínimo em `0`.
 
 2. **Variáveis obrigatórias e opcionais**
    - Obrigatórias: `DadoArma`, `ModAtributo`.
-   - Opcionais: `BonusRacaClasse`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
+   - Opcionais: `BonusRacaClasse`, `BonusItemDano`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
 
 3. **Regra de arredondamento**
    - `arred(x)` = **piso** (`floor`), sempre arredondando para baixo após etapa percentual.
@@ -144,17 +147,17 @@ Campos previstos:
 
 1. **Fórmula matemática final**
 
-   `DefesaFinal = max(0, arred( (BaseEsquiva + BonusArmadura + BonusEscudo + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
+   `DefesaFinal = max(0, arred( (BaseEsquiva + BonusArmadura + BonusEscudo + BonusItemDefesa + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
 
    **Ordem de aplicação de modificadores (obrigatória):**
-   1) somar base (`BaseEsquiva + BonusArmadura + BonusEscudo + BonusPlano`),  
-   2) aplicar percentuais,  
-   3) aplicar flats,  
+   1) somar base (`BaseEsquiva + BonusArmadura + BonusEscudo + BonusItemDefesa + BonusPlano`),
+   2) aplicar percentuais,
+   3) aplicar flats,
    4) truncar no mínimo em `0`.
 
 2. **Variáveis obrigatórias e opcionais**
    - Obrigatórias: `BaseEsquiva` (normalmente derivada de Destreza).
-   - Opcionais: `BonusArmadura`, `BonusEscudo`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
+   - Opcionais: `BonusArmadura`, `BonusEscudo`, `BonusItemDefesa`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
 
 3. **Regra de arredondamento**
    - `arred(x)` = **piso** (`floor`) após aplicação percentual.
@@ -175,17 +178,17 @@ Campos previstos:
 
 1. **Fórmula matemática final**
 
-   `BloqueioFinal = max(0, arred( (BaseBloqueio + BonusEquipBloqueio + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
+   `BloqueioFinal = max(0, arred( (BaseBloqueio + BonusEquipBloqueio + BonusItemBloqueio + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
 
    **Ordem de aplicação de modificadores (obrigatória):**
-   1) somar base (`BaseBloqueio + BonusEquipBloqueio + BonusPlano`),  
-   2) aplicar percentuais,  
-   3) aplicar flats,  
+   1) somar base (`BaseBloqueio + BonusEquipBloqueio + BonusItemBloqueio + BonusPlano`),
+   2) aplicar percentuais,
+   3) aplicar flats,
    4) truncar no mínimo em `0`.
 
 2. **Variáveis obrigatórias e opcionais**
    - Obrigatórias: `BaseBloqueio`.
-   - Opcionais: `BonusEquipBloqueio`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
+   - Opcionais: `BonusEquipBloqueio`, `BonusItemBloqueio`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
 
 3. **Regra de arredondamento**
    - `arred(x)` = **piso** (`floor`) após aplicação percentual.
