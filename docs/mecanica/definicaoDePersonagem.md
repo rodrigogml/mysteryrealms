@@ -9,7 +9,7 @@ Termos de exibição e chaves técnicas seguem o padrão canônico definido em `
 Com base na documentação legada:
 - A construção inicial do personagem é definida pela combinação de **Raça + Classe**.
 - Não há distribuição livre de pontos iniciais de atributos.
-- A evolução posterior ocorre pelo sistema de progressão.
+- A evolução posterior ocorre pelo sistema de progressão definido em `docs/mecanica/progressaoDoJogo.md`.
 
 ## Identidade da ficha do jogador
 
