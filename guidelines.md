@@ -97,12 +97,14 @@ Documentação relevante sobre as definições da implementação do sistema.
 - O banco de dados da aplicação será MySQL 9.0, acessado através do ORM/JPA padrão do Spring (Hibernate).
 - O schema da aplicação será `mysteryrealms`.
 - Dentro da pasta `src/main/resources/db/init` deve ser incluído o script `init.sql` de criação do banco de dados. Esse script não deve utilizar sintaxes do tipo `IF NOT EXISTS`; deve considerar sempre a criação do banco de dados do zero.
-  - Nesse script não devem ser criados scripts de `update` ou `alter table` quando for possível alterar o script original de criação ou de insert. Salvo casos de relacionamento circular que precisam ser adicionados por `alter table` após a execução de outros scripts.
-- Nenhum script de update para bases existentes deve ser criado no repositório.
-- Apesar de não ser padrão de implementação, o banco de dados deverá seguir as seguintes regras de nomenclatura:
+  - O script não deve conter instruções de `ALTER TABLE` ou `UPDATE` (seja de estrutura ou de dados) quando for possível corrigir diretamente o `CREATE TABLE` ou o `INSERT` original, de forma que a criação do banco seja feita corretamente desde a primeira execução. A exceção são casos de relacionamento circular, nos quais o `ALTER TABLE` é necessário após a criação das tabelas envolvidas.
+- Nenhum script de atualização para bases existentes deve ser criado no repositório.
+- O banco de dados deverá seguir as seguintes regras de nomenclatura:
   - Nomes de tabelas, colunas, FKs, etc. devem sempre estar em inglês. Apenas comentários, se necessários, podem estar em português.
   - Nomes de tabelas e colunas devem estar no singular e seguir o padrão camelCase sem a utilização de `_` ou `-`. Exemplos: `user`, `userGroup`.
-  - A chave primária da tabela deve se chamar `id` e ser do tipo `BIGINT UNSIGNED AUTO_INCREMENT`.
+  - O nome da coluna no banco de dados deve ser exatamente igual ao nome do campo correspondente na Entity Java, em camelCase e sem `_` ou `-`.
+  - A chave primária da tabela deve se chamar `id` e ser do tipo `BIGINT AUTO_INCREMENT`.
   - FKs devem sempre ter o prefixo `id` concatenado ao nome da tabela referenciada. Exemplo: `idUser`.
     - Casos de dois ou mais relacionamentos para a mesma tabela: utilizar o prefixo `id` concatenado com o significado do relacionamento, sem a necessidade de incluir o nome da tabela. Exemplos: `idPreviousItem` e `idNextItem`, imaginando um relacionamento linear entre objetos da mesma tabela.
-  - Tabelas de relacionamento N:N devem ter o nome das tabelas que relacionam separados por `_`. Exemplo: `user_userGroup`.
+  - Tabelas de relacionamento N:N devem ter o nome das tabelas que relacionam separados por `_`. Exemplo: `user_userGroup`. A utilização de `_` nesse caso é uma exceção prevista, com o objetivo de facilitar a identificação visual das tabelas de relacionamento em relação às tabelas de dados.
+  - Tipos de enumeração Java (`enum`) devem ser persistidos no banco pelo nome do valor da enum, em colunas do tipo `VARCHAR(50)`.
