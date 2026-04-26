@@ -13,9 +13,9 @@
 
     <groupId>br.eng.rodrigogml</groupId>
     <artifactId>mysteryrealms</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Mystery Realms</name>
-    <description>Base da aplicação Mystery Realms com Spring Boot e Vaadin.</description>
+    <description>Projeto do Jogo de RPG Mystery Realms</description>
 
     <properties>
         <java.version>25</java.version>

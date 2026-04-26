@@ -1,46 +1,66 @@
 # Guidelines do Repositório
 
-## Diretrizes de organização de código, documentação e repositório
+Este documento reúne as definições que devem ser seguidas integralmente em todo o repositório.
 
-### 1. Documentação oficial do projeto
-Toda documentação deverá ser escrita dentro da pasta `/docs`, em formato Markdown GitHub Flavored (`.md`).
+# Documentação
+- Toda a documentação do projeto deve ficar na pasta `/docs`.
+- Toda a documentação deve ser escrita na pasta `/docs`, em formato Markdown GitHub Flavored (`.md`).
+- Toda criação ou alteração de arquivos de documentação, bem como de seções e subseções, deve ser refletida imediatamente em `index.md`.
+- Todos os arquivos de documentação devem ter nome normalizado em estilo camelCase, sem acentos e sem uso de `-` ou `_`. Exemplo: `guiaDeCombate.md`.
 
-Cada arquivo `.md` criado em `/docs` deverá ser adicionado no índice da documentação `index.md`.
+## Índice da Documentação
+- Dentro de `/docs` deve ser mantido o arquivo `index.md`, com o objetivo de centralizar um índice único e geral de toda a documentação da pasta, independentemente das subpastas e da divisão interna do conteúdo.
+- O índice pode conter seções e subseções para separar as páginas por assuntos e tópicos, sempre visando facilitar a navegação.
+- O índice deve incluir um link para todo arquivo `.md` dentro da pasta `/docs`. Abaixo de cada link, deve haver uma estrutura de tópicos com links do tipo âncora para todas as seções e subseções internas do arquivo.
 
-Os arquivos de documentação devem seguir o padrão **camelCase**, sem uso de `-` (hífen) ou `_` (underscore) no nome do arquivo (exemplo: `guiaDeCombate.md`).
-
-O `index.md` deve conter:
-- Um link para a página principal de cada documento;
-- Abaixo do link principal, uma estrutura de tópicos com links por âncora para as seções do arquivo `.md`.
-
-#### Modelo de exemplo para o `docs/index.md`
+Exemplo de estrutura esperada em `index.md`:
 
 ```md
 # Índice da Documentação
+Índice de toda a documentação do projeto/repositório.
 
-## [Guia de Combate](./guiaDeCombate.md)
-- [Visão Geral](./guiaDeCombate.md#visão-geral)
-- [Mecânicas Básicas](./guiaDeCombate.md#mecânicas-básicas)
-- [Exemplos](./guiaDeCombate.md#exemplos)
+# Mecânica do Jogo
 
-## [Guia de Criação de Personagem](./guiaCriacaoDePersonagem.md)
-- [Introdução](./guiaCriacaoDePersonagem.md#introdução)
-- [Atributos](./guiaCriacaoDePersonagem.md#atributos)
-- [Classes](./guiaCriacaoDePersonagem.md#classes)
+Documentação relacionada às definições da mecânica do jogo, isto é, fórmulas, funcionamento, lógica, condições etc.
+
+- [Página 1](./mecanica/pagina1.md)
+  - [Sessão nível 1](./mecanica/pagina1.md#sessao-nivel-1)
+    - [Subseção nível 1](./mecanica/pagina1.md#subsecao-nivel-1)
+  - [Sessão nível 2](./mecanica/pagina1.md#sessao-nivel-2)
+
+
+- [Página 2](./mecanica/pagina2.md)
+
+
+# Mundo de Mystery Realms
+
+Documentação relacionada às definições do mundo, como classes existentes e seus atributos, localidades, NPCs etc. São as definições que transformam a mecânica do jogo no ambiente jogável de Mystery Realms.
+
+- [Página 1](./mundo/pagina1.md)
+
+
+# Requisitos do Sistema
+
+Documentação dos requisitos do sistema.
+
+- [Página 1](./requisitos/pagina1.md)
+  - [Sessão nível 1](./requisitos/pagina1.md#sessao-nivel-1)
+    - [Subseção nível 1](./requisitos/pagina1.md#subsecao-nivel-1)
+  - [Sessão nível 2](./requisitos/pagina1.md#sessao-nivel-2)
+
+
+- [Página 2](./requisitos/pagina2.md)
+
+
+# Implementação do Sistema
+
+Documentação relevante sobre as definições da implementação do sistema.
+
+
+- [Página 1](./implementacao/pagina1.md)
 ```
 
-### 1.1 Documentação de mecânica do jogo
-Toda documentação relacionada à mecânica do jogo (comportamento do jogo, fórmulas, atributos, fichas técnicas e definições sistêmicas) deve ser mantida na pasta `/docs/mecanica`.
-
-Novos documentos de mecânica devem seguir as mesmas regras gerais desta guideline (Markdown, padrão camelCase e indexação em `docs/index.md`).
-
-
-### 1.2 Estrutura conceitual do novo sistema
-Embora a documentação legada esteja dividida entre **engine** e **mundo**, o novo sistema não seguirá essa separação.
-
-A partir desta guideline, o projeto deve ser tratado como um único sistema sólido e completo, com arquitetura unificada.
-
-### 2. Documentação legada
-Em `/docs/legado/` encontramos arquivos `.wiki`, que são a documentação legada do projeto.
-
-Esses arquivos devem ser utilizados apenas para consulta e **nunca** devem ser alterados.
+## Documentação Legada
+- Em `/docs/legado/` há arquivos `.wiki`, que constituem a documentação legada inicial do projeto.
+- Esses arquivos devem ser utilizados apenas para consulta e consideração na evolução da mecânica do jogo atual. **Nunca** devem ser alterados.
+- A documentação legada serve como guia e referência de mecânica, mas não deve ser tratada como verdade absoluta nem como regra obrigatória. Ela pode ser evoluída, alterada ou simplificada ao formular recomendações para novas definições do projeto atual.
