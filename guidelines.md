@@ -91,3 +91,18 @@ Documentação relevante sobre as definições da implementação do sistema.
 - Em `/docs/legado/` há arquivos `.wiki`, que constituem a documentação legada inicial do projeto.
 - Esses arquivos devem ser utilizados apenas para consulta e consideração na evolução da mecânica do jogo atual. **Nunca** devem ser alterados.
 - A documentação legada serve como guia e referência de mecânica, mas não deve ser tratada como verdade absoluta nem como regra obrigatória. Ela pode ser evoluída, alterada ou simplificada ao formular recomendações para novas definições do projeto atual.
+
+# Banco de Dados
+
+- O banco de dados da aplicação será MySQL 9.0, acessado através do ORM/JPA padrão do Spring (Hibernate).
+- O schema da aplicação será `mysteryrealms`.
+- Dentro da pasta `src/main/resources/db/init` deve ser incluído o script `init.sql` de criação do banco de dados. Esse script não deve utilizar sintaxes do tipo `IF NOT EXISTS`; deve considerar sempre a criação do banco de dados do zero.
+  - Nesse script não devem ser criados scripts de `update` ou `alter table` quando for possível alterar o script original de criação ou de insert. Salvo casos de relacionamento circular que precisam ser adicionados por `alter table` após a execução de outros scripts.
+- Nenhum script de update para bases existentes deve ser criado no repositório.
+- Apesar de não ser padrão de implementação, o banco de dados deverá seguir as seguintes regras de nomenclatura:
+  - Nomes de tabelas, colunas, FKs, etc. devem sempre estar em inglês. Apenas comentários, se necessários, podem estar em português.
+  - Nomes de tabelas e colunas devem estar no singular e seguir o padrão camelCase sem a utilização de `_` ou `-`. Exemplos: `user`, `userGroup`.
+  - A chave primária da tabela deve se chamar `id` e ser do tipo `BIGINT UNSIGNED AUTO_INCREMENT`.
+  - FKs devem sempre ter o prefixo `id` concatenado ao nome da tabela referenciada. Exemplo: `idUser`.
+    - Casos de dois ou mais relacionamentos para a mesma tabela: utilizar o prefixo `id` concatenado com o significado do relacionamento, sem a necessidade de incluir o nome da tabela. Exemplos: `idPreviousItem` e `idNextItem`, imaginando um relacionamento linear entre objetos da mesma tabela.
+  - Tabelas de relacionamento N:N devem ter o nome das tabelas que relacionam separados por `_`. Exemplo: `user_userGroup`.
