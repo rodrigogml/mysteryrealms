@@ -1,5 +1,13 @@
 # Índice da Documentação
 
+## [Glossário Canônico](./mecanica/glossario.md)
+- [Convenção de escrita](./mecanica/glossario.md#convenção-de-escrita)
+- [Atributos principais](./mecanica/glossario.md#atributos-principais)
+- [Habilidades canônicas](./mecanica/glossario.md#habilidades-canônicas)
+- [Tipos de dano](./mecanica/glossario.md#tipos-de-dano)
+- [Tipos de aflição](./mecanica/glossario.md#tipos-de-aflição)
+- [Tipos de resistência](./mecanica/glossario.md#tipos-de-resistência)
+
 ## [Definição de Personagem](./mecanica/definicaoDePersonagem.md)
 - [Escopo da definição do personagem](./mecanica/definicaoDePersonagem.md#escopo-da-definição-do-personagem)
 - [Identidade da ficha do jogador](./mecanica/definicaoDePersonagem.md#identidade-da-ficha-do-jogador)

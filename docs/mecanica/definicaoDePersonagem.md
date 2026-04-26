@@ -2,6 +2,8 @@
 
 Este documento consolida, em formato Markdown, as definições legadas sobre personagem (jogador), atributos, ficha técnica e componentes diretamente relacionados.
 
+Termos de exibição e chaves técnicas seguem o padrão canônico definido em `docs/mecanica/glossario.md`.
+
 ## Escopo da definição do personagem
 
 Com base na documentação legada:
@@ -22,13 +24,13 @@ Campos de identidade mapeados:
 ## Atributos principais
 
 Atributos-base do personagem:
-- Força
-- Destreza
-- Constituição
-- Intelecto
-- Percepção
-- Carisma
-- Vontade
+- Força (`forca`)
+- Destreza (`destreza`)
+- Constituição (`constituicao`)
+- Intelecto (`intelecto`)
+- Percepção (`percepcao`)
+- Carisma (`carisma`)
+- Vontade (`vontade`)
 
 ### Papel dos atributos
 
@@ -42,16 +44,16 @@ Atributos-base do personagem:
 
 ## Habilidades associadas
 
-Habilidades listadas na base legada:
-- Persuasão [Carisma]
-- Intimidação [Carisma]
-- Enganação [Carisma]
-- Conhecimento (Arcano, História, Relíquias) [Intelecto]
-- Herbalismo / Alquimia [Intelecto]
-- Furtividade [Destreza]
-- Sobrevivência [Percepção]
-- Manuseio de Armas [Força ou Destreza]
-- Uso de Magia [Vontade ou Intelecto]
+Habilidades listadas na base legada (padronizadas):
+- Persuasão (`persuasao`) [Carisma / `carisma`]
+- Intimidação (`intimidacao`) [Carisma / `carisma`]
+- Enganação (`enganacao`) [Carisma / `carisma`]
+- Conhecimento (Arcano, História, Relíquias) (`conhecimento_arcano`, `conhecimento_historia`, `conhecimento_reliquias`) [Intelecto / `intelecto`]
+- Herbalismo / Alquimia (`herbalismo`, `alquimia`) [Intelecto / `intelecto`]
+- Furtividade (`furtividade`) [Destreza / `destreza`]
+- Sobrevivência (`sobrevivencia`) [Percepção / `percepcao`]
+- Manuseio de Armas (`manuseio_armas`) [Força ou Destreza / `forca` ou `destreza`]
+- Uso de Magia (`uso_magia`) [Vontade ou Intelecto / `vontade` ou `intelecto`]
 
 Regra geral legada: quando houver habilidade específica, usar habilidade; se não houver, usar teste direto de atributo principal.
 
