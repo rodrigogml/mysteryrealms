@@ -39,6 +39,15 @@
 - Ações que impactem a experiência do jogo, a arquitetura do sistema ou os requisitos vigentes.
 - Ao enumerar recomendações de evolução de requisitos ou de implementação, sempre apresentar justificativas e aguardar a escolha do usuário antes de aplicar.
 
+## Fluxo Padrão de Trabalho
+Toda tarefa deve seguir estas etapas em ordem:
+
+1. **Analisar** — ler os artefatos relevantes (Mecânica do Jogo, Requisitos do Sistema, código) para entender o estado atual.
+2. **Listar lacunas** — identificar e listar o que está incompleto, inconsistente ou ausente em relação ao escopo da tarefa.
+3. **Propor opções** — para cada lacuna que exija decisão do usuário, apresentar ao menos uma opção com justificativa. Para lacunas de decisão autônoma, indicar a abordagem escolhida.
+4. **Aguardar decisão** — nas situações definidas em `## Quando o agente deve consultar o usuário`, parar e aguardar a resposta antes de prosseguir.
+5. **Executar** — aplicar somente o que foi aprovado ou o que está dentro do escopo de decisão autônoma, respeitando `/guidelines.md` e a ordem de prioridade dos artefatos.
+
 # Tarefas do Agente
 - Quando o usuário não explicitar uma ação, o agente deve escolher uma das tarefas a seguir, conforme julgar mais prioritária.
 - Considerar, sempre que possível, concluir a implementação do sistema antes de criar mais documentação ou ampliar a complexidade dos requisitos.
