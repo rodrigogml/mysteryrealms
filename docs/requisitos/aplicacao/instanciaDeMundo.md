@@ -27,8 +27,16 @@ Requisitos funcionais relacionados ao ciclo de vida e ao isolamento da instânci
 
 ## RF-IM-03 — Persistência do estado do mundo
 
-- O estado da instância de mundo deve ser persistido automaticamente a cada ação relevante que altere o mundo (conclusão de missão, morte de NPC, descoberta de localidade etc.).
+- Ao iniciar uma sessão de jogo, a instância de mundo do personagem selecionado deve ser carregada integralmente na memória do servidor de jogo.
+- O estado em memória é a fonte de verdade durante a sessão ativa; todas as leituras de estado do mundo durante a sessão devem ocorrer a partir dessa representação em memória.
+- A cada ação do usuário que altere o estado do mundo (movimento, combate, diálogo, conclusão de missão, morte de NPC, descoberta de localidade, coleta de item, passagem de tempo etc.), o estado em memória deve ser persistido automaticamente no banco de dados, sem intervenção do usuário.
+- A persistência pode ser realizada de forma parcial e incremental, gravando apenas os fragmentos do estado que foram modificados pela ação, de forma a minimizar a carga sobre o ORM e o banco de dados.
+- O detalhamento da estratégia de persistência incremental (identificação de fragmentos modificados, granularidade de commit, estratégias de cache, latência aceitável etc.) deve ser especificado nos **Requisitos de Persistência** (a elaborar).
 - O sistema não deve depender de save manual para preservar o estado do mundo.
+- Em caso de falha de persistência, o sistema deve:
+  - Registrar o erro internamente.
+  - Tentar reprocessar a gravação automaticamente.
+  - Notificar o administrador do sistema em caso de falha persistente.
 
 ---
 

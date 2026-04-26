@@ -7,7 +7,7 @@ Requisitos funcionais relacionados à criação, gerenciamento e seleção de pe
 ## RF-PE-01 — Múltiplos personagens por usuário
 
 - Um usuário pode criar e manter múltiplos personagens simultaneamente.
-- O limite máximo de personagens por usuário é: **a definir** (sugestão: 5).
+- O limite máximo de personagens por usuário é **50**.
 - Cada personagem é independente dos demais: atributos, inventário, moedas, XP e progressão não são compartilhados.
 
 ---

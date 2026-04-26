@@ -58,7 +58,7 @@ Requisitos funcionais relacionados ao modo de jogo multi-usuário cooperativo (c
 
 ## RF-MJ-06 — Limite de jogadores por sessão
 
-- O limite máximo de jogadores simultâneos em uma sessão co-op é: **a definir** (sugestão: 4 jogadores incluindo o anfitrião).
+- O limite máximo de jogadores simultâneos em uma sessão co-op é **4** (incluindo o anfitrião).
 
 ---
 
