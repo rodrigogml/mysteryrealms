@@ -63,7 +63,15 @@ Atributos de estado referenciados:
 - XP Acumulado
 - Pontos de Vida
 - Fadiga
+- Fome
+- Sede
 - Moral (escala 0 a 100)
+
+Regras canônicas obrigatórias do estado do personagem:
+- `docs/mecanica/fadigaFomeSede.md` (faixas, gatilhos, empilhamento e precedência)
+- `docs/mecanica/recuperacao.md` (recuperação por descanso, sono e itens)
+- `docs/mecanica/morteDesmaio.md` (estado crítico, colapso e despertar)
+- `docs/mecanica/moral.md` (faixas emocionais e efeitos)
 
 ## Inventário e recursos
 
