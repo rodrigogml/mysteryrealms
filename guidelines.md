@@ -29,6 +29,11 @@ O `index.md` deve conter:
 - [Classes](./guiaCriacaoDePersonagem.md#classes)
 ```
 
+### 1.1 Documentação de mecânica do jogo
+Toda documentação relacionada à mecânica do jogo (comportamento do jogo, fórmulas, atributos, fichas técnicas e definições sistêmicas) deve ser mantida na pasta `/docs/mecanica`.
+
+Novos documentos de mecânica devem seguir as mesmas regras gerais desta guideline (Markdown, padrão camelCase e indexação em `docs/index.md`).
+
 ### 2. Documentação legada
 Em `/docs/legado/` encontramos arquivos `.wiki`, que são a documentação legada do projeto.
 
