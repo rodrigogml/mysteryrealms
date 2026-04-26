@@ -41,6 +41,12 @@
 - [Modificadores](./mecanica/modificadores.md)
   - [Prioridade e empilhamento](./mecanica/modificadores.md#prioridade-e-empilhamento)
 
+
+## [Mundo e Navegação](./mundo/estruturaDeLocalizacao.md)
+- [Estrutura de Localização](./mundo/estruturaDeLocalizacao.md)
+- [Estrutura Temporal](./mundo/estruturaTemporal.md)
+- [Mapa e Movimentação](./mundo/mapaEMovimentacao.md)
+
 ## [Economia](./mecanica/economia.md)
 - [Sistema monetário](./mecanica/economia.md#sistema-monetário)
   - [Taxa de conversão](./mecanica/economia.md#taxa-de-conversão)
