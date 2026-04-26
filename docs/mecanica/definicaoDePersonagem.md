@@ -98,9 +98,99 @@ Campos previstos:
 - **Fadiga Máxima / Fadiga Mínima / Exaustão:** definidos no sistema de Fadiga, Fome e Sede
 - **Precisão:** `1d20 + Destreza + Bônus de Precisão da Arma + Modificadores`
 - **Dano Base:** `Dado da Arma + Modificador de Atributo + Bônus de Raça/Classe`
-- **Dano Atual:** derivado de Dano Base + modificadores ativos
-- **Defesa:** composta por esquiva (Destreza), equipamentos e modificadores
-- **Bloqueio:** soma de bônus de bloqueio de equipamentos + modificadores
+
+#### Dano (final)
+
+1. **Fórmula matemática final**
+
+   `DanoFinal = max(0, arred( (DadoArma + ModAtributo + BonusRacaClasse + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
+
+   **Ordem de aplicação de modificadores (obrigatória):**
+   1) rolar/computar base (`DadoArma + ModAtributo + BonusRacaClasse + BonusPlano`),  
+   2) aplicar modificadores percentuais,  
+   3) aplicar modificadores flat (fixos),  
+   4) truncar no mínimo em `0`.
+
+2. **Variáveis obrigatórias e opcionais**
+   - Obrigatórias: `DadoArma`, `ModAtributo`.
+   - Opcionais: `BonusRacaClasse`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
+
+3. **Regra de arredondamento**
+   - `arred(x)` = **piso** (`floor`), sempre arredondando para baixo após etapa percentual.
+
+4. **Exemplo numérico completo**
+   - `DadoArma=14`, `ModAtributo=6`, `BonusRacaClasse=2`, `BonusPlano=0` → base `22`.
+   - `SomaPctPositivo=0,25`, `SomaPctNegativo=0,10` → multiplicador `1,15`.
+   - Pós-percentual: `22 × 1,15 = 25,3` → piso = `25`.
+   - `SomaFlatPositivo=4`, `SomaFlatNegativo=3` → `25 + 4 - 3 = 26`.
+   - **DanoFinal = 26**.
+
+5. **Regra de prioridade em conflito**
+   - Prioridade de origem (maior para menor): **regra de estado crítico do combate > habilidade ativa > efeito de equipamento > traço de classe > traço racial > efeito temporário genérico**.
+   - Modificadores da mesma origem e mesmo tipo **acumulam**.
+   - Quando duas regras do mesmo nível se excluem, vence a de **maior magnitude absoluta**; empate: vence a de **menor duração restante**; novo empate: aplica-se a mais recente.
+
+#### Defesa (final)
+
+1. **Fórmula matemática final**
+
+   `DefesaFinal = max(0, arred( (BaseEsquiva + BonusArmadura + BonusEscudo + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
+
+   **Ordem de aplicação de modificadores (obrigatória):**
+   1) somar base (`BaseEsquiva + BonusArmadura + BonusEscudo + BonusPlano`),  
+   2) aplicar percentuais,  
+   3) aplicar flats,  
+   4) truncar no mínimo em `0`.
+
+2. **Variáveis obrigatórias e opcionais**
+   - Obrigatórias: `BaseEsquiva` (normalmente derivada de Destreza).
+   - Opcionais: `BonusArmadura`, `BonusEscudo`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
+
+3. **Regra de arredondamento**
+   - `arred(x)` = **piso** (`floor`) após aplicação percentual.
+
+4. **Exemplo numérico completo**
+   - `BaseEsquiva=18`, `BonusArmadura=7`, `BonusEscudo=3`, `BonusPlano=0` → base `28`.
+   - `SomaPctPositivo=0,20`, `SomaPctNegativo=0,05` → multiplicador `1,15`.
+   - Pós-percentual: `28 × 1,15 = 32,2` → piso = `32`.
+   - `SomaFlatPositivo=2`, `SomaFlatNegativo=4` → `32 + 2 - 4 = 30`.
+   - **DefesaFinal = 30**.
+
+5. **Regra de prioridade em conflito**
+   - Mesma prioridade global de combate: **estado crítico > habilidade ativa > equipamento > classe > raça > temporário genérico**.
+   - Apenas o **maior bônus de escudo** é considerado quando houver múltiplos escudos.
+   - Penalidades de armadura e terreno **sempre acumulam** entre si.
+
+#### Bloqueio (final)
+
+1. **Fórmula matemática final**
+
+   `BloqueioFinal = max(0, arred( (BaseBloqueio + BonusEquipBloqueio + BonusPlano) × (1 + SomaPctPositivo - SomaPctNegativo) ) + SomaFlatPositivo - SomaFlatNegativo )`
+
+   **Ordem de aplicação de modificadores (obrigatória):**
+   1) somar base (`BaseBloqueio + BonusEquipBloqueio + BonusPlano`),  
+   2) aplicar percentuais,  
+   3) aplicar flats,  
+   4) truncar no mínimo em `0`.
+
+2. **Variáveis obrigatórias e opcionais**
+   - Obrigatórias: `BaseBloqueio`.
+   - Opcionais: `BonusEquipBloqueio`, `BonusPlano`, `SomaPctPositivo`, `SomaPctNegativo`, `SomaFlatPositivo`, `SomaFlatNegativo`.
+
+3. **Regra de arredondamento**
+   - `arred(x)` = **piso** (`floor`) após aplicação percentual.
+
+4. **Exemplo numérico completo**
+   - `BaseBloqueio=12`, `BonusEquipBloqueio=6`, `BonusPlano=1` → base `19`.
+   - `SomaPctPositivo=0,30`, `SomaPctNegativo=0,10` → multiplicador `1,20`.
+   - Pós-percentual: `19 × 1,20 = 22,8` → piso = `22`.
+   - `SomaFlatPositivo=3`, `SomaFlatNegativo=2` → `22 + 3 - 2 = 23`.
+   - **BloqueioFinal = 23**.
+
+5. **Regra de prioridade em conflito**
+   - Mesma prioridade global de combate: **estado crítico > habilidade ativa > equipamento > classe > raça > temporário genérico**.
+   - Efeitos com texto “substitui valor de bloqueio” têm precedência sobre efeitos que “adicionam”.
+   - Se duas substituições competirem, aplica-se a de maior valor final calculado; empate: a de menor duração restante; novo empate: a mais recente.
 
 ## Raças jogáveis e características-base
 
