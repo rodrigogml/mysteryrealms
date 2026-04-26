@@ -2,6 +2,18 @@
 
 Este documento reúne as definições que devem ser seguidas integralmente em todo o repositório.
 
+# Ordem de Prioridade
+- As definições da `Mecânica do Jogo` têm a maior prioridade conceitual do projeto.
+- Os `Requisitos do Sistema` devem derivar da `Mecânica do Jogo` e nunca a contradizer.
+- O código do sistema deve implementar os `Requisitos do Sistema` e, indiretamente, respeitar a `Mecânica do Jogo`.
+- A documentação deve refletir com precisão a `Mecânica do Jogo`, os `Requisitos do Sistema` e o código implementado, sem criar conflitos entre eles.
+- Em caso de conflito entre artefatos, deve ser respeitada esta ordem de prioridade:
+  1. `Mecânica do Jogo`
+  2. `Requisitos do Sistema`
+  3. Código do sistema
+  4. Documentação de apoio da implementação
+- Nenhum artefato de menor prioridade pode sobrescrever, reinterpretar ou invalidar um artefato de maior prioridade sem autorização explícita do usuário.
+
 # Documentação
 - Toda a documentação do projeto deve ficar na pasta `/docs`.
 - Toda a documentação deve ser escrita na pasta `/docs`, em formato Markdown GitHub Flavored (`.md`).
