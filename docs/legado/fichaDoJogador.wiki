@@ -31,7 +31,7 @@ As '''habilidades''' refletem a perícia prática do personagem em ações espec
 
 A pontuação final de uma habilidade é composta por:
 * '''Atributo Principal Associado:''' Cada habilidade é ligada a um atributo principal que serve de base para seus testes. Exemplo: '''Persuasão [Carisma]''' usa o valor de '''Carisma''' como base.
-* '''Experiência Direta (Prática):''' A utilização frequente de uma habilidade pode melhorar sua eficácia com o tempo, representando prática e domínio crescente.  Essa evolução é melhor explicada na página [[Página sobre a progressão do jogo]].
+* '''Experiência Direta (Prática):''' A utilização frequente de uma habilidade pode melhorar sua eficácia com o tempo, representando prática e domínio crescente. Essa evolução está detalhada em [[docs/mecanica/progressaoDoJogo.md|Progressão do Jogo]].
 * '''Bônus e Modificadores:''' Itens, magias, condições ambientais e estados emocionais podem conceder bônus ou penalidades temporárias à habilidade.
 
 
