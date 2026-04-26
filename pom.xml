@@ -18,7 +18,7 @@
     <description>Projeto do Jogo de RPG Mystery Realms</description>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <vaadin.version>25.0.0</vaadin.version>
