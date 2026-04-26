@@ -34,6 +34,12 @@ Toda documentação relacionada à mecânica do jogo (comportamento do jogo, fó
 
 Novos documentos de mecânica devem seguir as mesmas regras gerais desta guideline (Markdown, padrão camelCase e indexação em `docs/index.md`).
 
+
+### 1.2 Estrutura conceitual do novo sistema
+Embora a documentação legada esteja dividida entre **engine** e **mundo**, o novo sistema não seguirá essa separação.
+
+A partir desta guideline, o projeto deve ser tratado como um único sistema sólido e completo, com arquitetura unificada.
+
 ### 2. Documentação legada
 Em `/docs/legado/` encontramos arquivos `.wiki`, que são a documentação legada do projeto.
 
