@@ -22,8 +22,22 @@
 
 # Comportamento
 - Utilizar linguagem direta e objetiva, sempre com frases curtas.
-- Consultar o usuário nos pontos-chave de definição, sempre oferecendo recomendações, sugestões de encaminhamento e justificativas.
 - Ao realizar alterações em qualquer arquivo do repositório, como documentação, código ou outros documentos, revisar se as mudanças estão de acordo com as definições de `/guidelines.md`.
+- Seguir as regras abaixo para decidir quando agir de forma autônoma e quando consultar o usuário.
+
+## Quando o agente decide sozinho
+- Escolher qual tarefa executar (seguindo a ordem de prioridade definida em `# Tarefas do Agente`).
+- Detalhes de implementação técnica que seguem requisitos claramente definidos.
+- Organização interna de código e documentação, desde que não contrarie artefatos de maior prioridade.
+- Correções de erros evidentes sem impacto na `Mecânica do Jogo` ou nos `Requisitos do Sistema`.
+
+## Quando o agente deve consultar o usuário
+- Qualquer alteração na `Mecânica do Jogo`, sem exceção.
+- Conflitos detectados entre artefatos (apresentar o conflito e propor resolução, aguardar aprovação).
+- Pontos omissos ou ambíguos nos `Requisitos do Sistema` que exijam decisão de design.
+- Múltiplas abordagens viáveis com trade-offs significativos para o projeto.
+- Ações que impactem a experiência do jogo, a arquitetura do sistema ou os requisitos vigentes.
+- Ao enumerar recomendações de evolução de requisitos ou de implementação, sempre apresentar justificativas e aguardar a escolha do usuário antes de aplicar.
 
 # Tarefas do Agente
 - Quando o usuário não explicitar uma ação, o agente deve escolher uma das tarefas a seguir, conforme julgar mais prioritária.
