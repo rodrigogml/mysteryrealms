@@ -1,5 +1,7 @@
 package br.eng.rodrigogml.mysteryrealms.domain.physiology.service;
 
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.CombinedPhysiologicalEffect;
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.ConsciousnessTestResult;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.PhysiologicalState;
 import org.junit.jupiter.api.Test;
 
@@ -306,5 +308,171 @@ class PhysiologicalServiceTest {
         s.setMoral(5);
         PhysiologicalService.applyMoralDeltaFainted(s);
         assertEquals(0, s.getMoral());
+    }
+
+    // ── RF-EF-05: interações combinadas ──────────────────────────────────────
+
+    @Test
+    void combinedEffect_none_semEstadosGraves() {
+        // RF-EF-05
+        PhysiologicalState s = freshState();
+        assertEquals(CombinedPhysiologicalEffect.NONE,
+                PhysiologicalService.combinedEffect(s));
+    }
+
+    @Test
+    void combinedEffect_sedeExaustao() {
+        // RF-EF-05
+        PhysiologicalState s = freshState();
+        s.setSedePct(70.0);                    // sede_agravada
+        s.setFadigaAtual(FADIGA_MAX * 1.05);   // exaustao
+        assertEquals(CombinedPhysiologicalEffect.SEDE_EXAUSTAO,
+                PhysiologicalService.combinedEffect(s));
+    }
+
+    @Test
+    void combinedEffect_fomeExaustao() {
+        // RF-EF-05
+        PhysiologicalState s = freshState();
+        s.setFomePct(90.0);                    // fome_agravada
+        s.setFadigaAtual(FADIGA_MAX * 1.05);   // exaustao
+        assertEquals(CombinedPhysiologicalEffect.FOME_EXAUSTAO,
+                PhysiologicalService.combinedEffect(s));
+    }
+
+    @Test
+    void combinedEffect_fomeSede_aplicaMoralDelta() {
+        // RF-EF-05
+        PhysiologicalState s = freshState();
+        s.setMoral(75);
+        s.setFomePct(90.0);  // fome_agravada
+        s.setSedePct(70.0);  // sede_agravada
+        PhysiologicalService.combinedEffect(s);
+        assertEquals(60, s.getMoral(), "moral deve cair -15 com fome_agravada + sede_agravada");
+    }
+
+    // ── RF-EF-09: recuperação por itens ──────────────────────────────────────
+
+    @Test
+    void itemRecovery_pvAumentaClampado() {
+        // RF-EF-09
+        PhysiologicalState s = freshState();
+        s.setPontosVida(20.0);
+        PhysiologicalService.applyItemRecovery(s, 100.0, 0, 0, 0, 0);
+        assertEquals(PV_MAX, s.getPontosVida(), "PV não deve ultrapassar pontosVidaMax");
+    }
+
+    @Test
+    void itemRecovery_fadigaReducaoNaoAbaixoDeMin() {
+        // RF-EF-09
+        PhysiologicalState s = freshState();
+        s.setFadigaMin(100.0);
+        s.setFadigaAtual(105.0);
+        PhysiologicalService.applyItemRecovery(s, 0, -50.0, 0, 0, 0);
+        assertEquals(100.0, s.getFadigaAtual(), "fadiga_atual não pode descer abaixo de fadiga_min");
+    }
+
+    @Test
+    void itemRecovery_fomeReduzidaClampado() {
+        // RF-EF-09
+        PhysiologicalState s = freshState();
+        s.setFomePct(5.0);
+        PhysiologicalService.applyItemRecovery(s, 0, 0, -50.0, 0, 0);
+        assertEquals(0.0, s.getFomePct(), 1e-9);
+    }
+
+    @Test
+    void itemRecovery_moralLimitadoA100() {
+        // RF-EF-09
+        PhysiologicalState s = freshState();
+        s.setMoral(95);
+        PhysiologicalService.applyItemRecovery(s, 0, 0, 0, 0, 10);
+        assertEquals(100, s.getMoral());
+    }
+
+    // ── RF-EF-11: estado crítico por PV ──────────────────────────────────────
+
+    @Test
+    void isPvCritical_trueQuandoPvZero() {
+        // RF-EF-11
+        PhysiologicalState s = freshState();
+        s.setPontosVida(0.0);
+        assertTrue(PhysiologicalService.isPvCritical(s));
+    }
+
+    @Test
+    void isPvCritical_falseComPvPositivo() {
+        // RF-EF-11
+        PhysiologicalState s = freshState();
+        s.setPontosVida(1.0);
+        assertFalse(PhysiologicalService.isPvCritical(s));
+    }
+
+    @Test
+    void consciousnessTest_success_setPv1eFadiga90Pct() {
+        // RF-EF-11
+        PhysiologicalState s = freshState();
+        s.setPontosVida(0.0);
+        var result = PhysiologicalService.consciousnessTest(s, true);
+        assertEquals(ConsciousnessTestResult.SUCCESS, result);
+        assertEquals(1.0, s.getPontosVida(), 1e-9);
+        assertEquals(0.90 * FADIGA_MAX, s.getFadigaAtual(), 1e-9);
+    }
+
+    @Test
+    void consciousnessTest_fainted_naoModificaState() {
+        // RF-EF-11
+        PhysiologicalState s = freshState();
+        s.setPontosVida(0.0);
+        double pvAntes = s.getPontosVida();
+        var result = PhysiologicalService.consciousnessTest(s, false);
+        assertEquals(ConsciousnessTestResult.FAINTED, result);
+        assertEquals(pvAntes, s.getPontosVida(), 1e-9, "state não deve ser modificado em FAINTED");
+    }
+
+    // ── RF-EF-14: moral interage com fadiga ──────────────────────────────────
+
+    @Test
+    void moralFatigueCostMultiplier_colapso_110Pct() {
+        // RF-EF-14
+        PhysiologicalState s = freshState();
+        s.setMoral(10);
+        assertEquals(1.10, PhysiologicalService.moralFatigueCostMultiplier(s), 1e-9);
+    }
+
+    @Test
+    void moralFatigueCostMultiplier_alta_90Pct() {
+        // RF-EF-14
+        PhysiologicalState s = freshState();
+        s.setMoral(90);
+        assertEquals(0.90, PhysiologicalService.moralFatigueCostMultiplier(s), 1e-9);
+    }
+
+    @Test
+    void moralFatigueCostMultiplier_normal_semAjuste() {
+        // RF-EF-14
+        PhysiologicalState s = freshState();
+        s.setMoral(60);
+        assertEquals(1.0, PhysiologicalService.moralFatigueCostMultiplier(s), 1e-9);
+    }
+
+    // ── RF-EF-15: moral por repouso ───────────────────────────────────────────
+
+    @Test
+    void moralDelta_quietRest_mais5() {
+        // RF-EF-15
+        PhysiologicalState s = freshState();
+        s.setMoral(70);
+        PhysiologicalService.applyMoralDeltaQuietRest(s);
+        assertEquals(75, s.getMoral());
+    }
+
+    @Test
+    void moralDelta_interruptedSleep_menos8() {
+        // RF-EF-15
+        PhysiologicalState s = freshState();
+        s.setMoral(50);
+        PhysiologicalService.applyMoralDeltaInterruptedSleep(s);
+        assertEquals(42, s.getMoral());
     }
 }

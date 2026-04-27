@@ -6,6 +6,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.social.enums.SpeechStyle;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.SpeechStyleValuation;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.*;
 import br.eng.rodrigogml.mysteryrealms.domain.social.service.SocialService;
+import br.eng.rodrigogml.mysteryrealms.domain.world.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -257,7 +258,85 @@ class SocialSystemTest {
         assertThrows(IllegalStateException.class, () -> m.increment(1));
     }
 
+    // ── RF-SS-02: Ciclo social obrigatório ───────────────────────────────────
+
+    @Test
+    void socialCycle_semTeste_sucesso() {
+        // RF-SS-02
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                50, null, buildNode(), "op1", false, 480L, buildWorldConfig());
+        assertTrue(result.isSuccess(), "Sem teste social, ciclo deve ser sucesso");
+    }
+
+    @Test
+    void socialCycle_comTeste_sucesso() {
+        // RF-SS-02
+        DialogueOption opcaoComTeste = new DialogueOption(
+                "op2", SpeechStyle.FALA_DIPLOMATICA, "Quero um desconto.",
+                SocialTest.cdFixa("persuasao", 15),
+                new DialogueEffects(Map.of("npc_ferreiro", 10), Map.of(), Map.of(), "Desconto concedido!"),
+                DialogueEffects.empty());
+        DialogueNode node = new DialogueNode("dlg_002", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
+
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                0, null, node, "op2", true, 480L, buildWorldConfig());
+        assertTrue(result.isSuccess());
+        assertNotNull(result.getNovoRelacionamentoNpc(), "Delta de relacionamento deve ser calculado");
+        assertEquals(10, result.getNovoRelacionamentoNpc()); // 0 + 10
+    }
+
+    @Test
+    void socialCycle_comTeste_falha() {
+        // RF-SS-02
+        DialogueOption opcaoComTeste = new DialogueOption(
+                "op3", SpeechStyle.FALA_DIPLOMATICA, "Tento enganar.",
+                SocialTest.cdFixa("enganacao", 15),
+                DialogueEffects.empty(),
+                new DialogueEffects(Map.of("npc_ferreiro", -5), Map.of(), Map.of(), "Falha na enganação!"));
+        DialogueNode node = new DialogueNode("dlg_003", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
+
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                0, null, node, "op3", false, 480L, buildWorldConfig());
+        assertFalse(result.isSuccess());
+        assertNotNull(result.getNovoRelacionamentoNpc());
+        assertEquals(-5, result.getNovoRelacionamentoNpc()); // 0 + (-5)
+    }
+
+    @Test
+    void socialCycle_opcaoNaoEncontrada_lancaExcecao() {
+        // RF-SS-02
+        assertThrows(IllegalArgumentException.class,
+                () -> SocialService.executeSocialCycle(
+                        null, null, buildNode(), "op_inexistente", true, 0L, buildWorldConfig()));
+    }
+
+    @Test
+    void socialCycle_comDeltaRelacionamento_geraDiario() {
+        // RF-SS-02
+        DialogueOption opcao = new DialogueOption(
+                "op4", SpeechStyle.FALA_DIPLOMATICA, "Faço uma oferta generosa.",
+                null,
+                new DialogueEffects(Map.of("npc_ferreiro", 20), Map.of(), Map.of(), "Oferta aceita!"),
+                null);
+        DialogueNode node = new DialogueNode("dlg_004", "npc_ferreiro", "Proposta?", List.of(opcao));
+
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                50, null, node, "op4", true, 480L, buildWorldConfig());
+        assertNotNull(result.getDiaryEntry(), "Deve gerar entrada no diário quando há delta");
+        assertTrue(result.getDiaryEntry().entradaId().startsWith("diary_"));
+        assertTrue(result.getDiaryEntry().dataJogo().matches("D\\d+-\\d{2}:\\d{2}"));
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private WorldConfig buildWorldConfig() {
+        return new WorldConfig(
+                "mundo_teste",
+                60, 24, 360,
+                List.of(new DayPhase("dia", 0, 1439)),
+                List.of(new Season("unica", 1, 360)),
+                0);
+    }
 
     private DialogueNode buildNode() {
         return new DialogueNode("dlg_001", "npc_ferreiro", "Posso ajudá-lo?",

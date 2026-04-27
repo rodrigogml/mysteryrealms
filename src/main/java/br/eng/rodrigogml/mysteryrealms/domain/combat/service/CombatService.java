@@ -148,4 +148,65 @@ public final class CombatService {
         int posBloquio = damageAfterBlock(danoBruto, bloqueioFinal);
         return damageAfterResistance(posBloquio, resistenciaTipo);
     }
+
+    // ── RF-CT-05: teste de percepção ─────────────────────────────────────────
+
+    /**
+     * Rolagem de percepção: percepcao + 1d20 — RF-CT-05.
+     */
+    public static int rollPerception(int percepcao, DiceRoller dice) {
+        return percepcao + dice.d20();
+    }
+
+    /**
+     * Verifica se o observador detecta o alvo oculto — RF-CT-05.
+     * Empate: prevalece o oculto (retorna {@code false}).
+     *
+     * @param perceptionRoll  resultado do teste de percepção do observador
+     * @param furtividadeRoll resultado do teste de furtividade do oculto
+     * @return {@code true} se o observador detectar; {@code false} em empate ou falha
+     */
+    public static boolean detectsTarget(int perceptionRoll, int furtividadeRoll) {
+        return perceptionRoll > furtividadeRoll;
+    }
+
+    /**
+     * Verifica se o observador detecta um alvo fixo com CD de ambiente — RF-CT-05.
+     *
+     * @param perceptionRoll resultado do teste de percepção
+     * @param cdAmbiente     CD fixa do ambiente
+     * @return {@code true} se percepção >= CD
+     */
+    public static boolean detectsVsCd(int perceptionRoll, int cdAmbiente) {
+        return perceptionRoll >= cdAmbiente;
+    }
+
+    // ── RF-CT-12: ação preparada ──────────────────────────────────────────────
+
+    /**
+     * Verifica se uma ação preparada foi cancelada por alguma das condições definidas em RF-CT-12.
+     *
+     * @param isParalysed              personagem afetado por paralisia
+     * @param isSleepTorpor            personagem afetado por sono/torpor
+     * @param isBlindedWithVisualTarget personagem cego e a ação exige alvo visual
+     * @param forcedDisplacementOver3m personagem sofreu deslocamento forçado > 3m
+     * @param triggerBecameInvalid     gatilho declarado tornou-se inválido
+     * @param nextTurnStarted          início do próximo turno ocorreu sem o gatilho
+     * @return {@code true} se a ação preparada foi cancelada
+     */
+    public static boolean isPreparedActionCancelled(
+            boolean isParalysed,
+            boolean isSleepTorpor,
+            boolean isBlindedWithVisualTarget,
+            boolean forcedDisplacementOver3m,
+            boolean triggerBecameInvalid,
+            boolean nextTurnStarted) {
+
+        return isParalysed
+                || isSleepTorpor
+                || isBlindedWithVisualTarget
+                || forcedDisplacementOver3m
+                || triggerBecameInvalid
+                || nextTurnStarted;
+    }
 }

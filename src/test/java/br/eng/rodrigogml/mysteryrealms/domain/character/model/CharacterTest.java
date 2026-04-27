@@ -3,6 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.character.model;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Skill;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.MonetaryValue;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.Weapon;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testes do modelo de Personagem — RF-FP-01, RF-FP-04, RF-FP-05, RF-FP-09.
+ * Testes do modelo de Personagem — RF-FP-01 a RF-FP-10.
  */
 class CharacterTest {
 
@@ -223,6 +224,92 @@ class CharacterTest {
         Character c = buildHuman();
         c.setReputacaoFaccao("fac_guilda", -30);
         assertEquals(-30, c.getReputacaoFaccao("fac_guilda"));
+    }
+
+    // ── RF-FP-03: Habilidades canônicas ──────────────────────────────────────
+
+    @Test
+    void skill_possuiExatamente12ValoresCanonicos() {
+        // RF-FP-03
+        assertEquals(12, Skill.values().length,
+                "Skill deve ter exatamente 12 habilidades canônicas");
+    }
+
+    @Test
+    void skill_chavesTecnicasCorretas() {
+        // RF-FP-03
+        assertEquals("persuasao",           Skill.PERSUASAO.getChave());
+        assertEquals("intimidacao",         Skill.INTIMIDACAO.getChave());
+        assertEquals("enganacao",           Skill.ENGANACAO.getChave());
+        assertEquals("conhecimento_arcano", Skill.CONHECIMENTO_ARCANO.getChave());
+        assertEquals("conhecimento_historia", Skill.CONHECIMENTO_HISTORIA.getChave());
+        assertEquals("conhecimento_reliquias", Skill.CONHECIMENTO_RELIQUIAS.getChave());
+        assertEquals("herbalismo",          Skill.HERBALISMO.getChave());
+        assertEquals("alquimia",            Skill.ALQUIMIA.getChave());
+        assertEquals("furtividade",         Skill.FURTIVIDADE.getChave());
+        assertEquals("sobrevivencia",       Skill.SOBREVIVENCIA.getChave());
+        assertEquals("manuseio_armas",      Skill.MANUSEIO_ARMAS.getChave());
+        assertEquals("uso_magia",           Skill.USO_MAGIA.getChave());
+    }
+
+    // ── RF-FP-07: Raças canônicas ─────────────────────────────────────────────
+
+    @Test
+    void race_possuiExatamente8Valores() {
+        // RF-FP-07
+        assertEquals(8, Race.values().length,
+                "Race deve ter exatamente 8 raças canônicas");
+    }
+
+    @Test
+    void race_todasTemAtributosBaseNaoNulos() {
+        // RF-FP-07
+        for (Race r : Race.values()) {
+            assertNotNull(r.getAtributosBase(),
+                    "getAtributosBase() não pode ser nulo para " + r);
+        }
+    }
+
+    // ── RF-FP-08: Classes canônicas ───────────────────────────────────────────
+
+    @Test
+    void characterClass_possuiExatamente12Valores() {
+        // RF-FP-08
+        assertEquals(12, CharacterClass.values().length,
+                "CharacterClass deve ter exatamente 12 classes canônicas");
+    }
+
+    @Test
+    void characterClass_todasTemBonusAtributosNaoNulos() {
+        // RF-FP-08
+        for (CharacterClass cc : CharacterClass.values()) {
+            assertNotNull(cc.getBonusAtributos(),
+                    "getBonusAtributos() não pode ser nulo para " + cc);
+        }
+    }
+
+    // ── RF-FP-10: Recálculo de derivados ─────────────────────────────────────
+
+    @Test
+    void setAtributos_recalculaPvMaxEFadigaMax() {
+        // RF-FP-10
+        Character c = buildHuman();
+        double pvMaxAntes    = c.getPontosVidaMax();
+        double fadigaMaxAntes = c.getFadigaMax();
+
+        // Novo atributo com constituicao=10 (muito maior)
+        AttributeSet novosAtributos = new AttributeSet(6, 4, 10, 3, 3, 3, 3);
+        c.setAtributos(novosAtributos);
+
+        // pvMax = constituicao × 10 = 100
+        assertEquals(100.0, c.getPontosVidaMax(), 1e-9);
+        assertTrue(c.getPontosVidaMax() > pvMaxAntes,
+                "pvMax deve aumentar quando constituicao aumenta");
+
+        // fadigaMax = (const + vont) × 100 = (10+3)×100 = 1300
+        assertEquals(1300.0, c.getFadigaMax(), 1e-9);
+        assertTrue(c.getFadigaMax() > fadigaMaxAntes,
+                "fadigaMax deve aumentar quando constituicao aumenta");
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
