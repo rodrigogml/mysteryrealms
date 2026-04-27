@@ -1,11 +1,11 @@
 package br.eng.rodrigogml.mysteryrealms.domain.character.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.ClassePersonagem;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Skill;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.model.MonetaryValue;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.model.ValorMonetario;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.Weapon;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterTest {
 
     private Character buildHuman() {
-        return new Character("Aragorn", "Elessar", Gender.MASCULINO, Race.HUMANO, CharacterClass.GUERREIRO, 25);
+        return new Character("Aragorn", "Elessar", Gender.MASCULINO, Race.HUMANO, ClassePersonagem.GUERREIRO, 25);
     }
 
     // ── RF-FP-01: Identidade ──────────────────────────────────────────────────
@@ -29,32 +29,32 @@ class CharacterTest {
         assertEquals("Elessar", c.getSobrenome());
         assertEquals(Gender.MASCULINO, c.getGenero());
         assertEquals(Race.HUMANO, c.getRaca());
-        assertEquals(CharacterClass.GUERREIRO, c.getClasse());
+        assertEquals(ClassePersonagem.GUERREIRO, c.getClasse());
         assertEquals(25, c.getIdadeInicial());
     }
 
     @Test
     void character_nomeVazioLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Character("", "Elessar", Gender.MASCULINO, Race.HUMANO, CharacterClass.GUERREIRO, 25));
+                () -> new Character("", "Elessar", Gender.MASCULINO, Race.HUMANO, ClassePersonagem.GUERREIRO, 25));
     }
 
     @Test
     void character_sobrenomeVazioLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Character("Aragorn", "", Gender.MASCULINO, Race.HUMANO, CharacterClass.GUERREIRO, 25));
+                () -> new Character("Aragorn", "", Gender.MASCULINO, Race.HUMANO, ClassePersonagem.GUERREIRO, 25));
     }
 
     @Test
     void character_idadeInvalidaLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Character("Aragorn", "Elessar", Gender.MASCULINO, Race.HUMANO, CharacterClass.GUERREIRO, 0));
+                () -> new Character("Aragorn", "Elessar", Gender.MASCULINO, Race.HUMANO, ClassePersonagem.GUERREIRO, 0));
     }
 
     @Test
     void character_generoNuloLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Character("Aragorn", "Elessar", null, Race.HUMANO, CharacterClass.GUERREIRO, 25));
+                () -> new Character("Aragorn", "Elessar", null, Race.HUMANO, ClassePersonagem.GUERREIRO, 25));
     }
 
     // ── RF-FP-02: Atributos combinados raça + classe ──────────────────────────
@@ -275,14 +275,14 @@ class CharacterTest {
     @Test
     void characterClass_possuiExatamente12Valores() {
         // RF-FP-08
-        assertEquals(12, CharacterClass.values().length,
-                "CharacterClass deve ter exatamente 12 classes canônicas");
+        assertEquals(12, ClassePersonagem.values().length,
+                "ClassePersonagem deve ter exatamente 12 classes canônicas");
     }
 
     @Test
     void characterClass_todasTemBonusAtributosNaoNulos() {
         // RF-FP-08
-        for (CharacterClass cc : CharacterClass.values()) {
+        for (ClassePersonagem cc : ClassePersonagem.values()) {
             assertNotNull(cc.getBonusAtributos(),
                     "getBonusAtributos() não pode ser nulo para " + cc);
         }
@@ -315,7 +315,7 @@ class CharacterTest {
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private Weapon buildWeapon(int maos) {
-        return new Weapon("Espada", maos, 1.5, MonetaryValue.ofMp(10),
+        return new Weapon("Espada", maos, 1.5, ValorMonetario.deMp(10),
                 "tipo_espada", "1d8", DamageType.CORTE, "curto", "20/x2", 0, 0, 0, 0);
     }
 }

@@ -1,12 +1,12 @@
 package br.eng.rodrigogml.mysteryrealms.domain.character.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.ClassePersonagem;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
-import br.eng.rodrigogml.mysteryrealms.domain.character.service.CharacterAttributeService;
-import br.eng.rodrigogml.mysteryrealms.domain.character.service.ProgressionService;
+import br.eng.rodrigogml.mysteryrealms.domain.character.service.ServicoAtributosPersonagem;
+import br.eng.rodrigogml.mysteryrealms.domain.character.service.ServicoProgressao;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.HandItem;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.model.MonetaryValue;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.model.ValorMonetario;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import java.util.Map;
  * Agregado raiz do personagem jogador — RF-FP-01 a RF-FP-09.
  *
  * Os atributos derivados (PV máximo, fadiga máxima, peso etc.) são calculados
- * automaticamente a partir dos atributos base usando {@link CharacterAttributeService}.
+ * automaticamente a partir dos atributos base usando {@link ServicoAtributosPersonagem}.
  */
 public class Character {
 
@@ -27,7 +27,7 @@ public class Character {
     private final String sobrenome;
     private final Gender genero;
     private final Race raca;
-    private final CharacterClass classe;
+    private final ClassePersonagem classe;
     private final int idadeInicial;
 
     // ── RF-FP-02: Atributos principais ───────────────────────────────────────
@@ -69,7 +69,7 @@ public class Character {
             String sobrenome,
             Gender genero,
             Race raca,
-            CharacterClass classe,
+            ClassePersonagem classe,
             int idadeInicial) {
 
         if (nome == null || nome.isBlank())
@@ -98,10 +98,10 @@ public class Character {
         // Estado inicial
         this.xpAcumulado = 0;
         this.nivelAtual = 1;
-        this.balanceVersion = ProgressionService.BALANCE_VERSION;
-        this.pontosVidaMax = CharacterAttributeService.maxHp(atributos.constituicao());
+        this.balanceVersion = ServicoProgressao.VERSAO_BALANCEAMENTO;
+        this.pontosVidaMax = ServicoAtributosPersonagem.pvMaximo(atributos.constituicao());
         this.pontosVida = this.pontosVidaMax;
-        this.fadigaMax = CharacterAttributeService.maxFatigue(atributos.constituicao(), atributos.vontade());
+        this.fadigaMax = ServicoAtributosPersonagem.fadigaMaxima(atributos.constituicao(), atributos.vontade());
         this.fadigaMin = 0.0;
         this.fadigaAtual = 0.0;
         this.fomePct = 0.0;
@@ -125,7 +125,7 @@ public class Character {
     public String getSobrenome() { return sobrenome; }
     public Gender getGenero() { return genero; }
     public Race getRaca() { return raca; }
-    public CharacterClass getClasse() { return classe; }
+    public ClassePersonagem getClasse() { return classe; }
     public int getIdadeInicial() { return idadeInicial; }
 
     // ── Atributos ─────────────────────────────────────────────────────────────
@@ -217,8 +217,8 @@ public class Character {
         this.qtdMoedaSecundaria = qtdMoedaSecundaria;
     }
 
-    public MonetaryValue getMoedas() {
-        return MonetaryValue.of(qtdMoedaPrimaria, qtdMoedaSecundaria);
+    public ValorMonetario getMoedas() {
+        return ValorMonetario.de(qtdMoedaPrimaria, qtdMoedaSecundaria);
     }
 
     /** Itens equipados (máx. 2 mãos) — RF-EI-05. */
@@ -263,8 +263,8 @@ public class Character {
     public double getCargaAtualKg() {
         double pesoEquipados = itensEquipados.stream().mapToDouble(HandItem::getPesoKg).sum();
         double pesoBolsa = itensMochila.stream().mapToDouble(HandItem::getPesoKg).sum();
-        double pesoMoedas = MonetaryValue.of(qtdMoedaPrimaria, qtdMoedaSecundaria).weightKg();
-        return CharacterAttributeService.currentLoad(pesoEquipados, pesoBolsa, pesoMoedas);
+        double pesoMoedas = ValorMonetario.de(qtdMoedaPrimaria, qtdMoedaSecundaria).pesoKg();
+        return ServicoAtributosPersonagem.cargaAtual(pesoEquipados, pesoBolsa, pesoMoedas);
     }
 
     // ── RF-FP-09: Relacionamento e reputação ─────────────────────────────────
@@ -320,8 +320,8 @@ public class Character {
      * Recalcula atributos derivados sempre que os atributos base mudam — RF-FP-10.
      */
     private void recalcularDerivados() {
-        double novoPvMax = CharacterAttributeService.maxHp(atributos.constituicao());
-        double novaFadigaMax = CharacterAttributeService.maxFatigue(atributos.constituicao(), atributos.vontade());
+        double novoPvMax = ServicoAtributosPersonagem.pvMaximo(atributos.constituicao());
+        double novaFadigaMax = ServicoAtributosPersonagem.fadigaMaxima(atributos.constituicao(), atributos.vontade());
 
         // Ajustar PV proporcionalmente se o max mudou
         if (pontosVidaMax > 0) {

@@ -26,7 +26,7 @@ public record AttributeSet(
     /**
      * Soma componente a componente com um bônus (que pode ter valores zero).
      */
-    public AttributeSet plus(AttributeBonus bonus) {
+    public AttributeSet plus(BonusAtributo bonus) {
         return new AttributeSet(
                 forca + bonus.forca(),
                 destreza + bonus.destreza(),

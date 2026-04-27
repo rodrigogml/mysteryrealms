@@ -27,7 +27,7 @@ public class Weapon extends HandItem {
             String nome,
             int maosNecessarias,
             double pesoKg,
-            MonetaryValue precoBase,
+            ValorMonetario precoBase,
             String tipoArmaId,
             String dadoDanoBase,
             DamageType tipoDano,

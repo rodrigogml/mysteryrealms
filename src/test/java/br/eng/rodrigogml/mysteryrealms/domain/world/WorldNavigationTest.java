@@ -2,11 +2,11 @@ package br.eng.rodrigogml.mysteryrealms.domain.world;
 
 import br.eng.rodrigogml.mysteryrealms.domain.world.enums.ClusterNavigationMode;
 import br.eng.rodrigogml.mysteryrealms.domain.world.enums.ConnectionClassification;
-import br.eng.rodrigogml.mysteryrealms.domain.world.enums.LocationType;
+import br.eng.rodrigogml.mysteryrealms.domain.world.enums.TipoLocalizacao;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.*;
-import br.eng.rodrigogml.mysteryrealms.domain.world.service.NavigationService;
-import br.eng.rodrigogml.mysteryrealms.domain.world.service.HierarchyValidationService;
-import br.eng.rodrigogml.mysteryrealms.domain.world.service.WorldTimeService;
+import br.eng.rodrigogml.mysteryrealms.domain.world.service.ServicoNavegacao;
+import br.eng.rodrigogml.mysteryrealms.domain.world.service.ServicoValidacaoHierarquia;
+import br.eng.rodrigogml.mysteryrealms.domain.world.service.ServicoTempoMundo;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -25,7 +25,7 @@ class WorldNavigationTest {
 
     @Test
     void zone_tipoNavegavelEhZona() {
-        assertEquals(LocationType.ZONA, Zone.TIPO_NAVEGAVEL);
+        assertEquals(TipoLocalizacao.ZONA, Zone.TIPO_NAVEGAVEL);
     }
 
     @Test
@@ -52,7 +52,7 @@ class WorldNavigationTest {
 
     @Test
     void environment_tipoNavegavelEhAmbiente() {
-        assertEquals(LocationType.AMBIENTE, GameEnvironment.TIPO_NAVEGAVEL);
+        assertEquals(TipoLocalizacao.AMBIENTE, GameEnvironment.TIPO_NAVEGAVEL);
     }
 
     @Test
@@ -121,30 +121,30 @@ class WorldNavigationTest {
 
     @Test
     void navigationService_distanciaBase_pontoMesmo() {
-        assertEquals(0.0, NavigationService.distanceBaseKm(1.0, 1.0, 1.0, 1.0), 1e-9);
+        assertEquals(0.0, ServicoNavegacao.distanciaBaseKm(1.0, 1.0, 1.0, 1.0), 1e-9);
     }
 
     @Test
     void navigationService_distanciaBase_horizontalUmUnidade() {
         // sqrt(1^2 + 0^2) × 10 = 10 km
-        assertEquals(10.0, NavigationService.distanceBaseKm(0.0, 0.0, 1.0, 0.0), 1e-9);
+        assertEquals(10.0, ServicoNavegacao.distanciaBaseKm(0.0, 0.0, 1.0, 0.0), 1e-9);
     }
 
     @Test
     void navigationService_distanciaBase_diagonal() {
         // sqrt(3^2 + 4^2) × 10 = 5 × 10 = 50 km
-        assertEquals(50.0, NavigationService.distanceBaseKm(0, 0, 3, 4), 1e-9);
+        assertEquals(50.0, ServicoNavegacao.distanciaBaseKm(0, 0, 3, 4), 1e-9);
     }
 
     @Test
     void navigationService_distanciaAjustada_semPenalidade() {
-        assertEquals(50.0, NavigationService.distanceAdjustedKm(50.0, 0.0), 1e-9);
+        assertEquals(50.0, ServicoNavegacao.distanciaAjustadaKm(50.0, 0.0), 1e-9);
     }
 
     @Test
     void navigationService_distanciaAjustada_comPenalidade10Pct() {
         // 50 × 1.10 = 55
-        assertEquals(55.0, NavigationService.distanceAdjustedKm(50.0, 10.0), 1e-9);
+        assertEquals(55.0, ServicoNavegacao.distanciaAjustadaKm(50.0, 10.0), 1e-9);
     }
 
     // ── RF-MN-08: Resolução de destino ──────────────────────────────────────
@@ -153,7 +153,7 @@ class WorldNavigationTest {
     void navigationService_resolveDestination_primeiroAcessivel() {
         Connection conn = buildConnection("c", "o", List.of("zona_a", "zona_b", "zona_c"));
         Map<String, Boolean> nodes = Map.of("zona_a", false, "zona_b", true, "zona_c", true);
-        Optional<String> dest = NavigationService.resolveDestination(conn, nodes);
+        Optional<String> dest = ServicoNavegacao.resolverDestino(conn, nodes);
         assertTrue(dest.isPresent());
         assertEquals("zona_b", dest.get());
     }
@@ -162,32 +162,32 @@ class WorldNavigationTest {
     void navigationService_resolveDestination_nenhumAcessivel() {
         Connection conn = buildConnection("c", "o", List.of("zona_a", "zona_b"));
         Map<String, Boolean> nodes = Map.of("zona_a", false, "zona_b", false);
-        assertTrue(NavigationService.resolveDestination(conn, nodes).isEmpty());
+        assertTrue(ServicoNavegacao.resolverDestino(conn, nodes).isEmpty());
     }
 
     @Test
     void navigationService_resolveDestination_nodeDesconhecidoNaoAcessivel() {
         Connection conn = buildConnection("c", "o", List.of("zona_x"));
         // "zona_x" não está no mapa → não é acessível
-        assertTrue(NavigationService.resolveDestination(conn, Map.of()).isEmpty());
+        assertTrue(ServicoNavegacao.resolverDestino(conn, Map.of()).isEmpty());
     }
 
     // ── RF-MN-09: Interrupções ──────────────────────────────────────────────
 
     @Test
     void navigationService_interrupcao_segmentoCompleto() {
-        assertEquals(10.0, NavigationService.interruptionChanceForSegment(10.0, 1.0), 1e-9);
+        assertEquals(10.0, ServicoNavegacao.chanceInterrupcaoPorSegmento(10.0, 1.0), 1e-9);
     }
 
     @Test
     void navigationService_interrupcao_segmentoParcial() {
         // chance 10% × 0.5 km = 5%
-        assertEquals(5.0, NavigationService.interruptionChanceForSegment(10.0, 0.5), 1e-9);
+        assertEquals(5.0, ServicoNavegacao.chanceInterrupcaoPorSegmento(10.0, 0.5), 1e-9);
     }
 
     @Test
     void navigationService_interrupcao_acimaDe1kmUsaChanceDireta() {
-        assertEquals(10.0, NavigationService.interruptionChanceForSegment(10.0, 5.0), 1e-9);
+        assertEquals(10.0, ServicoNavegacao.chanceInterrupcaoPorSegmento(10.0, 5.0), 1e-9);
     }
 
     // ── RF-MN-10: Tempo de deslocamento ─────────────────────────────────────
@@ -195,24 +195,24 @@ class WorldNavigationTest {
     @Test
     void navigationService_travelTime_formulaCorreta() {
         // 10 km / 5 kmh = 2 h × 60 min/h = 120 min
-        assertEquals(120L, NavigationService.travelTimeMinutes(10.0, 5.0, 60));
+        assertEquals(120L, ServicoNavegacao.tempoDeslocamentoMinutos(10.0, 5.0, 60));
     }
 
     @Test
     void navigationService_travelTime_arredondamentoCeil() {
         // 1 km / 3 kmh = 0.333 h × 60 = 20 min (ceil)
-        assertEquals(20L, NavigationService.travelTimeMinutes(1.0, 3.0, 60));
+        assertEquals(20L, ServicoNavegacao.tempoDeslocamentoMinutos(1.0, 3.0, 60));
     }
 
     @Test
     void navigationService_travelTime_minimoUmMinuto() {
-        assertEquals(1L, NavigationService.travelTimeMinutes(0.001, 100.0, 60));
+        assertEquals(1L, ServicoNavegacao.tempoDeslocamentoMinutos(0.001, 100.0, 60));
     }
 
     @Test
     void navigationService_velocidadeZeroLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> NavigationService.travelTimeMinutes(10.0, 0.0, 60));
+                () -> ServicoNavegacao.tempoDeslocamentoMinutos(10.0, 0.0, 60));
     }
 
     // ── RF-MN-12: WorldConfig ────────────────────────────────────────────────
@@ -268,62 +268,62 @@ class WorldNavigationTest {
         assertThrows(IllegalArgumentException.class, () -> new Season("verao", 90, 1));
     }
 
-    // ── RF-MN-12 / RF-MN-13: WorldTimeService ───────────────────────────────
+    // ── RF-MN-12 / RF-MN-13: ServicoTempoMundo ───────────────────────────────
 
     @Test
     void worldTimeService_avancaTempo() {
-        assertEquals(100L, WorldTimeService.advanceTime(0L, 100L));
-        assertEquals(200L, WorldTimeService.advanceTime(100L, 100L));
+        assertEquals(100L, ServicoTempoMundo.avancarTempo(0L, 100L));
+        assertEquals(200L, ServicoTempoMundo.avancarTempo(100L, 100L));
     }
 
     @Test
     void worldTimeService_avancaTempoNegativoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> WorldTimeService.advanceTime(100L, -1L));
+                () -> ServicoTempoMundo.avancarTempo(100L, -1L));
     }
 
     @Test
     void worldTimeService_minuteOfDay() {
         WorldConfig config = buildWorldConfig(); // 1440 min/dia
-        assertEquals(0, WorldTimeService.minuteOfDay(0L, config));
-        assertEquals(60, WorldTimeService.minuteOfDay(60L, config));
-        assertEquals(0, WorldTimeService.minuteOfDay(1440L, config)); // novo dia
+        assertEquals(0, ServicoTempoMundo.minutosDoDia(0L, config));
+        assertEquals(60, ServicoTempoMundo.minutosDoDia(60L, config));
+        assertEquals(0, ServicoTempoMundo.minutosDoDia(1440L, config)); // novo dia
     }
 
     @Test
     void worldTimeService_dayOfYear() {
         WorldConfig config = buildWorldConfig(); // 360 dias/ano
-        assertEquals(1L, WorldTimeService.dayOfYear(0L, config));
-        assertEquals(1L, WorldTimeService.dayOfYear(1439L, config));
-        assertEquals(2L, WorldTimeService.dayOfYear(1440L, config)); // segundo dia
+        assertEquals(1L, ServicoTempoMundo.diaDoAno(0L, config));
+        assertEquals(1L, ServicoTempoMundo.diaDoAno(1439L, config));
+        assertEquals(2L, ServicoTempoMundo.diaDoAno(1440L, config)); // segundo dia
     }
 
     @Test
     void worldTimeService_year() {
         WorldConfig config = buildWorldConfig(); // 360 dias/ano × 1440 min/dia
         long minPorAno = 360L * 1440L;
-        assertEquals(1L, WorldTimeService.year(0L, config));
-        assertEquals(2L, WorldTimeService.year(minPorAno, config));
+        assertEquals(1L, ServicoTempoMundo.ano(0L, config));
+        assertEquals(2L, ServicoTempoMundo.ano(minPorAno, config));
     }
 
     @Test
     void worldTimeService_hourOfDay() {
         WorldConfig config = buildWorldConfig(); // 60 min/hora
-        assertEquals(1, WorldTimeService.hourOfDay(60L, config));
-        assertEquals(2, WorldTimeService.hourOfDay(120L, config));
+        assertEquals(1, ServicoTempoMundo.horaDoDia(60L, config));
+        assertEquals(2, ServicoTempoMundo.horaDoDia(120L, config));
     }
 
     @Test
     void worldTimeService_formatTime() {
         WorldConfig config = buildWorldConfig();
-        String fmt = WorldTimeService.formatTime(0L, config);
+        String fmt = ServicoTempoMundo.formatarTempo(0L, config);
         assertEquals("Ano1 D1-00:00", fmt);
     }
 
     @Test
     void worldTimeService_formatTime_segundoDia() {
         WorldConfig config = buildWorldConfig();
-        String fmt = WorldTimeService.formatTime(1440L, config);
+        String fmt = ServicoTempoMundo.formatarTempo(1440L, config);
         assertEquals("Ano1 D2-00:00", fmt);
     }
 
@@ -331,7 +331,7 @@ class WorldNavigationTest {
     void worldTimeService_currentDayPhase() {
         WorldConfig config = buildWorldConfig();
         // A config tem fase "dia" de 360 a 1080 min
-        DayPhase fase = WorldTimeService.currentDayPhase(360L, config);
+        DayPhase fase = ServicoTempoMundo.faseDiaAtual(360L, config);
         assertNotNull(fase);
         assertEquals("dia", fase.idFase());
     }
@@ -339,7 +339,7 @@ class WorldNavigationTest {
     @Test
     void worldTimeService_currentSeason() {
         WorldConfig config = buildWorldConfig();
-        Season estacao = WorldTimeService.currentSeason(0L, config);
+        Season estacao = ServicoTempoMundo.estacaoAtual(0L, config);
         assertNotNull(estacao);
         assertEquals("unica_estacao", estacao.idEstacao());
     }
@@ -349,37 +349,37 @@ class WorldNavigationTest {
     @Test
     void hierarchyValidation_prefixoZonaValido() {
         // RF-MN-06
-        assertTrue(HierarchyValidationService.validateZonePrefix("zona_mercado"));
-        assertFalse(HierarchyValidationService.validateZonePrefix("mercado"));
+        assertTrue(ServicoValidacaoHierarquia.validarPrefixoZona("zona_mercado"));
+        assertFalse(ServicoValidacaoHierarquia.validarPrefixoZona("mercado"));
     }
 
     @Test
     void hierarchyValidation_prefixoAmbienteValido() {
         // RF-MN-06
-        assertTrue(HierarchyValidationService.validateAmbientePrefix("amb_taverna"));
-        assertFalse(HierarchyValidationService.validateAmbientePrefix("taverna"));
+        assertTrue(ServicoValidacaoHierarquia.validarPrefixoAmbiente("amb_taverna"));
+        assertFalse(ServicoValidacaoHierarquia.validarPrefixoAmbiente("taverna"));
     }
 
     @Test
     void hierarchyValidation_idsGlobalmenteUnicos() {
         // RF-MN-06
-        assertTrue(HierarchyValidationService.idsAreGloballyUnique(
+        assertTrue(ServicoValidacaoHierarquia.idsGlobalmenteUnicos(
                 List.of("zona_a", "zona_b"), List.of("amb_x", "amb_y")));
     }
 
     @Test
     void hierarchyValidation_idsDuplicadosEntreListas() {
         // RF-MN-06
-        assertFalse(HierarchyValidationService.idsAreGloballyUnique(
+        assertFalse(ServicoValidacaoHierarquia.idsGlobalmenteUnicos(
                 List.of("zona_a", "zona_b"), List.of("zona_a")));
     }
 
     @Test
     void hierarchyValidation_coordenadasFinitasValidas() {
         // RF-MN-06
-        assertTrue(HierarchyValidationService.hasValidCoordinates(0.0, 0.0));
-        assertFalse(HierarchyValidationService.hasValidCoordinates(Double.NaN, 0.0));
-        assertFalse(HierarchyValidationService.hasValidCoordinates(0.0, Double.POSITIVE_INFINITY));
+        assertTrue(ServicoValidacaoHierarquia.temCoordenadasValidas(0.0, 0.0));
+        assertFalse(ServicoValidacaoHierarquia.temCoordenadasValidas(Double.NaN, 0.0));
+        assertFalse(ServicoValidacaoHierarquia.temCoordenadasValidas(0.0, Double.POSITIVE_INFINITY));
     }
 
     @Test
@@ -387,7 +387,7 @@ class WorldNavigationTest {
         // RF-MN-06
         Connection conn = buildConnection("conn_01", "zona_a", List.of("zona_b", "amb_x"));
         Set<String> nos = Set.of("zona_a", "zona_b", "amb_x");
-        assertTrue(HierarchyValidationService.connectionDestinationsExist(conn, nos));
+        assertTrue(ServicoValidacaoHierarquia.destinosConexaoExistem(conn, nos));
     }
 
     @Test
@@ -395,14 +395,14 @@ class WorldNavigationTest {
         // RF-MN-06
         Connection conn = buildConnection("conn_02", "zona_a", List.of("zona_b"));
         Set<String> nos = Set.of("zona_a"); // zona_b ausente
-        assertFalse(HierarchyValidationService.connectionDestinationsExist(conn, nos));
+        assertFalse(ServicoValidacaoHierarquia.destinosConexaoExistem(conn, nos));
     }
 
     @Test
     void hierarchyValidation_tipoNavegavelCoerente() {
         // RF-MN-06
-        assertTrue(HierarchyValidationService.tipoNavegavelCoherent("ZONA", "zona"));
-        assertFalse(HierarchyValidationService.tipoNavegavelCoherent("ambiente", "zona"));
+        assertTrue(ServicoValidacaoHierarquia.tipoNavegavelCoerente("ZONA", "zona"));
+        assertFalse(ServicoValidacaoHierarquia.tipoNavegavelCoerente("ambiente", "zona"));
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

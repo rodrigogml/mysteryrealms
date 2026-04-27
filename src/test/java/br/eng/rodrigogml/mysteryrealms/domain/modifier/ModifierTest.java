@@ -3,15 +3,15 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.AfflictionType;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.ResistanceType;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.ActionClass;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.ModifierOrigin;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.ClasseAcao;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.OrigemModificador;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.StackingRule;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.ActionCost;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.Modifier;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.CustoAcao;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.Modificador;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.ModifierDuration;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.ModifierEffect;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.service.ActionCostService;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.service.ModifierService;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.EfeitoModificador;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.service.ServicoCustoAcao;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.service.ServicoModificador;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -88,18 +88,18 @@ class ModifierTest {
                 "ResistanceType deve ter exatamente 19 valores canônicos");
     }
 
-    // ── RF-MAR-07/08: ActionClass e custos base ───────────────────────────────
+    // ── RF-MAR-07/08: ClasseAcao e custos base ───────────────────────────────
 
     @Test
     void actionClass_possuiExatamente4Valores() {
         // RF-MAR-07
-        assertEquals(4, ActionClass.values().length);
+        assertEquals(4, ClasseAcao.values().length);
     }
 
     @Test
     void baseCost_passiva() {
         // RF-MAR-08
-        ActionCost c = ActionCostService.baseCost(ActionClass.PASSIVA);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.PASSIVA);
         assertEquals(5,     c.getTempoGastoMin());
         assertEquals(2.0,   c.getCustoFadiga(),  1e-9);
         assertEquals(0.05,  c.getDeltaFomePct(), 1e-9);
@@ -109,7 +109,7 @@ class ModifierTest {
     @Test
     void baseCost_moderada() {
         // RF-MAR-08
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
         assertEquals(10,   c.getTempoGastoMin());
         assertEquals(8.0,  c.getCustoFadiga(),  1e-9);
         assertEquals(0.20, c.getDeltaFomePct(), 1e-9);
@@ -119,7 +119,7 @@ class ModifierTest {
     @Test
     void baseCost_exigente() {
         // RF-MAR-08
-        ActionCost c = ActionCostService.baseCost(ActionClass.EXIGENTE);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.EXIGENTE);
         assertEquals(15,   c.getTempoGastoMin());
         assertEquals(20.0, c.getCustoFadiga(),  1e-9);
         assertEquals(0.50, c.getDeltaFomePct(), 1e-9);
@@ -129,7 +129,7 @@ class ModifierTest {
     @Test
     void baseCost_recuperativa() {
         // RF-MAR-08
-        ActionCost c = ActionCostService.baseCost(ActionClass.RECUPERATIVA);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.RECUPERATIVA);
         assertEquals(20,    c.getTempoGastoMin());
         assertEquals(-12.0, c.getCustoFadiga(),  1e-9);
         assertEquals(-0.40, c.getDeltaFomePct(), 1e-9);
@@ -141,8 +141,8 @@ class ModifierTest {
     @Test
     void weatherModifier_heat_aumentaFadigaESede() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
-        ActionCostService.applyWeatherModifier(c, ActionClass.MODERADA, "HEAT");
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
+        ServicoCustoAcao.aplicarModificadorClima(c, ClasseAcao.MODERADA, "HEAT");
         assertEquals(8.0 * 1.20,  c.getCustoFadiga(),  1e-9);
         assertEquals(0.60 * 1.35, c.getDeltaSedePct(), 1e-9);
     }
@@ -150,24 +150,24 @@ class ModifierTest {
     @Test
     void weatherModifier_cold_aumentaFadiga() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.EXIGENTE);
-        ActionCostService.applyWeatherModifier(c, ActionClass.EXIGENTE, "COLD");
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.EXIGENTE);
+        ServicoCustoAcao.aplicarModificadorClima(c, ClasseAcao.EXIGENTE, "COLD");
         assertEquals(20.0 * 1.15, c.getCustoFadiga(), 1e-9);
     }
 
     @Test
     void weatherModifier_rain_aumentaTempoEmModerada() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
-        ActionCostService.applyWeatherModifier(c, ActionClass.MODERADA, "RAIN");
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
+        ServicoCustoAcao.aplicarModificadorClima(c, ClasseAcao.MODERADA, "RAIN");
         assertEquals((int) Math.ceil(10 * 1.10), c.getTempoGastoMin());
     }
 
     @Test
     void weatherModifier_rain_naoAplicaEmPassiva() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.PASSIVA);
-        ActionCostService.applyWeatherModifier(c, ActionClass.PASSIVA, "RAIN");
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.PASSIVA);
+        ServicoCustoAcao.aplicarModificadorClima(c, ClasseAcao.PASSIVA, "RAIN");
         assertEquals(5, c.getTempoGastoMin(), "PASSIVA não deve ter tempo alterado por RAIN");
     }
 
@@ -176,25 +176,25 @@ class ModifierTest {
     @Test
     void loadModifier_abaixoDe50Pct_semAjuste() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
         double original = c.getCustoFadiga();
-        ActionCostService.applyLoadModifier(c, ActionClass.MODERADA, 0.49);
+        ServicoCustoAcao.aplicarModificadorCarga(c, ClasseAcao.MODERADA, 0.49);
         assertEquals(original, c.getCustoFadiga(), 1e-9);
     }
 
     @Test
     void loadModifier_entre51e80Pct_aumentaFadigaModerada() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
-        ActionCostService.applyLoadModifier(c, ActionClass.MODERADA, 0.70);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
+        ServicoCustoAcao.aplicarModificadorCarga(c, ClasseAcao.MODERADA, 0.70);
         assertEquals(8.0 * 1.10, c.getCustoFadiga(), 1e-9);
     }
 
     @Test
     void loadModifier_acimaDe80Pct_aumentaFadigaETempo() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
-        ActionCostService.applyLoadModifier(c, ActionClass.MODERADA, 0.90);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
+        ServicoCustoAcao.aplicarModificadorCarga(c, ClasseAcao.MODERADA, 0.90);
         assertEquals(8.0 * 1.25, c.getCustoFadiga(), 1e-9);
         assertEquals((int) Math.ceil(10 * 1.10), c.getTempoGastoMin());
     }
@@ -202,16 +202,16 @@ class ModifierTest {
     @Test
     void loadModifier_acimaDe100Pct_exigenteBloqueada() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.EXIGENTE);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.EXIGENTE);
         assertThrows(IllegalStateException.class,
-                () -> ActionCostService.applyLoadModifier(c, ActionClass.EXIGENTE, 1.01));
+                () -> ServicoCustoAcao.aplicarModificadorCarga(c, ClasseAcao.EXIGENTE, 1.01));
     }
 
     @Test
     void loadModifier_acimaDe100Pct_moderadaPermitida() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
-        ActionCostService.applyLoadModifier(c, ActionClass.MODERADA, 1.10);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
+        ServicoCustoAcao.aplicarModificadorCarga(c, ClasseAcao.MODERADA, 1.10);
         assertEquals(8.0 * 1.50, c.getCustoFadiga(), 1e-9);
     }
 
@@ -220,32 +220,32 @@ class ModifierTest {
     @Test
     void physiologicalModifier_exaustao_aumentaFadiga() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
-        ActionCostService.applyPhysiologicalModifier(c, true, false, false, false, false, false, false);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
+        ServicoCustoAcao.aplicarModificadorFisiologico(c, true, false, false, false, false, false, false);
         assertEquals(8.0 * 1.15, c.getCustoFadiga(), 1e-9);
     }
 
     @Test
     void physiologicalModifier_desmaioLancaExcecao() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
         assertThrows(IllegalStateException.class,
-                () -> ActionCostService.applyPhysiologicalModifier(c, false, false, false, false, false, true, false));
+                () -> ServicoCustoAcao.aplicarModificadorFisiologico(c, false, false, false, false, false, true, false));
     }
 
     @Test
     void physiologicalModifier_estadoCriticoLancaExcecao() {
         // RF-MAR-09
-        ActionCost c = ActionCostService.baseCost(ActionClass.MODERADA);
+        CustoAcao c = ServicoCustoAcao.custoBase(ClasseAcao.MODERADA);
         assertThrows(IllegalStateException.class,
-                () -> ActionCostService.applyPhysiologicalModifier(c, false, false, false, false, false, false, true));
+                () -> ServicoCustoAcao.aplicarModificadorFisiologico(c, false, false, false, false, false, false, true));
     }
 
     @Test
     void calculateCost_ordemCorretaDeModificadores() {
         // RF-MAR-09 — verifica método consolidado sem erro
-        ActionCost c = ActionCostService.calculateCost(
-                ActionClass.MODERADA, "HEAT", 0.60, true, false, false, false, false, false, false);
+        CustoAcao c = ServicoCustoAcao.calcularCusto(
+                ClasseAcao.MODERADA, "HEAT", 0.60, true, false, false, false, false, false, false);
         assertTrue(c.getCustoFadiga() > 8.0,
                 "Fadiga deve ser maior que a base após HEAT+carga+exaustao");
     }
@@ -254,10 +254,10 @@ class ModifierTest {
 
     @Test
     void modifier_criacaoValida() {
-        Modifier m = buildModifier("ataque_bonus", StackingRule.ACCUMULATES);
+        Modificador m = buildModifier("ataque_bonus", StackingRule.ACUMULA);
         assertEquals("ataque_bonus", m.id());
         assertEquals("Bônus de Ataque", m.nomeExibicao());
-        assertEquals(ModifierOrigin.EQUIPAMENTO, m.origem());
+        assertEquals(OrigemModificador.EQUIPAMENTO, m.origem());
     }
 
     @Test
@@ -299,108 +299,108 @@ class ModifierTest {
 
     @Test
     void modifierEffect_descricaoVaziaLancaExcecao() {
-        assertThrows(IllegalArgumentException.class, () -> new ModifierEffect(""));
+        assertThrows(IllegalArgumentException.class, () -> new EfeitoModificador(""));
     }
 
     // ── RF-MAR-05: Prioridade de origem ─────────────────────────────────────
 
     @Test
     void modifierOrigin_estadoCriticoTemMaiorPrioridade() {
-        assertTrue(ModifierOrigin.ESTADO_CRITICO_COMBATE.getPrioridade()
-                < ModifierOrigin.HABILIDADE_ATIVA.getPrioridade());
+        assertTrue(OrigemModificador.ESTADO_CRITICO_COMBATE.getPrioridade()
+                < OrigemModificador.HABILIDADE_ATIVA.getPrioridade());
     }
 
     @Test
     void modifierOrigin_racaMenorPrioridadeQueEquipamento() {
-        assertTrue(ModifierOrigin.EQUIPAMENTO.getPrioridade()
-                < ModifierOrigin.RACA.getPrioridade());
+        assertTrue(OrigemModificador.EQUIPAMENTO.getPrioridade()
+                < OrigemModificador.RACA.getPrioridade());
     }
 
     // ── RF-MAR-06: Empilhamento ────────────────────────────────────────────
 
     @Test
     void modifierService_accumulates_adicionaAmbos() {
-        List<Modifier> ativos = new ArrayList<>();
-        Modifier m1 = buildModifier("bonus_dano", StackingRule.ACCUMULATES);
-        Modifier m2 = buildModifier("bonus_dano", StackingRule.ACCUMULATES);
-        ModifierService.apply(ativos, m1);
-        ModifierService.apply(ativos, m2);
+        List<Modificador> ativos = new ArrayList<>();
+        Modificador m1 = buildModifier("bonus_dano", StackingRule.ACUMULA);
+        Modificador m2 = buildModifier("bonus_dano", StackingRule.ACUMULA);
+        ServicoModificador.aplicar(ativos, m1);
+        ServicoModificador.aplicar(ativos, m2);
         assertEquals(2, ativos.size());
     }
 
     @Test
     void modifierService_replaces_substituiExistente() {
-        List<Modifier> ativos = new ArrayList<>();
-        Modifier m1 = buildModifier("bonus_dano", StackingRule.REPLACES);
-        Modifier m2 = buildModifier("bonus_dano", StackingRule.REPLACES);
-        ModifierService.apply(ativos, m1);
-        ModifierService.apply(ativos, m2);
+        List<Modificador> ativos = new ArrayList<>();
+        Modificador m1 = buildModifier("bonus_dano", StackingRule.SUBSTITUI);
+        Modificador m2 = buildModifier("bonus_dano", StackingRule.SUBSTITUI);
+        ServicoModificador.aplicar(ativos, m1);
+        ServicoModificador.aplicar(ativos, m2);
         assertEquals(1, ativos.size());
         assertSame(m2, ativos.get(0)); // novo prevalece
     }
 
     @Test
     void modifierService_replaces_adicionaSeNaoHouverConflito() {
-        List<Modifier> ativos = new ArrayList<>();
-        Modifier m1 = buildModifier("bonus_dano", StackingRule.REPLACES);
-        Modifier m2 = buildModifier("outro_bonus", StackingRule.REPLACES);
-        ModifierService.apply(ativos, m1);
-        ModifierService.apply(ativos, m2);
+        List<Modificador> ativos = new ArrayList<>();
+        Modificador m1 = buildModifier("bonus_dano", StackingRule.SUBSTITUI);
+        Modificador m2 = buildModifier("outro_bonus", StackingRule.SUBSTITUI);
+        ServicoModificador.aplicar(ativos, m1);
+        ServicoModificador.aplicar(ativos, m2);
         assertEquals(2, ativos.size());
     }
 
     @Test
     void modifierService_invalidates_removeExistenteENaoAdiciona() {
-        List<Modifier> ativos = new ArrayList<>();
-        Modifier m1 = buildModifier("bonus_dano", StackingRule.ACCUMULATES);
-        Modifier m2 = buildModifier("bonus_dano", StackingRule.INVALIDATES);
-        ModifierService.apply(ativos, m1);
-        ModifierService.apply(ativos, m2);
+        List<Modificador> ativos = new ArrayList<>();
+        Modificador m1 = buildModifier("bonus_dano", StackingRule.ACUMULA);
+        Modificador m2 = buildModifier("bonus_dano", StackingRule.INVALIDA);
+        ServicoModificador.aplicar(ativos, m1);
+        ServicoModificador.aplicar(ativos, m2);
         assertTrue(ativos.isEmpty());
     }
 
     @Test
     void modifierService_byOrigin_filtraCorretamente() {
-        List<Modifier> ativos = new ArrayList<>();
-        ModifierService.apply(ativos, buildModifier("m1", StackingRule.ACCUMULATES));
-        ModifierService.apply(ativos, buildModifierComOrigem("m2", ModifierOrigin.RACA));
-        List<Modifier> equipamento = ModifierService.byOrigin(ativos, ModifierOrigin.EQUIPAMENTO);
+        List<Modificador> ativos = new ArrayList<>();
+        ServicoModificador.aplicar(ativos, buildModifier("m1", StackingRule.ACUMULA));
+        ServicoModificador.aplicar(ativos, buildModifierComOrigem("m2", OrigemModificador.RACA));
+        List<Modificador> equipamento = ServicoModificador.porOrigem(ativos, OrigemModificador.EQUIPAMENTO);
         assertEquals(1, equipamento.size());
         assertEquals("m1", equipamento.get(0).id());
     }
 
     @Test
     void modifierService_sortedByPriority_ordenaCorretamente() {
-        List<Modifier> ativos = new ArrayList<>();
-        ModifierService.apply(ativos, buildModifierComOrigem("m_raca", ModifierOrigin.RACA));
-        ModifierService.apply(ativos, buildModifierComOrigem("m_estado", ModifierOrigin.ESTADO_CRITICO_COMBATE));
-        List<Modifier> sorted = ModifierService.sortedByPriority(ativos);
-        assertEquals(ModifierOrigin.ESTADO_CRITICO_COMBATE, sorted.get(0).origem());
+        List<Modificador> ativos = new ArrayList<>();
+        ServicoModificador.aplicar(ativos, buildModifierComOrigem("m_raca", OrigemModificador.RACA));
+        ServicoModificador.aplicar(ativos, buildModifierComOrigem("m_estado", OrigemModificador.ESTADO_CRITICO_COMBATE));
+        List<Modificador> sorted = ServicoModificador.ordenadosPorPrioridade(ativos);
+        assertEquals(OrigemModificador.ESTADO_CRITICO_COMBATE, sorted.get(0).origem());
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private Modifier buildModifier(String id, StackingRule rule) {
-        return new Modifier(id, "Bônus de Ataque", "ao_equipar",
-                new ModifierEffect("Aumenta dano em +2"),
+    private Modificador buildModifier(String id, StackingRule rule) {
+        return new Modificador(id, "Bônus de Ataque", "ao_equipar",
+                new EfeitoModificador("Aumenta dano em +2"),
                 ModifierDuration.dePermanente(),
                 rule,
-                ModifierOrigin.EQUIPAMENTO);
+                OrigemModificador.EQUIPAMENTO);
     }
 
-    private Modifier buildModifierWithId(String id) {
-        return new Modifier(id, "Bônus", "ao_equipar",
-                new ModifierEffect("Aumenta dano"),
+    private Modificador buildModifierWithId(String id) {
+        return new Modificador(id, "Bônus", "ao_equipar",
+                new EfeitoModificador("Aumenta dano"),
                 ModifierDuration.turnos(3),
-                StackingRule.ACCUMULATES,
-                ModifierOrigin.EQUIPAMENTO);
+                StackingRule.ACUMULA,
+                OrigemModificador.EQUIPAMENTO);
     }
 
-    private Modifier buildModifierComOrigem(String id, ModifierOrigin origem) {
-        return new Modifier(id, "Bônus", "ao_equipar",
-                new ModifierEffect("Aumenta dano"),
+    private Modificador buildModifierComOrigem(String id, OrigemModificador origem) {
+        return new Modificador(id, "Bônus", "ao_equipar",
+                new EfeitoModificador("Aumenta dano"),
                 ModifierDuration.dePermanente(),
-                StackingRule.ACCUMULATES,
+                StackingRule.ACUMULA,
                 origem);
     }
 }

@@ -2,7 +2,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.physiology.model;
 
 /**
  * Estado fisiológico dinâmico do personagem durante uma sessão de jogo.
- * Utilizado pelo {@link br.eng.rodrigogml.mysteryrealms.domain.physiology.service.PhysiologicalService}
+ * Utilizado pelo {@link br.eng.rodrigogml.mysteryrealms.domain.physiology.service.ServicoFisiologico}
  * para calcular ticks e transições de estado — RF-EF-*.
  *
  * Os campos são mutáveis para refletir a natureza dinâmica do estado durante o jogo.

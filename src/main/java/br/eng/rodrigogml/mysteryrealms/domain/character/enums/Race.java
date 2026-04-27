@@ -1,7 +1,7 @@
 package br.eng.rodrigogml.mysteryrealms.domain.character.enums;
 
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
-import br.eng.rodrigogml.mysteryrealms.domain.character.model.SkillBonuses;
+import br.eng.rodrigogml.mysteryrealms.domain.character.model.BonusHabilidades;
 
 /**
  * Raças jogáveis, conforme RF-FP-07.
@@ -20,50 +20,50 @@ public enum Race {
     HUMANO("Humano",
             new AttributeSet(3, 3, 3, 3, 3, 3, 3),
             new int[]{75, 65, 70},
-            SkillBonuses.empty()),
+            BonusHabilidades.vazio()),
 
     ELFO("Elfo",
             new AttributeSet(2, 4, 2, 4, 4, 2, 3),
             new int[]{60, 50, 55},
-            SkillBonuses.of(Skill.CONHECIMENTO_ARCANO, 2)),
+            BonusHabilidades.de(Skill.CONHECIMENTO_ARCANO, 2)),
 
     MEIO_ELFO("Meio-elfo",
             new AttributeSet(2, 3, 3, 3, 3, 4, 3),
             new int[]{67, 57, 62},
-            SkillBonuses.of(Skill.PERSUASAO, 1)),
+            BonusHabilidades.de(Skill.PERSUASAO, 1)),
 
     ANAO("Anão",
             new AttributeSet(3, 2, 5, 2, 3, 2, 3),
             new int[]{85, 75, 80},
-            SkillBonuses.of(Skill.SOBREVIVENCIA, 2)),
+            BonusHabilidades.de(Skill.SOBREVIVENCIA, 2)),
 
     MEIO_ORC("Meio-orc",
             new AttributeSet(5, 3, 4, 1, 2, 1, 2),
             new int[]{95, 85, 90},
-            SkillBonuses.of(Skill.INTIMIDACAO, 1)),
+            BonusHabilidades.de(Skill.INTIMIDACAO, 1)),
 
     TIEFLING("Tiefling",
             new AttributeSet(2, 3, 2, 4, 2, 4, 3),
             new int[]{70, 60, 65},
-            SkillBonuses.of(Skill.CONHECIMENTO_RELIQUIAS, 2)),
+            BonusHabilidades.de(Skill.CONHECIMENTO_RELIQUIAS, 2)),
 
     DRACONATO("Draconato",
             new AttributeSet(4, 2, 4, 3, 2, 3, 2),
             new int[]{100, 90, 95},
-            SkillBonuses.of(Skill.INTIMIDACAO, 1)),
+            BonusHabilidades.de(Skill.INTIMIDACAO, 1)),
 
     HALFLING("Halfling",
             new AttributeSet(1, 5, 3, 2, 3, 2, 4),
             new int[]{40, 35, 37},
-            SkillBonuses.of(Skill.FURTIVIDADE, 2));
+            BonusHabilidades.de(Skill.FURTIVIDADE, 2));
 
     private final String nome;
     private final AttributeSet atributosBase;
     /** Peso base em kg: índice 0=MASCULINO, 1=FEMININO, 2=OUTRO */
     private final int[] pesoBaseKg;
-    private final SkillBonuses bonusHabilidades;
+    private final BonusHabilidades bonusHabilidades;
 
-    Race(String nome, AttributeSet atributosBase, int[] pesoBaseKg, SkillBonuses bonusHabilidades) {
+    Race(String nome, AttributeSet atributosBase, int[] pesoBaseKg, BonusHabilidades bonusHabilidades) {
         this.nome = nome;
         this.atributosBase = atributosBase;
         this.pesoBaseKg = pesoBaseKg;
@@ -86,7 +86,7 @@ public enum Race {
         };
     }
 
-    public SkillBonuses getBonusHabilidades() {
+    public BonusHabilidades getBonusHabilidades() {
         return bonusHabilidades;
     }
 }

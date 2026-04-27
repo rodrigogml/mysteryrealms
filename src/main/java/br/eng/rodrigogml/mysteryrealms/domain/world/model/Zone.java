@@ -1,12 +1,12 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.world.enums.LocationType;
+import br.eng.rodrigogml.mysteryrealms.domain.world.enums.TipoLocalizacao;
 
 /**
  * Zona navegável — RF-MN-02.
  *
  * ID deve usar prefixo {@code zona_} e ser único globalmente.
- * {@code tipo_navegavel} é sempre {@link LocationType#ZONA}.
+ * {@code tipo_navegavel} é sempre {@link TipoLocalizacao#ZONA}.
  */
 public record Zone(
         String idZona,
@@ -18,7 +18,7 @@ public record Zone(
         /** Texto de ambientação (opcional). */
         String descricao) {
 
-    public static final LocationType TIPO_NAVEGAVEL = LocationType.ZONA;
+    public static final TipoLocalizacao TIPO_NAVEGAVEL = TipoLocalizacao.ZONA;
 
     public Zone {
         if (idZona == null || idZona.isBlank())

@@ -23,7 +23,7 @@ public class Shield extends HandItem {
     public Shield(
             String nome,
             double pesoKg,
-            MonetaryValue precoBase,
+            ValorMonetario precoBase,
             int valorBaseBloqueio,
             String cobertura,
             int penaldadeDestreza,

@@ -1,12 +1,12 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.world.enums.LocationType;
+import br.eng.rodrigogml.mysteryrealms.domain.world.enums.TipoLocalizacao;
 
 /**
  * Ambiente navegável — RF-MN-03.
  *
  * ID deve usar prefixo {@code amb_} e ser único globalmente.
- * {@code tipo_navegavel} é sempre {@link LocationType#AMBIENTE}.
+ * {@code tipo_navegavel} é sempre {@link TipoLocalizacao#AMBIENTE}.
  */
 public record GameEnvironment(
         String idAmbiente,
@@ -18,7 +18,7 @@ public record GameEnvironment(
         /** Texto de ambientação (opcional). */
         String descricao) {
 
-    public static final LocationType TIPO_NAVEGAVEL = LocationType.AMBIENTE;
+    public static final TipoLocalizacao TIPO_NAVEGAVEL = TipoLocalizacao.AMBIENTE;
 
     public GameEnvironment {
         if (idAmbiente == null || idAmbiente.isBlank())

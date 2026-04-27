@@ -18,7 +18,7 @@ public abstract class HandItem {
     private final HandItemCategory categoriaUso;
     /** >= 0 — RF-EI-03. */
     private final double pesoKg;
-    private final MonetaryValue precoBase;
+    private final ValorMonetario precoBase;
 
     protected HandItem(
             String nome,
@@ -26,7 +26,7 @@ public abstract class HandItem {
             int maosNecessarias,
             HandItemCategory categoriaUso,
             double pesoKg,
-            MonetaryValue precoBase) {
+            ValorMonetario precoBase) {
 
         if (nome == null || nome.isBlank())
             throw new IllegalArgumentException("nome do item não pode ser vazio");
@@ -54,7 +54,7 @@ public abstract class HandItem {
     public int getMaosNecessarias() { return maosNecessarias; }
     public HandItemCategory getCategoriaUso() { return categoriaUso; }
     public double getPesoKg() { return pesoKg; }
-    public MonetaryValue getPrecoBase() { return precoBase; }
+    public ValorMonetario getPrecoBase() { return precoBase; }
 
     // ── Canais de bônus canônicos — RF-EI-04 ─────────────────────────────────
 
