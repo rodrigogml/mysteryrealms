@@ -1,11 +1,11 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social;
 
-import br.eng.rodrigogml.mysteryrealms.domain.social.enums.TipoMarcador;
-import br.eng.rodrigogml.mysteryrealms.domain.social.enums.FaixaRelacionamento;
-import br.eng.rodrigogml.mysteryrealms.domain.social.enums.EstiloDiscurso;
-import br.eng.rodrigogml.mysteryrealms.domain.social.enums.AvaliacaoEstiloDiscurso;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipRange;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyle;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyleEvaluation;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.*;
-import br.eng.rodrigogml.mysteryrealms.domain.social.service.ServicoSocial;
+import br.eng.rodrigogml.mysteryrealms.domain.social.service.SocialService;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.*;
 import org.junit.jupiter.api.Test;
 
@@ -19,60 +19,60 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SocialSystemTest {
 
-    // ── RF-SS-01: NoDialogo ────────────────────────────────────────────────
+    // ── RF-SS-01: DialogNode ────────────────────────────────────────────────
 
     @Test
     void dialogueNode_criacaoValida() {
-        NoDialogo node = buildNode();
-        assertEquals("dlg_001", node.dialogoId());
+        DialogNode node = buildNode();
+        assertEquals("dlg_001", node.dialogId());
         assertEquals("npc_ferreiro", node.npcId());
-        assertEquals(1, node.opcoes().size());
+        assertEquals(1, node.options().size());
     }
 
     @Test
     void dialogueNode_idSemPrefixoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new NoDialogo("001", "npc_x", "Olá", List.of(buildOption("op1"))));
+                () -> new DialogNode("001", "npc_x", "Olá", List.of(buildOption("op1"))));
     }
 
     @Test
     void dialogueNode_semOpcoesLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new NoDialogo("dlg_001", "npc_x", "Olá", List.of()));
+                () -> new DialogNode("dlg_001", "npc_x", "Olá", List.of()));
     }
 
     @Test
     void dialogueNode_textVazioLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new NoDialogo("dlg_001", "npc_x", "", List.of(buildOption("op1"))));
+                () -> new DialogNode("dlg_001", "npc_x", "", List.of(buildOption("op1"))));
     }
 
-    // ── RF-SS-01: OpcaoDialogo ──────────────────────────────────────────────
+    // ── RF-SS-01: DialogOption ──────────────────────────────────────────────
 
     @Test
     void dialogueOption_comTesteRequerEfeitosFalha() {
         assertThrows(IllegalArgumentException.class,
-                () -> new OpcaoDialogo("op1", EstiloDiscurso.FALA_DIPLOMATICA, "Opção",
-                        TesteSocial.cdFixa("persuasao", 12),
-                        EfeitosDialogo.vazio(),
+                () -> new DialogOption("op1", DiscourseStyle.DIPLOMATIC, "Opção",
+                        SocialTest.fixedDC("persuasao", 12),
+                        DialogEffects.empty(),
                         null));
     }
 
     @Test
     void dialogueOption_semTesteSemEfeitosFalhaOk() {
-        OpcaoDialogo op = new OpcaoDialogo("op1", EstiloDiscurso.FALA_DIPLOMATICA,
-                "Opção", null, EfeitosDialogo.vazio(), null);
-        assertNull(op.testeSocial());
-        assertNull(op.efeitosFalha());
+        DialogOption op = new DialogOption("op1", DiscourseStyle.DIPLOMATIC,
+                "Opção", null, DialogEffects.empty(), null);
+        assertNull(op.socialTest());
+        assertNull(op.failureEffects());
     }
 
     // ── RF-SS-03: Estilos de fala ─────────────────────────────────────────────
 
     @Test
     void speechStyle_chavesPrefixoFala() {
-        for (EstiloDiscurso style : EstiloDiscurso.values()) {
-            assertTrue(style.getChave().startsWith("fala_"),
-                    "Chave deve começar com 'fala_': " + style.getChave());
+        for (DiscourseStyle style : DiscourseStyle.values()) {
+            assertTrue(style.getKey().startsWith("fala_"),
+                    "Chave deve começar com 'fala_': " + style.getKey());
         }
     }
 
@@ -80,182 +80,182 @@ class SocialSystemTest {
 
     @Test
     void speechStyleValuation_ajustesCorretos() {
-        assertEquals(2, AvaliacaoEstiloDiscurso.GOSTA.getAjusteTeste());
-        assertEquals(0, AvaliacaoEstiloDiscurso.TOLERA.getAjusteTeste());
-        assertEquals(-2, AvaliacaoEstiloDiscurso.REJEITA.getAjusteTeste());
+        assertEquals(2, DiscourseStyleEvaluation.LIKES.getTestAdjustment());
+        assertEquals(0, DiscourseStyleEvaluation.TOLERATES.getTestAdjustment());
+        assertEquals(-2, DiscourseStyleEvaluation.REJECTS.getTestAdjustment());
     }
 
     // ── RF-SS-05: Teste social ────────────────────────────────────────────────
 
     @Test
     void socialService_ajustaTestePorEstiloGosta() {
-        assertEquals(17, ServicoSocial.ajustarPorEstiloFala(15, AvaliacaoEstiloDiscurso.GOSTA));
+        assertEquals(17, SocialService.adjustByTalkStyle(15, DiscourseStyleEvaluation.LIKES));
     }
 
     @Test
     void socialService_ajustaTestePorEstiloTolera() {
-        assertEquals(15, ServicoSocial.ajustarPorEstiloFala(15, AvaliacaoEstiloDiscurso.TOLERA));
+        assertEquals(15, SocialService.adjustByTalkStyle(15, DiscourseStyleEvaluation.TOLERATES));
     }
 
     @Test
     void socialService_ajustaTestePorEstiloRejeita() {
-        assertEquals(13, ServicoSocial.ajustarPorEstiloFala(15, AvaliacaoEstiloDiscurso.REJEITA));
+        assertEquals(13, SocialService.adjustByTalkStyle(15, DiscourseStyleEvaluation.REJECTS));
     }
 
     @Test
     void socialService_ajustaTestePorNuloRetornaMesmoValor() {
-        assertEquals(10, ServicoSocial.ajustarPorEstiloFala(10, null));
+        assertEquals(10, SocialService.adjustByTalkStyle(10, null));
     }
 
     // ── RF-SS-06: Relacionamento com NPC ────────────────────────────────────
 
     @Test
     void socialService_aplicaDeltaRelacionamento() {
-        assertEquals(30, ServicoSocial.aplicarDeltaRelacionamento(25, 5));
-        assertEquals(-15, ServicoSocial.aplicarDeltaRelacionamento(-10, -5));
+        assertEquals(30, SocialService.applyRelationshipDelta(25, 5));
+        assertEquals(-15, SocialService.applyRelationshipDelta(-10, -5));
     }
 
     @Test
     void socialService_clampMaxRelacionamento() {
-        assertEquals(100, ServicoSocial.aplicarDeltaRelacionamento(98, 5));
+        assertEquals(100, SocialService.applyRelationshipDelta(98, 5));
     }
 
     @Test
     void socialService_clampMinRelacionamento() {
-        assertEquals(-100, ServicoSocial.aplicarDeltaRelacionamento(-95, -10));
+        assertEquals(-100, SocialService.applyRelationshipDelta(-95, -10));
     }
 
     @Test
     void socialService_faixaRelacionamento_neutro() {
-        assertEquals(FaixaRelacionamento.NEUTRO, ServicoSocial.faixaRelacionamento(0));
+        assertEquals(RelationshipRange.NEUTRAL, SocialService.relationshipRange(0));
     }
 
     @Test
     void socialService_faixaRelacionamento_aliado() {
-        assertEquals(FaixaRelacionamento.ALIADO, ServicoSocial.faixaRelacionamento(100));
+        assertEquals(RelationshipRange.ALLY, SocialService.relationshipRange(100));
     }
 
     @Test
     void socialService_faixaRelacionamento_inimigoMortal() {
-        assertEquals(FaixaRelacionamento.INIMIGO_MORTAL, ServicoSocial.faixaRelacionamento(-100));
+        assertEquals(RelationshipRange.MORTAL_ENEMY, SocialService.relationshipRange(-100));
     }
 
     @Test
     void socialService_faixaRelacionamento_hostil() {
-        assertEquals(FaixaRelacionamento.HOSTIL, ServicoSocial.faixaRelacionamento(-50));
+        assertEquals(RelationshipRange.HOSTILE, SocialService.relationshipRange(-50));
     }
 
     @Test
     void socialService_faixaRelacionamento_favorable() {
-        assertEquals(FaixaRelacionamento.FAVORAVEL, ServicoSocial.faixaRelacionamento(40));
+        assertEquals(RelationshipRange.FAVORABLE, SocialService.relationshipRange(40));
     }
 
     // ── RF-SS-07: Reputação ──────────────────────────────────────────────────
 
     @Test
     void socialService_aplicaDeltaReputacao_semClamp() {
-        assertEquals(200, ServicoSocial.aplicarDeltaReputacao(150, 50));
-        assertEquals(-500, ServicoSocial.aplicarDeltaReputacao(-490, -10));
+        assertEquals(200, SocialService.applyReputationDelta(150, 50));
+        assertEquals(-500, SocialService.applyReputationDelta(-490, -10));
     }
 
-    // ── RF-SS-08: EntradaDiario ─────────────────────────────────────────────────
+    // ── RF-SS-08: DiaryEntry ─────────────────────────────────────────────────
 
     @Test
     void diaryEntry_criacaoValida() {
-        EntradaDiario entry = buildEntradaDiario();
-        assertEquals("diary_001", entry.entradaId());
-        assertEquals("Encontro com o Ferreiro", entry.titulo());
+        DiaryEntry entry = buildEntradaDiario();
+        assertEquals("diary_001", entry.entryId());
+        assertEquals("Encontro com o Ferreiro", entry.title());
     }
 
     @Test
     void diaryEntry_idSemPrefixoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new EntradaDiario("001", "Titulo", "Resumo.", "D1-08:00",
-                        "dlg_001", "op1", ImpactoDiario.vazio()));
+                () -> new DiaryEntry("001", "Titulo", "Resumo.", "D1-08:00",
+                        "dlg_001", "op1", DiaryImpact.empty()));
     }
 
     @Test
     void diaryEntry_tituloCom9PalavrasLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new EntradaDiario("diary_001",
+                () -> new DiaryEntry("diary_001",
                         "Esta titulo tem exatamente nove palavras no total aqui",
-                        "Resumo.", "D1-08:00", "dlg_001", "op1", ImpactoDiario.vazio()));
+                        "Resumo.", "D1-08:00", "dlg_001", "op1", DiaryImpact.empty()));
     }
 
     @Test
     void diaryEntry_dataJogoFormatoInvalido() {
         assertThrows(IllegalArgumentException.class,
-                () -> new EntradaDiario("diary_001", "Titulo", "Resumo.", "Dia1-08:00",
-                        "dlg_001", "op1", ImpactoDiario.vazio()));
+                () -> new DiaryEntry("diary_001", "Titulo", "Resumo.", "Dia1-08:00",
+                        "dlg_001", "op1", DiaryImpact.empty()));
     }
 
     @Test
     void diaryEntry_dataJogoFormatoValido() {
-        EntradaDiario e = buildEntradaDiario();
-        assertTrue(e.dataJogo().matches("D\\d+-\\d{2}:\\d{2}"));
+        DiaryEntry e = buildEntradaDiario();
+        assertTrue(e.gameDate().matches("D\\d+-\\d{2}:\\d{2}"));
     }
 
     // ── RF-SS-09: Marcadores ─────────────────────────────────────────────────
 
     @Test
     void marker_flagAtivoPorPadrao() {
-        Marcador m = Marcador.sinalizador("mk_quest_iniciada");
-        assertEquals(TipoMarcador.SINALIZADOR, m.getTipo());
-        assertTrue(m.sinalizadorAtivo());
+        Marker m = Marker.flag("mk_quest_iniciada");
+        assertEquals(MarkerType.FLAG, m.getType());
+        assertTrue(m.isFlagActive());
     }
 
     @Test
     void marker_flagInativo() {
-        Marcador m = Marcador.sinalizadorInativo("mk_quest_iniciada");
-        assertFalse(m.sinalizadorAtivo());
+        Marker m = Marker.inactiveFlag("mk_quest_iniciada");
+        assertFalse(m.isFlagActive());
     }
 
     @Test
     void marker_setFlag() {
-        Marcador m = Marcador.sinalizador("mk_quest_iniciada");
-        m.definirSinalizador(false);
-        assertFalse(m.sinalizadorAtivo());
+        Marker m = Marker.flag("mk_quest_iniciada");
+        m.setFlag(false);
+        assertFalse(m.isFlagActive());
     }
 
     @Test
     void marker_stage_incremento() {
-        Marcador m = Marcador.estagio("mk_quest_estagio");
-        assertEquals(0, m.valorInteiro());
-        m.incrementar(2);
-        assertEquals(2, m.valorInteiro());
+        Marker m = Marker.stage("mk_quest_estagio");
+        assertEquals(0, m.intValue());
+        m.increment(2);
+        assertEquals(2, m.intValue());
     }
 
     @Test
     void marker_counter_incremento() {
-        Marcador m = Marcador.contador("mk_npc_visitas");
-        m.incrementar(1);
-        m.incrementar(1);
-        assertEquals(2, m.valorInteiro());
+        Marker m = Marker.counter("mk_npc_visitas");
+        m.increment(1);
+        m.increment(1);
+        assertEquals(2, m.intValue());
     }
 
     @Test
     void marker_setStage() {
-        Marcador m = Marcador.estagio("mk_quest_estagio");
-        m.definirEstagio(3);
-        assertEquals(3, m.valorInteiro());
+        Marker m = Marker.stage("mk_quest_estagio");
+        m.setStage(3);
+        assertEquals(3, m.intValue());
     }
 
     @Test
     void marker_idSemPrefixoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Marcador("quest_iniciada", TipoMarcador.SINALIZADOR, Boolean.TRUE));
+                () -> new Marker("quest_iniciada", MarkerType.FLAG, Boolean.TRUE));
     }
 
     @Test
     void marker_flagNaoTemValorInteiro() {
-        Marcador m = Marcador.sinalizador("mk_x");
-        assertThrows(IllegalStateException.class, m::valorInteiro);
+        Marker m = Marker.flag("mk_x");
+        assertThrows(IllegalStateException.class, m::intValue);
     }
 
     @Test
     void marker_incrementFlagLancaExcecao() {
-        Marcador m = Marcador.sinalizador("mk_x");
-        assertThrows(IllegalStateException.class, () -> m.incrementar(1));
+        Marker m = Marker.flag("mk_x");
+        assertThrows(IllegalStateException.class, () -> m.increment(1));
     }
 
     // ── RF-SS-02: Ciclo social obrigatório ───────────────────────────────────
@@ -263,94 +263,94 @@ class SocialSystemTest {
     @Test
     void socialCycle_semTeste_sucesso() {
         // RF-SS-02
-        ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
+        SocialCycleResult result = SocialService.executeSocialCycle(
                 50, null, buildNode(), "op1", false, 480L, buildConfiguracaoMundo());
-        assertTrue(result.sucesso(), "Sem teste social, ciclo deve ser sucesso");
+        assertTrue(result.success(), "Sem teste social, ciclo deve ser sucesso");
     }
 
     @Test
     void socialCycle_comTeste_sucesso() {
         // RF-SS-02
-        OpcaoDialogo opcaoComTeste = new OpcaoDialogo(
-                "op2", EstiloDiscurso.FALA_DIPLOMATICA, "Quero um desconto.",
-                TesteSocial.cdFixa("persuasao", 15),
-                new EfeitosDialogo(Map.of("npc_ferreiro", 10), Map.of(), Map.of(), "Desconto concedido!"),
-                EfeitosDialogo.vazio());
-        NoDialogo node = new NoDialogo("dlg_002", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
+        DialogOption opcaoComTeste = new DialogOption(
+                "op2", DiscourseStyle.DIPLOMATIC, "Quero um desconto.",
+                SocialTest.fixedDC("persuasao", 15),
+                new DialogEffects(Map.of("npc_ferreiro", 10), Map.of(), Map.of(), "Desconto concedido!"),
+                DialogEffects.empty());
+        DialogNode node = new DialogNode("dlg_002", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
 
-        ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
+        SocialCycleResult result = SocialService.executeSocialCycle(
                 0, null, node, "op2", true, 480L, buildConfiguracaoMundo());
-        assertTrue(result.sucesso());
-        assertNotNull(result.novoRelacionamentoNpc(), "Delta de relacionamento deve ser calculado");
-        assertEquals(10, result.novoRelacionamentoNpc()); // 0 + 10
+        assertTrue(result.success());
+        assertNotNull(result.newNpcRelationship(), "Delta de relacionamento deve ser calculado");
+        assertEquals(10, result.newNpcRelationship()); // 0 + 10
     }
 
     @Test
     void socialCycle_comTeste_falha() {
         // RF-SS-02
-        OpcaoDialogo opcaoComTeste = new OpcaoDialogo(
-                "op3", EstiloDiscurso.FALA_DIPLOMATICA, "Tento enganar.",
-                TesteSocial.cdFixa("enganacao", 15),
-                EfeitosDialogo.vazio(),
-                new EfeitosDialogo(Map.of("npc_ferreiro", -5), Map.of(), Map.of(), "Falha na enganação!"));
-        NoDialogo node = new NoDialogo("dlg_003", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
+        DialogOption opcaoComTeste = new DialogOption(
+                "op3", DiscourseStyle.DIPLOMATIC, "Tento enganar.",
+                SocialTest.fixedDC("enganacao", 15),
+                DialogEffects.empty(),
+                new DialogEffects(Map.of("npc_ferreiro", -5), Map.of(), Map.of(), "Falha na enganação!"));
+        DialogNode node = new DialogNode("dlg_003", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
 
-        ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
+        SocialCycleResult result = SocialService.executeSocialCycle(
                 0, null, node, "op3", false, 480L, buildConfiguracaoMundo());
-        assertFalse(result.sucesso());
-        assertNotNull(result.novoRelacionamentoNpc());
-        assertEquals(-5, result.novoRelacionamentoNpc()); // 0 + (-5)
+        assertFalse(result.success());
+        assertNotNull(result.newNpcRelationship());
+        assertEquals(-5, result.newNpcRelationship()); // 0 + (-5)
     }
 
     @Test
     void socialCycle_opcaoNaoEncontrada_lancaExcecao() {
         // RF-SS-02
         assertThrows(IllegalArgumentException.class,
-                () -> ServicoSocial.executarCicloSocial(
+                () -> SocialService.executeSocialCycle(
                         null, null, buildNode(), "op_inexistente", true, 0L, buildConfiguracaoMundo()));
     }
 
     @Test
     void socialCycle_comDeltaRelacionamento_geraDiario() {
         // RF-SS-02
-        OpcaoDialogo opcao = new OpcaoDialogo(
-                "op4", EstiloDiscurso.FALA_DIPLOMATICA, "Faço uma oferta generosa.",
+        DialogOption opcao = new DialogOption(
+                "op4", DiscourseStyle.DIPLOMATIC, "Faço uma oferta generosa.",
                 null,
-                new EfeitosDialogo(Map.of("npc_ferreiro", 20), Map.of(), Map.of(), "Oferta aceita!"),
+                new DialogEffects(Map.of("npc_ferreiro", 20), Map.of(), Map.of(), "Oferta aceita!"),
                 null);
-        NoDialogo node = new NoDialogo("dlg_004", "npc_ferreiro", "Proposta?", List.of(opcao));
+        DialogNode node = new DialogNode("dlg_004", "npc_ferreiro", "Proposta?", List.of(opcao));
 
-        ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
+        SocialCycleResult result = SocialService.executeSocialCycle(
                 50, null, node, "op4", true, 480L, buildConfiguracaoMundo());
-        assertNotNull(result.entradaDiario(), "Deve gerar entrada no diário quando há delta");
-        assertTrue(result.entradaDiario().entradaId().startsWith("diary_"));
-        assertTrue(result.entradaDiario().dataJogo().matches("D\\d+-\\d{2}:\\d{2}"));
+        assertNotNull(result.diaryEntry(), "Deve gerar entrada no diário quando há delta");
+        assertTrue(result.diaryEntry().entryId().startsWith("diary_"));
+        assertTrue(result.diaryEntry().gameDate().matches("D\\d+-\\d{2}:\\d{2}"));
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private ConfiguracaoMundo buildConfiguracaoMundo() {
-        return new ConfiguracaoMundo(
+    private WorldConfig buildConfiguracaoMundo() {
+        return new WorldConfig(
                 "mundo_teste",
                 60, 24, 360,
-                List.of(new FaseDia("dia", 0, 1439)),
-                List.of(new Estacao("unica", 1, 360)),
+                List.of(new DayPhase("dia", 0, 1439)),
+                List.of(new Season("unica", 1, 360)),
                 0);
     }
 
-    private NoDialogo buildNode() {
-        return new NoDialogo("dlg_001", "npc_ferreiro", "Posso ajudá-lo?",
+    private DialogNode buildNode() {
+        return new DialogNode("dlg_001", "npc_ferreiro", "Posso ajudá-lo?",
                 List.of(buildOption("op1")));
     }
 
-    private OpcaoDialogo buildOption(String id) {
-        return new OpcaoDialogo(id, EstiloDiscurso.FALA_DIPLOMATICA, "Sim, preciso de ajuda.",
-                null, EfeitosDialogo.vazio(), null);
+    private DialogOption buildOption(String id) {
+        return new DialogOption(id, DiscourseStyle.DIPLOMATIC, "Sim, preciso de ajuda.",
+                null, DialogEffects.empty(), null);
     }
 
-    private EntradaDiario buildEntradaDiario() {
-        return new EntradaDiario("diary_001", "Encontro com o Ferreiro",
+    private DiaryEntry buildEntradaDiario() {
+        return new DiaryEntry("diary_001", "Encontro com o Ferreiro",
                 "O herói conheceu o ferreiro e recebeu uma espada.",
-                "D1-08:00", "dlg_001", "op1", ImpactoDiario.vazio());
+                "D1-08:00", "dlg_001", "op1", DiaryImpact.empty());
     }
 }
