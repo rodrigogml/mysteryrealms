@@ -26,7 +26,7 @@ public record ConjuntoAtributos(
     /**
      * Soma componente a componente com um bônus (que pode ter valores zero).
      */
-    public ConjuntoAtributos plus(BonusAtributo bonus) {
+    public ConjuntoAtributos somar(BonusAtributo bonus) {
         return new ConjuntoAtributos(
                 forca + bonus.forca(),
                 destreza + bonus.destreza(),

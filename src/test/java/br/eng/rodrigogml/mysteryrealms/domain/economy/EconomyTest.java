@@ -100,18 +100,18 @@ class EconomyTest {
     void weapon_bonusPrecisaoEDano() {
         Arma arma = new Arma("Espada Mágica", 1, 1.5, ValorMonetario.deMp(100),
                 "tipo_espada", "1d8", TipoDano.CORTE, "curto", "20/x2", 2, 0.1, 1, 0.0);
-        assertEquals(2, arma.getBonusItemPrecisaoFlat());
+        assertEquals(2, arma.getBonusItemPrecisaoPlano());
         assertEquals(0.1, arma.getBonusItemPrecisaoPct(), 1e-9);
-        assertEquals(1, arma.getBonusItemDanoFlat());
-        assertEquals(0, arma.getBonusItemBloqueioFlat());
+        assertEquals(1, arma.getBonusItemDanoPlano());
+        assertEquals(0, arma.getBonusItemBloqueioPlano());
     }
 
     @Test
     void shield_bonusDefesaEBloqueio() {
         Escudo escudo = buildEscudo("Escudo de Ferro", 30, 5, 0, 10, 0.1);
-        assertEquals(5, escudo.getBonusItemDefesaFlat());
+        assertEquals(5, escudo.getBonusItemDefesaPlano());
         assertEquals(0.1, escudo.getBonusItemDefesaPct(), 1e-9);
-        assertEquals(10, escudo.getBonusItemBloqueioFlat());
+        assertEquals(10, escudo.getBonusItemBloqueioPlano());
         assertEquals(30, escudo.getValorBaseBloqueio());
     }
 

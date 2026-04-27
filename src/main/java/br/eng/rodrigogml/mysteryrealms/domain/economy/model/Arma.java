@@ -18,10 +18,10 @@ public class Arma extends ItemMao {
     private final String alcance;
     /** Faixa mínima do dado e multiplicador de crítico (textual, ex.: "19-20/x2"). */
     private final String perfilCritico;
-    private final int bonusItemPrecisaoFlatValue;
-    private final double bonusItemPrecisaoPctValue;
-    private final int bonusItemDanoFlatValue;
-    private final double bonusItemDanoPctValue;
+    private final int bonusItemPrecisaoPlano;
+    private final double bonusItemPrecisaoPct;
+    private final int bonusItemDanoPlano;
+    private final double bonusItemDanoPct;
 
     public Arma(
             String nome,
@@ -33,9 +33,9 @@ public class Arma extends ItemMao {
             TipoDano tipoDano,
             String alcance,
             String perfilCritico,
-            int bonusItemPrecisaoFlat,
+            int bonusItemPrecisaoPlano,
             double bonusItemPrecisaoPct,
-            int bonusItemDanoFlat,
+            int bonusItemDanoPlano,
             double bonusItemDanoPct) {
 
         super(nome, SubtipoItemMao.ARMA, maosNecessarias, CategoriaItemMao.ATAQUE, pesoKg, precoBase);
@@ -56,10 +56,10 @@ public class Arma extends ItemMao {
         this.tipoDano = tipoDano;
         this.alcance = alcance;
         this.perfilCritico = perfilCritico;
-        this.bonusItemPrecisaoFlatValue = bonusItemPrecisaoFlat;
-        this.bonusItemPrecisaoPctValue = bonusItemPrecisaoPct;
-        this.bonusItemDanoFlatValue = bonusItemDanoFlat;
-        this.bonusItemDanoPctValue = bonusItemDanoPct;
+        this.bonusItemPrecisaoPlano = bonusItemPrecisaoPlano;
+        this.bonusItemPrecisaoPct = bonusItemPrecisaoPct;
+        this.bonusItemDanoPlano = bonusItemDanoPlano;
+        this.bonusItemDanoPct = bonusItemDanoPct;
     }
 
     public String getTipoArmaId() { return tipoArmaId; }
@@ -68,8 +68,8 @@ public class Arma extends ItemMao {
     public String getAlcance() { return alcance; }
     public String getPerfilCritico() { return perfilCritico; }
 
-    @Override public int getBonusItemPrecisaoFlat() { return bonusItemPrecisaoFlatValue; }
-    @Override public double getBonusItemPrecisaoPct() { return bonusItemPrecisaoPctValue; }
-    @Override public int getBonusItemDanoFlat() { return bonusItemDanoFlatValue; }
-    @Override public double getBonusItemDanoPct() { return bonusItemDanoPctValue; }
+    @Override public int getBonusItemPrecisaoPlano() { return bonusItemPrecisaoPlano; }
+    @Override public double getBonusItemPrecisaoPct() { return bonusItemPrecisaoPct; }
+    @Override public int getBonusItemDanoPlano() { return bonusItemDanoPlano; }
+    @Override public double getBonusItemDanoPct() { return bonusItemDanoPct; }
 }

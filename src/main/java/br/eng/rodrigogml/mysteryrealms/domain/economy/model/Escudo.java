@@ -15,10 +15,10 @@ public class Escudo extends ItemMao {
     private final String cobertura;
     /** Penalidade de destreza para não proficientes (opcional, 0 = sem penalidade). */
     private final int penaldadeDestreza;
-    private final int bonusItemDefesaFlatValue;
-    private final double bonusItemDefesaPctValue;
-    private final int bonusItemBloqueioFlatValue;
-    private final double bonusItemBloqueioPctValue;
+    private final int bonusItemDefesaPlano;
+    private final double bonusItemDefesaPct;
+    private final int bonusItemBloqueioPlano;
+    private final double bonusItemBloqueioPct;
 
     public Escudo(
             String nome,
@@ -27,9 +27,9 @@ public class Escudo extends ItemMao {
             int valorBaseBloqueio,
             String cobertura,
             int penaldadeDestreza,
-            int bonusItemDefesaFlat,
+            int bonusItemDefesaPlano,
             double bonusItemDefesaPct,
-            int bonusItemBloqueioFlat,
+            int bonusItemBloqueioPlano,
             double bonusItemBloqueioPct) {
 
         super(nome, SubtipoItemMao.ESCUDO, 1, CategoriaItemMao.DEFESA, pesoKg, precoBase);
@@ -37,18 +37,18 @@ public class Escudo extends ItemMao {
         this.valorBaseBloqueio = valorBaseBloqueio;
         this.cobertura = cobertura;
         this.penaldadeDestreza = penaldadeDestreza;
-        this.bonusItemDefesaFlatValue = bonusItemDefesaFlat;
-        this.bonusItemDefesaPctValue = bonusItemDefesaPct;
-        this.bonusItemBloqueioFlatValue = bonusItemBloqueioFlat;
-        this.bonusItemBloqueioPctValue = bonusItemBloqueioPct;
+        this.bonusItemDefesaPlano = bonusItemDefesaPlano;
+        this.bonusItemDefesaPct = bonusItemDefesaPct;
+        this.bonusItemBloqueioPlano = bonusItemBloqueioPlano;
+        this.bonusItemBloqueioPct = bonusItemBloqueioPct;
     }
 
     public int getValorBaseBloqueio() { return valorBaseBloqueio; }
     public String getCobertura() { return cobertura; }
     public int getPenaldadeDestreza() { return penaldadeDestreza; }
 
-    @Override public int getBonusItemDefesaFlat() { return bonusItemDefesaFlatValue; }
-    @Override public double getBonusItemDefesaPct() { return bonusItemDefesaPctValue; }
-    @Override public int getBonusItemBloqueioFlat() { return bonusItemBloqueioFlatValue; }
-    @Override public double getBonusItemBloqueioPct() { return bonusItemBloqueioPctValue; }
+    @Override public int getBonusItemDefesaPlano() { return bonusItemDefesaPlano; }
+    @Override public double getBonusItemDefesaPct() { return bonusItemDefesaPct; }
+    @Override public int getBonusItemBloqueioPlano() { return bonusItemBloqueioPlano; }
+    @Override public double getBonusItemBloqueioPct() { return bonusItemBloqueioPct; }
 }

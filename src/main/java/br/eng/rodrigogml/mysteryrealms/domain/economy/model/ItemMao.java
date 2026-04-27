@@ -59,25 +59,25 @@ public abstract class ItemMao {
     // ── Canais de bônus canônicos — RF-EI-04 ─────────────────────────────────
 
     /** Bônus plano de precisão alimentado em precisao_final — RF-EI-04. */
-    public int getBonusItemPrecisaoFlat() { return 0; }
+    public int getBonusItemPrecisaoPlano() { return 0; }
 
     /** Bônus percentual de precisão — RF-EI-04. */
     public double getBonusItemPrecisaoPct() { return 0.0; }
 
     /** Bônus plano de dano alimentado em dano_final — RF-EI-04. */
-    public int getBonusItemDanoFlat() { return 0; }
+    public int getBonusItemDanoPlano() { return 0; }
 
     /** Bônus percentual de dano — RF-EI-04. */
     public double getBonusItemDanoPct() { return 0.0; }
 
     /** Bônus plano de defesa alimentado em defesa_final — RF-EI-04. */
-    public int getBonusItemDefesaFlat() { return 0; }
+    public int getBonusItemDefesaPlano() { return 0; }
 
     /** Bônus percentual de defesa — RF-EI-04. */
     public double getBonusItemDefesaPct() { return 0.0; }
 
     /** Bônus plano de bloqueio alimentado em bloqueio_final — RF-EI-04. */
-    public int getBonusItemBloqueioFlat() { return 0; }
+    public int getBonusItemBloqueioPlano() { return 0; }
 
     /** Bônus percentual de bloqueio — RF-EI-04. */
     public double getBonusItemBloqueioPct() { return 0.0; }

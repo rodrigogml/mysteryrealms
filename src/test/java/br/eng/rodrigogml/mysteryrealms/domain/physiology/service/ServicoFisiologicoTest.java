@@ -16,7 +16,7 @@ class ServicoFisiologicoTest {
     private static final double PV_MAX     = 30.0;     // constituicao=3
 
     private EstadoFisiologico freshState() {
-        return EstadoFisiologico.initial(FADIGA_MAX, PV_MAX);
+        return EstadoFisiologico.inicial(FADIGA_MAX, PV_MAX);
     }
 
     // ── RF-EF-01: tick de minuto ──────────────────────────────────────────────

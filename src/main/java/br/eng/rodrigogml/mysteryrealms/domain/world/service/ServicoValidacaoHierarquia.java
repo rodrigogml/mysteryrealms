@@ -85,11 +85,11 @@ public final class ServicoValidacaoHierarquia {
      * Verifica se o tipo navegável declarado é coerente com o tipo esperado — RF-MN-06.
      *
      * @param tipoNavegavel  valor declarado no campo {@code tipo_navegavel}
-     * @param expectedType   valor esperado (ex.: "zona", "ambiente")
+     * @param tipoEsperado   valor esperado (ex.: "zona", "ambiente")
      * @return {@code true} se os valores forem iguais (comparação case-insensitive)
      */
-    public static boolean tipoNavegavelCoerente(String tipoNavegavel, String expectedType) {
-        if (tipoNavegavel == null || expectedType == null) return false;
-        return tipoNavegavel.equalsIgnoreCase(expectedType);
+    public static boolean tipoNavegavelCoerente(String tipoNavegavel, String tipoEsperado) {
+        if (tipoNavegavel == null || tipoEsperado == null) return false;
+        return tipoNavegavel.equalsIgnoreCase(tipoEsperado);
     }
 }

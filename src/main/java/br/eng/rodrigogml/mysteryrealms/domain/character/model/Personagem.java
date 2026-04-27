@@ -93,7 +93,7 @@ public class Personagem {
         this.idadeInicial = idadeInicial;
 
         // Atributos: base da raça + bônus da classe (RF-FP-07, RF-FP-08)
-        this.atributos = raca.getAtributosBase().plus(classe.getBonusAtributos());
+        this.atributos = raca.getAtributosBase().somar(classe.getBonusAtributos());
 
         // Estado inicial
         this.xpAcumulado = 0;

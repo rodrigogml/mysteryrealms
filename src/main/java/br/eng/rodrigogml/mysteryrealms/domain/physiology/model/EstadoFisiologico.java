@@ -38,7 +38,7 @@ public class EstadoFisiologico {
     }
 
     /** Cria um estado inicial "zerado" a partir dos atributos base. */
-    public static EstadoFisiologico initial(double fadigaMax, double pontosVidaMax) {
+    public static EstadoFisiologico inicial(double fadigaMax, double pontosVidaMax) {
         return new EstadoFisiologico(0.0, 0.0, fadigaMax, 0.0, 0.0, 75, pontosVidaMax, pontosVidaMax);
     }
 
