@@ -250,7 +250,7 @@ class PhysiologyServiceTest {
     // ── RF-EF-08: tick de sono ───────────────────────────────────────────────
 
     @Test
-    void sleepTick_reduzhFadigaAtual() {
+    void sleepTick_reduzFadigaAtual() {
         // RF-EF-08
         PhysiologyState s = freshState();
         s.setCurrentFatigue(300.0);
@@ -260,7 +260,7 @@ class PhysiologyServiceTest {
     }
 
     @Test
-    void sleepTick_reduzhFadigaMin() {
+    void sleepTick_reduzFadigaMin() {
         // RF-EF-08 — sono também reduz fadiga_min
         PhysiologyState s = freshState();
         s.setMinFatigue(100.0);
