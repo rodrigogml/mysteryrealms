@@ -221,15 +221,15 @@ class SocialSystemTest {
     void marker_stage_incremento() {
         Marcador m = Marcador.estagio("mk_quest_estagio");
         assertEquals(0, m.valorInteiro());
-        m.increment(2);
+        m.incrementar(2);
         assertEquals(2, m.valorInteiro());
     }
 
     @Test
     void marker_counter_incremento() {
         Marcador m = Marcador.contador("mk_npc_visitas");
-        m.increment(1);
-        m.increment(1);
+        m.incrementar(1);
+        m.incrementar(1);
         assertEquals(2, m.valorInteiro());
     }
 
@@ -255,7 +255,7 @@ class SocialSystemTest {
     @Test
     void marker_incrementFlagLancaExcecao() {
         Marcador m = Marcador.sinalizador("mk_x");
-        assertThrows(IllegalStateException.class, () -> m.increment(1));
+        assertThrows(IllegalStateException.class, () -> m.incrementar(1));
     }
 
     // ── RF-SS-02: Ciclo social obrigatório ───────────────────────────────────

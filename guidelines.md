@@ -124,6 +124,10 @@ Documentação relevante sobre as definições da implementação do sistema.
 - Todas as mensagens e textos expostos ao usuário devem ser internacionalizados via i18n.
 - O idioma padrão e obrigatório para as mensagens i18n é o inglês.
 
+## Imports
+- Todo tipo referenciado no código deve ser importado no início do arquivo via instrução `import`.
+- O uso de nomes canônicos (fully qualified names) diretamente no corpo do código — fora de declarações `package` e `import` — é proibido, salvo nos casos em que duas classes de pacotes distintos possuem o mesmo nome simples e o uso do nome canônico é necessário para diferenciá-las.
+
 ## Javadoc
 - Todo tipo público — classe, interface, enum ou record — deve possuir Javadoc descrevendo o seu propósito.
 - Todo método público não trivialmente autoexplicativo deve possuir Javadoc. Métodos triviais como getters simples estão dispensados.
