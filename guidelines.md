@@ -117,8 +117,7 @@ Documentação relevante sobre as definições da implementação do sistema.
 # Código Java
 
 ## Idioma do Código
-- Identificadores Java — nomes de classes, interfaces, enums, records, métodos, campos, variáveis e parâmetros — devem ser escritos em português, sem acentuação e sem cedilha.
-  > Observação: a ausência de acentuação e cedilha evita conflitos de encoding em ferramentas que não suportam UTF-8 nativamente (IDEs, terminais, diff viewers) e garante portabilidade do código-fonte.
+- Identificadores Java — nomes de classes, interfaces, enums, records, métodos, campos, variáveis e parâmetros — devem ser escritos em inglês.
 - Comentários no código devem ser escritos em português.
 - Comentários do tipo TODO são permitidos, no formato `// TODO`.
 - Todas as mensagens e textos expostos ao usuário devem ser internacionalizados via i18n.
