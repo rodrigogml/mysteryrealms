@@ -96,8 +96,13 @@ Documentação relevante sobre as definições da implementação do sistema.
 
 - O banco de dados da aplicação será MySQL 9.0, acessado através do ORM/JPA padrão do Spring (Hibernate).
 - O schema da aplicação será `mysteryrealms`.
-- Dentro da pasta `src/main/resources/db/init` deve ser incluído o script `init.sql` de criação do banco de dados. Esse script não deve utilizar sintaxes do tipo `IF NOT EXISTS`; deve considerar sempre a criação do banco de dados do zero.
-  - O script não deve conter instruções de `ALTER TABLE` ou `UPDATE` (seja de estrutura ou de dados) quando for possível corrigir diretamente o `CREATE TABLE` ou o `INSERT` original, de forma que a criação do banco seja feita corretamente desde a primeira execução. A exceção são casos de relacionamento circular, nos quais o `ALTER TABLE` é necessário após a criação das tabelas envolvidas.
+- Dentro da pasta `src/main/resources/db/init` devem ser incluídos os scripts de criação do banco de dados. Os arquivos devem ter prefixo numérico que garanta a ordem de execução, seguindo a estrutura abaixo:
+  - `01_schema.sql` — `DROP`/`CREATE SCHEMA` e configurações gerais.
+  - `02_tables.sql` — todos os `CREATE TABLE`.
+  - `03_constraints.sql` — `ALTER TABLE` exclusivamente para FKs circulares (ver regra abaixo).
+  - `04_seed.sql` — `INSERT` de dados iniciais (enums, configurações, dados fixos de jogo).
+  - Nenhum arquivo deve utilizar sintaxes do tipo `IF NOT EXISTS`; o conjunto de scripts deve considerar sempre a criação do banco de dados do zero.
+  - Os scripts não devem conter instruções de `ALTER TABLE` (estrutura) ou de `UPDATE`/`DELETE` (dados) quando for possível corrigir diretamente o `CREATE TABLE` ou o `INSERT` original, de forma que a criação do banco seja feita corretamente desde a primeira execução. A exceção são casos de relacionamento circular, nos quais o `ALTER TABLE` em `03_constraints.sql` é necessário após a criação das tabelas envolvidas.
 - Nenhum script de atualização para bases existentes deve ser criado no repositório.
 - O banco de dados deverá seguir as seguintes regras de nomenclatura:
   - Nomes de tabelas, colunas, FKs, etc. devem sempre estar em inglês. Apenas comentários, se necessários, podem estar em português.
