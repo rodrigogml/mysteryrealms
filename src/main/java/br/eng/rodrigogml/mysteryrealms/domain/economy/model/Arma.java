@@ -1,20 +1,20 @@
 package br.eng.rodrigogml.mysteryrealms.domain.economy.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemCategory;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemSubtype;
+import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.TipoDano;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.CategoriaItemMao;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.SubtipoItemMao;
 
 /**
  * Ficha de arma — RF-EI-07.
  *
  * Inclui todos os atributos comuns de Item de Mão (RF-EI-03) mais campos específicos de arma.
  */
-public class Weapon extends HandItem {
+public class Arma extends ItemMao {
 
     private final String tipoArmaId;
     /** Notação de dado, ex.: {@code 1d8}, {@code 2d6}. */
     private final String dadoDanoBase;
-    private final DamageType tipoDano;
+    private final TipoDano tipoDano;
     private final String alcance;
     /** Faixa mínima do dado e multiplicador de crítico (textual, ex.: "19-20/x2"). */
     private final String perfilCritico;
@@ -23,14 +23,14 @@ public class Weapon extends HandItem {
     private final int bonusItemDanoFlatValue;
     private final double bonusItemDanoPctValue;
 
-    public Weapon(
+    public Arma(
             String nome,
             int maosNecessarias,
             double pesoKg,
             ValorMonetario precoBase,
             String tipoArmaId,
             String dadoDanoBase,
-            DamageType tipoDano,
+            TipoDano tipoDano,
             String alcance,
             String perfilCritico,
             int bonusItemPrecisaoFlat,
@@ -38,7 +38,7 @@ public class Weapon extends HandItem {
             int bonusItemDanoFlat,
             double bonusItemDanoPct) {
 
-        super(nome, HandItemSubtype.ARMA, maosNecessarias, HandItemCategory.ATAQUE, pesoKg, precoBase);
+        super(nome, SubtipoItemMao.ARMA, maosNecessarias, CategoriaItemMao.ATAQUE, pesoKg, precoBase);
 
         if (tipoArmaId == null || tipoArmaId.isBlank())
             throw new IllegalArgumentException("tipoArmaId não pode ser vazio");
@@ -64,7 +64,7 @@ public class Weapon extends HandItem {
 
     public String getTipoArmaId() { return tipoArmaId; }
     public String getDadoDanoBase() { return dadoDanoBase; }
-    public DamageType getTipoDano() { return tipoDano; }
+    public TipoDano getTipoDano() { return tipoDano; }
     public String getAlcance() { return alcance; }
     public String getPerfilCritico() { return perfilCritico; }
 

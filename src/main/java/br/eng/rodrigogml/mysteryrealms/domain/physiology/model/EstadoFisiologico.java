@@ -7,7 +7,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.physiology.model;
  *
  * Os campos são mutáveis para refletir a natureza dinâmica do estado durante o jogo.
  */
-public class PhysiologicalState {
+public class EstadoFisiologico {
 
     private double fadigaMin;
     private double fadigaAtual;
@@ -18,7 +18,7 @@ public class PhysiologicalState {
     private double pontosVida;
     private double pontosVidaMax;
 
-    public PhysiologicalState(
+    public EstadoFisiologico(
             double fadigaMin,
             double fadigaAtual,
             double fadigaMax,
@@ -38,8 +38,8 @@ public class PhysiologicalState {
     }
 
     /** Cria um estado inicial "zerado" a partir dos atributos base. */
-    public static PhysiologicalState initial(double fadigaMax, double pontosVidaMax) {
-        return new PhysiologicalState(0.0, 0.0, fadigaMax, 0.0, 0.0, 75, pontosVidaMax, pontosVidaMax);
+    public static EstadoFisiologico initial(double fadigaMax, double pontosVidaMax) {
+        return new EstadoFisiologico(0.0, 0.0, fadigaMax, 0.0, 0.0, 75, pontosVidaMax, pontosVidaMax);
     }
 
     public double getFadigaMin() { return fadigaMin; }

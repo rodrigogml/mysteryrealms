@@ -8,16 +8,16 @@ import java.util.List;
  * {@code fasesDia} deve cobrir o dia completo sem sobreposição.
  * {@code estacoes} deve cobrir o ano completo sem lacunas.
  */
-public record WorldConfig(
+public record ConfiguracaoMundo(
         String idMundo,
         int minutosPorHora,
         int horasPorDia,
         int diasPorAno,
-        List<DayPhase> fasesDia,
-        List<Season> estacoes,
+        List<FaseDia> fasesDia,
+        List<Estacao> estacoes,
         int tempoInicialMin) {
 
-    public WorldConfig {
+    public ConfiguracaoMundo {
         if (idMundo == null || idMundo.isBlank())
             throw new IllegalArgumentException("idMundo não pode ser vazio");
         if (minutosPorHora < 1)

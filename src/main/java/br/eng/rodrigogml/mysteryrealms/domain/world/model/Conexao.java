@@ -1,6 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.world.enums.ConnectionClassification;
+import br.eng.rodrigogml.mysteryrealms.domain.world.enums.ClassificacaoConexao;
 
 import java.util.List;
 
@@ -11,17 +11,17 @@ import java.util.List;
  * {@code chanceInterrupcaoKmPct} ∈ [0, 100].
  * Deve ter pelo menos 1 destino em {@code destinosPriorizados}.
  */
-public record Connection(
+public record Conexao(
         String idConexao,
         String origemId,
         List<String> destinosPriorizados,
         boolean bidirecional,
-        ConnectionClassification classificacao,
+        ClassificacaoConexao classificacao,
         double penaldadeRotaPct,
         double chanceInterrupcaoKmPct,
         String tabelaInterrupcoesId) {
 
-    public Connection {
+    public Conexao {
         if (idConexao == null || idConexao.isBlank())
             throw new IllegalArgumentException("idConexao não pode ser vazio");
         if (origemId == null || origemId.isBlank())

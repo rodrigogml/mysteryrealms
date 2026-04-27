@@ -5,23 +5,23 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier.model;
  *
  * Pode ser permanente ou ter uma duração em turnos/minutos.
  */
-public record ModifierDuration(int valor, String unidade, boolean permanente) {
+public record DuracaoModificador(int valor, String unidade, boolean permanente) {
 
     /** Cria uma duração permanente. */
-    public static ModifierDuration dePermanente() {
-        return new ModifierDuration(0, null, true);
+    public static DuracaoModificador dePermanente() {
+        return new DuracaoModificador(0, null, true);
     }
 
     /** Cria uma duração em turnos. */
-    public static ModifierDuration turnos(int turnos) {
+    public static DuracaoModificador turnos(int turnos) {
         if (turnos < 1) throw new IllegalArgumentException("turnos deve ser >= 1");
-        return new ModifierDuration(turnos, "turnos", false);
+        return new DuracaoModificador(turnos, "turnos", false);
     }
 
     /** Cria uma duração em minutos. */
-    public static ModifierDuration minutos(int minutos) {
+    public static DuracaoModificador minutos(int minutos) {
         if (minutos < 1) throw new IllegalArgumentException("minutos deve ser >= 1");
-        return new ModifierDuration(minutos, "minutos", false);
+        return new DuracaoModificador(minutos, "minutos", false);
     }
 
     @Override

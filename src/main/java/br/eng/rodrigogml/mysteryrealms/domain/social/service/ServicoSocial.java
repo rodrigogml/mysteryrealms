@@ -9,7 +9,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.social.model.NoDialogo;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.OpcaoDialogo;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.Marcador;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.ResultadoCicloSocial;
-import br.eng.rodrigogml.mysteryrealms.domain.world.model.WorldConfig;
+import br.eng.rodrigogml.mysteryrealms.domain.world.model.ConfiguracaoMundo;
 import br.eng.rodrigogml.mysteryrealms.domain.world.service.ServicoTempoMundo;
 
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public final class ServicoSocial {
             String opcaoId,
             boolean testePassed,
             long tempoAtualMin,
-            WorldConfig worldConfig) {
+            ConfiguracaoMundo worldConfig) {
 
         // 1. Localizar a opção escolhida
         OpcaoDialogo opcao = node.opcoes().stream()
@@ -181,7 +181,7 @@ public final class ServicoSocial {
     /**
      * Formata o tempo do mundo no formato {@code D<n>-HH:MM} — RF-SS-08.
      */
-    private static String formatDataJogo(long tempoAtualMin, WorldConfig worldConfig) {
+    private static String formatDataJogo(long tempoAtualMin, ConfiguracaoMundo worldConfig) {
         long dia = ServicoTempoMundo.diaDoAno(tempoAtualMin, worldConfig);
         int hora = ServicoTempoMundo.horaDoDia(tempoAtualMin, worldConfig);
         int min = ServicoTempoMundo.minutoDaHora(tempoAtualMin, worldConfig);

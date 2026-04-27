@@ -1,8 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.domain.economy;
 
-import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemCategory;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemSubtype;
+import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.TipoDano;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.CategoriaItemMao;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.SubtipoItemMao;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.*;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.service.ServicoPrecos;
 import org.junit.jupiter.api.Test;
@@ -62,44 +62,44 @@ class EconomyTest {
         assertEquals(50, norm.ms());
     }
 
-    // ── RF-EI-03: HandItem ────────────────────────────────────────────────────
+    // ── RF-EI-03: ItemMao ────────────────────────────────────────────────────
 
     @Test
     void handItem_validacaoNomeVazio() {
         assertThrows(IllegalArgumentException.class,
-                () -> buildWeapon(""));
+                () -> buildArma(""));
     }
 
     @Test
     void handItem_validacaoMaosNecessariasInvalido() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Weapon("Espada", 3, 1.5, ValorMonetario.deMp(10),
-                        "tipo_espada", "1d8", DamageType.CORTE, "curto", "20/x2", 0, 0, 0, 0));
+                () -> new Arma("Espada", 3, 1.5, ValorMonetario.deMp(10),
+                        "tipo_espada", "1d8", TipoDano.CORTE, "curto", "20/x2", 0, 0, 0, 0));
     }
 
     @Test
     void handItem_maosNecessariasValidos() {
-        Weapon arma1 = buildWeapon("Espada Curta");
+        Arma arma1 = buildArma("Espada Curta");
         assertEquals(1, arma1.getMaosNecessarias());
 
-        Weapon arma2 = new Weapon("Machado Grande", 2, 4.0, ValorMonetario.deMp(15),
-                "tipo_machado", "2d6", DamageType.CORTE, "curto", "20/x3", 0, 0, 0, 0);
+        Arma arma2 = new Arma("Machado Grande", 2, 4.0, ValorMonetario.deMp(15),
+                "tipo_machado", "2d6", TipoDano.CORTE, "curto", "20/x3", 0, 0, 0, 0);
         assertEquals(2, arma2.getMaosNecessarias());
     }
 
     @Test
     void handItem_pesoNegativoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Weapon("Espada", 1, -0.1, ValorMonetario.deMp(10),
-                        "tipo_espada", "1d8", DamageType.CORTE, "curto", "20/x2", 0, 0, 0, 0));
+                () -> new Arma("Espada", 1, -0.1, ValorMonetario.deMp(10),
+                        "tipo_espada", "1d8", TipoDano.CORTE, "curto", "20/x2", 0, 0, 0, 0));
     }
 
     // ── RF-EI-04: Canais de bônus ─────────────────────────────────────────────
 
     @Test
     void weapon_bonusPrecisaoEDano() {
-        Weapon arma = new Weapon("Espada Mágica", 1, 1.5, ValorMonetario.deMp(100),
-                "tipo_espada", "1d8", DamageType.CORTE, "curto", "20/x2", 2, 0.1, 1, 0.0);
+        Arma arma = new Arma("Espada Mágica", 1, 1.5, ValorMonetario.deMp(100),
+                "tipo_espada", "1d8", TipoDano.CORTE, "curto", "20/x2", 2, 0.1, 1, 0.0);
         assertEquals(2, arma.getBonusItemPrecisaoFlat());
         assertEquals(0.1, arma.getBonusItemPrecisaoPct(), 1e-9);
         assertEquals(1, arma.getBonusItemDanoFlat());
@@ -108,7 +108,7 @@ class EconomyTest {
 
     @Test
     void shield_bonusDefesaEBloqueio() {
-        Shield escudo = buildShield("Escudo de Ferro", 30, 5, 0, 10, 0.1);
+        Escudo escudo = buildEscudo("Escudo de Ferro", 30, 5, 0, 10, 0.1);
         assertEquals(5, escudo.getBonusItemDefesaFlat());
         assertEquals(0.1, escudo.getBonusItemDefesaPct(), 1e-9);
         assertEquals(10, escudo.getBonusItemBloqueioFlat());
@@ -119,18 +119,18 @@ class EconomyTest {
 
     @Test
     void weapon_camposObrigatorios() {
-        Weapon arma = buildWeapon("Lança");
+        Arma arma = buildArma("Lança");
         assertEquals("tipo_lanca", arma.getTipoArmaId());
         assertEquals("1d6", arma.getDadoDanoBase());
-        assertEquals(DamageType.PERFURACAO, arma.getTipoDano());
-        assertEquals(HandItemSubtype.ARMA, arma.getSubtipo());
-        assertEquals(HandItemCategory.ATAQUE, arma.getCategoriaUso());
+        assertEquals(TipoDano.PERFURACAO, arma.getTipoDano());
+        assertEquals(SubtipoItemMao.ARMA, arma.getSubtipo());
+        assertEquals(CategoriaItemMao.ATAQUE, arma.getCategoriaUso());
     }
 
     @Test
     void weapon_tipoDanoNuloLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Weapon("Espada", 1, 1.5, ValorMonetario.deMp(10),
+                () -> new Arma("Espada", 1, 1.5, ValorMonetario.deMp(10),
                         "tipo_espada", "1d8", null, "curto", "20/x2", 0, 0, 0, 0));
     }
 
@@ -138,9 +138,9 @@ class EconomyTest {
 
     @Test
     void shield_camposObrigatorios() {
-        Shield escudo = buildShield("Escudo de Madeira", 20, 0, 0, 0, 0.0);
-        assertEquals(HandItemSubtype.ESCUDO, escudo.getSubtipo());
-        assertEquals(HandItemCategory.DEFESA, escudo.getCategoriaUso());
+        Escudo escudo = buildEscudo("Escudo de Madeira", 20, 0, 0, 0, 0.0);
+        assertEquals(SubtipoItemMao.ESCUDO, escudo.getSubtipo());
+        assertEquals(CategoriaItemMao.DEFESA, escudo.getCategoriaUso());
         assertEquals(1, escudo.getMaosNecessarias());
         assertEquals(20, escudo.getValorBaseBloqueio());
     }
@@ -194,14 +194,14 @@ class EconomyTest {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private Weapon buildWeapon(String nome) {
-        return new Weapon(nome, 1, 1.0, ValorMonetario.deMp(5),
-                "tipo_lanca", "1d6", DamageType.PERFURACAO, "médio", "20/x2", 0, 0, 0, 0);
+    private Arma buildArma(String nome) {
+        return new Arma(nome, 1, 1.0, ValorMonetario.deMp(5),
+                "tipo_lanca", "1d6", TipoDano.PERFURACAO, "médio", "20/x2", 0, 0, 0, 0);
     }
 
-    private Shield buildShield(String nome, int bloqueio, int defesaFlat, int penDex,
+    private Escudo buildEscudo(String nome, int bloqueio, int defesaFlat, int penDex,
                                 int bloqueioFlat, double defesaPct) {
-        return new Shield(nome, 3.0, ValorMonetario.deMp(8),
+        return new Escudo(nome, 3.0, ValorMonetario.deMp(8),
                 bloqueio, null, penDex, defesaFlat, defesaPct, bloqueioFlat, 0.0);
     }
 }

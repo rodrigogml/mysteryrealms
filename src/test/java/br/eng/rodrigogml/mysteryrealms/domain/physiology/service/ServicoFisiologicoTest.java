@@ -2,7 +2,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.physiology.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.EfeitoFisiologicoCombinado;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.ResultadoTesteConsciencia;
-import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.PhysiologicalState;
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.EstadoFisiologico;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,15 +15,15 @@ class ServicoFisiologicoTest {
     private static final double FADIGA_MAX = 600.0;    // constituicao=3, vontade=3
     private static final double PV_MAX     = 30.0;     // constituicao=3
 
-    private PhysiologicalState freshState() {
-        return PhysiologicalState.initial(FADIGA_MAX, PV_MAX);
+    private EstadoFisiologico freshState() {
+        return EstadoFisiologico.initial(FADIGA_MAX, PV_MAX);
     }
 
     // ── RF-EF-01: tick de minuto ──────────────────────────────────────────────
 
     @Test
     void minuteTick_incrementaFadigaMin() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         double expectedDelta = FADIGA_MAX / 1440.0;
         ServicoFisiologico.aplicarTickDeMinuto(s);
         assertEquals(expectedDelta, s.getFadigaMin(), 1e-9);
@@ -31,7 +31,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void minuteTick_fadigaAtualNuncaMenorQueFadigaMin() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFadigaAtual(0.0);
         ServicoFisiologico.aplicarTickDeMinuto(s);
         assertTrue(s.getFadigaAtual() >= s.getFadigaMin(),
@@ -40,7 +40,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void minuteTick_incrementaSedeCorretamente() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         double expectedDelta = 100.0 / (48.0 * 60.0);
         ServicoFisiologico.aplicarTickDeMinuto(s);
         assertEquals(expectedDelta, s.getSedePct(), 1e-9);
@@ -48,7 +48,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void minuteTick_incrementaFomeCorretamente() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         double expectedDelta = 100.0 / (7.0 * 24.0 * 60.0);
         ServicoFisiologico.aplicarTickDeMinuto(s);
         assertEquals(expectedDelta, s.getFomePct(), 1e-9);
@@ -56,7 +56,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void minuteTick_sedeLimitadaA100() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setSedePct(99.99);
         ServicoFisiologico.aplicarTickDeMinuto(s);
         assertEquals(100.0, s.getSedePct(), 1e-6);
@@ -64,7 +64,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void minuteTick_fomeLimitadaA100() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFomePct(99.9999);
         ServicoFisiologico.aplicarTickDeMinuto(s);
         assertEquals(100.0, s.getFomePct(), 1e-4);
@@ -74,7 +74,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void fatigueState_normalAbaixoDe100Pct() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFadigaAtual(FADIGA_MAX * 0.99);
         assertEquals(ServicoFisiologico.EstadoFadiga.NORMAL,
                 ServicoFisiologico.estadoFadiga(s));
@@ -82,7 +82,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void fatigueState_exaustaoEntre100e120Pct() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFadigaAtual(FADIGA_MAX * 1.0);
         assertEquals(ServicoFisiologico.EstadoFadiga.EXAUSTAO,
                 ServicoFisiologico.estadoFadiga(s));
@@ -94,7 +94,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void fatigueState_colapsoAPartirDe120Pct() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFadigaAtual(FADIGA_MAX * 1.2);
         assertEquals(ServicoFisiologico.EstadoFadiga.COLAPSO_FADIGA,
                 ServicoFisiologico.estadoFadiga(s));
@@ -104,7 +104,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void thirstState_normal0a24() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setSedePct(0.0);
         assertEquals(ServicoFisiologico.EstadoSede.NORMAL, ServicoFisiologico.estadoSede(s));
         s.setSedePct(24.9);
@@ -113,7 +113,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void thirstState_sede25a64() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setSedePct(25.0);
         assertEquals(ServicoFisiologico.EstadoSede.SEDE, ServicoFisiologico.estadoSede(s));
         s.setSedePct(64.9);
@@ -122,7 +122,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void thirstState_sedeAgravada65a99() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setSedePct(65.0);
         assertEquals(ServicoFisiologico.EstadoSede.SEDE_AGRAVADA, ServicoFisiologico.estadoSede(s));
         s.setSedePct(99.9);
@@ -131,7 +131,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void thirstState_colapso100() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setSedePct(100.0);
         assertEquals(ServicoFisiologico.EstadoSede.COLAPSO_SEDE, ServicoFisiologico.estadoSede(s));
     }
@@ -140,14 +140,14 @@ class ServicoFisiologicoTest {
 
     @Test
     void hungerState_normal0a42() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFomePct(42.9);
         assertEquals(ServicoFisiologico.EstadoFome.NORMAL, ServicoFisiologico.estadoFome(s));
     }
 
     @Test
     void hungerState_fome43a84() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFomePct(43.0);
         assertEquals(ServicoFisiologico.EstadoFome.FOME, ServicoFisiologico.estadoFome(s));
         s.setFomePct(84.9);
@@ -156,14 +156,14 @@ class ServicoFisiologicoTest {
 
     @Test
     void hungerState_fomeAgravada85a99() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFomePct(85.0);
         assertEquals(ServicoFisiologico.EstadoFome.FOME_AGRAVADA, ServicoFisiologico.estadoFome(s));
     }
 
     @Test
     void hungerState_colapso100() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFomePct(100.0);
         assertEquals(ServicoFisiologico.EstadoFome.COLAPSO_FOME, ServicoFisiologico.estadoFome(s));
     }
@@ -172,7 +172,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralState_colapsoEmocional0a20() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(0);
         assertEquals(ServicoFisiologico.EstadoMoral.COLAPSO_EMOCIONAL, ServicoFisiologico.estadoMoral(s));
         s.setMoral(20);
@@ -181,7 +181,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralState_moralBaixa21a50() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(21);
         assertEquals(ServicoFisiologico.EstadoMoral.MORAL_BAIXA, ServicoFisiologico.estadoMoral(s));
         s.setMoral(50);
@@ -190,7 +190,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralState_estavel51a80() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(51);
         assertEquals(ServicoFisiologico.EstadoMoral.MORAL_ESTAVEL, ServicoFisiologico.estadoMoral(s));
         s.setMoral(75);
@@ -199,7 +199,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralState_alta81a100() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(81);
         assertEquals(ServicoFisiologico.EstadoMoral.MORAL_ALTA, ServicoFisiologico.estadoMoral(s));
         s.setMoral(100);
@@ -210,7 +210,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void restRecovery_reduzhFadigaAtual() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFadigaAtual(300.0); // 50% da máx
         ServicoFisiologico.aplicarTickDescanso(s, 1.0);
         assertTrue(s.getFadigaAtual() < 300.0, "fadiga_atual deve diminuir após descanso");
@@ -218,7 +218,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void restRecovery_naoDescePorFadigaMin() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFadigaMin(200.0);
         s.setFadigaAtual(200.1);
         ServicoFisiologico.aplicarTickDescanso(s, 1.0);
@@ -251,7 +251,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void canWakeFromFaint_trueQuandoCondicoesAtendidas() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(PV_MAX * 0.9);
         s.setFadigaAtual(FADIGA_MAX * 0.05);
         s.setFadigaMin(FADIGA_MAX * 0.05);
@@ -260,7 +260,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void canWakeFromFaint_falseComPVBaixo() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(PV_MAX * 0.89);
         s.setFadigaAtual(0.0);
         s.setFadigaMin(0.0);
@@ -269,7 +269,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void canWakeFromFaint_falseComFadigaAlta() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(PV_MAX);
         s.setFadigaAtual(FADIGA_MAX * 0.11);
         s.setFadigaMin(0.0);
@@ -280,7 +280,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralDelta_quedaDeAliado() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(75);
         ServicoFisiologico.aplicarDeltaMoralAliadoCaido(s);
         assertEquals(67, s.getMoral());
@@ -288,7 +288,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralDelta_vitoriaCombate() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(60);
         ServicoFisiologico.aplicarDeltaMoralVitoriaCombate(s);
         assertEquals(66, s.getMoral());
@@ -296,7 +296,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralDelta_limitadoA100() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(98);
         ServicoFisiologico.aplicarDeltaMoralBomSono(s);
         assertEquals(100, s.getMoral());
@@ -304,7 +304,7 @@ class ServicoFisiologicoTest {
 
     @Test
     void moralDelta_limitadoA0() {
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(5);
         ServicoFisiologico.aplicarDeltaMoralDesmaio(s);
         assertEquals(0, s.getMoral());
@@ -315,7 +315,7 @@ class ServicoFisiologicoTest {
     @Test
     void combinedEffect_none_semEstadosGraves() {
         // RF-EF-05
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         assertEquals(EfeitoFisiologicoCombinado.NENHUM,
                 ServicoFisiologico.efeitoCombinado(s));
     }
@@ -323,7 +323,7 @@ class ServicoFisiologicoTest {
     @Test
     void combinedEffect_sedeExaustao() {
         // RF-EF-05
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setSedePct(70.0);                    // sede_agravada
         s.setFadigaAtual(FADIGA_MAX * 1.05);   // exaustao
         assertEquals(EfeitoFisiologicoCombinado.SEDE_EXAUSTAO,
@@ -333,7 +333,7 @@ class ServicoFisiologicoTest {
     @Test
     void combinedEffect_fomeExaustao() {
         // RF-EF-05
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFomePct(90.0);                    // fome_agravada
         s.setFadigaAtual(FADIGA_MAX * 1.05);   // exaustao
         assertEquals(EfeitoFisiologicoCombinado.FOME_EXAUSTAO,
@@ -343,7 +343,7 @@ class ServicoFisiologicoTest {
     @Test
     void combinedEffect_fomeSede_aplicaMoralDelta() {
         // RF-EF-05
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(75);
         s.setFomePct(90.0);  // fome_agravada
         s.setSedePct(70.0);  // sede_agravada
@@ -356,7 +356,7 @@ class ServicoFisiologicoTest {
     @Test
     void itemRecovery_pvAumentaClampado() {
         // RF-EF-09
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(20.0);
         ServicoFisiologico.aplicarRecuperacaoPorItem(s, 100.0, 0, 0, 0, 0);
         assertEquals(PV_MAX, s.getPontosVida(), "PV não deve ultrapassar pontosVidaMax");
@@ -365,7 +365,7 @@ class ServicoFisiologicoTest {
     @Test
     void itemRecovery_fadigaReducaoNaoAbaixoDeMin() {
         // RF-EF-09
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFadigaMin(100.0);
         s.setFadigaAtual(105.0);
         ServicoFisiologico.aplicarRecuperacaoPorItem(s, 0, -50.0, 0, 0, 0);
@@ -375,7 +375,7 @@ class ServicoFisiologicoTest {
     @Test
     void itemRecovery_fomeReduzidaClampado() {
         // RF-EF-09
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setFomePct(5.0);
         ServicoFisiologico.aplicarRecuperacaoPorItem(s, 0, 0, -50.0, 0, 0);
         assertEquals(0.0, s.getFomePct(), 1e-9);
@@ -384,7 +384,7 @@ class ServicoFisiologicoTest {
     @Test
     void itemRecovery_moralLimitadoA100() {
         // RF-EF-09
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(95);
         ServicoFisiologico.aplicarRecuperacaoPorItem(s, 0, 0, 0, 0, 10);
         assertEquals(100, s.getMoral());
@@ -395,7 +395,7 @@ class ServicoFisiologicoTest {
     @Test
     void isPvCritical_trueQuandoPvZero() {
         // RF-EF-11
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(0.0);
         assertTrue(ServicoFisiologico.ehPvCritico(s));
     }
@@ -403,7 +403,7 @@ class ServicoFisiologicoTest {
     @Test
     void isPvCritical_falseComPvPositivo() {
         // RF-EF-11
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(1.0);
         assertFalse(ServicoFisiologico.ehPvCritico(s));
     }
@@ -411,7 +411,7 @@ class ServicoFisiologicoTest {
     @Test
     void consciousnessTest_success_setPv1eFadiga90Pct() {
         // RF-EF-11
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(0.0);
         var result = ServicoFisiologico.testeConsciencia(s, true);
         assertEquals(ResultadoTesteConsciencia.SUCESSO, result);
@@ -422,7 +422,7 @@ class ServicoFisiologicoTest {
     @Test
     void consciousnessTest_fainted_naoModificaState() {
         // RF-EF-11
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setPontosVida(0.0);
         double pvAntes = s.getPontosVida();
         var result = ServicoFisiologico.testeConsciencia(s, false);
@@ -435,7 +435,7 @@ class ServicoFisiologicoTest {
     @Test
     void moralFatigueCostMultiplier_colapso_110Pct() {
         // RF-EF-14
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(10);
         assertEquals(1.10, ServicoFisiologico.multiplicadorCustoFadigaPorMoral(s), 1e-9);
     }
@@ -443,7 +443,7 @@ class ServicoFisiologicoTest {
     @Test
     void moralFatigueCostMultiplier_alta_90Pct() {
         // RF-EF-14
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(90);
         assertEquals(0.90, ServicoFisiologico.multiplicadorCustoFadigaPorMoral(s), 1e-9);
     }
@@ -451,7 +451,7 @@ class ServicoFisiologicoTest {
     @Test
     void moralFatigueCostMultiplier_normal_semAjuste() {
         // RF-EF-14
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(60);
         assertEquals(1.0, ServicoFisiologico.multiplicadorCustoFadigaPorMoral(s), 1e-9);
     }
@@ -461,7 +461,7 @@ class ServicoFisiologicoTest {
     @Test
     void moralDelta_quietRest_mais5() {
         // RF-EF-15
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(70);
         ServicoFisiologico.aplicarDeltaMoralDescansoQuieto(s);
         assertEquals(75, s.getMoral());
@@ -470,7 +470,7 @@ class ServicoFisiologicoTest {
     @Test
     void moralDelta_interruptedSleep_menos8() {
         // RF-EF-15
-        PhysiologicalState s = freshState();
+        EstadoFisiologico s = freshState();
         s.setMoral(50);
         ServicoFisiologico.aplicarDeltaMoralSonoInterrompido(s);
         assertEquals(42, s.getMoral());

@@ -1,14 +1,14 @@
 package br.eng.rodrigogml.mysteryrealms.domain.modifier;
 
-import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.AfflictionType;
-import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
-import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.ResistanceType;
+import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.TipoAfliccao;
+import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.TipoDano;
+import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.TipoResistencia;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.ClasseAcao;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.OrigemModificador;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.StackingRule;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.RegraEmpilhamento;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.CustoAcao;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.Modificador;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.ModifierDuration;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.DuracaoModificador;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.EfeitoModificador;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.service.ServicoCustoAcao;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.service.ServicoModificador;
@@ -24,68 +24,68 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ModifierTest {
 
-    // ── RF-MAR-01: DamageType ─────────────────────────────────────────────────
+    // ── RF-MAR-01: TipoDano ─────────────────────────────────────────────────
 
     @Test
     void damageType_possuiExatamente10ValoresCanonicos() {
         // RF-MAR-01
-        assertEquals(10, DamageType.values().length,
-                "DamageType deve ter exatamente 10 valores canônicos");
+        assertEquals(10, TipoDano.values().length,
+                "TipoDano deve ter exatamente 10 valores canônicos");
     }
 
     @Test
     void damageType_eletricidadeLegacyMapeiaParaRaio() {
         // RF-MAR-01
-        assertEquals(DamageType.RAIO, DamageType.fromLegacy("eletricidade"));
-        assertEquals(DamageType.RAIO, DamageType.fromLegacy("Eletricidade"));
+        assertEquals(TipoDano.RAIO, TipoDano.fromLegacy("eletricidade"));
+        assertEquals(TipoDano.RAIO, TipoDano.fromLegacy("Eletricidade"));
     }
 
     @Test
     void damageType_chavesTecnicasCorretas() {
         // RF-MAR-01
-        assertEquals("corte",        DamageType.CORTE.getChave());
-        assertEquals("perfuracao",   DamageType.PERFURACAO.getChave());
-        assertEquals("esmagamento",  DamageType.ESMAGAMENTO.getChave());
-        assertEquals("fogo",         DamageType.FOGO.getChave());
-        assertEquals("gelo",         DamageType.GELO.getChave());
-        assertEquals("raio",         DamageType.RAIO.getChave());
-        assertEquals("acido",        DamageType.ACIDO.getChave());
-        assertEquals("magia_pura",   DamageType.MAGIA_PURA.getChave());
-        assertEquals("sangramento",  DamageType.SANGRAMENTO.getChave());
-        assertEquals("veneno_letal", DamageType.VENENO_LETAL.getChave());
+        assertEquals("corte",        TipoDano.CORTE.getChave());
+        assertEquals("perfuracao",   TipoDano.PERFURACAO.getChave());
+        assertEquals("esmagamento",  TipoDano.ESMAGAMENTO.getChave());
+        assertEquals("fogo",         TipoDano.FOGO.getChave());
+        assertEquals("gelo",         TipoDano.GELO.getChave());
+        assertEquals("raio",         TipoDano.RAIO.getChave());
+        assertEquals("acido",        TipoDano.ACIDO.getChave());
+        assertEquals("magia_pura",   TipoDano.MAGIA_PURA.getChave());
+        assertEquals("sangramento",  TipoDano.SANGRAMENTO.getChave());
+        assertEquals("veneno_letal", TipoDano.VENENO_LETAL.getChave());
     }
 
-    // ── RF-MAR-02: AfflictionType ─────────────────────────────────────────────
+    // ── RF-MAR-02: TipoAfliccao ─────────────────────────────────────────────
 
     @Test
     void afflictionType_possuiExatamente10ValoresCanonicos() {
         // RF-MAR-02
-        assertEquals(10, AfflictionType.values().length,
-                "AfflictionType deve ter exatamente 10 valores canônicos");
+        assertEquals(10, TipoAfliccao.values().length,
+                "TipoAfliccao deve ter exatamente 10 valores canônicos");
     }
 
     @Test
     void afflictionType_chavesTecnicasCorretas() {
         // RF-MAR-02
-        assertEquals("psiquica",                      AfflictionType.PSIQUICA.getChave());
-        assertEquals("espiritual",                    AfflictionType.ESPIRITUAL.getChave());
-        assertEquals("medo",                          AfflictionType.MEDO.getChave());
-        assertEquals("paralisia",                     AfflictionType.PARALISIA.getChave());
-        assertEquals("cegueira",                      AfflictionType.CEGUEIRA.getChave());
-        assertEquals("surdez_mudez",                  AfflictionType.SURDEZ_MUDEZ.getChave());
-        assertEquals("fadiga",                        AfflictionType.FADIGA.getChave());
-        assertEquals("doenca_magica",                 AfflictionType.DOENCA_MAGICA.getChave());
-        assertEquals("alucinacao_ilusao_persistente", AfflictionType.ALUCINACAO_ILUSAO_PERSISTENTE.getChave());
-        assertEquals("sono_torpor",                   AfflictionType.SONO_TORPOR.getChave());
+        assertEquals("psiquica",                      TipoAfliccao.PSIQUICA.getChave());
+        assertEquals("espiritual",                    TipoAfliccao.ESPIRITUAL.getChave());
+        assertEquals("medo",                          TipoAfliccao.MEDO.getChave());
+        assertEquals("paralisia",                     TipoAfliccao.PARALISIA.getChave());
+        assertEquals("cegueira",                      TipoAfliccao.CEGUEIRA.getChave());
+        assertEquals("surdez_mudez",                  TipoAfliccao.SURDEZ_MUDEZ.getChave());
+        assertEquals("fadiga",                        TipoAfliccao.FADIGA.getChave());
+        assertEquals("doenca_magica",                 TipoAfliccao.DOENCA_MAGICA.getChave());
+        assertEquals("alucinacao_ilusao_persistente", TipoAfliccao.ALUCINACAO_ILUSAO_PERSISTENTE.getChave());
+        assertEquals("sono_torpor",                   TipoAfliccao.SONO_TORPOR.getChave());
     }
 
-    // ── RF-MAR-03: ResistanceType ─────────────────────────────────────────────
+    // ── RF-MAR-03: TipoResistencia ─────────────────────────────────────────────
 
     @Test
     void resistanceType_possuiExatamente19ValoresCanonicos() {
         // RF-MAR-03
-        assertEquals(19, ResistanceType.values().length,
-                "ResistanceType deve ter exatamente 19 valores canônicos");
+        assertEquals(19, TipoResistencia.values().length,
+                "TipoResistencia deve ter exatamente 19 valores canônicos");
     }
 
     // ── RF-MAR-07/08: ClasseAcao e custos base ───────────────────────────────
@@ -254,7 +254,7 @@ class ModifierTest {
 
     @Test
     void modifier_criacaoValida() {
-        Modificador m = buildModifier("ataque_bonus", StackingRule.ACUMULA);
+        Modificador m = buildModifier("ataque_bonus", RegraEmpilhamento.ACUMULA);
         assertEquals("ataque_bonus", m.id());
         assertEquals("Bônus de Ataque", m.nomeExibicao());
         assertEquals(OrigemModificador.EQUIPAMENTO, m.origem());
@@ -279,7 +279,7 @@ class ModifierTest {
 
     @Test
     void modifier_duracaoTurnos() {
-        ModifierDuration d = ModifierDuration.turnos(3);
+        DuracaoModificador d = DuracaoModificador.turnos(3);
         assertFalse(d.permanente());
         assertEquals(3, d.valor());
         assertEquals("turnos", d.unidade());
@@ -287,14 +287,14 @@ class ModifierTest {
 
     @Test
     void modifier_duracaoPermanente() {
-        ModifierDuration d = ModifierDuration.dePermanente();
+        DuracaoModificador d = DuracaoModificador.dePermanente();
         assertTrue(d.permanente());
         assertEquals("permanente", d.toString());
     }
 
     @Test
     void modifier_duracaoMinutosInvalidoLancaExcecao() {
-        assertThrows(IllegalArgumentException.class, () -> ModifierDuration.minutos(0));
+        assertThrows(IllegalArgumentException.class, () -> DuracaoModificador.minutos(0));
     }
 
     @Test
@@ -321,8 +321,8 @@ class ModifierTest {
     @Test
     void modifierService_accumulates_adicionaAmbos() {
         List<Modificador> ativos = new ArrayList<>();
-        Modificador m1 = buildModifier("bonus_dano", StackingRule.ACUMULA);
-        Modificador m2 = buildModifier("bonus_dano", StackingRule.ACUMULA);
+        Modificador m1 = buildModifier("bonus_dano", RegraEmpilhamento.ACUMULA);
+        Modificador m2 = buildModifier("bonus_dano", RegraEmpilhamento.ACUMULA);
         ServicoModificador.aplicar(ativos, m1);
         ServicoModificador.aplicar(ativos, m2);
         assertEquals(2, ativos.size());
@@ -331,8 +331,8 @@ class ModifierTest {
     @Test
     void modifierService_replaces_substituiExistente() {
         List<Modificador> ativos = new ArrayList<>();
-        Modificador m1 = buildModifier("bonus_dano", StackingRule.SUBSTITUI);
-        Modificador m2 = buildModifier("bonus_dano", StackingRule.SUBSTITUI);
+        Modificador m1 = buildModifier("bonus_dano", RegraEmpilhamento.SUBSTITUI);
+        Modificador m2 = buildModifier("bonus_dano", RegraEmpilhamento.SUBSTITUI);
         ServicoModificador.aplicar(ativos, m1);
         ServicoModificador.aplicar(ativos, m2);
         assertEquals(1, ativos.size());
@@ -342,8 +342,8 @@ class ModifierTest {
     @Test
     void modifierService_replaces_adicionaSeNaoHouverConflito() {
         List<Modificador> ativos = new ArrayList<>();
-        Modificador m1 = buildModifier("bonus_dano", StackingRule.SUBSTITUI);
-        Modificador m2 = buildModifier("outro_bonus", StackingRule.SUBSTITUI);
+        Modificador m1 = buildModifier("bonus_dano", RegraEmpilhamento.SUBSTITUI);
+        Modificador m2 = buildModifier("outro_bonus", RegraEmpilhamento.SUBSTITUI);
         ServicoModificador.aplicar(ativos, m1);
         ServicoModificador.aplicar(ativos, m2);
         assertEquals(2, ativos.size());
@@ -352,8 +352,8 @@ class ModifierTest {
     @Test
     void modifierService_invalidates_removeExistenteENaoAdiciona() {
         List<Modificador> ativos = new ArrayList<>();
-        Modificador m1 = buildModifier("bonus_dano", StackingRule.ACUMULA);
-        Modificador m2 = buildModifier("bonus_dano", StackingRule.INVALIDA);
+        Modificador m1 = buildModifier("bonus_dano", RegraEmpilhamento.ACUMULA);
+        Modificador m2 = buildModifier("bonus_dano", RegraEmpilhamento.INVALIDA);
         ServicoModificador.aplicar(ativos, m1);
         ServicoModificador.aplicar(ativos, m2);
         assertTrue(ativos.isEmpty());
@@ -362,7 +362,7 @@ class ModifierTest {
     @Test
     void modifierService_byOrigin_filtraCorretamente() {
         List<Modificador> ativos = new ArrayList<>();
-        ServicoModificador.aplicar(ativos, buildModifier("m1", StackingRule.ACUMULA));
+        ServicoModificador.aplicar(ativos, buildModifier("m1", RegraEmpilhamento.ACUMULA));
         ServicoModificador.aplicar(ativos, buildModifierComOrigem("m2", OrigemModificador.RACA));
         List<Modificador> equipamento = ServicoModificador.porOrigem(ativos, OrigemModificador.EQUIPAMENTO);
         assertEquals(1, equipamento.size());
@@ -380,10 +380,10 @@ class ModifierTest {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private Modificador buildModifier(String id, StackingRule rule) {
+    private Modificador buildModifier(String id, RegraEmpilhamento rule) {
         return new Modificador(id, "Bônus de Ataque", "ao_equipar",
                 new EfeitoModificador("Aumenta dano em +2"),
-                ModifierDuration.dePermanente(),
+                DuracaoModificador.dePermanente(),
                 rule,
                 OrigemModificador.EQUIPAMENTO);
     }
@@ -391,16 +391,16 @@ class ModifierTest {
     private Modificador buildModifierWithId(String id) {
         return new Modificador(id, "Bônus", "ao_equipar",
                 new EfeitoModificador("Aumenta dano"),
-                ModifierDuration.turnos(3),
-                StackingRule.ACUMULA,
+                DuracaoModificador.turnos(3),
+                RegraEmpilhamento.ACUMULA,
                 OrigemModificador.EQUIPAMENTO);
     }
 
     private Modificador buildModifierComOrigem(String id, OrigemModificador origem) {
         return new Modificador(id, "Bônus", "ao_equipar",
                 new EfeitoModificador("Aumenta dano"),
-                ModifierDuration.dePermanente(),
-                StackingRule.ACUMULA,
+                DuracaoModificador.dePermanente(),
+                RegraEmpilhamento.ACUMULA,
                 origem);
     }
 }

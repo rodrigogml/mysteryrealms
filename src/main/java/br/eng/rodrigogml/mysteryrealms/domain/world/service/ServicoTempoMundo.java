@@ -1,8 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.service;
 
-import br.eng.rodrigogml.mysteryrealms.domain.world.model.DayPhase;
-import br.eng.rodrigogml.mysteryrealms.domain.world.model.Season;
-import br.eng.rodrigogml.mysteryrealms.domain.world.model.WorldConfig;
+import br.eng.rodrigogml.mysteryrealms.domain.world.model.FaseDia;
+import br.eng.rodrigogml.mysteryrealms.domain.world.model.Estacao;
+import br.eng.rodrigogml.mysteryrealms.domain.world.model.ConfiguracaoMundo;
 
 /**
  * Serviço de tempo do mundo — RF-MN-12 e RF-MN-13.
@@ -33,14 +33,14 @@ public final class ServicoTempoMundo {
     /**
      * Retorna o minuto do dia atual (0-based, dentro de {@code minutosPorDia}).
      */
-    public static int minutosDoDia(long tempoTotalMin, WorldConfig config) {
+    public static int minutosDoDia(long tempoTotalMin, ConfiguracaoMundo config) {
         return (int) (tempoTotalMin % config.minutosPorDia());
     }
 
     /**
      * Retorna o número do dia atual (1-based).
      */
-    public static long diaDoAno(long tempoTotalMin, WorldConfig config) {
+    public static long diaDoAno(long tempoTotalMin, ConfiguracaoMundo config) {
         long totalDias = tempoTotalMin / config.minutosPorDia();
         return (totalDias % config.diasPorAno()) + 1;
     }
@@ -48,7 +48,7 @@ public final class ServicoTempoMundo {
     /**
      * Retorna o ano atual (1-based).
      */
-    public static long ano(long tempoTotalMin, WorldConfig config) {
+    public static long ano(long tempoTotalMin, ConfiguracaoMundo config) {
         long totalDias = tempoTotalMin / config.minutosPorDia();
         return (totalDias / config.diasPorAno()) + 1;
     }
@@ -56,21 +56,21 @@ public final class ServicoTempoMundo {
     /**
      * Retorna a hora do dia (0-based).
      */
-    public static int horaDoDia(long tempoTotalMin, WorldConfig config) {
+    public static int horaDoDia(long tempoTotalMin, ConfiguracaoMundo config) {
         return minutosDoDia(tempoTotalMin, config) / config.minutosPorHora();
     }
 
     /**
      * Retorna o minuto dentro da hora atual (0-based).
      */
-    public static int minutoDaHora(long tempoTotalMin, WorldConfig config) {
+    public static int minutoDaHora(long tempoTotalMin, ConfiguracaoMundo config) {
         return minutosDoDia(tempoTotalMin, config) % config.minutosPorHora();
     }
 
     /**
      * Formata o tempo em formato legível: {@code AnoX DiaY HH:MM}.
      */
-    public static String formatarTempo(long tempoTotalMin, WorldConfig config) {
+    public static String formatarTempo(long tempoTotalMin, ConfiguracaoMundo config) {
         long ano = ano(tempoTotalMin, config);
         long dia = diaDoAno(tempoTotalMin, config);
         int hora = horaDoDia(tempoTotalMin, config);
@@ -81,9 +81,9 @@ public final class ServicoTempoMundo {
     /**
      * Retorna a fase do dia correspondente ao tempo atual, ou {@code null} se não houver fase configurada.
      */
-    public static DayPhase faseDiaAtual(long tempoTotalMin, WorldConfig config) {
+    public static FaseDia faseDiaAtual(long tempoTotalMin, ConfiguracaoMundo config) {
         int minDia = minutosDoDia(tempoTotalMin, config);
-        for (DayPhase fase : config.fasesDia()) {
+        for (FaseDia fase : config.fasesDia()) {
             if (minDia >= fase.inicioMinDia() && minDia <= fase.fimMinDia()) {
                 return fase;
             }
@@ -94,9 +94,9 @@ public final class ServicoTempoMundo {
     /**
      * Retorna a estação correspondente ao dia do ano atual, ou {@code null} se não houver.
      */
-    public static Season estacaoAtual(long tempoTotalMin, WorldConfig config) {
+    public static Estacao estacaoAtual(long tempoTotalMin, ConfiguracaoMundo config) {
         long dia = diaDoAno(tempoTotalMin, config);
-        for (Season estacao : config.estacoes()) {
+        for (Estacao estacao : config.estacoes()) {
             if (dia >= estacao.diaInicio() && dia <= estacao.diaFim()) {
                 return estacao;
             }

@@ -5,12 +5,12 @@ package br.eng.rodrigogml.mysteryrealms.domain.world.model;
  *
  * {@code inicioMinDia} e {@code fimMinDia} são minutos a partir do início do dia (>= 0).
  */
-public record DayPhase(
+public record FaseDia(
         String idFase,
         int inicioMinDia,
         int fimMinDia) {
 
-    public DayPhase {
+    public FaseDia {
         if (idFase == null || idFase.isBlank())
             throw new IllegalArgumentException("idFase não pode ser vazio");
         if (inicioMinDia < 0)

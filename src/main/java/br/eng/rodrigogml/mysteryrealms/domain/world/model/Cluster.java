@@ -1,6 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.world.enums.ClusterNavigationMode;
+import br.eng.rodrigogml.mysteryrealms.domain.world.enums.ModoNavegacaoCluster;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public record Cluster(
         String idLocalidade,
         List<String> pontos,
         List<String> conexoes,
-        ClusterNavigationMode modoNavegacao) {
+        ModoNavegacaoCluster modoNavegacao) {
 
     public Cluster {
         if (idCluster == null || idCluster.isBlank())

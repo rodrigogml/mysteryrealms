@@ -6,7 +6,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.physiology.enums;
  * Define a ordem obrigatória de resolução dentro de um tick.
  * Prioridade 1 é a mais alta.
  */
-public enum PhysiologicalResolutionPriority {
+public enum PrioridadeResolucaoFisiologica {
 
     /** Colapso / Inconsciência: desmaio_fadiga, desmaio_sede, desmaio_fome. */
     COLAPSO_INCONSCIENCIA(1),
@@ -23,13 +23,13 @@ public enum PhysiologicalResolutionPriority {
     /** Estados fisiológicos moderados: sede, fome. */
     ESTADOS_FISIOLOGICOS_MODERADOS(5);
 
-    private final int priority;
+    private final int prioridade;
 
-    PhysiologicalResolutionPriority(int priority) {
-        this.priority = priority;
+    PrioridadeResolucaoFisiologica(int prioridade) {
+        this.prioridade = prioridade;
     }
 
-    public int getPriority() {
-        return priority;
+    public int getPrioridade() {
+        return prioridade;
     }
 }

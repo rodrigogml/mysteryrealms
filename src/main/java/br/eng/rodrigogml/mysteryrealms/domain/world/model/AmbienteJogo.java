@@ -8,7 +8,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.world.enums.TipoLocalizacao;
  * ID deve usar prefixo {@code amb_} e ser único globalmente.
  * {@code tipo_navegavel} é sempre {@link TipoLocalizacao#AMBIENTE}.
  */
-public record GameEnvironment(
+public record AmbienteJogo(
         String idAmbiente,
         String nome,
         String idZona,
@@ -20,7 +20,7 @@ public record GameEnvironment(
 
     public static final TipoLocalizacao TIPO_NAVEGAVEL = TipoLocalizacao.AMBIENTE;
 
-    public GameEnvironment {
+    public AmbienteJogo {
         if (idAmbiente == null || idAmbiente.isBlank())
             throw new IllegalArgumentException("idAmbiente não pode ser vazio");
         if (!idAmbiente.startsWith("amb_"))

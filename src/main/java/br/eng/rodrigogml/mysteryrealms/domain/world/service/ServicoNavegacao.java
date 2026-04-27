@@ -1,6 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.service;
 
-import br.eng.rodrigogml.mysteryrealms.domain.world.model.Connection;
+import br.eng.rodrigogml.mysteryrealms.domain.world.model.Conexao;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,7 @@ public final class ServicoNavegacao {
      * @param accessibleNodes mapa de id → acessibilidade dos nós conhecidos
      */
     public static Optional<String> resolverDestino(
-            Connection connection, Map<String, Boolean> accessibleNodes) {
+            Conexao connection, Map<String, Boolean> accessibleNodes) {
         for (String destId : connection.destinosPriorizados()) {
             Boolean acessivel = accessibleNodes.get(destId);
             if (Boolean.TRUE.equals(acessivel)) {

@@ -1,7 +1,7 @@
 package br.eng.rodrigogml.mysteryrealms.domain.modifier.model;
 
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.OrigemModificador;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.StackingRule;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.RegraEmpilhamento;
 
 /**
  * Estrutura de um modificador — RF-MAR-04.
@@ -14,8 +14,8 @@ public record Modificador(
         String nomeExibicao,
         String gatilho,
         EfeitoModificador efeito,
-        ModifierDuration duracao,
-        StackingRule regraEmpilhamento,
+        DuracaoModificador duracao,
+        RegraEmpilhamento regraEmpilhamento,
         OrigemModificador origem) {
 
     public Modificador {

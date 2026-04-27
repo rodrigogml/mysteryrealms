@@ -162,7 +162,7 @@ class SocialSystemTest {
 
     @Test
     void diaryEntry_criacaoValida() {
-        EntradaDiario entry = buildDiaryEntry();
+        EntradaDiario entry = buildEntradaDiario();
         assertEquals("diary_001", entry.entradaId());
         assertEquals("Encontro com o Ferreiro", entry.titulo());
     }
@@ -191,7 +191,7 @@ class SocialSystemTest {
 
     @Test
     void diaryEntry_dataJogoFormatoValido() {
-        EntradaDiario e = buildDiaryEntry();
+        EntradaDiario e = buildEntradaDiario();
         assertTrue(e.dataJogo().matches("D\\d+-\\d{2}:\\d{2}"));
     }
 
@@ -264,7 +264,7 @@ class SocialSystemTest {
     void socialCycle_semTeste_sucesso() {
         // RF-SS-02
         ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
-                50, null, buildNode(), "op1", false, 480L, buildWorldConfig());
+                50, null, buildNode(), "op1", false, 480L, buildConfiguracaoMundo());
         assertTrue(result.sucesso(), "Sem teste social, ciclo deve ser sucesso");
     }
 
@@ -279,7 +279,7 @@ class SocialSystemTest {
         NoDialogo node = new NoDialogo("dlg_002", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
 
         ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
-                0, null, node, "op2", true, 480L, buildWorldConfig());
+                0, null, node, "op2", true, 480L, buildConfiguracaoMundo());
         assertTrue(result.sucesso());
         assertNotNull(result.novoRelacionamentoNpc(), "Delta de relacionamento deve ser calculado");
         assertEquals(10, result.novoRelacionamentoNpc()); // 0 + 10
@@ -296,7 +296,7 @@ class SocialSystemTest {
         NoDialogo node = new NoDialogo("dlg_003", "npc_ferreiro", "E aí?", List.of(opcaoComTeste));
 
         ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
-                0, null, node, "op3", false, 480L, buildWorldConfig());
+                0, null, node, "op3", false, 480L, buildConfiguracaoMundo());
         assertFalse(result.sucesso());
         assertNotNull(result.novoRelacionamentoNpc());
         assertEquals(-5, result.novoRelacionamentoNpc()); // 0 + (-5)
@@ -307,7 +307,7 @@ class SocialSystemTest {
         // RF-SS-02
         assertThrows(IllegalArgumentException.class,
                 () -> ServicoSocial.executarCicloSocial(
-                        null, null, buildNode(), "op_inexistente", true, 0L, buildWorldConfig()));
+                        null, null, buildNode(), "op_inexistente", true, 0L, buildConfiguracaoMundo()));
     }
 
     @Test
@@ -321,7 +321,7 @@ class SocialSystemTest {
         NoDialogo node = new NoDialogo("dlg_004", "npc_ferreiro", "Proposta?", List.of(opcao));
 
         ResultadoCicloSocial result = ServicoSocial.executarCicloSocial(
-                50, null, node, "op4", true, 480L, buildWorldConfig());
+                50, null, node, "op4", true, 480L, buildConfiguracaoMundo());
         assertNotNull(result.entradaDiario(), "Deve gerar entrada no diário quando há delta");
         assertTrue(result.entradaDiario().entradaId().startsWith("diary_"));
         assertTrue(result.entradaDiario().dataJogo().matches("D\\d+-\\d{2}:\\d{2}"));
@@ -329,12 +329,12 @@ class SocialSystemTest {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private WorldConfig buildWorldConfig() {
-        return new WorldConfig(
+    private ConfiguracaoMundo buildConfiguracaoMundo() {
+        return new ConfiguracaoMundo(
                 "mundo_teste",
                 60, 24, 360,
-                List.of(new DayPhase("dia", 0, 1439)),
-                List.of(new Season("unica", 1, 360)),
+                List.of(new FaseDia("dia", 0, 1439)),
+                List.of(new Estacao("unica", 1, 360)),
                 0);
     }
 
@@ -348,7 +348,7 @@ class SocialSystemTest {
                 null, EfeitosDialogo.vazio(), null);
     }
 
-    private EntradaDiario buildDiaryEntry() {
+    private EntradaDiario buildEntradaDiario() {
         return new EntradaDiario("diary_001", "Encontro com o Ferreiro",
                 "O herói conheceu o ferreiro e recebeu uma espada.",
                 "D1-08:00", "dlg_001", "op1", ImpactoDiario.vazio());

@@ -3,7 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.combat.enums;
 /**
  * Tipos de aflição canônicos, conforme RF-MAR-02.
  */
-public enum AfflictionType {
+public enum TipoAfliccao {
 
     PSIQUICA("psiquica"),
     ESPIRITUAL("espiritual"),
@@ -18,7 +18,7 @@ public enum AfflictionType {
 
     private final String chave;
 
-    AfflictionType(String chave) {
+    TipoAfliccao(String chave) {
         this.chave = chave;
     }
 

@@ -1,7 +1,7 @@
 package br.eng.rodrigogml.mysteryrealms.domain.modifier.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.OrigemModificador;
-import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.StackingRule;
+import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.RegraEmpilhamento;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.Modificador;
 
 import java.util.ArrayList;

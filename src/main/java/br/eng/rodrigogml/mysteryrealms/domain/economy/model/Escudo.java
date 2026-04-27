@@ -1,14 +1,14 @@
 package br.eng.rodrigogml.mysteryrealms.domain.economy.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemCategory;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemSubtype;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.CategoriaItemMao;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.SubtipoItemMao;
 
 /**
  * Ficha de escudo — RF-EI-08.
  *
  * Inclui todos os atributos comuns de Item de Mão (RF-EI-03) mais campos específicos de escudo.
  */
-public class Shield extends HandItem {
+public class Escudo extends ItemMao {
 
     private final int valorBaseBloqueio;
     /** Descrição de cobertura especial (opcional). */
@@ -20,7 +20,7 @@ public class Shield extends HandItem {
     private final int bonusItemBloqueioFlatValue;
     private final double bonusItemBloqueioPctValue;
 
-    public Shield(
+    public Escudo(
             String nome,
             double pesoKg,
             ValorMonetario precoBase,
@@ -32,7 +32,7 @@ public class Shield extends HandItem {
             int bonusItemBloqueioFlat,
             double bonusItemBloqueioPct) {
 
-        super(nome, HandItemSubtype.ESCUDO, 1, HandItemCategory.DEFESA, pesoKg, precoBase);
+        super(nome, SubtipoItemMao.ESCUDO, 1, CategoriaItemMao.DEFESA, pesoKg, precoBase);
 
         this.valorBaseBloqueio = valorBaseBloqueio;
         this.cobertura = cobertura;

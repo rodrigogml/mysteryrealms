@@ -3,7 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.character.enums;
 /**
  * Habilidades canônicas do personagem, conforme RF-FP-03.
  */
-public enum Skill {
+public enum Habilidade {
 
     PERSUASAO("persuasao"),
     INTIMIDACAO("intimidacao"),
@@ -20,7 +20,7 @@ public enum Skill {
 
     private final String chave;
 
-    Skill(String chave) {
+    Habilidade(String chave) {
         this.chave = chave;
     }
 

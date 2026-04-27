@@ -1,11 +1,11 @@
 package br.eng.rodrigogml.mysteryrealms.domain.character.model;
 
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.ClassePersonagem;
-import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
-import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Genero;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Raca;
 import br.eng.rodrigogml.mysteryrealms.domain.character.service.ServicoAtributosPersonagem;
 import br.eng.rodrigogml.mysteryrealms.domain.character.service.ServicoProgressao;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.model.HandItem;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.model.ItemMao;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.ValorMonetario;
 
 import java.util.ArrayList;
@@ -20,18 +20,18 @@ import java.util.Map;
  * Os atributos derivados (PV máximo, fadiga máxima, peso etc.) são calculados
  * automaticamente a partir dos atributos base usando {@link ServicoAtributosPersonagem}.
  */
-public class Character {
+public class Personagem {
 
     // ── RF-FP-01: Identidade ──────────────────────────────────────────────────
     private final String nome;
     private final String sobrenome;
-    private final Gender genero;
-    private final Race raca;
+    private final Genero genero;
+    private final Raca raca;
     private final ClassePersonagem classe;
     private final int idadeInicial;
 
     // ── RF-FP-02: Atributos principais ───────────────────────────────────────
-    private AttributeSet atributos;
+    private ConjuntoAtributos atributos;
 
     // ── RF-FP-04: Estado dinâmico ─────────────────────────────────────────────
     private long xpAcumulado;       // >= 0
@@ -50,8 +50,8 @@ public class Character {
     private long qtdMoedaPrimaria;   // >= 0
     private long qtdMoedaSecundaria; // >= 0
     /** Máximo de 2 mãos — RF-EI-05. */
-    private final List<HandItem> itensEquipados;
-    private final List<HandItem> itensMochila;
+    private final List<ItemMao> itensEquipados;
+    private final List<ItemMao> itensMochila;
 
     // ── RF-FP-09: Relacionamento e reputação ─────────────────────────────────
     /** Escala [-100, 100] — RF-FP-09. */
@@ -64,11 +64,11 @@ public class Character {
     /**
      * Cria um personagem de nível 1 com atributos derivados da combinação raça + classe — RF-FP-07, RF-FP-08.
      */
-    public Character(
+    public Personagem(
             String nome,
             String sobrenome,
-            Gender genero,
-            Race raca,
+            Genero genero,
+            Raca raca,
             ClassePersonagem classe,
             int idadeInicial) {
 
@@ -123,18 +123,18 @@ public class Character {
     // ── Identidade ────────────────────────────────────────────────────────────
     public String getNome() { return nome; }
     public String getSobrenome() { return sobrenome; }
-    public Gender getGenero() { return genero; }
-    public Race getRaca() { return raca; }
+    public Genero getGenero() { return genero; }
+    public Raca getRaca() { return raca; }
     public ClassePersonagem getClasse() { return classe; }
     public int getIdadeInicial() { return idadeInicial; }
 
     // ── Atributos ─────────────────────────────────────────────────────────────
-    public AttributeSet getAtributos() { return atributos; }
+    public ConjuntoAtributos getAtributos() { return atributos; }
 
     /**
      * Atualiza os atributos e recalcula todos os derivados — RF-FP-10.
      */
-    public void setAtributos(AttributeSet atributos) {
+    public void setAtributos(ConjuntoAtributos atributos) {
         if (atributos == null) throw new IllegalArgumentException("atributos não podem ser nulos");
         this.atributos = atributos;
         recalcularDerivados();
@@ -222,11 +222,11 @@ public class Character {
     }
 
     /** Itens equipados (máx. 2 mãos) — RF-EI-05. */
-    public List<HandItem> getItensEquipados() {
+    public List<ItemMao> getItensEquipados() {
         return Collections.unmodifiableList(itensEquipados);
     }
 
-    public List<HandItem> getItensMochila() {
+    public List<ItemMao> getItensMochila() {
         return Collections.unmodifiableList(itensMochila);
     }
 
@@ -234,9 +234,9 @@ public class Character {
      * Equipa um item nas mãos do personagem — RF-EI-05.
      * Valida que não excedam 2 mãos ocupáveis.
      */
-    public void equiparItem(HandItem item) {
+    public void equiparItem(ItemMao item) {
         if (item == null) throw new IllegalArgumentException("item não pode ser nulo");
-        int maosOcupadas = itensEquipados.stream().mapToInt(HandItem::getMaosNecessarias).sum();
+        int maosOcupadas = itensEquipados.stream().mapToInt(ItemMao::getMaosNecessarias).sum();
         if (maosOcupadas + item.getMaosNecessarias() > 2) {
             throw new IllegalStateException("Não há mãos disponíveis para equipar o item '" + item.getNome() + "'");
         }
@@ -244,16 +244,16 @@ public class Character {
     }
 
     /** Remove o item equipado pelo índice (0-based). */
-    public HandItem desequiparItem(int index) {
+    public ItemMao desequiparItem(int index) {
         return itensEquipados.remove(index);
     }
 
-    public void adicionarItemMochila(HandItem item) {
+    public void adicionarItemMochila(ItemMao item) {
         if (item == null) throw new IllegalArgumentException("item não pode ser nulo");
         itensMochila.add(item);
     }
 
-    public HandItem removerItemMochila(int index) {
+    public ItemMao removerItemMochila(int index) {
         return itensMochila.remove(index);
     }
 
@@ -261,8 +261,8 @@ public class Character {
 
     /** Carga atual em kg (equipados + mochila + moedas) — RF-FP-06.4. */
     public double getCargaAtualKg() {
-        double pesoEquipados = itensEquipados.stream().mapToDouble(HandItem::getPesoKg).sum();
-        double pesoBolsa = itensMochila.stream().mapToDouble(HandItem::getPesoKg).sum();
+        double pesoEquipados = itensEquipados.stream().mapToDouble(ItemMao::getPesoKg).sum();
+        double pesoBolsa = itensMochila.stream().mapToDouble(ItemMao::getPesoKg).sum();
         double pesoMoedas = ValorMonetario.de(qtdMoedaPrimaria, qtdMoedaSecundaria).pesoKg();
         return ServicoAtributosPersonagem.cargaAtual(pesoEquipados, pesoBolsa, pesoMoedas);
     }

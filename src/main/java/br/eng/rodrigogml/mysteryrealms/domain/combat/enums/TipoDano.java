@@ -3,7 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.combat.enums;
 /**
  * Tipos de dano canônicos, conforme RF-MAR-01.
  */
-public enum DamageType {
+public enum TipoDano {
 
     CORTE("corte"),
     PERFURACAO("perfuracao"),
@@ -18,7 +18,7 @@ public enum DamageType {
 
     private final String chave;
 
-    DamageType(String chave) {
+    TipoDano(String chave) {
         this.chave = chave;
     }
 
@@ -29,11 +29,11 @@ public enum DamageType {
     /**
      * Compatibilidade legada: "Eletricidade" mapeia para RAIO, conforme RF-MAR-01.
      */
-    public static DamageType fromLegacy(String nome) {
+    public static TipoDano fromLegacy(String nome) {
         if ("eletricidade".equalsIgnoreCase(nome)) {
             return RAIO;
         }
-        for (DamageType dt : values()) {
+        for (TipoDano dt : values()) {
             if (dt.chave.equalsIgnoreCase(nome)) return dt;
         }
         throw new IllegalArgumentException("Tipo de dano desconhecido: " + nome);

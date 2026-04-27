@@ -1,6 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.service;
 
-import br.eng.rodrigogml.mysteryrealms.domain.world.model.Connection;
+import br.eng.rodrigogml.mysteryrealms.domain.world.model.Conexao;
 
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +73,7 @@ public final class ServicoValidacaoHierarquia {
      * @param knownNodeIds conjunto de IDs de nós (zonas e ambientes) existentes
      * @return {@code true} se origem e todos os destinos forem encontrados
      */
-    public static boolean destinosConexaoExistem(Connection conn, Set<String> knownNodeIds) {
+    public static boolean destinosConexaoExistem(Conexao conn, Set<String> knownNodeIds) {
         if (!knownNodeIds.contains(conn.origemId())) return false;
         for (String destId : conn.destinosPriorizados()) {
             if (!knownNodeIds.contains(destId)) return false;

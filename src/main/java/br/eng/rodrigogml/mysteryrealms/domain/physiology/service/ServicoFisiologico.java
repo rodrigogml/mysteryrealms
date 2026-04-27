@@ -2,7 +2,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.physiology.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.EfeitoFisiologicoCombinado;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.ResultadoTesteConsciencia;
-import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.PhysiologicalState;
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.EstadoFisiologico;
 
 /**
  * Serviço de estado fisiológico do personagem — RF-EF-01 a RF-EF-16.
@@ -39,7 +39,7 @@ public final class ServicoFisiologico {
      * Aplica os efeitos de um minuto de jogo enquanto o personagem está acordado.
      * Muta o estado diretamente.
      */
-    public static void aplicarTickDeMinuto(PhysiologicalState state) {
+    public static void aplicarTickDeMinuto(EstadoFisiologico state) {
         double newFadigaMin = state.getFadigaMin() + state.getFadigaMax() / MINUTOS_DIA;
         double newFadigaAtual = Math.max(state.getFadigaAtual(), newFadigaMin);
         double newSede = Math.min(100.0, state.getSedePct() + 100.0 / MINUTOS_SEDE_TOTAL);
@@ -60,7 +60,7 @@ public final class ServicoFisiologico {
     }
 
     /** Retorna o estado de fadiga atual do personagem — RF-EF-02. */
-    public static EstadoFadiga estadoFadiga(PhysiologicalState s) {
+    public static EstadoFadiga estadoFadiga(EstadoFisiologico s) {
         double ratio = s.getFadigaAtual() / s.getFadigaMax();
         if (ratio >= LIMIAR_COLAPSO_FADIGA) return EstadoFadiga.COLAPSO_FADIGA;
         if (ratio >= 1.0) return EstadoFadiga.EXAUSTAO;
@@ -77,7 +77,7 @@ public final class ServicoFisiologico {
     }
 
     /** Retorna o estado de sede atual do personagem — RF-EF-03. */
-    public static EstadoSede estadoSede(PhysiologicalState s) {
+    public static EstadoSede estadoSede(EstadoFisiologico s) {
         double pct = s.getSedePct();
         if (pct >= 100.0) return EstadoSede.COLAPSO_SEDE;
         if (pct >= 65.0)  return EstadoSede.SEDE_AGRAVADA;
@@ -95,7 +95,7 @@ public final class ServicoFisiologico {
     }
 
     /** Retorna o estado de fome atual do personagem — RF-EF-04. */
-    public static EstadoFome estadoFome(PhysiologicalState s) {
+    public static EstadoFome estadoFome(EstadoFisiologico s) {
         double pct = s.getFomePct();
         if (pct >= 100.0) return EstadoFome.COLAPSO_FOME;
         if (pct >= 85.0)  return EstadoFome.FOME_AGRAVADA;
@@ -113,7 +113,7 @@ public final class ServicoFisiologico {
     }
 
     /** Retorna o estado de moral atual do personagem — RF-EF-12. */
-    public static EstadoMoral estadoMoral(PhysiologicalState s) {
+    public static EstadoMoral estadoMoral(EstadoFisiologico s) {
         int m = s.getMoral();
         if (m <= 20) return EstadoMoral.COLAPSO_EMOCIONAL;
         if (m <= 50) return EstadoMoral.MORAL_BAIXA;
@@ -127,7 +127,7 @@ public final class ServicoFisiologico {
      * Aplica recuperação de fadiga por um minuto de descanso.
      * Não recupera fadiga_min nem pontos de vida.
      */
-    public static void aplicarTickDescanso(PhysiologicalState state, double fatorAtividade) {
+    public static void aplicarTickDescanso(EstadoFisiologico state, double fatorAtividade) {
         double recovery = RECUPERACAO_DESCANSO_PCT * state.getFadigaMax() * fatorAtividade;
         double newFadiga = Math.max(state.getFadigaMin(), state.getFadigaAtual() - recovery);
         state.setFadigaAtual(newFadiga);
@@ -151,7 +151,7 @@ public final class ServicoFisiologico {
     /**
      * Aplica recuperação por um minuto de sono — RF-EF-08.
      */
-    public static void aplicarTickSono(PhysiologicalState state, double fatorQualidadeSono) {
+    public static void aplicarTickSono(EstadoFisiologico state, double fatorQualidadeSono) {
         double recoveryFadiga = RECUPERACAO_SONO_PCT * state.getFadigaMax() * fatorQualidadeSono;
         double recoveryFadigaMin = RECUPERACAO_SONO_PCT * state.getFadigaMax() * fatorQualidadeSono;
         double recoveryPv = (state.getPontosVidaMax() > 0)
@@ -167,7 +167,7 @@ public final class ServicoFisiologico {
      * Recuperação de PV por minuto de sono: (constituicao / 120) × fator — RF-EF-08.
      * Como constituicao = pontosVidaMax / 10 (RF-FP-06.1), substituímos diretamente.
      */
-    public static double recuperacaoPvPorMinuto(PhysiologicalState state, double fatorQualidadeSono) {
+    public static double recuperacaoPvPorMinuto(EstadoFisiologico state, double fatorQualidadeSono) {
         double constituicao = state.getPontosVidaMax() / 10.0;
         return (constituicao / 120.0) * fatorQualidadeSono;
     }
@@ -177,7 +177,7 @@ public final class ServicoFisiologico {
     /**
      * Verifica se o personagem pode sair do estado de desmaio — RF-EF-10.
      */
-    public static boolean podeDespertarDoDesmaio(PhysiologicalState state) {
+    public static boolean podeDespertarDoDesmaio(EstadoFisiologico state) {
         return state.getPontosVida() >= 0.9 * state.getPontosVidaMax()
                 && state.getFadigaAtual() <= 0.1 * state.getFadigaMax()
                 && state.getFadigaMin() <= 0.1 * state.getFadigaMax();
@@ -186,22 +186,22 @@ public final class ServicoFisiologico {
     // ── RF-EF-13: deltas de moral ─────────────────────────────────────────────
 
     /** Aplica delta de moral por testemunhar queda de aliado (-8) — RF-EF-13. */
-    public static void aplicarDeltaMoralAliadoCaido(PhysiologicalState state) {
+    public static void aplicarDeltaMoralAliadoCaido(EstadoFisiologico state) {
         state.setMoral(state.getMoral() - 8);
     }
 
     /** Aplica delta de moral por vitória em combate significativo (+6) — RF-EF-13. */
-    public static void aplicarDeltaMoralVitoriaCombate(PhysiologicalState state) {
+    public static void aplicarDeltaMoralVitoriaCombate(EstadoFisiologico state) {
         state.setMoral(state.getMoral() + 6);
     }
 
     /** Aplica delta de moral por sono contínuo >= 4h com fator >= 0.75 (+10) — RF-EF-13/15. */
-    public static void aplicarDeltaMoralBomSono(PhysiologicalState state) {
+    public static void aplicarDeltaMoralBomSono(EstadoFisiologico state) {
         state.setMoral(state.getMoral() + 10);
     }
 
     /** Aplica delta de moral por entrada em desmaio (-12) — RF-EF-13. */
-    public static void aplicarDeltaMoralDesmaio(PhysiologicalState state) {
+    public static void aplicarDeltaMoralDesmaio(EstadoFisiologico state) {
         state.setMoral(state.getMoral() - 12);
     }
 
@@ -232,7 +232,7 @@ public final class ServicoFisiologico {
      *
      * @return o efeito combinado detectado
      */
-    public static EfeitoFisiologicoCombinado efeitoCombinado(PhysiologicalState state) {
+    public static EfeitoFisiologicoCombinado efeitoCombinado(EstadoFisiologico state) {
         boolean isExaustao      = estadoFadiga(state) == EstadoFadiga.EXAUSTAO;
         boolean isSedeAgravada  = estadoSede(state)  == EstadoSede.SEDE_AGRAVADA;
         boolean isFomeAgravada  = estadoFome(state)  == EstadoFome.FOME_AGRAVADA;
@@ -251,7 +251,7 @@ public final class ServicoFisiologico {
     }
 
     /** Aplica -15 de moral pela combinação fome_agravada + sede_agravada — RF-EF-05. */
-    public static void aplicarDeltaMoralFomeSede(PhysiologicalState state) {
+    public static void aplicarDeltaMoralFomeSede(EstadoFisiologico state) {
         state.setMoral(state.getMoral() - 15);
     }
 
@@ -275,7 +275,7 @@ public final class ServicoFisiologico {
      * @param moralDelta  variação de moral
      */
     public static void aplicarRecuperacaoPorItem(
-            PhysiologicalState state,
+            EstadoFisiologico state,
             double pvDelta,
             double fadigaDelta,
             double fomeDelta,
@@ -291,7 +291,7 @@ public final class ServicoFisiologico {
             state.setFadigaAtual(Math.max(state.getFadigaMin(), novaFadiga));
         }
 
-        // Fome e Sede (os setters do PhysiologicalState já fazem clamp [0, 100])
+        // Fome e Sede (os setters do EstadoFisiologico já fazem clamp [0, 100])
         state.setFomePct(state.getFomePct() + fomeDelta);
         state.setSedePct(state.getSedePct() + sedeDelta);
 
@@ -304,7 +304,7 @@ public final class ServicoFisiologico {
     /**
      * Verifica se o personagem está em estado crítico por PV (pontos_vida <= 0) — RF-EF-11.
      */
-    public static boolean ehPvCritico(PhysiologicalState state) {
+    public static boolean ehPvCritico(EstadoFisiologico state) {
         return state.getPontosVida() <= 0;
     }
 
@@ -320,7 +320,7 @@ public final class ServicoFisiologico {
      * @param testPassed resultado externo do teste (dado já rolado pelo caller)
      * @return {@link ResultadoTesteConsciencia#SUCESSO} ou {@link ResultadoTesteConsciencia#DESMAIADO}
      */
-    public static ResultadoTesteConsciencia testeConsciencia(PhysiologicalState state, boolean testPassed) {
+    public static ResultadoTesteConsciencia testeConsciencia(EstadoFisiologico state, boolean testPassed) {
         if (testPassed) {
             state.setPontosVida(1.0);
             state.setFadigaAtual(0.90 * state.getFadigaMax());
@@ -340,7 +340,7 @@ public final class ServicoFisiologico {
      *   <li>outros: 1.0</li>
      * </ul>
      */
-    public static double multiplicadorCustoFadigaPorMoral(PhysiologicalState state) {
+    public static double multiplicadorCustoFadigaPorMoral(EstadoFisiologico state) {
         int m = state.getMoral();
         if (m <= 20) return 1.10;
         if (m > 80)  return 0.90;
@@ -352,14 +352,14 @@ public final class ServicoFisiologico {
     /**
      * Aplica +5 de moral por descanso seguro de 2h sem interrupção — RF-EF-15.
      */
-    public static void aplicarDeltaMoralDescansoQuieto(PhysiologicalState state) {
+    public static void aplicarDeltaMoralDescansoQuieto(EstadoFisiologico state) {
         state.setMoral(state.getMoral() + 5);
     }
 
     /**
      * Aplica -8 de moral por interrupção hostil do sono — RF-EF-15.
      */
-    public static void aplicarDeltaMoralSonoInterrompido(PhysiologicalState state) {
+    public static void aplicarDeltaMoralSonoInterrompido(EstadoFisiologico state) {
         state.setMoral(state.getMoral() - 8);
     }
 }

@@ -5,12 +5,12 @@ package br.eng.rodrigogml.mysteryrealms.domain.world.model;
  *
  * {@code diaInicio} e {@code diaFim} são números de dia no ano ({@code >= 1}).
  */
-public record Season(
+public record Estacao(
         String idEstacao,
         int diaInicio,
         int diaFim) {
 
-    public Season {
+    public Estacao {
         if (idEstacao == null || idEstacao.isBlank())
             throw new IllegalArgumentException("idEstacao não pode ser vazio");
         if (diaInicio < 1)

@@ -1,7 +1,7 @@
 package br.eng.rodrigogml.mysteryrealms.domain.economy.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemCategory;
-import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemSubtype;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.CategoriaItemMao;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.SubtipoItemMao;
 
 /**
  * Atributos comuns de um Item de Mão — RF-EI-03.
@@ -9,22 +9,22 @@ import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemSubtype;
  * Subclasses devem declarar os canais de bônus canônicos (RF-EI-04):
  * {@code bonusItemPrecisao}, {@code bonusItemDano}, {@code bonusItemDefesa}, {@code bonusItemBloqueio}.
  */
-public abstract class HandItem {
+public abstract class ItemMao {
 
     private final String nome;
-    private final HandItemSubtype subtipo;
+    private final SubtipoItemMao subtipo;
     /** 1 ou 2 — RF-EI-03. */
     private final int maosNecessarias;
-    private final HandItemCategory categoriaUso;
+    private final CategoriaItemMao categoriaUso;
     /** >= 0 — RF-EI-03. */
     private final double pesoKg;
     private final ValorMonetario precoBase;
 
-    protected HandItem(
+    protected ItemMao(
             String nome,
-            HandItemSubtype subtipo,
+            SubtipoItemMao subtipo,
             int maosNecessarias,
-            HandItemCategory categoriaUso,
+            CategoriaItemMao categoriaUso,
             double pesoKg,
             ValorMonetario precoBase) {
 
@@ -50,9 +50,9 @@ public abstract class HandItem {
     }
 
     public String getNome() { return nome; }
-    public HandItemSubtype getSubtipo() { return subtipo; }
+    public SubtipoItemMao getSubtipo() { return subtipo; }
     public int getMaosNecessarias() { return maosNecessarias; }
-    public HandItemCategory getCategoriaUso() { return categoriaUso; }
+    public CategoriaItemMao getCategoriaUso() { return categoriaUso; }
     public double getPesoKg() { return pesoKg; }
     public ValorMonetario getPrecoBase() { return precoBase; }
 

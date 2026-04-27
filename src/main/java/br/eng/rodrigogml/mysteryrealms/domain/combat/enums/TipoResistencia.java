@@ -3,7 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.combat.enums;
 /**
  * Tipos de resistência canônicos, conforme RF-MAR-03.
  */
-public enum ResistanceType {
+public enum TipoResistencia {
 
     CORTE("corte"),
     PERFURACAO("perfuracao"),
@@ -27,7 +27,7 @@ public enum ResistanceType {
 
     private final String chave;
 
-    ResistanceType(String chave) {
+    TipoResistencia(String chave) {
         this.chave = chave;
     }
 

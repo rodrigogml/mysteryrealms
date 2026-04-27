@@ -1,6 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.character.enums;
 
-import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
+import br.eng.rodrigogml.mysteryrealms.domain.character.model.ConjuntoAtributos;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.BonusHabilidades;
 
 /**
@@ -15,55 +15,55 @@ import br.eng.rodrigogml.mysteryrealms.domain.character.model.BonusHabilidades;
  * não há bônus numérico de raça para essa habilidade na tabela. A habilidade canônica
  * mais próxima, Sobrevivência, é usada onde aplicável.
  */
-public enum Race {
+public enum Raca {
 
     HUMANO("Humano",
-            new AttributeSet(3, 3, 3, 3, 3, 3, 3),
+            new ConjuntoAtributos(3, 3, 3, 3, 3, 3, 3),
             new int[]{75, 65, 70},
             BonusHabilidades.vazio()),
 
     ELFO("Elfo",
-            new AttributeSet(2, 4, 2, 4, 4, 2, 3),
+            new ConjuntoAtributos(2, 4, 2, 4, 4, 2, 3),
             new int[]{60, 50, 55},
-            BonusHabilidades.de(Skill.CONHECIMENTO_ARCANO, 2)),
+            BonusHabilidades.de(Habilidade.CONHECIMENTO_ARCANO, 2)),
 
     MEIO_ELFO("Meio-elfo",
-            new AttributeSet(2, 3, 3, 3, 3, 4, 3),
+            new ConjuntoAtributos(2, 3, 3, 3, 3, 4, 3),
             new int[]{67, 57, 62},
-            BonusHabilidades.de(Skill.PERSUASAO, 1)),
+            BonusHabilidades.de(Habilidade.PERSUASAO, 1)),
 
     ANAO("Anão",
-            new AttributeSet(3, 2, 5, 2, 3, 2, 3),
+            new ConjuntoAtributos(3, 2, 5, 2, 3, 2, 3),
             new int[]{85, 75, 80},
-            BonusHabilidades.de(Skill.SOBREVIVENCIA, 2)),
+            BonusHabilidades.de(Habilidade.SOBREVIVENCIA, 2)),
 
     MEIO_ORC("Meio-orc",
-            new AttributeSet(5, 3, 4, 1, 2, 1, 2),
+            new ConjuntoAtributos(5, 3, 4, 1, 2, 1, 2),
             new int[]{95, 85, 90},
-            BonusHabilidades.de(Skill.INTIMIDACAO, 1)),
+            BonusHabilidades.de(Habilidade.INTIMIDACAO, 1)),
 
     TIEFLING("Tiefling",
-            new AttributeSet(2, 3, 2, 4, 2, 4, 3),
+            new ConjuntoAtributos(2, 3, 2, 4, 2, 4, 3),
             new int[]{70, 60, 65},
-            BonusHabilidades.de(Skill.CONHECIMENTO_RELIQUIAS, 2)),
+            BonusHabilidades.de(Habilidade.CONHECIMENTO_RELIQUIAS, 2)),
 
     DRACONATO("Draconato",
-            new AttributeSet(4, 2, 4, 3, 2, 3, 2),
+            new ConjuntoAtributos(4, 2, 4, 3, 2, 3, 2),
             new int[]{100, 90, 95},
-            BonusHabilidades.de(Skill.INTIMIDACAO, 1)),
+            BonusHabilidades.de(Habilidade.INTIMIDACAO, 1)),
 
     HALFLING("Halfling",
-            new AttributeSet(1, 5, 3, 2, 3, 2, 4),
+            new ConjuntoAtributos(1, 5, 3, 2, 3, 2, 4),
             new int[]{40, 35, 37},
-            BonusHabilidades.de(Skill.FURTIVIDADE, 2));
+            BonusHabilidades.de(Habilidade.FURTIVIDADE, 2));
 
     private final String nome;
-    private final AttributeSet atributosBase;
+    private final ConjuntoAtributos atributosBase;
     /** Peso base em kg: índice 0=MASCULINO, 1=FEMININO, 2=OUTRO */
     private final int[] pesoBaseKg;
     private final BonusHabilidades bonusHabilidades;
 
-    Race(String nome, AttributeSet atributosBase, int[] pesoBaseKg, BonusHabilidades bonusHabilidades) {
+    Raca(String nome, ConjuntoAtributos atributosBase, int[] pesoBaseKg, BonusHabilidades bonusHabilidades) {
         this.nome = nome;
         this.atributosBase = atributosBase;
         this.pesoBaseKg = pesoBaseKg;
@@ -74,11 +74,11 @@ public enum Race {
         return nome;
     }
 
-    public AttributeSet getAtributosBase() {
+    public ConjuntoAtributos getAtributosBase() {
         return atributosBase;
     }
 
-    public int getPesoBaseKg(Gender gender) {
+    public int getPesoBaseKg(Genero gender) {
         return switch (gender) {
             case MASCULINO -> pesoBaseKg[0];
             case FEMININO -> pesoBaseKg[1];

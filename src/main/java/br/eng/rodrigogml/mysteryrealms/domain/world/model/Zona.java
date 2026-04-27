@@ -8,7 +8,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.world.enums.TipoLocalizacao;
  * ID deve usar prefixo {@code zona_} e ser único globalmente.
  * {@code tipo_navegavel} é sempre {@link TipoLocalizacao#ZONA}.
  */
-public record Zone(
+public record Zona(
         String idZona,
         String nome,
         String idLocalidade,
@@ -20,7 +20,7 @@ public record Zone(
 
     public static final TipoLocalizacao TIPO_NAVEGAVEL = TipoLocalizacao.ZONA;
 
-    public Zone {
+    public Zona {
         if (idZona == null || idZona.isBlank())
             throw new IllegalArgumentException("idZona não pode ser vazio");
         if (!idZona.startsWith("zona_"))
