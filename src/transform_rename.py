@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Renomeia identificadores Java de inglês para português conforme guidelines.md."""
+"""Renomeia identificadores Java de português para inglês conforme guidelines.md."""
 
 import os
 import re

@@ -423,7 +423,7 @@ class WorldNavigationTest {
     private WorldConfig buildConfiguracaoMundo() {
         return new WorldConfig(
                 "mundo_teste",
-                60,  // minutes por hora
+                60,  // minutos por hora
                 24,  // horas por dia
                 360, // dias por ano
                 List.of(
