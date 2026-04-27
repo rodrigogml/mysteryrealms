@@ -224,4 +224,93 @@ class CombatServiceTest {
     void resolveDamage_semBloqueioSemResistencia() {
         assertEquals(15, CombatService.resolveDamage(15, 0, 0.0));
     }
+
+    // ── RF-CT-05: percepção ──────────────────────────────────────────────────
+
+    @Test
+    void rollPerception_somaDadoMaisAtributo() {
+        // RF-CT-05
+        assertEquals(13, CombatService.rollPerception(3, FIXO_10));
+    }
+
+    @Test
+    void detectsTarget_maiorQueOcultoDetecta() {
+        // RF-CT-05
+        assertTrue(CombatService.detectsTarget(15, 12));
+    }
+
+    @Test
+    void detectsTarget_empateNaoDetecta() {
+        // RF-CT-05 — empate favorece o oculto
+        assertFalse(CombatService.detectsTarget(12, 12));
+    }
+
+    @Test
+    void detectsTarget_menorQueOcultoNaoDetecta() {
+        // RF-CT-05
+        assertFalse(CombatService.detectsTarget(10, 15));
+    }
+
+    @Test
+    void detectsVsCd_igualAoCdDetecta() {
+        // RF-CT-05
+        assertTrue(CombatService.detectsVsCd(12, 12));
+    }
+
+    @Test
+    void detectsVsCd_menorQueCdNaoDetecta() {
+        // RF-CT-05
+        assertFalse(CombatService.detectsVsCd(11, 12));
+    }
+
+    // ── RF-CT-12: ação preparada ──────────────────────────────────────────────
+
+    @Test
+    void isPreparedActionCancelled_nenhumaCondicao_naoCancel() {
+        // RF-CT-12
+        assertFalse(CombatService.isPreparedActionCancelled(
+                false, false, false, false, false, false));
+    }
+
+    @Test
+    void isPreparedActionCancelled_paralisia_cancela() {
+        // RF-CT-12
+        assertTrue(CombatService.isPreparedActionCancelled(
+                true, false, false, false, false, false));
+    }
+
+    @Test
+    void isPreparedActionCancelled_sonoTorpor_cancela() {
+        // RF-CT-12
+        assertTrue(CombatService.isPreparedActionCancelled(
+                false, true, false, false, false, false));
+    }
+
+    @Test
+    void isPreparedActionCancelled_cegueiraSemAlvo_cancela() {
+        // RF-CT-12
+        assertTrue(CombatService.isPreparedActionCancelled(
+                false, false, true, false, false, false));
+    }
+
+    @Test
+    void isPreparedActionCancelled_deslocamentoForcado_cancela() {
+        // RF-CT-12
+        assertTrue(CombatService.isPreparedActionCancelled(
+                false, false, false, true, false, false));
+    }
+
+    @Test
+    void isPreparedActionCancelled_gatilhoInvalido_cancela() {
+        // RF-CT-12
+        assertTrue(CombatService.isPreparedActionCancelled(
+                false, false, false, false, true, false));
+    }
+
+    @Test
+    void isPreparedActionCancelled_proximoTurno_cancela() {
+        // RF-CT-12
+        assertTrue(CombatService.isPreparedActionCancelled(
+                false, false, false, false, false, true));
+    }
 }

@@ -4,6 +4,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemCategory;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemSubtype;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.*;
+import br.eng.rodrigogml.mysteryrealms.domain.economy.service.PricingService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,6 +143,53 @@ class EconomyTest {
         assertEquals(HandItemCategory.DEFESA, escudo.getCategoriaUso());
         assertEquals(1, escudo.getMaosNecessarias());
         assertEquals(20, escudo.getValorBaseBloqueio());
+    }
+
+    // ── RF-EI-02: fórmula de preço ────────────────────────────────────────────
+
+    @Test
+    void pricing_fatores1_retornaPrecoBase() {
+        // RF-EI-02
+        MonetaryValue base = MonetaryValue.of(10, 0); // 10 MP = 1000 MS
+        MonetaryValue resultado = PricingService.applyPrice(base, 1.0, 1.0, 1.0, 1.0, 1.0);
+        assertEquals(10L, resultado.mp());
+        assertEquals(0L, resultado.ms());
+    }
+
+    @Test
+    void pricing_fatorDobra_dobraPreco() {
+        // RF-EI-02
+        MonetaryValue base = MonetaryValue.of(10, 0); // 1000 MS
+        MonetaryValue resultado = PricingService.applyPrice(base, 2.0, 1.0, 1.0, 1.0, 1.0);
+        assertEquals(2000, resultado.toTotalMs());
+    }
+
+    @Test
+    void pricing_fatorMetade_metadeDoPreco() {
+        // RF-EI-02
+        MonetaryValue base = MonetaryValue.of(10, 0); // 1000 MS
+        MonetaryValue resultado = PricingService.applyPrice(base, 0.5, 1.0, 1.0, 1.0, 1.0);
+        assertEquals(500, resultado.toTotalMs());
+    }
+
+    @Test
+    void pricing_fatorForaDaFaixa_lancaExcecao() {
+        // RF-EI-02
+        MonetaryValue base = MonetaryValue.ofMp(10);
+        assertThrows(IllegalArgumentException.class,
+                () -> PricingService.applyPrice(base, 0.4, 1.0, 1.0, 1.0, 1.0));
+        assertThrows(IllegalArgumentException.class,
+                () -> PricingService.applyPrice(base, 1.0, 2.1, 1.0, 1.0, 1.0));
+    }
+
+    @Test
+    void pricing_resultadoNormalizadoCorreto() {
+        // RF-EI-02 — verificar que MP e MS estão normalizados
+        MonetaryValue base = MonetaryValue.of(0, 50); // 50 MS
+        MonetaryValue resultado = PricingService.applyPrice(base, 2.0, 1.0, 1.0, 1.0, 1.0);
+        // 50 × 2 = 100 MS = 1 MP 0 MS
+        assertEquals(1L, resultado.mp());
+        assertEquals(0L, resultado.ms());
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

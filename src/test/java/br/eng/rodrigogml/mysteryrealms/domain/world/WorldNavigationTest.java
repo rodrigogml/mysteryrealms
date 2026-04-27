@@ -5,12 +5,14 @@ import br.eng.rodrigogml.mysteryrealms.domain.world.enums.ConnectionClassificati
 import br.eng.rodrigogml.mysteryrealms.domain.world.enums.LocationType;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.*;
 import br.eng.rodrigogml.mysteryrealms.domain.world.service.NavigationService;
+import br.eng.rodrigogml.mysteryrealms.domain.world.service.HierarchyValidationService;
 import br.eng.rodrigogml.mysteryrealms.domain.world.service.WorldTimeService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -340,6 +342,67 @@ class WorldNavigationTest {
         Season estacao = WorldTimeService.currentSeason(0L, config);
         assertNotNull(estacao);
         assertEquals("unica_estacao", estacao.idEstacao());
+    }
+
+    // ── RF-MN-06: validações hierárquicas ────────────────────────────────────
+
+    @Test
+    void hierarchyValidation_prefixoZonaValido() {
+        // RF-MN-06
+        assertTrue(HierarchyValidationService.validateZonePrefix("zona_mercado"));
+        assertFalse(HierarchyValidationService.validateZonePrefix("mercado"));
+    }
+
+    @Test
+    void hierarchyValidation_prefixoAmbienteValido() {
+        // RF-MN-06
+        assertTrue(HierarchyValidationService.validateAmbientePrefix("amb_taverna"));
+        assertFalse(HierarchyValidationService.validateAmbientePrefix("taverna"));
+    }
+
+    @Test
+    void hierarchyValidation_idsGlobalmenteUnicos() {
+        // RF-MN-06
+        assertTrue(HierarchyValidationService.idsAreGloballyUnique(
+                List.of("zona_a", "zona_b"), List.of("amb_x", "amb_y")));
+    }
+
+    @Test
+    void hierarchyValidation_idsDuplicadosEntreListas() {
+        // RF-MN-06
+        assertFalse(HierarchyValidationService.idsAreGloballyUnique(
+                List.of("zona_a", "zona_b"), List.of("zona_a")));
+    }
+
+    @Test
+    void hierarchyValidation_coordenadasFinitasValidas() {
+        // RF-MN-06
+        assertTrue(HierarchyValidationService.hasValidCoordinates(0.0, 0.0));
+        assertFalse(HierarchyValidationService.hasValidCoordinates(Double.NaN, 0.0));
+        assertFalse(HierarchyValidationService.hasValidCoordinates(0.0, Double.POSITIVE_INFINITY));
+    }
+
+    @Test
+    void hierarchyValidation_destinosDeConexaoExistem() {
+        // RF-MN-06
+        Connection conn = buildConnection("conn_01", "zona_a", List.of("zona_b", "amb_x"));
+        Set<String> nos = Set.of("zona_a", "zona_b", "amb_x");
+        assertTrue(HierarchyValidationService.connectionDestinationsExist(conn, nos));
+    }
+
+    @Test
+    void hierarchyValidation_destinoAusenteRetornaFalse() {
+        // RF-MN-06
+        Connection conn = buildConnection("conn_02", "zona_a", List.of("zona_b"));
+        Set<String> nos = Set.of("zona_a"); // zona_b ausente
+        assertFalse(HierarchyValidationService.connectionDestinationsExist(conn, nos));
+    }
+
+    @Test
+    void hierarchyValidation_tipoNavegavelCoerente() {
+        // RF-MN-06
+        assertTrue(HierarchyValidationService.tipoNavegavelCoherent("ZONA", "zona"));
+        assertFalse(HierarchyValidationService.tipoNavegavelCoherent("ambiente", "zona"));
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

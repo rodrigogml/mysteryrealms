@@ -122,4 +122,49 @@ public final class ProgressionService {
     public static int attributeSoftCap(int level) {
         return 10 + level / 5;
     }
+
+    // ── RF-PP-07: marcos de nível ─────────────────────────────────────────────
+
+    /**
+     * Verifica se o slot de habilidade ativa está desbloqueado para o nível informado — RF-PP-07.
+     * <ul>
+     *   <li>Slot 1: nível >= 3</li>
+     *   <li>Slot 2: nível >= 8</li>
+     * </ul>
+     *
+     * @param level     nível atual do personagem
+     * @param slotIndex índice do slot (1-based)
+     * @return {@code true} se o slot estiver desbloqueado
+     */
+    public static boolean isAbilitySlotUnlocked(int level, int slotIndex) {
+        return switch (slotIndex) {
+            case 1 -> level >= 3;
+            case 2 -> level >= 8;
+            default -> false;
+        };
+    }
+
+    /**
+     * Verifica se a habilidade de assinatura (tier intermediário) está desbloqueada — RF-PP-07.
+     * Marco: nível 12.
+     */
+    public static boolean isSignatureAbilityUnlocked(int level) {
+        return level >= 12;
+    }
+
+    /**
+     * Verifica se a especialização avançada (ramificação de build) está desbloqueada — RF-PP-07.
+     * Marco: nível 20.
+     */
+    public static boolean isAdvancedSpecializationUnlocked(int level) {
+        return level >= 20;
+    }
+
+    /**
+     * Verifica se os ciclos de maestria repetíveis estão ativos — RF-PP-07.
+     * Marco: nível 30+.
+     */
+    public static boolean isMasteryCycleActive(int level) {
+        return level >= 30;
+    }
 }

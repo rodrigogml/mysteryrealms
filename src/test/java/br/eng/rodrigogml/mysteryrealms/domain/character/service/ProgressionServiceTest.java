@@ -217,4 +217,68 @@ class ProgressionServiceTest {
         // atributo=5, pp=0, level=1 (bonus=0), mod=0 → 5
         assertEquals(5, ProgressionService.skillFinalValue(5, 0, 1, 0));
     }
+
+    // ── RF-PP-01: XP nunca diminui ───────────────────────────────────────────
+
+    @Test
+    void xpNuncaDiminui_semXpNaoSobe() {
+        // RF-PP-01
+        assertFalse(ProgressionService.shouldLevelUp(0L, 1),
+                "Sem XP acumulado, personagem não deve subir de nível");
+    }
+
+    @Test
+    void xpNuncaDiminui_xpCrescente() {
+        // RF-PP-01 — xpTotalForLevel é crescente (XP não diminui)
+        long prev = 0;
+        for (int n = 1; n <= 20; n++) {
+            long total = ProgressionService.xpTotalForLevel(n);
+            assertTrue(total >= prev,
+                    "xpTotalForLevel deve ser crescente: nível " + n);
+            prev = total;
+        }
+    }
+
+    // ── RF-PP-07: marcos de nível ─────────────────────────────────────────────
+
+    @Test
+    void abilitySlot_slot1DesbloqueadoNivel3() {
+        // RF-PP-07
+        assertFalse(ProgressionService.isAbilitySlotUnlocked(2, 1));
+        assertTrue(ProgressionService.isAbilitySlotUnlocked(3, 1));
+    }
+
+    @Test
+    void abilitySlot_slot2DesbloqueadoNivel8() {
+        // RF-PP-07
+        assertFalse(ProgressionService.isAbilitySlotUnlocked(7, 2));
+        assertTrue(ProgressionService.isAbilitySlotUnlocked(8, 2));
+    }
+
+    @Test
+    void abilitySlot_slotInexistente_false() {
+        // RF-PP-07
+        assertFalse(ProgressionService.isAbilitySlotUnlocked(99, 3));
+    }
+
+    @Test
+    void signatureAbilityUnlocked_nivel12() {
+        // RF-PP-07
+        assertFalse(ProgressionService.isSignatureAbilityUnlocked(11));
+        assertTrue(ProgressionService.isSignatureAbilityUnlocked(12));
+    }
+
+    @Test
+    void advancedSpecializationUnlocked_nivel20() {
+        // RF-PP-07
+        assertFalse(ProgressionService.isAdvancedSpecializationUnlocked(19));
+        assertTrue(ProgressionService.isAdvancedSpecializationUnlocked(20));
+    }
+
+    @Test
+    void masteryCycleActive_nivel30() {
+        // RF-PP-07
+        assertFalse(ProgressionService.isMasteryCycleActive(29));
+        assertTrue(ProgressionService.isMasteryCycleActive(30));
+    }
 }

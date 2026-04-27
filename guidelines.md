@@ -91,3 +91,25 @@ Documentação relevante sobre as definições da implementação do sistema.
 - Em `/docs/legado/` há arquivos `.wiki`, que constituem a documentação legada inicial do projeto.
 - Esses arquivos devem ser utilizados apenas para consulta e consideração na evolução da mecânica do jogo atual. **Nunca** devem ser alterados.
 - A documentação legada serve como guia e referência de mecânica, mas não deve ser tratada como verdade absoluta nem como regra obrigatória. Ela pode ser evoluída, alterada ou simplificada ao formular recomendações para novas definições do projeto atual.
+
+# Banco de Dados
+
+- O banco de dados da aplicação será MySQL 9.0, acessado através do ORM/JPA padrão do Spring (Hibernate).
+- O schema da aplicação será `mysteryrealms`.
+- Dentro da pasta `src/main/resources/db/init` devem ser incluídos os scripts de criação do banco de dados. Os arquivos devem ter prefixo numérico que garanta a ordem de execução, seguindo a estrutura abaixo:
+  - `01_schema.sql` — `DROP`/`CREATE SCHEMA` e configurações gerais.
+  - `02_tables.sql` — todos os `CREATE TABLE`.
+  - `03_constraints.sql` — `ALTER TABLE` exclusivamente para FKs circulares (ver regra abaixo).
+  - `04_seed.sql` — `INSERT` de dados iniciais (enums, configurações, dados fixos de jogo).
+  - Nenhum arquivo deve utilizar sintaxes do tipo `IF NOT EXISTS`; o conjunto de scripts deve considerar sempre a criação do banco de dados do zero.
+  - Os scripts não devem conter instruções de `ALTER TABLE` (estrutura) ou de `UPDATE`/`DELETE` (dados) quando for possível corrigir diretamente o `CREATE TABLE` ou o `INSERT` original, de forma que a criação do banco seja feita corretamente desde a primeira execução. A exceção são casos de relacionamento circular, nos quais o `ALTER TABLE` em `03_constraints.sql` é necessário após a criação das tabelas envolvidas.
+- Nenhum script de atualização para bases existentes deve ser criado no repositório.
+- O banco de dados deverá seguir as seguintes regras de nomenclatura:
+  - Nomes de tabelas, colunas, FKs, etc. devem sempre estar em inglês. Apenas comentários, se necessários, podem estar em português.
+  - Nomes de tabelas e colunas devem estar no singular e seguir o padrão camelCase sem a utilização de `_` ou `-`. Exemplos: `user`, `userGroup`.
+  - O nome da coluna no banco de dados deve ser exatamente igual ao nome do campo correspondente na Entity Java, em camelCase e sem `_` ou `-`.
+  - A chave primária da tabela deve se chamar `id` e ser do tipo `BIGINT AUTO_INCREMENT`.
+  - FKs devem sempre ter o prefixo `id` concatenado ao nome da tabela referenciada. Exemplo: `idUser`.
+    - Casos de dois ou mais relacionamentos para a mesma tabela: utilizar o prefixo `id` concatenado com o significado do relacionamento, sem a necessidade de incluir o nome da tabela. Exemplos: `idPreviousItem` e `idNextItem`, imaginando um relacionamento linear entre objetos da mesma tabela.
+  - Tabelas de relacionamento N:N devem ter o nome das tabelas que relacionam separados por `_`. Exemplo: `user_userGroup`. A utilização de `_` nesse caso é uma exceção prevista, com o objetivo de facilitar a identificação visual das tabelas de relacionamento em relação às tabelas de dados.
+  - Tipos de enumeração Java (`enum`) devem ser persistidos no banco pelo nome do valor da enum, em colunas do tipo `VARCHAR(50)`.
