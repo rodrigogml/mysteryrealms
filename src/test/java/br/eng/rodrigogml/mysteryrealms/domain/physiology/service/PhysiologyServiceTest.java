@@ -247,6 +247,84 @@ class PhysiologyServiceTest {
         assertEquals(0.5, factor, 1e-9);
     }
 
+    // ── RF-EF-08: tick de sono ───────────────────────────────────────────────
+
+    @Test
+    void sleepTick_reduzhFadigaAtual() {
+        // RF-EF-08
+        PhysiologyState s = freshState();
+        s.setCurrentFatigue(300.0);
+        PhysiologyService.applySleepTick(s, 1.0);
+        assertTrue(s.getCurrentFatigue() < 300.0,
+                "fadiga_atual deve diminuir após tick de sono");
+    }
+
+    @Test
+    void sleepTick_reduzhFadigaMin() {
+        // RF-EF-08 — sono também reduz fadiga_min
+        PhysiologyState s = freshState();
+        s.setMinFatigue(100.0);
+        s.setCurrentFatigue(200.0);
+        PhysiologyService.applySleepTick(s, 1.0);
+        assertTrue(s.getMinFatigue() < 100.0,
+                "fadiga_min deve diminuir após tick de sono");
+    }
+
+    @Test
+    void sleepTick_fadigaAtualNuncaMenorQueFadigaMin() {
+        // RF-EF-08 — invariante: fadiga_atual >= fadiga_min
+        PhysiologyState s = freshState();
+        s.setMinFatigue(500.0);
+        s.setCurrentFatigue(500.0);
+        PhysiologyService.applySleepTick(s, 1.0);
+        assertTrue(s.getCurrentFatigue() >= s.getMinFatigue(),
+                "fadiga_atual não pode ser menor que fadiga_min após tick de sono");
+    }
+
+    @Test
+    void sleepTick_recuperaPv() {
+        // RF-EF-08 — sono recupera PV
+        PhysiologyState s = freshState();
+        s.setHealthPoints(PV_MAX * 0.5);
+        double pvAntes = s.getHealthPoints();
+        PhysiologyService.applySleepTick(s, 1.0);
+        assertTrue(s.getHealthPoints() > pvAntes,
+                "PV deve aumentar após tick de sono");
+    }
+
+    @Test
+    void sleepTick_pvNaoUltrapassaMax() {
+        // RF-EF-08 — PV não ultrapassa o máximo
+        PhysiologyState s = freshState();
+        s.setHealthPoints(PV_MAX);
+        PhysiologyService.applySleepTick(s, 1.0);
+        assertEquals(PV_MAX, s.getHealthPoints(), 1e-9,
+                "PV não deve ultrapassar pontosVidaMax após tick de sono");
+    }
+
+    @Test
+    void sleepTick_fatorQualidadeMaiorRecuperaMais() {
+        // RF-EF-08 — fator de qualidade maior resulta em mais recuperação de fadiga
+        PhysiologyState s1 = freshState();
+        s1.setCurrentFatigue(400.0);
+        PhysiologyService.applySleepTick(s1, 1.0);
+
+        PhysiologyState s2 = freshState();
+        s2.setCurrentFatigue(400.0);
+        PhysiologyService.applySleepTick(s2, 0.5);
+
+        assertTrue(s1.getCurrentFatigue() < s2.getCurrentFatigue(),
+                "Fator de qualidade maior deve recuperar mais fadiga");
+    }
+
+    @Test
+    void hpRecoveryPerMinute_calculoCorreto() {
+        // RF-EF-08 — constituicao = maxPv/10; recuperacao = (const/120) × fator
+        PhysiologyState s = freshState(); // PV_MAX = 30 → constitution = 3
+        double expected = (3.0 / 120.0) * 1.0;
+        assertEquals(expected, PhysiologyService.hpRecoveryPerMinute(s, 1.0), 1e-9);
+    }
+
     // ── RF-EF-10: critérios de despertar ─────────────────────────────────────
 
     @Test
