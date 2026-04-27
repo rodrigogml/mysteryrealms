@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testes dos atributos derivados do personagem — RF-FP-06.
+ * Testes dos attributes derivados do personagem — RF-FP-06.
  */
 class CharacterAttributeServiceTest {
 
@@ -13,9 +13,9 @@ class CharacterAttributeServiceTest {
 
     @Test
     void maxHp_constituicaoMultiplicadaPorDez() {
-        assertEquals(50.0, CharacterAttributeService.maxHp(5), 1e-9);
-        assertEquals(30.0, CharacterAttributeService.maxHp(3), 1e-9);
-        assertEquals(100.0, CharacterAttributeService.maxHp(10), 1e-9);
+        assertEquals(50.0, CharacterAttributeService.maxHealthPoints(5), 1e-9);
+        assertEquals(30.0, CharacterAttributeService.maxHealthPoints(3), 1e-9);
+        assertEquals(100.0, CharacterAttributeService.maxHealthPoints(10), 1e-9);
     }
 
     // ── RF-FP-06.2: fadiga máxima ─────────────────────────────────────────────
@@ -51,24 +51,24 @@ class CharacterAttributeServiceTest {
 
     @Test
     void maxCarryCapacity_forcaMultiplicadaPorDez() {
-        assertEquals(30.0, CharacterAttributeService.maxCarryCapacity(3), 1e-9);
-        assertEquals(50.0, CharacterAttributeService.maxCarryCapacity(5), 1e-9);
+        assertEquals(30.0, CharacterAttributeService.maxLoadCapacity(3), 1e-9);
+        assertEquals(50.0, CharacterAttributeService.maxLoadCapacity(5), 1e-9);
     }
 
     @Test
     void criticalCarryCapacity_umMeioVezesCapacidade() {
-        assertEquals(45.0, CharacterAttributeService.criticalCarryCapacity(30), 1e-9);
+        assertEquals(45.0, CharacterAttributeService.criticalLoadCapacity(30), 1e-9);
     }
 
     @Test
     void coinWeight_formulaCorreta() {
         // ((2 × 6) + (100 × 5)) / 1000 = (12 + 500) / 1000 = 0,512
-        assertEquals(0.512, CharacterAttributeService.coinWeight(2, 100), 1e-9);
+        assertEquals(0.512, CharacterAttributeService.currencyWeight(2, 100), 1e-9);
     }
 
     @Test
     void coinWeight_semMoedas() {
-        assertEquals(0.0, CharacterAttributeService.coinWeight(0, 0), 1e-9);
+        assertEquals(0.0, CharacterAttributeService.currencyWeight(0, 0), 1e-9);
     }
 
     @Test

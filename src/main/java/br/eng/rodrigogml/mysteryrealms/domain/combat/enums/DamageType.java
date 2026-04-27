@@ -5,37 +5,37 @@ package br.eng.rodrigogml.mysteryrealms.domain.combat.enums;
  */
 public enum DamageType {
 
-    CORTE("corte"),
-    PERFURACAO("perfuracao"),
-    ESMAGAMENTO("esmagamento"),
-    FOGO("fogo"),
-    GELO("gelo"),
-    RAIO("raio"),
-    ACIDO("acido"),
-    MAGIA_PURA("magia_pura"),
-    SANGRAMENTO("sangramento"),
-    VENENO_LETAL("veneno_letal");
+    SLASHING("corte"),
+    PIERCING("perfuracao"),
+    BLUDGEONING("esmagamento"),
+    FIRE("fogo"),
+    ICE("gelo"),
+    LIGHTNING("raio"),
+    ACID("acido"),
+    PURE_MAGIC("magia_pura"),
+    BLEEDING("sangramento"),
+    LETHAL_POISON("veneno_letal");
 
-    private final String chave;
+    private final String key;
 
-    DamageType(String chave) {
-        this.chave = chave;
+    DamageType(String key) {
+        this.key = key;
     }
 
-    public String getChave() {
-        return chave;
+    public String getKey() {
+        return key;
     }
 
     /**
-     * Compatibilidade legada: "Eletricidade" mapeia para RAIO, conforme RF-MAR-01.
+     * Compatibilidade legada: "Eletricidade" mapeia para LIGHTNING, conforme RF-MAR-01.
      */
-    public static DamageType fromLegacy(String nome) {
-        if ("eletricidade".equalsIgnoreCase(nome)) {
-            return RAIO;
+    public static DamageType fromLegacy(String name) {
+        if ("eletricidade".equalsIgnoreCase(name)) {
+            return LIGHTNING;
         }
         for (DamageType dt : values()) {
-            if (dt.chave.equalsIgnoreCase(nome)) return dt;
+            if (dt.key.equalsIgnoreCase(name)) return dt;
         }
-        throw new IllegalArgumentException("Tipo de dano desconhecido: " + nome);
+        throw new IllegalArgumentException("Tipo de dano desconhecido: " + name);
     }
 }

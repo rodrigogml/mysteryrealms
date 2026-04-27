@@ -10,12 +10,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public interface DiceRoller {
 
     /**
-     * Rola um dado de {@code sides} faces.
+     * Rola um dado de {@code faces} faces.
      *
-     * @param sides número de faces do dado (>= 1)
-     * @return valor entre 1 e {@code sides} (inclusivo)
+     * @param faces número de faces do dado (>= 1)
+     * @return value entre 1 e {@code faces} (inclusivo)
      */
-    int roll(int sides);
+    int roll(int faces);
 
     default int d20() {
         return roll(20);
@@ -33,14 +33,14 @@ public interface DiceRoller {
      * Rolagem padrão com aleatoriedade real.
      */
     static DiceRoller standard() {
-        return sides -> ThreadLocalRandom.current().nextInt(1, sides + 1);
+        return faces -> ThreadLocalRandom.current().nextInt(1, faces + 1);
     }
 
     /**
-     * Rolagem determinística: retorna sempre {@code value} (clamped a sides).
+     * Rolagem determinística: retorna sempre {@code value} (clamped a faces).
      * Útil para testes.
      */
     static DiceRoller fixed(int value) {
-        return sides -> Math.min(value, sides);
+        return faces -> Math.min(value, faces);
     }
 }

@@ -5,44 +5,44 @@ import java.util.List;
 /**
  * Configuração temporal e estrutural do mundo — RF-MN-12.
  *
- * {@code fasesDia} deve cobrir o dia completo sem sobreposição.
- * {@code estacoes} deve cobrir o ano completo sem lacunas.
+ * {@code dayPhases} deve cobrir o dia completo sem sobreposição.
+ * {@code seasons} deve cobrir o ano completo sem lacunas.
  */
 public record WorldConfig(
-        String idMundo,
-        int minutosPorHora,
-        int horasPorDia,
-        int diasPorAno,
-        List<DayPhase> fasesDia,
-        List<Season> estacoes,
-        int tempoInicialMin) {
+        String worldId,
+        int minutesPerHour,
+        int hoursPerDay,
+        int daysPerYear,
+        List<DayPhase> dayPhases,
+        List<Season> seasons,
+        int initialTimeMin) {
 
     public WorldConfig {
-        if (idMundo == null || idMundo.isBlank())
+        if (worldId == null || worldId.isBlank())
             throw new IllegalArgumentException("idMundo não pode ser vazio");
-        if (minutosPorHora < 1)
+        if (minutesPerHour < 1)
             throw new IllegalArgumentException("minutosPorHora deve ser >= 1");
-        if (horasPorDia < 1)
+        if (hoursPerDay < 1)
             throw new IllegalArgumentException("horasPorDia deve ser >= 1");
-        if (diasPorAno < 1)
+        if (daysPerYear < 1)
             throw new IllegalArgumentException("diasPorAno deve ser >= 1");
-        if (fasesDia == null || fasesDia.isEmpty())
+        if (dayPhases == null || dayPhases.isEmpty())
             throw new IllegalArgumentException("fasesDia deve ter pelo menos 1 fase");
-        if (estacoes == null || estacoes.isEmpty())
+        if (seasons == null || seasons.isEmpty())
             throw new IllegalArgumentException("estacoes deve ter pelo menos 1 estação");
-        if (tempoInicialMin < 0)
+        if (initialTimeMin < 0)
             throw new IllegalArgumentException("tempoInicialMin deve ser >= 0");
-        fasesDia = List.copyOf(fasesDia);
-        estacoes = List.copyOf(estacoes);
+        dayPhases = List.copyOf(dayPhases);
+        seasons = List.copyOf(seasons);
     }
 
-    /** Total de minutos por dia. */
-    public int minutosPorDia() {
-        return minutosPorHora * horasPorDia;
+    /** Total de minutes por dia. */
+    public int minutesPerDay() {
+        return minutesPerHour * hoursPerDay;
     }
 
-    /** Total de minutos por ano. */
-    public long minutosPorAno() {
-        return (long) minutosPorDia() * diasPorAno;
+    /** Total de minutes por ano. */
+    public long minutesPerYear() {
+        return (long) minutesPerDay() * daysPerYear;
     }
 }

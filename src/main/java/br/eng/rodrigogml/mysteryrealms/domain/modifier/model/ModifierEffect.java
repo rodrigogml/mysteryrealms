@@ -3,13 +3,13 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier.model;
 /**
  * Efeito mecânico de um modificador — RF-MAR-04.
  *
- * Descreve o efeito de forma objetiva. A interpretação concreta do efeito
+ * Descreve o effect de forma objetiva. A interpretação concreta do effect
  * é responsabilidade do sistema que aplica o modificador.
  */
-public record ModifierEffect(String descricao) {
+public record ModifierEffect(String description) {
 
     public ModifierEffect {
-        if (descricao == null || descricao.isBlank())
+        if (description == null || description.isBlank())
             throw new IllegalArgumentException("descricao do efeito não pode ser vazia");
     }
 }

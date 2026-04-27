@@ -17,11 +17,11 @@ public final class WorldTimeService {
     // ── RF-MN-13: Avanço de tempo ────────────────────────────────────────────
 
     /**
-     * Avança o tempo global pelo número de minutos indicado — RF-MN-13.
+     * Avança o tempo global pelo número de minutes indicado — RF-MN-13.
      *
-     * @param tempoAtualMin   tempo atual em minutos
-     * @param minutosAvancar  minutos a avançar (>= 0)
-     * @return novo tempo total em minutos
+     * @param tempoAtualMin   tempo atual em minutes
+     * @param minutosAvancar  minutes a avançar (>= 0)
+     * @return novo tempo total em minutes
      */
     public static long advanceTime(long tempoAtualMin, long minutosAvancar) {
         if (minutosAvancar < 0) throw new IllegalArgumentException("minutosAvancar deve ser >= 0");
@@ -31,47 +31,47 @@ public final class WorldTimeService {
     // ── RF-MN-12: Conversões de tempo ────────────────────────────────────────
 
     /**
-     * Retorna o minuto do dia atual (0-based, dentro de {@code minutosPorDia}).
+     * Retorna o minuto do dia atual (0-based, dentro de {@code minutesPerDay}).
      */
-    public static int minuteOfDay(long tempoTotalMin, WorldConfig config) {
-        return (int) (tempoTotalMin % config.minutosPorDia());
+    public static int minutesOfDay(long tempoTotalMin, WorldConfig config) {
+        return (int) (tempoTotalMin % config.minutesPerDay());
     }
 
     /**
      * Retorna o número do dia atual (1-based).
      */
     public static long dayOfYear(long tempoTotalMin, WorldConfig config) {
-        long totalDias = tempoTotalMin / config.minutosPorDia();
-        return (totalDias % config.diasPorAno()) + 1;
+        long totalDias = tempoTotalMin / config.minutesPerDay();
+        return (totalDias % config.daysPerYear()) + 1;
     }
 
     /**
      * Retorna o ano atual (1-based).
      */
-    public static long year(long tempoTotalMin, WorldConfig config) {
-        long totalDias = tempoTotalMin / config.minutosPorDia();
-        return (totalDias / config.diasPorAno()) + 1;
+    public static long ano(long tempoTotalMin, WorldConfig config) {
+        long totalDias = tempoTotalMin / config.minutesPerDay();
+        return (totalDias / config.daysPerYear()) + 1;
     }
 
     /**
      * Retorna a hora do dia (0-based).
      */
     public static int hourOfDay(long tempoTotalMin, WorldConfig config) {
-        return minuteOfDay(tempoTotalMin, config) / config.minutosPorHora();
+        return minutesOfDay(tempoTotalMin, config) / config.minutesPerHour();
     }
 
     /**
      * Retorna o minuto dentro da hora atual (0-based).
      */
     public static int minuteOfHour(long tempoTotalMin, WorldConfig config) {
-        return minuteOfDay(tempoTotalMin, config) % config.minutosPorHora();
+        return minutesOfDay(tempoTotalMin, config) % config.minutesPerHour();
     }
 
     /**
      * Formata o tempo em formato legível: {@code AnoX DiaY HH:MM}.
      */
     public static String formatTime(long tempoTotalMin, WorldConfig config) {
-        long ano = year(tempoTotalMin, config);
+        long ano = ano(tempoTotalMin, config);
         long dia = dayOfYear(tempoTotalMin, config);
         int hora = hourOfDay(tempoTotalMin, config);
         int min = minuteOfHour(tempoTotalMin, config);
@@ -82,9 +82,9 @@ public final class WorldTimeService {
      * Retorna a fase do dia correspondente ao tempo atual, ou {@code null} se não houver fase configurada.
      */
     public static DayPhase currentDayPhase(long tempoTotalMin, WorldConfig config) {
-        int minDia = minuteOfDay(tempoTotalMin, config);
-        for (DayPhase fase : config.fasesDia()) {
-            if (minDia >= fase.inicioMinDia() && minDia <= fase.fimMinDia()) {
+        int minDia = minutesOfDay(tempoTotalMin, config);
+        for (DayPhase fase : config.dayPhases()) {
+            if (minDia >= fase.startMinOfDay() && minDia <= fase.endMinOfDay()) {
                 return fase;
             }
         }
@@ -96,8 +96,8 @@ public final class WorldTimeService {
      */
     public static Season currentSeason(long tempoTotalMin, WorldConfig config) {
         long dia = dayOfYear(tempoTotalMin, config);
-        for (Season estacao : config.estacoes()) {
-            if (dia >= estacao.diaInicio() && dia <= estacao.diaFim()) {
+        for (Season estacao : config.seasons()) {
+            if (dia >= estacao.startDay() && dia <= estacao.endDay()) {
                 return estacao;
             }
         }

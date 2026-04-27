@@ -8,39 +8,39 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier.model;
  */
 public class ActionCost {
 
-    /** Tempo gasto em minutos de jogo. */
-    private int tempoGastoMin;
+    /** Tempo gasto em minutes de jogo. */
+    private int timeSpentMin;
 
     /** Delta de fadiga_atual. Negativo = recuperação. */
-    private double custoFadiga;
+    private double fatigueCost;
 
     /** Delta de fome_pct. Negativo = recuperação. */
-    private double deltaFomePct;
+    private double hungerDeltaPct;
 
     /** Delta de sede_pct. Negativo = recuperação. */
-    private double deltaSedePct;
+    private double thirstDeltaPct;
 
-    public ActionCost(int tempoGastoMin, double custoFadiga, double deltaFomePct, double deltaSedePct) {
-        this.tempoGastoMin = tempoGastoMin;
-        this.custoFadiga = custoFadiga;
-        this.deltaFomePct = deltaFomePct;
-        this.deltaSedePct = deltaSedePct;
+    public ActionCost(int timeSpentMin, double fatigueCost, double hungerDeltaPct, double thirstDeltaPct) {
+        this.timeSpentMin = timeSpentMin;
+        this.fatigueCost = fatigueCost;
+        this.hungerDeltaPct = hungerDeltaPct;
+        this.thirstDeltaPct = thirstDeltaPct;
     }
 
     /** Cria uma cópia independente deste custo. */
     public ActionCost copy() {
-        return new ActionCost(tempoGastoMin, custoFadiga, deltaFomePct, deltaSedePct);
+        return new ActionCost(timeSpentMin, fatigueCost, hungerDeltaPct, thirstDeltaPct);
     }
 
-    public int getTempoGastoMin() { return tempoGastoMin; }
-    public void setTempoGastoMin(int tempoGastoMin) { this.tempoGastoMin = tempoGastoMin; }
+    public int getTimeSpentMin() { return timeSpentMin; }
+    public void setTimeSpentMin(int timeSpentMin) { this.timeSpentMin = timeSpentMin; }
 
-    public double getCustoFadiga() { return custoFadiga; }
-    public void setCustoFadiga(double custoFadiga) { this.custoFadiga = custoFadiga; }
+    public double getFatigueCost() { return fatigueCost; }
+    public void setFatigueCost(double fatigueCost) { this.fatigueCost = fatigueCost; }
 
-    public double getDeltaFomePct() { return deltaFomePct; }
-    public void setDeltaFomePct(double deltaFomePct) { this.deltaFomePct = deltaFomePct; }
+    public double getHungerDeltaPct() { return hungerDeltaPct; }
+    public void setHungerDeltaPct(double hungerDeltaPct) { this.hungerDeltaPct = hungerDeltaPct; }
 
-    public double getDeltaSedePct() { return deltaSedePct; }
-    public void setDeltaSedePct(double deltaSedePct) { this.deltaSedePct = deltaSedePct; }
+    public double getThirstDeltaPct() { return thirstDeltaPct; }
+    public void setThirstDeltaPct(double thirstDeltaPct) { this.thirstDeltaPct = thirstDeltaPct; }
 }

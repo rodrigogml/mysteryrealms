@@ -1,24 +1,24 @@
 package br.eng.rodrigogml.mysteryrealms.domain.modifier.enums;
 
 /**
- * Origens de modificadores, em ordem canônica de prioridade (1 = maior), conforme RF-MAR-05.
+ * Origens de modificadores, em ordem canônica de priority (1 = maior), conforme RF-MAR-05.
  */
 public enum ModifierOrigin {
 
-    ESTADO_CRITICO_COMBATE(1),
-    HABILIDADE_ATIVA(2),
-    EQUIPAMENTO(3),
-    CLASSE(4),
-    RACA(5),
-    EFEITO_TEMPORARIO_GENERICO(6);
+    CRITICAL_COMBAT_STATE(1),
+    ACTIVE_SKILL(2),
+    EQUIPMENT(3),
+    CHARACTER_CLASS(4),
+    RACE(5),
+    GENERIC_TEMPORARY_EFFECT(6);
 
-    private final int prioridade;
+    private final int priority;
 
-    ModifierOrigin(int prioridade) {
-        this.prioridade = prioridade;
+    ModifierOrigin(int priority) {
+        this.priority = priority;
     }
 
-    public int getPrioridade() {
-        return prioridade;
+    public int getPriority() {
+        return priority;
     }
 }

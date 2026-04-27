@@ -6,49 +6,49 @@ import br.eng.rodrigogml.mysteryrealms.domain.economy.enums.HandItemSubtype;
 /**
  * Ficha de escudo — RF-EI-08.
  *
- * Inclui todos os atributos comuns de Item de Mão (RF-EI-03) mais campos específicos de escudo.
+ * Inclui todos os attributes comuns de Item de Mão (RF-EI-03) mais campos específicos de escudo.
  */
 public class Shield extends HandItem {
 
-    private final int valorBaseBloqueio;
-    /** Descrição de cobertura especial (opcional). */
-    private final String cobertura;
-    /** Penalidade de destreza para não proficientes (opcional, 0 = sem penalidade). */
-    private final int penaldadeDestreza;
-    private final int bonusItemDefesaFlatValue;
-    private final double bonusItemDefesaPctValue;
-    private final int bonusItemBloqueioFlatValue;
-    private final double bonusItemBloqueioPctValue;
+    private final int baseBlockValue;
+    /** Descrição de coverage especial (opcional). */
+    private final String coverage;
+    /** Penalidade de dexterity para não proficientes (opcional, 0 = sem penalidade). */
+    private final int dexPenalty;
+    private final int itemDefenseBonusFlat;
+    private final double itemDefenseBonusPct;
+    private final int itemBlockBonusFlat;
+    private final double itemBlockBonusPct;
 
     public Shield(
-            String nome,
-            double pesoKg,
-            MonetaryValue precoBase,
-            int valorBaseBloqueio,
-            String cobertura,
-            int penaldadeDestreza,
-            int bonusItemDefesaFlat,
-            double bonusItemDefesaPct,
-            int bonusItemBloqueioFlat,
-            double bonusItemBloqueioPct) {
+            String name,
+            double weightKg,
+            MonetaryValue basePrice,
+            int baseBlockValue,
+            String coverage,
+            int dexPenalty,
+            int itemDefenseBonusFlat,
+            double itemDefenseBonusPct,
+            int itemBlockBonusFlat,
+            double itemBlockBonusPct) {
 
-        super(nome, HandItemSubtype.ESCUDO, 1, HandItemCategory.DEFESA, pesoKg, precoBase);
+        super(name, HandItemSubtype.ESCUDO, 1, HandItemCategory.DEFENSE, weightKg, basePrice);
 
-        this.valorBaseBloqueio = valorBaseBloqueio;
-        this.cobertura = cobertura;
-        this.penaldadeDestreza = penaldadeDestreza;
-        this.bonusItemDefesaFlatValue = bonusItemDefesaFlat;
-        this.bonusItemDefesaPctValue = bonusItemDefesaPct;
-        this.bonusItemBloqueioFlatValue = bonusItemBloqueioFlat;
-        this.bonusItemBloqueioPctValue = bonusItemBloqueioPct;
+        this.baseBlockValue = baseBlockValue;
+        this.coverage = coverage;
+        this.dexPenalty = dexPenalty;
+        this.itemDefenseBonusFlat = itemDefenseBonusFlat;
+        this.itemDefenseBonusPct = itemDefenseBonusPct;
+        this.itemBlockBonusFlat = itemBlockBonusFlat;
+        this.itemBlockBonusPct = itemBlockBonusPct;
     }
 
-    public int getValorBaseBloqueio() { return valorBaseBloqueio; }
-    public String getCobertura() { return cobertura; }
-    public int getPenaldadeDestreza() { return penaldadeDestreza; }
+    public int getBaseBlockValue() { return baseBlockValue; }
+    public String getCoverage() { return coverage; }
+    public int getDexPenalty() { return dexPenalty; }
 
-    @Override public int getBonusItemDefesaFlat() { return bonusItemDefesaFlatValue; }
-    @Override public double getBonusItemDefesaPct() { return bonusItemDefesaPctValue; }
-    @Override public int getBonusItemBloqueioFlat() { return bonusItemBloqueioFlatValue; }
-    @Override public double getBonusItemBloqueioPct() { return bonusItemBloqueioPctValue; }
+    @Override public int getItemDefenseBonusFlat() { return itemDefenseBonusFlat; }
+    @Override public double getItemDefenseBonusPct() { return itemDefenseBonusPct; }
+    @Override public int getItemBlockBonusFlat() { return itemBlockBonusFlat; }
+    @Override public double getItemBlockBonusPct() { return itemBlockBonusPct; }
 }

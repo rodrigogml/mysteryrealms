@@ -5,24 +5,24 @@ package br.eng.rodrigogml.mysteryrealms.domain.combat.enums;
  */
 public enum AfflictionType {
 
-    PSIQUICA("psiquica"),
-    ESPIRITUAL("espiritual"),
-    MEDO("medo"),
-    PARALISIA("paralisia"),
-    CEGUEIRA("cegueira"),
-    SURDEZ_MUDEZ("surdez_mudez"),
-    FADIGA("fadiga"),
-    DOENCA_MAGICA("doenca_magica"),
-    ALUCINACAO_ILUSAO_PERSISTENTE("alucinacao_ilusao_persistente"),
-    SONO_TORPOR("sono_torpor");
+    PSYCHIC("psiquica"),
+    SPIRITUAL("espiritual"),
+    FEAR("medo"),
+    PARALYSIS("paralisia"),
+    BLINDNESS("cegueira"),
+    DEAFNESS_MUTENESS("surdez_mudez"),
+    FATIGUE("fadiga"),
+    MAGICAL_DISEASE("doenca_magica"),
+    PERSISTENT_HALLUCINATION("alucinacao_ilusao_persistente"),
+    SLEEP_TORPOR("sono_torpor");
 
-    private final String chave;
+    private final String key;
 
-    AfflictionType(String chave) {
-        this.chave = chave;
+    AfflictionType(String key) {
+        this.key = key;
     }
 
-    public String getChave() {
-        return chave;
+    public String getKey() {
+        return key;
     }
 }

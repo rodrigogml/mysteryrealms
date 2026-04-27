@@ -26,7 +26,7 @@ public final class HierarchyValidationService {
     }
 
     /**
-     * Verifica se um ID de Zona usa o prefixo canônico {@code zona_} — RF-MN-01.
+     * Verifica se um ID de Zone usa o prefixo canônico {@code zona_} — RF-MN-01.
      */
     public static boolean validateZonePrefix(String zoneId) {
         return hasValidPrefix(zoneId, "zona_");
@@ -35,7 +35,7 @@ public final class HierarchyValidationService {
     /**
      * Verifica se um ID de Ambiente usa o prefixo canônico {@code amb_} — RF-MN-01.
      */
-    public static boolean validateAmbientePrefix(String ambId) {
+    public static boolean validateEnvironmentPrefix(String ambId) {
         return hasValidPrefix(ambId, "amb_");
     }
 
@@ -44,7 +44,7 @@ public final class HierarchyValidationService {
      *
      * Não deve haver nenhum ID duplicado entre as duas listas combinadas.
      *
-     * @param zonaIds lista de IDs de Zona
+     * @param zonaIds lista de IDs de Zone
      * @param ambIds  lista de IDs de Ambiente
      * @return {@code true} se todos os IDs forem distintos
      */
@@ -67,29 +67,29 @@ public final class HierarchyValidationService {
     }
 
     /**
-     * Verifica se todos os destinos e a origem de uma Conexão existem no conjunto de nós conhecidos — RF-MN-06.
+     * Verifica se todos os destinos e a origin de uma Conexão existem no conjunto de nós conhecidos — RF-MN-06.
      *
      * @param conn         conexão a validar
      * @param knownNodeIds conjunto de IDs de nós (zonas e ambientes) existentes
-     * @return {@code true} se origem e todos os destinos forem encontrados
+     * @return {@code true} se origin e todos os destinos forem encontrados
      */
     public static boolean connectionDestinationsExist(Connection conn, Set<String> knownNodeIds) {
-        if (!knownNodeIds.contains(conn.origemId())) return false;
-        for (String destId : conn.destinosPriorizados()) {
+        if (!knownNodeIds.contains(conn.originId())) return false;
+        for (String destId : conn.prioritizedDestinations()) {
             if (!knownNodeIds.contains(destId)) return false;
         }
         return true;
     }
 
     /**
-     * Verifica se o tipo navegável declarado é coerente com o tipo esperado — RF-MN-06.
+     * Verifica se o type navegável declarado é coerente com o type esperado — RF-MN-06.
      *
-     * @param tipoNavegavel  valor declarado no campo {@code tipo_navegavel}
-     * @param expectedType   valor esperado (ex.: "zona", "ambiente")
+     * @param tipoNavegavel  value declarado no campo {@code tipo_navegavel}
+     * @param tipoEsperado   value esperado (ex.: "zona", "ambiente")
      * @return {@code true} se os valores forem iguais (comparação case-insensitive)
      */
-    public static boolean tipoNavegavelCoherent(String tipoNavegavel, String expectedType) {
-        if (tipoNavegavel == null || expectedType == null) return false;
-        return tipoNavegavel.equalsIgnoreCase(expectedType);
+    public static boolean isNavigableTypeCoherent(String tipoNavegavel, String tipoEsperado) {
+        if (tipoNavegavel == null || tipoEsperado == null) return false;
+        return tipoNavegavel.equalsIgnoreCase(tipoEsperado);
     }
 }

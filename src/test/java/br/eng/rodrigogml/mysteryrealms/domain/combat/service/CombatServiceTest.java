@@ -28,7 +28,7 @@ class CombatServiceTest {
         assertEquals(14, CombatService.testResult(4, 0, FIXO_10));
     }
 
-    // ── RF-CT-02: sucesso por CD ──────────────────────────────────────────────
+    // ── RF-CT-02: success por CD ──────────────────────────────────────────────
 
     @Test
     void isSuccess_igualAoCdÉSucesso() {
@@ -79,7 +79,7 @@ class CombatServiceTest {
 
     @Test
     void rollInitiative_somaDadoMaisAtributos() {
-        // dado=10, destreza=3, percepcao=2 → 15
+        // dado=10, dexterity=3, perception=2 → 15
         assertEquals(15, CombatService.rollInitiative(3, 2, FIXO_10));
     }
 
@@ -93,17 +93,17 @@ class CombatServiceTest {
 
     @Test
     void isHit_igualADefesaAcerta() {
-        assertTrue(CombatService.isHit(10, 10));
+        assertTrue(CombatService.hit(10, 10));
     }
 
     @Test
     void isHit_maiorQueDefesaAcerta() {
-        assertTrue(CombatService.isHit(11, 10));
+        assertTrue(CombatService.hit(11, 10));
     }
 
     @Test
     void isHit_menorQueDefesaErra() {
-        assertFalse(CombatService.isHit(9, 10));
+        assertFalse(CombatService.hit(9, 10));
     }
 
     // ── RF-CT-09: bloqueio ───────────────────────────────────────────────────
@@ -160,13 +160,13 @@ class CombatServiceTest {
 
     @Test
     void clampPlayerResistance_limita80Pct() {
-        assertEquals(0.80, CombatService.clampPlayerResistance(0.90), 1e-9);
-        assertEquals(0.75, CombatService.clampPlayerResistance(0.75), 1e-9);
+        assertEquals(0.80, CombatService.limitPlayerResistance(0.90), 1e-9);
+        assertEquals(0.75, CombatService.limitPlayerResistance(0.75), 1e-9);
     }
 
     @Test
     void damageAfterResistance_comLimiteJogador_naoZera() {
-        double resistEncampada = CombatService.clampPlayerResistance(0.90);
+        double resistEncampada = CombatService.limitPlayerResistance(0.90);
         int dano = CombatService.damageAfterResistance(100, resistEncampada);
         assertTrue(dano > 0, "Dano de jogador resistente (80%) não deve ser zero");
     }
@@ -236,31 +236,31 @@ class CombatServiceTest {
     @Test
     void detectsTarget_maiorQueOcultoDetecta() {
         // RF-CT-05
-        assertTrue(CombatService.detectsTarget(15, 12));
+        assertTrue(CombatService.detectTarget(15, 12));
     }
 
     @Test
     void detectsTarget_empateNaoDetecta() {
         // RF-CT-05 — empate favorece o oculto
-        assertFalse(CombatService.detectsTarget(12, 12));
+        assertFalse(CombatService.detectTarget(12, 12));
     }
 
     @Test
     void detectsTarget_menorQueOcultoNaoDetecta() {
         // RF-CT-05
-        assertFalse(CombatService.detectsTarget(10, 15));
+        assertFalse(CombatService.detectTarget(10, 15));
     }
 
     @Test
     void detectsVsCd_igualAoCdDetecta() {
         // RF-CT-05
-        assertTrue(CombatService.detectsVsCd(12, 12));
+        assertTrue(CombatService.detectVersusCD(12, 12));
     }
 
     @Test
     void detectsVsCd_menorQueCdNaoDetecta() {
         // RF-CT-05
-        assertFalse(CombatService.detectsVsCd(11, 12));
+        assertFalse(CombatService.detectVersusCD(11, 12));
     }
 
     // ── RF-CT-12: ação preparada ──────────────────────────────────────────────
@@ -268,49 +268,49 @@ class CombatServiceTest {
     @Test
     void isPreparedActionCancelled_nenhumaCondicao_naoCancel() {
         // RF-CT-12
-        assertFalse(CombatService.isPreparedActionCancelled(
+        assertFalse(CombatService.preparedActionCanceled(
                 false, false, false, false, false, false));
     }
 
     @Test
     void isPreparedActionCancelled_paralisia_cancela() {
         // RF-CT-12
-        assertTrue(CombatService.isPreparedActionCancelled(
+        assertTrue(CombatService.preparedActionCanceled(
                 true, false, false, false, false, false));
     }
 
     @Test
     void isPreparedActionCancelled_sonoTorpor_cancela() {
         // RF-CT-12
-        assertTrue(CombatService.isPreparedActionCancelled(
+        assertTrue(CombatService.preparedActionCanceled(
                 false, true, false, false, false, false));
     }
 
     @Test
     void isPreparedActionCancelled_cegueiraSemAlvo_cancela() {
         // RF-CT-12
-        assertTrue(CombatService.isPreparedActionCancelled(
+        assertTrue(CombatService.preparedActionCanceled(
                 false, false, true, false, false, false));
     }
 
     @Test
     void isPreparedActionCancelled_deslocamentoForcado_cancela() {
         // RF-CT-12
-        assertTrue(CombatService.isPreparedActionCancelled(
+        assertTrue(CombatService.preparedActionCanceled(
                 false, false, false, true, false, false));
     }
 
     @Test
     void isPreparedActionCancelled_gatilhoInvalido_cancela() {
         // RF-CT-12
-        assertTrue(CombatService.isPreparedActionCancelled(
+        assertTrue(CombatService.preparedActionCanceled(
                 false, false, false, false, true, false));
     }
 
     @Test
     void isPreparedActionCancelled_proximoTurno_cancela() {
         // RF-CT-12
-        assertTrue(CombatService.isPreparedActionCancelled(
+        assertTrue(CombatService.preparedActionCanceled(
                 false, false, false, false, false, true));
     }
 }

@@ -45,16 +45,16 @@ public record MonetaryValue(long mp, long ms) {
     }
 
     /** Valor total equivalente em MS — RF-EI-01: 1 MP = 100 MS. */
-    public long toTotalMs() {
+    public long totalInMinorUnits() {
         return mp * 100L + ms;
     }
 
     /**
-     * Converte para formato normalizado: minimiza MP, mantém resto como MS.
+     * Converte para formato normalized: minimiza MP, mantém resto como MS.
      * Útil após operações que podem gerar > 99 MS.
      */
     public MonetaryValue normalized() {
-        long total = toTotalMs();
+        long total = totalInMinorUnits();
         return new MonetaryValue(total / 100, total % 100);
     }
 }

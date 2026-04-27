@@ -18,10 +18,10 @@ public final class NavigationService {
     // ── RF-MN-07: Sistema de coordenadas ────────────────────────────────────
 
     /**
-     * Distância base em km entre dois pontos cartesianos — RF-MN-07.
+     * Distância base em km entre dois points cartesianos — RF-MN-07.
      * {@code distancia_base_km = sqrt((x2-x1)^2 + (y2-y1)^2) × 10}
      */
-    public static double distanceBaseKm(double x1, double y1, double x2, double y2) {
+    public static double baseDistanceKm(double x1, double y1, double x2, double y2) {
         double dx = x2 - x1;
         double dy = y2 - y1;
         return Math.sqrt(dx * dx + dy * dy) * 10.0;
@@ -29,13 +29,13 @@ public final class NavigationService {
 
     /**
      * Distância ajustada por rota em km — RF-MN-07.
-     * {@code distancia_ajustada_km = distancia_base_km × (1 + penaldadeRotaPct / 100)}
+     * {@code distancia_ajustada_km = distancia_base_km × (1 + routePenaltyPct / 100)}
      *
      * @param distBaseKm       distância base em km
-     * @param penaldadeRotaPct penalidade da rota em % (intervalo [0, 15])
+     * @param routePenaltyPct penalidade da rota em % (intervalo [0, 15])
      */
-    public static double distanceAdjustedKm(double distBaseKm, double penaldadeRotaPct) {
-        return distBaseKm * (1.0 + penaldadeRotaPct / 100.0);
+    public static double adjustedDistanceKm(double distBaseKm, double routePenaltyPct) {
+        return distBaseKm * (1.0 + routePenaltyPct / 100.0);
     }
 
     // ── RF-MN-08: Resolução de destino ──────────────────────────────────────
@@ -52,9 +52,9 @@ public final class NavigationService {
      */
     public static Optional<String> resolveDestination(
             Connection connection, Map<String, Boolean> accessibleNodes) {
-        for (String destId : connection.destinosPriorizados()) {
-            Boolean acessivel = accessibleNodes.get(destId);
-            if (Boolean.TRUE.equals(acessivel)) {
+        for (String destId : connection.prioritizedDestinations()) {
+            Boolean accessible = accessibleNodes.get(destId);
+            if (Boolean.TRUE.equals(accessible)) {
                 return Optional.of(destId);
             }
         }
@@ -75,7 +75,7 @@ public final class NavigationService {
      * @param distanciaKm       tamanho do segmento em km
      * @return chance de interrupção para o segmento (%)
      */
-    public static double interruptionChanceForSegment(double chanceKmPct, double distanciaKm) {
+    public static double interruptionChancePerSegment(double chanceKmPct, double distanciaKm) {
         if (distanciaKm < 1.0) {
             return chanceKmPct * distanciaKm;
         }
@@ -85,19 +85,19 @@ public final class NavigationService {
     // ── RF-MN-10: Consumo de tempo por deslocamento ─────────────────────────
 
     /**
-     * Calcula o tempo de deslocamento em minutos — RF-MN-10.
-     * {@code minutos = ceil((distancia_ajustada_km / velocidade_kmh) × minutos_por_hora)}
+     * Calcula o tempo de deslocamento em minutes — RF-MN-10.
+     * {@code minutes = ceil((distancia_ajustada_km / velocidade_kmh) × minutos_por_hora)}
      *
      * @param distAjustadaKm    distância ajustada em km
      * @param velocidadeKmh     velocidade efetiva em km/h
-     * @param minutosPorHora    minutos por hora do mundo
-     * @return tempo de deslocamento em minutos (>= 1)
+     * @param minutesPerHour    minutes por hora do mundo
+     * @return tempo de deslocamento em minutes (>= 1)
      */
     public static long travelTimeMinutes(
-            double distAjustadaKm, double velocidadeKmh, int minutosPorHora) {
+            double distAjustadaKm, double velocidadeKmh, int minutesPerHour) {
         if (velocidadeKmh <= 0) throw new IllegalArgumentException("velocidadeKmh deve ser > 0");
         double horas = distAjustadaKm / velocidadeKmh;
-        return Math.max(1L, (long) Math.ceil(horas * minutosPorHora));
+        return Math.max(1L, (long) Math.ceil(horas * minutesPerHour));
     }
 
     // ── RF-MN-11: Atualização fisiológica por trecho ────────────────────────
@@ -107,10 +107,10 @@ public final class NavigationService {
      * O custo base é proporcional ao tempo do trecho, escalado pelo fator de ação.
      *
      * @param custoPorMinuto custo de fadiga por minuto de ação
-     * @param minutosTrecho  duração do trecho em minutos
+     * @param minutosTrecho  duração do trecho em minutes
      * @return custo total de fadiga para o trecho
      */
-    public static double fatigueCostForLeg(double custoPorMinuto, long minutosTrecho) {
+    public static double fatigueCostPerSegment(double custoPorMinuto, long minutosTrecho) {
         return custoPorMinuto * minutosTrecho;
     }
 }

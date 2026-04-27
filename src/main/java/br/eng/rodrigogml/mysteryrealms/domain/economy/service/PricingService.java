@@ -10,10 +10,10 @@ import br.eng.rodrigogml.mysteryrealms.domain.economy.model.MonetaryValue;
 public final class PricingService {
 
     /** Fator mínimo permitido por faixa canônica — RF-EI-02. */
-    public static final double FATOR_MIN = 0.5;
+    public static final double FACTOR_MIN = 0.5;
 
     /** Fator máximo permitido por faixa canônica — RF-EI-02. */
-    public static final double FATOR_MAX = 2.0;
+    public static final double FACTOR_MAX = 2.0;
 
     private PricingService() {}
 
@@ -28,48 +28,48 @@ public final class PricingService {
      * preco_aplicado = preco_base × fator_total
      * </pre>
      *
-     * Cada fator deve estar no intervalo [{@value #FATOR_MIN}, {@value #FATOR_MAX}].
-     * O resultado é convertido de MS total para {@link MonetaryValue} normalizado.
+     * Cada fator deve estar no intervalo [{@value #FACTOR_MIN}, {@value #FACTOR_MAX}].
+     * O resultado é convertido de MS total para {@link MonetaryValue} normalized.
      *
-     * @param precoBase          preço base do item
+     * @param basePrice          preço base do item
      * @param fatorLugar         custo de vida e logística da localidade
      * @param fatorReputacao     reputação do personagem no local
      * @param fatorRelacionamento vínculo com o NPC comerciante
      * @param fatorOfertaDemanda escassez/abundância do item no mercado
      * @param fatorVenda         penalidade de revenda (deve ser <= 1.0 para desfavorecer revenda)
-     * @return preço resultante como {@link MonetaryValue} normalizado
-     * @throws IllegalArgumentException se qualquer fator estiver fora de [{@value #FATOR_MIN}, {@value #FATOR_MAX}]
+     * @return preço resultante como {@link MonetaryValue} normalized
+     * @throws IllegalArgumentException se qualquer fator estiver fora de [{@value #FACTOR_MIN}, {@value #FACTOR_MAX}]
      */
     public static MonetaryValue applyPrice(
-            MonetaryValue precoBase,
+            MonetaryValue basePrice,
             double fatorLugar,
             double fatorReputacao,
             double fatorRelacionamento,
             double fatorOfertaDemanda,
             double fatorVenda) {
 
-        validateFator("fatorLugar", fatorLugar);
-        validateFator("fatorReputacao", fatorReputacao);
-        validateFator("fatorRelacionamento", fatorRelacionamento);
-        validateFator("fatorOfertaDemanda", fatorOfertaDemanda);
-        validateFator("fatorVenda", fatorVenda);
+        validateFactor("fatorLugar", fatorLugar);
+        validateFactor("fatorReputacao", fatorReputacao);
+        validateFactor("fatorRelacionamento", fatorRelacionamento);
+        validateFactor("fatorOfertaDemanda", fatorOfertaDemanda);
+        validateFactor("fatorVenda", fatorVenda);
 
         double fatorTotal = fatorLugar * fatorReputacao * fatorRelacionamento
                 * fatorOfertaDemanda * fatorVenda;
 
-        long baseMs = precoBase.toTotalMs();
+        long baseMs = basePrice.totalInMinorUnits();
         long resultadoMs = Math.round(baseMs * fatorTotal);
 
-        // Converte de volta para MonetaryValue normalizado
+        // Converte de volta para MonetaryValue normalized
         long mp = resultadoMs / 100;
         long ms = resultadoMs % 100;
         return MonetaryValue.of(mp, ms);
     }
 
-    private static void validateFator(String nome, double valor) {
-        if (valor < FATOR_MIN || valor > FATOR_MAX) {
+    private static void validateFactor(String name, double value) {
+        if (value < FACTOR_MIN || value > FACTOR_MAX) {
             throw new IllegalArgumentException(
-                    nome + " deve estar em [" + FATOR_MIN + ", " + FATOR_MAX + "], recebido: " + valor);
+                    name + " deve estar em [" + FACTOR_MIN + ", " + FACTOR_MAX + "], recebido: " + value);
         }
     }
 }

@@ -5,9 +5,9 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier.enums;
  */
 public enum StackingRule {
     /** Modificadores acumulam (somam) entre si. */
-    ACCUMULATES,
-    /** O novo modificador substitui o anterior do mesmo tipo/origem. */
-    REPLACES,
+    ACCUMULATE,
+    /** O novo modificador substitui o anterior do mesmo type/origin. */
+    REPLACE,
     /** O novo modificador invalida (cancela) o anterior. */
-    INVALIDATES
+    INVALIDATE
 }

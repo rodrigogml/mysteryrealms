@@ -6,7 +6,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.character.model.SkillBonuses;
 /**
  * Classes jogáveis, conforme RF-FP-08.
  *
- * Bônus de atributos e habilidades derivados da documentação legada (docs/legado/classes.wiki).
+ * Bônus de attributes e habilidades derivados da documentação legada (docs/legado/classes.wiki).
  *
  * Nota: o legado inclui "Conhecimento (Natureza)" (Caçador +3, Alquimista +1, Sábio +1, Ladrão +2),
  * mas essa habilidade não faz parte do catálogo canônico (RF-FP-03). Esses bônus foram omitidos
@@ -19,88 +19,88 @@ public enum CharacterClass {
 
     // ── Combate ───────────────────────────────────────────────────────────────
 
-    GUERREIRO("Guerreiro",
+    WARRIOR("Guerreiro",
             new AttributeBonus(3, 1, 2, 0, 0, 0, 0),
-            SkillBonuses.of(Skill.INTIMIDACAO, 1)),
+            SkillBonuses.of(Skill.INTIMIDATION, 1)),
 
-    CACADOR("Caçador",
+    HUNTER("Caçador",
             new AttributeBonus(0, 2, 1, 0, 2, 0, 0),
             // Conhecimento (Natureza) +3 omitido (não canônico); Sobrevivência +3
-            SkillBonuses.of(Skill.SOBREVIVENCIA, 3)),
+            SkillBonuses.of(Skill.SURVIVAL, 3)),
 
-    DUELISTA("Duelista",
+    DUELIST("Duelista",
             new AttributeBonus(1, 3, 0, 0, 1, 0, 0),
-            SkillBonuses.of(Skill.FURTIVIDADE, 2, Skill.SOBREVIVENCIA, 1)),
+            SkillBonuses.of(Skill.STEALTH, 2, Skill.SURVIVAL, 1)),
 
     // ── Magia ─────────────────────────────────────────────────────────────────
 
-    MAGO("Mago",
+    MAGE("Mago",
             new AttributeBonus(0, 0, 0, 4, 0, 0, 1),
-            SkillBonuses.of(Skill.CONHECIMENTO_ARCANO, 3, Skill.CONHECIMENTO_RELIQUIAS, 1)),
+            SkillBonuses.of(Skill.ARCANE_KNOWLEDGE, 3, Skill.RELIC_KNOWLEDGE, 1)),
 
-    ALQUIMISTA("Alquimista",
+    ALCHEMIST("Alquimista",
             new AttributeBonus(0, 0, 0, 3, 0, 0, 1),
             // Conhecimento (Natureza) +1 omitido (não canônico)
-            SkillBonuses.of(Skill.CONHECIMENTO_ARCANO, 1, Skill.CONHECIMENTO_RELIQUIAS, 3)),
+            SkillBonuses.of(Skill.ARCANE_KNOWLEDGE, 1, Skill.RELIC_KNOWLEDGE, 3)),
 
-    CONJURADOR_ELEMENTAL("Conjurador Elemental",
+    ELEMENTAL_CONJURER("Conjurador Elemental",
             new AttributeBonus(0, 0, 1, 2, 1, 0, 3),
-            SkillBonuses.of(Skill.CONHECIMENTO_ARCANO, 2)),
+            SkillBonuses.of(Skill.ARCANE_KNOWLEDGE, 2)),
 
     // ── Social / Suporte ──────────────────────────────────────────────────────
 
-    BARDO("Bardo",
+    BARD("Bardo",
             new AttributeBonus(0, 1, 0, 1, 0, 3, 1),
-            SkillBonuses.of(Skill.PERSUASAO, 2, Skill.FURTIVIDADE, 1)),
+            SkillBonuses.of(Skill.PERSUASION, 2, Skill.STEALTH, 1)),
 
-    CLERIGO("Clérigo",
+    CLERIC("Clérigo",
             new AttributeBonus(0, 0, 2, 1, 0, 1, 3),
             // Conhecimento (Natureza) +1 omitido; Sobrevivência +1
-            SkillBonuses.of(Skill.CONHECIMENTO_RELIQUIAS, 1, Skill.SOBREVIVENCIA, 1)),
+            SkillBonuses.of(Skill.RELIC_KNOWLEDGE, 1, Skill.SURVIVAL, 1)),
 
-    SABIO("Sábio",
+    SAGE("Sábio",
             new AttributeBonus(0, 0, 0, 3, 2, 0, 1),
             // Conhecimento (Natureza) +1 omitido
-            SkillBonuses.of(Skill.PERSUASAO, 1, Skill.CONHECIMENTO_ARCANO, 1,
-                    Skill.CONHECIMENTO_RELIQUIAS, 2)),
+            SkillBonuses.of(Skill.PERSUASION, 1, Skill.ARCANE_KNOWLEDGE, 1,
+                    Skill.RELIC_KNOWLEDGE, 2)),
 
     // ── Furtivo / Manipulação ─────────────────────────────────────────────────
 
-    LADRAO("Ladrão",
+    ROGUE("Ladrão",
             new AttributeBonus(0, 2, 0, 0, 2, 0, 0),
             // Conhecimento (Natureza) +2 omitido
-            SkillBonuses.of(Skill.FURTIVIDADE, 2, Skill.SOBREVIVENCIA, 2,
-                    Skill.INTIMIDACAO, 1)),
+            SkillBonuses.of(Skill.STEALTH, 2, Skill.SURVIVAL, 2,
+                    Skill.INTIMIDATION, 1)),
 
-    ASSASSINO("Assassino",
+    ASSASSIN("Assassino",
             new AttributeBonus(1, 2, 0, 0, 1, 0, 0),
-            SkillBonuses.of(Skill.FURTIVIDADE, 3, Skill.SOBREVIVENCIA, 1,
-                    Skill.INTIMIDACAO, 2)),
+            SkillBonuses.of(Skill.STEALTH, 3, Skill.SURVIVAL, 1,
+                    Skill.INTIMIDATION, 2)),
 
-    ILUSIONISTA("Ilusionista",
+    ILLUSIONIST("Ilusionista",
             new AttributeBonus(0, 2, 0, 2, 1, 0, 2),
-            SkillBonuses.of(Skill.PERSUASAO, 1, Skill.CONHECIMENTO_ARCANO, 2,
-                    Skill.FURTIVIDADE, 3));
+            SkillBonuses.of(Skill.PERSUASION, 1, Skill.ARCANE_KNOWLEDGE, 2,
+                    Skill.STEALTH, 3));
 
-    private final String nome;
-    private final AttributeBonus bonusAtributos;
-    private final SkillBonuses bonusHabilidades;
+    private final String name;
+    private final AttributeBonus attributeBonus;
+    private final SkillBonuses skillBonuses;
 
-    CharacterClass(String nome, AttributeBonus bonusAtributos, SkillBonuses bonusHabilidades) {
-        this.nome = nome;
-        this.bonusAtributos = bonusAtributos;
-        this.bonusHabilidades = bonusHabilidades;
+    CharacterClass(String name, AttributeBonus attributeBonus, SkillBonuses skillBonuses) {
+        this.name = name;
+        this.attributeBonus = attributeBonus;
+        this.skillBonuses = skillBonuses;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public AttributeBonus getBonusAtributos() {
-        return bonusAtributos;
+    public AttributeBonus getAttributeBonus() {
+        return attributeBonus;
     }
 
-    public SkillBonuses getBonusHabilidades() {
-        return bonusHabilidades;
+    public SkillBonuses getSkillBonuses() {
+        return skillBonuses;
     }
 }

@@ -1,12 +1,12 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social.service;
 
-import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipBand;
-import br.eng.rodrigogml.mysteryrealms.domain.social.enums.SpeechStyleValuation;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipRange;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyleEvaluation;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.DiaryEntry;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.DiaryImpact;
-import br.eng.rodrigogml.mysteryrealms.domain.social.model.DialogueEffects;
-import br.eng.rodrigogml.mysteryrealms.domain.social.model.DialogueNode;
-import br.eng.rodrigogml.mysteryrealms.domain.social.model.DialogueOption;
+import br.eng.rodrigogml.mysteryrealms.domain.social.model.DialogEffects;
+import br.eng.rodrigogml.mysteryrealms.domain.social.model.DialogNode;
+import br.eng.rodrigogml.mysteryrealms.domain.social.model.DialogOption;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.Marker;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.SocialCycleResult;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.WorldConfig;
@@ -36,13 +36,13 @@ public final class SocialService {
     /**
      * Aplica o ajuste de estilo de fala ao resultado do teste — RF-SS-04 / RF-SS-05.
      *
-     * @param resultadoTeste resultado base do teste (valor_base + 1d20 + modificadores)
+     * @param testResult resultado base do teste (valor_base + 1d20 + modificadores)
      * @param valoracao      valoração do NPC para o estilo de fala escolhido
      * @return resultado ajustado (+2, 0 ou -2)
      */
-    public static int ajustarPorEstiloFala(int resultadoTeste, SpeechStyleValuation valoracao) {
-        if (valoracao == null) return resultadoTeste;
-        return resultadoTeste + valoracao.getAjusteTeste();
+    public static int adjustByTalkStyle(int testResult, DiscourseStyleEvaluation valoracao) {
+        if (valoracao == null) return testResult;
+        return testResult + valoracao.getTestAdjustment();
     }
 
     // ── RF-SS-06: Relacionamento com NPC ─────────────────────────────────────
@@ -50,31 +50,31 @@ public final class SocialService {
     /**
      * Aplica delta de relacionamento com NPC, clampado em [-100, 100] — RF-SS-06.
      *
-     * @param valorAtual valor atual do relacionamento
+     * @param valorAtual value atual do relacionamento
      * @param delta      incremento (pode ser negativo)
-     * @return novo valor clampado
+     * @return novo value clampado
      */
-    public static int aplicarDeltaRelacionamento(int valorAtual, int delta) {
+    public static int applyRelationshipDelta(int valorAtual, int delta) {
         return Math.max(-100, Math.min(100, valorAtual + delta));
     }
 
     /**
      * Retorna a faixa canônica de relacionamento — RF-SS-06.
      */
-    public static RelationshipBand faixaRelacionamento(int valor) {
-        return RelationshipBand.of(valor);
+    public static RelationshipRange relationshipRange(int value) {
+        return RelationshipRange.of(value);
     }
 
     // ── RF-SS-07: Reputação por localidade/facção ─────────────────────────────
 
     /**
-     * Aplica delta de reputação (sem limite fixo de clamp) — RF-SS-07.
+     * Aplica delta de reputação (sem limite fixed de clamp) — RF-SS-07.
      *
-     * @param valorAtual valor atual de reputação
+     * @param valorAtual value atual de reputação
      * @param delta      incremento (pode ser negativo)
-     * @return novo valor
+     * @return novo value
      */
-    public static int aplicarDeltaReputacao(int valorAtual, int delta) {
+    public static int applyReputationDelta(int valorAtual, int delta) {
         return valorAtual + delta;
     }
 
@@ -87,76 +87,76 @@ public final class SocialService {
      * escolha → teste social (quando aplicável) → atualização de relacionamento/reputação
      * → registro no diário → atualização de marcadores.
      *
-     * @param npcRelacionamentoAtual  valor atual do relacionamento com o NPC alvo (pode ser null)
-     * @param reputacaoAtual          valor atual de reputação no alvo (pode ser null)
+     * @param npcRelacionamentoAtual  value atual do relacionamento com o NPC alvo (pode ser null)
+     * @param reputacaoAtual          value atual de reputação no alvo (pode ser null)
      * @param node                    nó de diálogo
-     * @param opcaoId                 ID da opção escolhida pelo jogador
+     * @param optionId                 ID da opção escolhida pelo jogador
      * @param testePassed             resultado externo do teste social (dado já rolado fora)
-     * @param tempoAtualMin           tempo atual em minutos (para o campo dataJogo do diário)
+     * @param tempoAtualMin           tempo atual em minutes (para o campo gameDate do diário)
      * @param worldConfig             configuração do mundo (para formatar a data)
      * @return resultado completo do ciclo social
-     * @throws IllegalArgumentException se opcaoId não for encontrado no nó
+     * @throws IllegalArgumentException se optionId não for encontrado no nó
      */
     public static SocialCycleResult executeSocialCycle(
             Integer npcRelacionamentoAtual,
             Integer reputacaoAtual,
-            DialogueNode node,
-            String opcaoId,
+            DialogNode node,
+            String optionId,
             boolean testePassed,
             long tempoAtualMin,
             WorldConfig worldConfig) {
 
         // 1. Localizar a opção escolhida
-        DialogueOption opcao = node.opcoes().stream()
-                .filter(o -> o.opcaoId().equals(opcaoId))
+        DialogOption opcao = node.options().stream()
+                .filter(o -> o.optionId().equals(optionId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "opcaoId '" + opcaoId + "' não encontrado no nó '" + node.dialogoId() + "'"));
+                        "opcaoId '" + optionId + "' não encontrado no nó '" + node.dialogId() + "'"));
 
-        // 2. Determinar sucesso: se não há teste, sucesso automático
-        boolean sucesso = (opcao.testeSocial() == null) || testePassed;
+        // 2. Determinar success: se não há teste, success automático
+        boolean success = (opcao.socialTest() == null) || testePassed;
 
         // 3. Selecionar os efeitos aplicáveis
-        DialogueEffects efeitos = sucesso ? opcao.efeitosSucesso() : opcao.efeitosFalha();
+        DialogEffects efeitos = success ? opcao.successEffects() : opcao.failureEffects();
 
         // 4. Aplicar deltas de relacionamento e reputação
         Integer novoRelacionamento = null;
-        Integer novaReputacao = null;
-        Map<String, Integer> deltasNpc = efeitos.deltasRelacionamentoNpc();
-        Map<String, Integer> deltasLoc = efeitos.deltasReputacaoLocalidade();
-        Map<String, Integer> deltasFac = efeitos.deltasReputacaoFaccao();
+        Integer newReputation = null;
+        Map<String, Integer> deltasNpc = efeitos.npcRelationshipDeltas();
+        Map<String, Integer> deltasLoc = efeitos.localityReputationDeltas();
+        Map<String, Integer> deltasFac = efeitos.factionReputationDeltas();
 
         // Relacionamento com NPC principal do nó
         if (!deltasNpc.isEmpty() && npcRelacionamentoAtual != null) {
             int deltaTotal = deltasNpc.values().stream().mapToInt(Integer::intValue).sum();
-            novoRelacionamento = aplicarDeltaRelacionamento(npcRelacionamentoAtual, deltaTotal);
+            novoRelacionamento = applyRelationshipDelta(npcRelacionamentoAtual, deltaTotal);
         } else if (!deltasNpc.isEmpty()) {
             int deltaTotal = deltasNpc.values().stream().mapToInt(Integer::intValue).sum();
-            novoRelacionamento = aplicarDeltaRelacionamento(0, deltaTotal);
+            novoRelacionamento = applyRelationshipDelta(0, deltaTotal);
         }
 
         // Reputação (localidade ou facção, primeiro encontrado)
         if (!deltasLoc.isEmpty() && reputacaoAtual != null) {
             int deltaTotal = deltasLoc.values().stream().mapToInt(Integer::intValue).sum();
-            novaReputacao = aplicarDeltaReputacao(reputacaoAtual, deltaTotal);
+            newReputation = applyReputationDelta(reputacaoAtual, deltaTotal);
         } else if (!deltasFac.isEmpty() && reputacaoAtual != null) {
             int deltaTotal = deltasFac.values().stream().mapToInt(Integer::intValue).sum();
-            novaReputacao = aplicarDeltaReputacao(reputacaoAtual, deltaTotal);
+            newReputation = applyReputationDelta(reputacaoAtual, deltaTotal);
         }
 
         // 5. Verificar se deve registrar no diário
         boolean temImpacto = novoRelacionamento != null
-                || novaReputacao != null
+                || newReputation != null
                 || !deltasNpc.isEmpty()
                 || !deltasLoc.isEmpty()
                 || !deltasFac.isEmpty();
 
         DiaryEntry diaryEntry = null;
         if (temImpacto) {
-            String dataJogo = formatDataJogo(tempoAtualMin, worldConfig);
-            String entradaId = "diary_" + node.dialogoId() + "_" + opcaoId + "_" + DIARY_COUNTER.getAndIncrement();
-            String titulo = resumirTitulo(opcao.textoOpcao());
-            String resumo = sucesso ? "Ação bem-sucedida com " + node.npcId() + "."
+            String gameDate = formatGameDate(tempoAtualMin, worldConfig);
+            String entryId = "diary_" + node.dialogId() + "_" + optionId + "_" + DIARY_COUNTER.getAndIncrement();
+            String title = summarizeTitle(opcao.optionText());
+            String summary = success ? "Ação bem-sucedida com " + node.npcId() + "."
                     : "Ação falhou com " + node.npcId() + ".";
 
             // Consolidar todos os deltas para o impacto do diário
@@ -165,23 +165,23 @@ public final class SocialService {
             Map<String, Integer> todosFac = new HashMap<>(deltasFac);
             List<String> marcadoresIds = new ArrayList<>();
 
-            DiaryImpact impactos = new DiaryImpact(todosNpc, todosLoc, todosFac, marcadoresIds);
+            DiaryImpact impacts = new DiaryImpact(todosNpc, todosLoc, todosFac, marcadoresIds);
 
             diaryEntry = new DiaryEntry(
-                    entradaId, titulo, resumo, dataJogo,
-                    node.dialogoId(), opcaoId, impactos);
+                    entryId, title, summary, gameDate,
+                    node.dialogId(), optionId, impacts);
         }
 
         // 6. Marcadores (sem implementação de marcadores dinâmicos neste ciclo — RF-SS-09 é gerenciado externamente)
-        List<Marker> marcadoresAlterados = List.of();
+        List<Marker> alteredMarkers = List.of();
 
-        return new SocialCycleResult(sucesso, diaryEntry, marcadoresAlterados, novoRelacionamento, novaReputacao);
+        return new SocialCycleResult(success, diaryEntry, alteredMarkers, novoRelacionamento, newReputation);
     }
 
     /**
      * Formata o tempo do mundo no formato {@code D<n>-HH:MM} — RF-SS-08.
      */
-    private static String formatDataJogo(long tempoAtualMin, WorldConfig worldConfig) {
+    private static String formatGameDate(long tempoAtualMin, WorldConfig worldConfig) {
         long dia = WorldTimeService.dayOfYear(tempoAtualMin, worldConfig);
         int hora = WorldTimeService.hourOfDay(tempoAtualMin, worldConfig);
         int min = WorldTimeService.minuteOfHour(tempoAtualMin, worldConfig);
@@ -189,11 +189,11 @@ public final class SocialService {
     }
 
     /**
-     * Gera um título de no máximo 8 palavras a partir do texto da opção — RF-SS-08.
+     * Gera um título de no máximo 8 palavras a partir do text da opção — RF-SS-08.
      */
-    private static String resumirTitulo(String textoOpcao) {
-        String[] palavras = textoOpcao.trim().split("\\s+");
-        if (palavras.length <= 8) return textoOpcao.trim();
+    private static String summarizeTitle(String optionText) {
+        String[] palavras = optionText.trim().split("\\s+");
+        if (palavras.length <= 8) return optionText.trim();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             if (i > 0) sb.append(' ');

@@ -50,8 +50,8 @@ class ProgressionServiceTest {
         long soma = 0;
         for (int n = 1; n <= 10; n++) {
             soma += ProgressionService.xpForLevel(n);
-            assertEquals(soma, ProgressionService.xpTotalForLevel(n),
-                    "xpTotalForLevel(" + n + ") deve ser a soma de xpForLevel(1) a xpForLevel(" + n + ")");
+            assertEquals(soma, ProgressionService.totalXpForLevel(n),
+                    "xpTotalParaNivel(" + n + ") deve ser a soma de xpParaNivel(1) a xpParaNivel(" + n + ")");
         }
     }
 
@@ -65,20 +65,20 @@ class ProgressionServiceTest {
 
     @Test
     void shouldLevelUp_verdadeiroAoAtingirLimiar() {
-        long limiar = ProgressionService.xpTotalForLevel(2);
+        long limiar = ProgressionService.totalXpForLevel(2);
         assertTrue(ProgressionService.shouldLevelUp(limiar, 1),
                 "Deve subir de nível ao atingir exatamente o XP total do próximo nível");
     }
 
     @Test
     void shouldLevelUp_verdadeiroAcimaDoLimiar() {
-        long limiar = ProgressionService.xpTotalForLevel(2);
+        long limiar = ProgressionService.totalXpForLevel(2);
         assertTrue(ProgressionService.shouldLevelUp(limiar + 1, 1));
     }
 
     @Test
     void shouldLevelUp_falsoUmAbaixoDoLimiar() {
-        long limiar = ProgressionService.xpTotalForLevel(2);
+        long limiar = ProgressionService.totalXpForLevel(2);
         assertFalse(ProgressionService.shouldLevelUp(limiar - 1, 1));
     }
 
@@ -186,22 +186,22 @@ class ProgressionServiceTest {
 
     @Test
     void attributeSoftCap_nivel1() {
-        assertEquals(10, ProgressionService.attributeSoftCap(1));
+        assertEquals(10, ProgressionService.softCapAttribute(1));
     }
 
     @Test
     void attributeSoftCap_nivel5() {
-        assertEquals(11, ProgressionService.attributeSoftCap(5));
+        assertEquals(11, ProgressionService.softCapAttribute(5));
     }
 
     @Test
     void attributeSoftCap_nivel10() {
-        assertEquals(12, ProgressionService.attributeSoftCap(10));
+        assertEquals(12, ProgressionService.softCapAttribute(10));
     }
 
     @Test
     void attributeSoftCap_nivel20() {
-        assertEquals(14, ProgressionService.attributeSoftCap(20));
+        assertEquals(14, ProgressionService.softCapAttribute(20));
     }
 
     // ── RF-PP-06: habilidade final ────────────────────────────────────────────
@@ -209,13 +209,13 @@ class ProgressionServiceTest {
     @Test
     void skillFinalValue_somaCorretamente() {
         // atributo=4, pp=2, level=10 (bonusProficiency=1), mod=1 → 4+2+1+1=8
-        assertEquals(8, ProgressionService.skillFinalValue(4, 2, 10, 1));
+        assertEquals(8, ProgressionService.finalSkillValue(4, 2, 10, 1));
     }
 
     @Test
     void skillFinalValue_semModificadores() {
         // atributo=5, pp=0, level=1 (bonus=0), mod=0 → 5
-        assertEquals(5, ProgressionService.skillFinalValue(5, 0, 1, 0));
+        assertEquals(5, ProgressionService.finalSkillValue(5, 0, 1, 0));
     }
 
     // ── RF-PP-01: XP nunca diminui ───────────────────────────────────────────
@@ -229,12 +229,12 @@ class ProgressionServiceTest {
 
     @Test
     void xpNuncaDiminui_xpCrescente() {
-        // RF-PP-01 — xpTotalForLevel é crescente (XP não diminui)
+        // RF-PP-01 — totalXpForLevel é crescente (XP não diminui)
         long prev = 0;
         for (int n = 1; n <= 20; n++) {
-            long total = ProgressionService.xpTotalForLevel(n);
+            long total = ProgressionService.totalXpForLevel(n);
             assertTrue(total >= prev,
-                    "xpTotalForLevel deve ser crescente: nível " + n);
+                    "xpTotalParaNivel deve ser crescente: nível " + n);
             prev = total;
         }
     }
@@ -244,28 +244,28 @@ class ProgressionServiceTest {
     @Test
     void abilitySlot_slot1DesbloqueadoNivel3() {
         // RF-PP-07
-        assertFalse(ProgressionService.isAbilitySlotUnlocked(2, 1));
-        assertTrue(ProgressionService.isAbilitySlotUnlocked(3, 1));
+        assertFalse(ProgressionService.isSkillSlotUnlocked(2, 1));
+        assertTrue(ProgressionService.isSkillSlotUnlocked(3, 1));
     }
 
     @Test
     void abilitySlot_slot2DesbloqueadoNivel8() {
         // RF-PP-07
-        assertFalse(ProgressionService.isAbilitySlotUnlocked(7, 2));
-        assertTrue(ProgressionService.isAbilitySlotUnlocked(8, 2));
+        assertFalse(ProgressionService.isSkillSlotUnlocked(7, 2));
+        assertTrue(ProgressionService.isSkillSlotUnlocked(8, 2));
     }
 
     @Test
     void abilitySlot_slotInexistente_false() {
         // RF-PP-07
-        assertFalse(ProgressionService.isAbilitySlotUnlocked(99, 3));
+        assertFalse(ProgressionService.isSkillSlotUnlocked(99, 3));
     }
 
     @Test
     void signatureAbilityUnlocked_nivel12() {
         // RF-PP-07
-        assertFalse(ProgressionService.isSignatureAbilityUnlocked(11));
-        assertTrue(ProgressionService.isSignatureAbilityUnlocked(12));
+        assertFalse(ProgressionService.isSignatureSkillUnlocked(11));
+        assertTrue(ProgressionService.isSignatureSkillUnlocked(12));
     }
 
     @Test

@@ -47,10 +47,10 @@ public record SkillBonuses(Map<Skill, Integer> bonuses) {
     /**
      * Combina dois SkillBonuses somando os valores de chaves comuns.
      */
-    public SkillBonuses merge(SkillBonuses other) {
+    public SkillBonuses merge(SkillBonuses outro) {
         EnumMap<Skill, Integer> merged = new EnumMap<>(Skill.class);
         merged.putAll(this.bonuses);
-        other.bonuses.forEach((k, v) -> merged.merge(k, v, Integer::sum));
+        outro.bonuses.forEach((k, v) -> merged.merge(k, v, Integer::sum));
         return new SkillBonuses(merged);
     }
 }

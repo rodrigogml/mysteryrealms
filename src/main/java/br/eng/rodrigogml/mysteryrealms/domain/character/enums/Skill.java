@@ -5,26 +5,26 @@ package br.eng.rodrigogml.mysteryrealms.domain.character.enums;
  */
 public enum Skill {
 
-    PERSUASAO("persuasao"),
-    INTIMIDACAO("intimidacao"),
-    ENGANACAO("enganacao"),
-    CONHECIMENTO_ARCANO("conhecimento_arcano"),
-    CONHECIMENTO_HISTORIA("conhecimento_historia"),
-    CONHECIMENTO_RELIQUIAS("conhecimento_reliquias"),
-    HERBALISMO("herbalismo"),
-    ALQUIMIA("alquimia"),
-    FURTIVIDADE("furtividade"),
-    SOBREVIVENCIA("sobrevivencia"),
-    MANUSEIO_ARMAS("manuseio_armas"),
-    USO_MAGIA("uso_magia");
+    PERSUASION("persuasao"),
+    INTIMIDATION("intimidacao"),
+    DECEPTION("enganacao"),
+    ARCANE_KNOWLEDGE("conhecimento_arcano"),
+    HISTORY_KNOWLEDGE("conhecimento_historia"),
+    RELIC_KNOWLEDGE("conhecimento_reliquias"),
+    HERBALISM("herbalismo"),
+    ALCHEMY("alquimia"),
+    STEALTH("furtividade"),
+    SURVIVAL("sobrevivencia"),
+    WEAPON_HANDLING("manuseio_armas"),
+    MAGIC_USE("uso_magia");
 
-    private final String chave;
+    private final String key;
 
-    Skill(String chave) {
-        this.chave = chave;
+    Skill(String key) {
+        this.key = key;
     }
 
-    public String getChave() {
-        return chave;
+    public String getKey() {
+        return key;
     }
 }

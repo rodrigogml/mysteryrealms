@@ -17,76 +17,76 @@ import br.eng.rodrigogml.mysteryrealms.domain.character.model.SkillBonuses;
  */
 public enum Race {
 
-    HUMANO("Humano",
+    HUMAN("Humano",
             new AttributeSet(3, 3, 3, 3, 3, 3, 3),
             new int[]{75, 65, 70},
             SkillBonuses.empty()),
 
-    ELFO("Elfo",
+    ELF("Elfo",
             new AttributeSet(2, 4, 2, 4, 4, 2, 3),
             new int[]{60, 50, 55},
-            SkillBonuses.of(Skill.CONHECIMENTO_ARCANO, 2)),
+            SkillBonuses.of(Skill.ARCANE_KNOWLEDGE, 2)),
 
-    MEIO_ELFO("Meio-elfo",
+    HALF_ELF("Meio-elfo",
             new AttributeSet(2, 3, 3, 3, 3, 4, 3),
             new int[]{67, 57, 62},
-            SkillBonuses.of(Skill.PERSUASAO, 1)),
+            SkillBonuses.of(Skill.PERSUASION, 1)),
 
-    ANAO("Anão",
+    DWARF("Anão",
             new AttributeSet(3, 2, 5, 2, 3, 2, 3),
             new int[]{85, 75, 80},
-            SkillBonuses.of(Skill.SOBREVIVENCIA, 2)),
+            SkillBonuses.of(Skill.SURVIVAL, 2)),
 
-    MEIO_ORC("Meio-orc",
+    HALF_ORC("Meio-orc",
             new AttributeSet(5, 3, 4, 1, 2, 1, 2),
             new int[]{95, 85, 90},
-            SkillBonuses.of(Skill.INTIMIDACAO, 1)),
+            SkillBonuses.of(Skill.INTIMIDATION, 1)),
 
     TIEFLING("Tiefling",
             new AttributeSet(2, 3, 2, 4, 2, 4, 3),
             new int[]{70, 60, 65},
-            SkillBonuses.of(Skill.CONHECIMENTO_RELIQUIAS, 2)),
+            SkillBonuses.of(Skill.RELIC_KNOWLEDGE, 2)),
 
-    DRACONATO("Draconato",
+    DRAGONBORN("Draconato",
             new AttributeSet(4, 2, 4, 3, 2, 3, 2),
             new int[]{100, 90, 95},
-            SkillBonuses.of(Skill.INTIMIDACAO, 1)),
+            SkillBonuses.of(Skill.INTIMIDATION, 1)),
 
     HALFLING("Halfling",
             new AttributeSet(1, 5, 3, 2, 3, 2, 4),
             new int[]{40, 35, 37},
-            SkillBonuses.of(Skill.FURTIVIDADE, 2));
+            SkillBonuses.of(Skill.STEALTH, 2));
 
-    private final String nome;
-    private final AttributeSet atributosBase;
-    /** Peso base em kg: índice 0=MASCULINO, 1=FEMININO, 2=OUTRO */
-    private final int[] pesoBaseKg;
-    private final SkillBonuses bonusHabilidades;
+    private final String name;
+    private final AttributeSet baseAttributes;
+    /** Peso base em kg: índice 0=MALE, 1=FEMALE, 2=OTHER */
+    private final int[] baseWeightKg;
+    private final SkillBonuses skillBonuses;
 
-    Race(String nome, AttributeSet atributosBase, int[] pesoBaseKg, SkillBonuses bonusHabilidades) {
-        this.nome = nome;
-        this.atributosBase = atributosBase;
-        this.pesoBaseKg = pesoBaseKg;
-        this.bonusHabilidades = bonusHabilidades;
+    Race(String name, AttributeSet baseAttributes, int[] baseWeightKg, SkillBonuses skillBonuses) {
+        this.name = name;
+        this.baseAttributes = baseAttributes;
+        this.baseWeightKg = baseWeightKg;
+        this.skillBonuses = skillBonuses;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public AttributeSet getAtributosBase() {
-        return atributosBase;
+    public AttributeSet getBaseAttributes() {
+        return baseAttributes;
     }
 
-    public int getPesoBaseKg(Gender gender) {
+    public int getBaseWeightKg(Gender gender) {
         return switch (gender) {
-            case MASCULINO -> pesoBaseKg[0];
-            case FEMININO -> pesoBaseKg[1];
-            case OUTRO -> pesoBaseKg[2];
+            case MALE -> baseWeightKg[0];
+            case FEMALE -> baseWeightKg[1];
+            case OTHER -> baseWeightKg[2];
         };
     }
 
-    public SkillBonuses getBonusHabilidades() {
-        return bonusHabilidades;
+    public SkillBonuses getSkillBonuses() {
+        return skillBonuses;
     }
 }

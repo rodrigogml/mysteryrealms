@@ -4,11 +4,11 @@ package br.eng.rodrigogml.mysteryrealms.domain.world.enums;
  * Nível hierárquico de localização — RF-MN-01.
  */
 public enum LocationType {
-    MUNDO,
-    CONTINENTE,
-    DOMINIO,
-    REGIAO,
-    LOCALIDADE,
+    WORLD,
+    CONTINENT,
+    DOMAIN,
+    REGION,
+    LOCALITY,
     ZONA,
-    AMBIENTE
+    ENVIRONMENT
 }

@@ -45,7 +45,7 @@ class EconomyTest {
     @Test
     void monetaryValue_totalMs_conversao() {
         // 1 MP = 100 MS
-        assertEquals(125L, MonetaryValue.of(1, 25).toTotalMs());
+        assertEquals(125L, MonetaryValue.of(1, 25).totalInMinorUnits());
     }
 
     @Test
@@ -67,31 +67,31 @@ class EconomyTest {
     @Test
     void handItem_validacaoNomeVazio() {
         assertThrows(IllegalArgumentException.class,
-                () -> buildWeapon(""));
+                () -> buildArma(""));
     }
 
     @Test
     void handItem_validacaoMaosNecessariasInvalido() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Weapon("Espada", 3, 1.5, MonetaryValue.ofMp(10),
-                        "tipo_espada", "1d8", DamageType.CORTE, "curto", "20/x2", 0, 0, 0, 0));
+                        "tipo_espada", "1d8", DamageType.SLASHING, "curto", "20/x2", 0, 0, 0, 0));
     }
 
     @Test
     void handItem_maosNecessariasValidos() {
-        Weapon arma1 = buildWeapon("Espada Curta");
-        assertEquals(1, arma1.getMaosNecessarias());
+        Weapon arma1 = buildArma("Espada Curta");
+        assertEquals(1, arma1.getHandsRequired());
 
         Weapon arma2 = new Weapon("Machado Grande", 2, 4.0, MonetaryValue.ofMp(15),
-                "tipo_machado", "2d6", DamageType.CORTE, "curto", "20/x3", 0, 0, 0, 0);
-        assertEquals(2, arma2.getMaosNecessarias());
+                "tipo_machado", "2d6", DamageType.SLASHING, "curto", "20/x3", 0, 0, 0, 0);
+        assertEquals(2, arma2.getHandsRequired());
     }
 
     @Test
     void handItem_pesoNegativoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Weapon("Espada", 1, -0.1, MonetaryValue.ofMp(10),
-                        "tipo_espada", "1d8", DamageType.CORTE, "curto", "20/x2", 0, 0, 0, 0));
+                        "tipo_espada", "1d8", DamageType.SLASHING, "curto", "20/x2", 0, 0, 0, 0));
     }
 
     // ── RF-EI-04: Canais de bônus ─────────────────────────────────────────────
@@ -99,32 +99,32 @@ class EconomyTest {
     @Test
     void weapon_bonusPrecisaoEDano() {
         Weapon arma = new Weapon("Espada Mágica", 1, 1.5, MonetaryValue.ofMp(100),
-                "tipo_espada", "1d8", DamageType.CORTE, "curto", "20/x2", 2, 0.1, 1, 0.0);
-        assertEquals(2, arma.getBonusItemPrecisaoFlat());
-        assertEquals(0.1, arma.getBonusItemPrecisaoPct(), 1e-9);
-        assertEquals(1, arma.getBonusItemDanoFlat());
-        assertEquals(0, arma.getBonusItemBloqueioFlat());
+                "tipo_espada", "1d8", DamageType.SLASHING, "curto", "20/x2", 2, 0.1, 1, 0.0);
+        assertEquals(2, arma.getItemPrecisionBonusFlat());
+        assertEquals(0.1, arma.getItemPrecisionBonusPct(), 1e-9);
+        assertEquals(1, arma.getItemDamageBonusFlat());
+        assertEquals(0, arma.getItemBlockBonusFlat());
     }
 
     @Test
     void shield_bonusDefesaEBloqueio() {
-        Shield escudo = buildShield("Escudo de Ferro", 30, 5, 0, 10, 0.1);
-        assertEquals(5, escudo.getBonusItemDefesaFlat());
-        assertEquals(0.1, escudo.getBonusItemDefesaPct(), 1e-9);
-        assertEquals(10, escudo.getBonusItemBloqueioFlat());
-        assertEquals(30, escudo.getValorBaseBloqueio());
+        Shield escudo = buildEscudo("Escudo de Ferro", 30, 5, 0, 10, 0.1);
+        assertEquals(5, escudo.getItemDefenseBonusFlat());
+        assertEquals(0.1, escudo.getItemDefenseBonusPct(), 1e-9);
+        assertEquals(10, escudo.getItemBlockBonusFlat());
+        assertEquals(30, escudo.getBaseBlockValue());
     }
 
     // ── RF-EI-07: Ficha de arma ───────────────────────────────────────────────
 
     @Test
     void weapon_camposObrigatorios() {
-        Weapon arma = buildWeapon("Lança");
-        assertEquals("tipo_lanca", arma.getTipoArmaId());
-        assertEquals("1d6", arma.getDadoDanoBase());
-        assertEquals(DamageType.PERFURACAO, arma.getTipoDano());
-        assertEquals(HandItemSubtype.ARMA, arma.getSubtipo());
-        assertEquals(HandItemCategory.ATAQUE, arma.getCategoriaUso());
+        Weapon arma = buildArma("Lança");
+        assertEquals("tipo_lanca", arma.getWeaponTypeId());
+        assertEquals("1d6", arma.getBaseDamageDie());
+        assertEquals(DamageType.PIERCING, arma.getDamageType());
+        assertEquals(HandItemSubtype.ARMA, arma.getSubtype());
+        assertEquals(HandItemCategory.ATTACK, arma.getUseCategory());
     }
 
     @Test
@@ -138,11 +138,11 @@ class EconomyTest {
 
     @Test
     void shield_camposObrigatorios() {
-        Shield escudo = buildShield("Escudo de Madeira", 20, 0, 0, 0, 0.0);
-        assertEquals(HandItemSubtype.ESCUDO, escudo.getSubtipo());
-        assertEquals(HandItemCategory.DEFESA, escudo.getCategoriaUso());
-        assertEquals(1, escudo.getMaosNecessarias());
-        assertEquals(20, escudo.getValorBaseBloqueio());
+        Shield escudo = buildEscudo("Escudo de Madeira", 20, 0, 0, 0, 0.0);
+        assertEquals(HandItemSubtype.ESCUDO, escudo.getSubtype());
+        assertEquals(HandItemCategory.DEFENSE, escudo.getUseCategory());
+        assertEquals(1, escudo.getHandsRequired());
+        assertEquals(20, escudo.getBaseBlockValue());
     }
 
     // ── RF-EI-02: fórmula de preço ────────────────────────────────────────────
@@ -161,7 +161,7 @@ class EconomyTest {
         // RF-EI-02
         MonetaryValue base = MonetaryValue.of(10, 0); // 1000 MS
         MonetaryValue resultado = PricingService.applyPrice(base, 2.0, 1.0, 1.0, 1.0, 1.0);
-        assertEquals(2000, resultado.toTotalMs());
+        assertEquals(2000, resultado.totalInMinorUnits());
     }
 
     @Test
@@ -169,7 +169,7 @@ class EconomyTest {
         // RF-EI-02
         MonetaryValue base = MonetaryValue.of(10, 0); // 1000 MS
         MonetaryValue resultado = PricingService.applyPrice(base, 0.5, 1.0, 1.0, 1.0, 1.0);
-        assertEquals(500, resultado.toTotalMs());
+        assertEquals(500, resultado.totalInMinorUnits());
     }
 
     @Test
@@ -194,14 +194,14 @@ class EconomyTest {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private Weapon buildWeapon(String nome) {
-        return new Weapon(nome, 1, 1.0, MonetaryValue.ofMp(5),
-                "tipo_lanca", "1d6", DamageType.PERFURACAO, "médio", "20/x2", 0, 0, 0, 0);
+    private Weapon buildArma(String name) {
+        return new Weapon(name, 1, 1.0, MonetaryValue.ofMp(5),
+                "tipo_lanca", "1d6", DamageType.PIERCING, "médio", "20/x2", 0, 0, 0, 0);
     }
 
-    private Shield buildShield(String nome, int bloqueio, int defesaFlat, int penDex,
+    private Shield buildEscudo(String name, int bloqueio, int defesaFlat, int penDex,
                                 int bloqueioFlat, double defesaPct) {
-        return new Shield(nome, 3.0, MonetaryValue.ofMp(8),
+        return new Shield(name, 3.0, MonetaryValue.ofMp(8),
                 bloqueio, null, penDex, defesaFlat, defesaPct, bloqueioFlat, 0.0);
     }
 }

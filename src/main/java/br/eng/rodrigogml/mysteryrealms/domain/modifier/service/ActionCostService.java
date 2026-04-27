@@ -19,12 +19,12 @@ public final class ActionCostService {
      * Retorna o custo base de uma ação, conforme a tabela RF-MAR-08.
      * Retorna uma nova instância a cada chamada para garantir mutabilidade segura.
      */
-    public static ActionCost baseCost(ActionClass actionClass) {
+    public static ActionCost baseActionCost(ActionClass actionClass) {
         return switch (actionClass) {
-            case PASSIVA      -> new ActionCost(5,   2.0,  0.05,  0.15);
-            case MODERADA     -> new ActionCost(10,  8.0,  0.20,  0.60);
-            case EXIGENTE     -> new ActionCost(15, 20.0,  0.50,  1.20);
-            case RECUPERATIVA -> new ActionCost(20, -12.0, -0.40, -0.80);
+            case PASSIVE      -> new ActionCost(5,   2.0,  0.05,  0.15);
+            case MODERATE     -> new ActionCost(10,  8.0,  0.20,  0.60);
+            case DEMANDING     -> new ActionCost(15, 20.0,  0.50,  1.20);
+            case RESTORATIVE -> new ActionCost(20, -12.0, -0.40, -0.80);
         };
     }
 
@@ -36,7 +36,7 @@ public final class ActionCostService {
      * <ul>
      *   <li>{@code "HEAT"} — calor forte/seco: +20% custo_fadiga, +35% delta_sede_pct</li>
      *   <li>{@code "COLD"} — frio intenso: +15% custo_fadiga</li>
-     *   <li>{@code "RAIN"} — chuva/vento forte: +10% tempo_gasto_min (MODERADA/EXIGENTE)</li>
+     *   <li>{@code "RAIN"} — chuva/vento forte: +10% tempo_gasto_min (MODERATE/DEMANDING)</li>
      * </ul>
      *
      * @param cost        custo a modificar (mutado diretamente)
@@ -47,15 +47,15 @@ public final class ActionCostService {
         if (condition == null) return;
         switch (condition.toUpperCase()) {
             case "HEAT" -> {
-                cost.setCustoFadiga(cost.getCustoFadiga() * 1.20);
-                cost.setDeltaSedePct(cost.getDeltaSedePct() * 1.35);
+                cost.setFatigueCost(cost.getFatigueCost() * 1.20);
+                cost.setThirstDeltaPct(cost.getThirstDeltaPct() * 1.35);
             }
             case "COLD" -> {
-                cost.setCustoFadiga(cost.getCustoFadiga() * 1.15);
+                cost.setFatigueCost(cost.getFatigueCost() * 1.15);
             }
             case "RAIN" -> {
-                if (actionClass == ActionClass.MODERADA || actionClass == ActionClass.EXIGENTE) {
-                    cost.setTempoGastoMin((int) Math.ceil(cost.getTempoGastoMin() * 1.10));
+                if (actionClass == ActionClass.MODERATE || actionClass == ActionClass.DEMANDING) {
+                    cost.setTimeSpentMin((int) Math.ceil(cost.getTimeSpentMin() * 1.10));
                 }
             }
             default -> { /* condição desconhecida: sem ajuste */ }
@@ -68,23 +68,23 @@ public final class ActionCostService {
      * Aplica modificadores de carga ao custo da ação — RF-MAR-09.
      *
      * @param cost        custo a modificar (mutado diretamente)
-     * @param actionClass classe da ação (EXIGENTE bloqueada acima de 100% de carga)
-     * @param cargaRatio  razão carga_atual / capacidade_carga (0.0 = vazio, 1.0 = cheio, >1.0 = sobrecarga)
-     * @throws IllegalStateException se actionClass=EXIGENTE e cargaRatio>1.0 (deslocamento bloqueado)
+     * @param actionClass classe da ação (DEMANDING bloqueada acima de 100% de carga)
+     * @param cargaRatio  razão carga_atual / capacidade_carga (0.0 = empty, 1.0 = cheio, >1.0 = sobrecarga)
+     * @throws IllegalStateException se actionClass=DEMANDING e cargaRatio>1.0 (deslocamento bloqueado)
      */
     public static void applyLoadModifier(ActionCost cost, ActionClass actionClass, double cargaRatio) {
         if (cargaRatio > 1.0) {
-            if (actionClass == ActionClass.EXIGENTE) {
+            if (actionClass == ActionClass.DEMANDING) {
                 throw new IllegalStateException(
                         "Ação EXIGENTE bloqueada: carga acima de 100% da capacidade (ratio=" + cargaRatio + ")");
             }
-            cost.setCustoFadiga(cost.getCustoFadiga() * 1.50);
+            cost.setFatigueCost(cost.getFatigueCost() * 1.50);
         } else if (cargaRatio > 0.80) {
-            cost.setCustoFadiga(cost.getCustoFadiga() * 1.25);
-            cost.setTempoGastoMin((int) Math.ceil(cost.getTempoGastoMin() * 1.10));
+            cost.setFatigueCost(cost.getFatigueCost() * 1.25);
+            cost.setTimeSpentMin((int) Math.ceil(cost.getTimeSpentMin() * 1.10));
         } else if (cargaRatio > 0.50) {
-            if (actionClass == ActionClass.MODERADA || actionClass == ActionClass.EXIGENTE) {
-                cost.setCustoFadiga(cost.getCustoFadiga() * 1.10);
+            if (actionClass == ActionClass.MODERATE || actionClass == ActionClass.DEMANDING) {
+                cost.setFatigueCost(cost.getFatigueCost() * 1.10);
             }
         }
         // <= 0.50: sem ajuste
@@ -105,7 +105,7 @@ public final class ActionCostService {
      * @param isEstadoCritico  personagem em estado_critico
      * @throws IllegalStateException se isDesmaio ou isEstadoCritico for verdadeiro
      */
-    public static void applyPhysiologicalModifier(
+    public static void applyPhysiologyModifier(
             ActionCost cost,
             boolean isExaustao,
             boolean isSede,
@@ -127,18 +127,18 @@ public final class ActionCostService {
         if (isFome)           multiplicadorFadiga += 0.10;
         if (isFomeAgravada)   multiplicadorFadiga += 0.20;
 
-        cost.setCustoFadiga(cost.getCustoFadiga() * multiplicadorFadiga);
+        cost.setFatigueCost(cost.getFatigueCost() * multiplicadorFadiga);
 
         if (isSedeAgravada) {
-            cost.setDeltaSedePct(cost.getDeltaSedePct() + cost.getDeltaSedePct() * 0.15);
+            cost.setThirstDeltaPct(cost.getThirstDeltaPct() + cost.getThirstDeltaPct() * 0.15);
         }
         if (isFomeAgravada) {
-            cost.setDeltaFomePct(cost.getDeltaFomePct() + cost.getDeltaFomePct() * 0.10);
+            cost.setHungerDeltaPct(cost.getHungerDeltaPct() + cost.getHungerDeltaPct() * 0.10);
         }
 
         // Clamp final — RF-MAR-09
-        cost.setDeltaFomePct(Math.max(-100.0, Math.min(100.0, cost.getDeltaFomePct())));
-        cost.setDeltaSedePct(Math.max(-100.0, Math.min(100.0, cost.getDeltaSedePct())));
+        cost.setHungerDeltaPct(Math.max(-100.0, Math.min(100.0, cost.getHungerDeltaPct())));
+        cost.setThirstDeltaPct(Math.max(-100.0, Math.min(100.0, cost.getThirstDeltaPct())));
     }
 
     // ── Método consolidado ────────────────────────────────────────────────────
@@ -171,10 +171,10 @@ public final class ActionCostService {
             boolean isDesmaio,
             boolean isEstadoCritico) {
 
-        ActionCost cost = baseCost(actionClass);
+        ActionCost cost = baseActionCost(actionClass);
         applyWeatherModifier(cost, actionClass, weatherCondition);
         applyLoadModifier(cost, actionClass, cargaRatio);
-        applyPhysiologicalModifier(cost, isExaustao, isSede, isSedeAgravada,
+        applyPhysiologyModifier(cost, isExaustao, isSede, isSedeAgravada,
                 isFome, isFomeAgravada, isDesmaio, isEstadoCritico);
         return cost;
     }

@@ -22,10 +22,10 @@ public final class CombatService {
         return valorBase + dice.d20() + modificadores;
     }
 
-    // ── RF-CT-02: critério de sucesso por CD ─────────────────────────────────
+    // ── RF-CT-02: critério de success por CD ─────────────────────────────────
 
     /**
-     * Verifica sucesso contra CD fixa — RF-CT-02.
+     * Verifica success contra CD fixa — RF-CT-02.
      */
     public static boolean isSuccess(int resultado, int cd) {
         return resultado >= cd;
@@ -50,10 +50,10 @@ public final class CombatService {
     // ── RF-CT-04: iniciativa ─────────────────────────────────────────────────
 
     /**
-     * Rolagem de iniciativa: 1d20 + destreza + percepcao — RF-CT-04.
+     * Rolagem de iniciativa: 1d20 + dexterity + perception — RF-CT-04.
      */
-    public static int rollInitiative(int destreza, int percepcao, DiceRoller dice) {
-        return dice.d20() + destreza + percepcao;
+    public static int rollInitiative(int dexterity, int perception, DiceRoller dice) {
+        return dice.d20() + dexterity + perception;
     }
 
     // ── RF-CT-08: teste de acerto vs defesaFinal ─────────────────────────────
@@ -68,7 +68,7 @@ public final class CombatService {
     /**
      * Verifica se o ataque acerta: testeAcerto >= defesaFinal — RF-CT-08.
      */
-    public static boolean isHit(int testeAcerto, int defesaFinal) {
+    public static boolean hit(int testeAcerto, int defesaFinal) {
         return testeAcerto >= defesaFinal;
     }
 
@@ -87,7 +87,7 @@ public final class CombatService {
     // ── RF-CT-10: resistência ────────────────────────────────────────────────
 
     /**
-     * Dano após resistência por tipo — RF-CT-10.
+     * Dano após resistência por type — RF-CT-10.
      * dano_pos_resistencia = max(0, floor(danoPosBloquio × (1 - resistenciaTipo)))
      * Para jogadores, resistenciaTipo é limitado a 0,80 (RF-CT-10).
      *
@@ -102,8 +102,8 @@ public final class CombatService {
     /**
      * Aplica o limite máximo de resistência para personagens jogadores — RF-CT-10.
      */
-    public static double clampPlayerResistance(double resistenciaTipo) {
-        return Math.min(resistenciaTipo, CharacterAttributeService.MAX_RESISTANCE_PLAYER);
+    public static double limitPlayerResistance(double resistenciaTipo) {
+        return Math.min(resistenciaTipo, CharacterAttributeService.MAX_PLAYER_RESISTANCE);
     }
 
     // ── RF-CT-11: aflições ───────────────────────────────────────────────────
@@ -141,8 +141,8 @@ public final class CombatService {
      * Resultado final de dano após bloqueio e resistência (etapas 3–5 do pipeline) — RF-CT-07.
      *
      * @param danoBruto          dano bruto calculado pelas fórmulas de RF-FP-06.6
-     * @param bloqueioFinal      valor final de bloqueio
-     * @param resistenciaTipo    resistência por tipo de dano [0,0 a 1,0] (já limitada externamente para jogadores)
+     * @param bloqueioFinal      value final de bloqueio
+     * @param resistenciaTipo    resistência por type de dano [0,0 a 1,0] (já limitada externamente para jogadores)
      */
     public static int resolveDamage(int danoBruto, int bloqueioFinal, double resistenciaTipo) {
         int posBloquio = damageAfterBlock(danoBruto, bloqueioFinal);
@@ -152,10 +152,10 @@ public final class CombatService {
     // ── RF-CT-05: teste de percepção ─────────────────────────────────────────
 
     /**
-     * Rolagem de percepção: percepcao + 1d20 — RF-CT-05.
+     * Rolagem de percepção: perception + 1d20 — RF-CT-05.
      */
-    public static int rollPerception(int percepcao, DiceRoller dice) {
-        return percepcao + dice.d20();
+    public static int rollPerception(int perception, DiceRoller dice) {
+        return perception + dice.d20();
     }
 
     /**
@@ -166,18 +166,18 @@ public final class CombatService {
      * @param furtividadeRoll resultado do teste de furtividade do oculto
      * @return {@code true} se o observador detectar; {@code false} em empate ou falha
      */
-    public static boolean detectsTarget(int perceptionRoll, int furtividadeRoll) {
+    public static boolean detectTarget(int perceptionRoll, int furtividadeRoll) {
         return perceptionRoll > furtividadeRoll;
     }
 
     /**
-     * Verifica se o observador detecta um alvo fixo com CD de ambiente — RF-CT-05.
+     * Verifica se o observador detecta um alvo fixed com CD de ambiente — RF-CT-05.
      *
      * @param perceptionRoll resultado do teste de percepção
      * @param cdAmbiente     CD fixa do ambiente
      * @return {@code true} se percepção >= CD
      */
-    public static boolean detectsVsCd(int perceptionRoll, int cdAmbiente) {
+    public static boolean detectVersusCD(int perceptionRoll, int cdAmbiente) {
         return perceptionRoll >= cdAmbiente;
     }
 
@@ -190,11 +190,11 @@ public final class CombatService {
      * @param isSleepTorpor            personagem afetado por sono/torpor
      * @param isBlindedWithVisualTarget personagem cego e a ação exige alvo visual
      * @param forcedDisplacementOver3m personagem sofreu deslocamento forçado > 3m
-     * @param triggerBecameInvalid     gatilho declarado tornou-se inválido
-     * @param nextTurnStarted          início do próximo turno ocorreu sem o gatilho
+     * @param triggerBecameInvalid     trigger declarado tornou-se inválido
+     * @param nextTurnStarted          início do próximo turno ocorreu sem o trigger
      * @return {@code true} se a ação preparada foi cancelada
      */
-    public static boolean isPreparedActionCancelled(
+    public static boolean preparedActionCanceled(
             boolean isParalysed,
             boolean isSleepTorpor,
             boolean isBlindedWithVisualTarget,

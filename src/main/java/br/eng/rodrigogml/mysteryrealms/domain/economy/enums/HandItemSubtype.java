@@ -6,7 +6,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.economy.enums;
 public enum HandItemSubtype {
     ARMA,
     ESCUDO,
-    FOCO_MAGICO,
-    FERRAMENTA,
-    OUTRO
+    MAGIC_FOCUS,
+    TOOL,
+    OTHER
 }

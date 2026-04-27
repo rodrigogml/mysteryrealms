@@ -9,14 +9,14 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier.enums;
 public enum ActionClass {
 
     /** Observação, conversa breve, organização de inventário parado. */
-    PASSIVA,
+    PASSIVE,
 
     /** Movimento padrão, coleta simples, interação tática leve. */
-    MODERADA,
+    MODERATE,
 
     /** Corrida prolongada, escalada difícil, combate intenso. */
-    EXIGENTE,
+    DEMANDING,
 
     /** Descanso curto, hidratação, refeição leve, respiração guiada. */
-    RECUPERATIVA
+    RESTORATIVE
 }

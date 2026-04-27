@@ -30,10 +30,10 @@ class WorldNavigationTest {
 
     @Test
     void zone_criacaoValida() {
-        Zone z = buildZone("zona_praca", "Praça Central");
-        assertEquals("zona_praca", z.idZona());
-        assertEquals("Praça Central", z.nome());
-        assertTrue(z.acessivel());
+        Zone z = buildZona("zona_praca", "Praça Central");
+        assertEquals("zona_praca", z.zoneId());
+        assertEquals("Praça Central", z.name());
+        assertTrue(z.accessible());
     }
 
     @Test
@@ -52,14 +52,14 @@ class WorldNavigationTest {
 
     @Test
     void environment_tipoNavegavelEhAmbiente() {
-        assertEquals(LocationType.AMBIENTE, GameEnvironment.TIPO_NAVEGAVEL);
+        assertEquals(LocationType.ENVIRONMENT, GameEnvironment.TIPO_NAVEGAVEL);
     }
 
     @Test
     void environment_criacaoValida() {
         GameEnvironment e = buildEnv("amb_taverna");
-        assertEquals("amb_taverna", e.idAmbiente());
-        assertEquals("zona_praca", e.idZona());
+        assertEquals("amb_taverna", e.environmentId());
+        assertEquals("zona_praca", e.zoneId());
     }
 
     @Test
@@ -73,30 +73,30 @@ class WorldNavigationTest {
     @Test
     void connection_criacaoValida() {
         Connection c = buildConnection("conn_001", "zona_praca", List.of("zona_mercado"));
-        assertEquals("conn_001", c.idConexao());
-        assertEquals("zona_praca", c.origemId());
-        assertEquals(ConnectionClassification.PACIFICADO, c.classificacao());
+        assertEquals("conn_001", c.connectionId());
+        assertEquals("zona_praca", c.originId());
+        assertEquals(ConnectionClassification.PACIFIED, c.classification());
     }
 
     @Test
     void connection_semDestinosLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Connection("conn_001", "zona_praca", List.of(),
-                        true, ConnectionClassification.PACIFICADO, 0, 0, "tab_001"));
+                        true, ConnectionClassification.PACIFIED, 0, 0, "tab_001"));
     }
 
     @Test
     void connection_penaldadeForaDaFaixaLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Connection("conn_001", "zona_praca", List.of("zona_m"),
-                        true, ConnectionClassification.PACIFICADO, 20, 0, "tab_001"));
+                        true, ConnectionClassification.PACIFIED, 20, 0, "tab_001"));
     }
 
     @Test
     void connection_chanceInterrupcaoForaDaFaixaLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Connection("conn_001", "zona_praca", List.of("zona_m"),
-                        true, ConnectionClassification.PACIFICADO, 5, 101, "tab_001"));
+                        true, ConnectionClassification.PACIFIED, 5, 101, "tab_001"));
     }
 
     // ── RF-MN-05: Cluster ───────────────────────────────────────────────────
@@ -105,46 +105,46 @@ class WorldNavigationTest {
     void cluster_criacaoValida() {
         Cluster cl = new Cluster("cl_cidade", "Centro", "loc_cidade",
                 List.of("zona_praca", "zona_mercado"), List.of("conn_001"),
-                ClusterNavigationMode.LIVRE);
-        assertEquals("cl_cidade", cl.idCluster());
-        assertEquals(ClusterNavigationMode.LIVRE, cl.modoNavegacao());
+                ClusterNavigationMode.FREE);
+        assertEquals("cl_cidade", cl.clusterId());
+        assertEquals(ClusterNavigationMode.FREE, cl.navigationMode());
     }
 
     @Test
     void cluster_semPontosLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Cluster("cl_001", "Nome", "loc_001",
-                        List.of(), List.of(), ClusterNavigationMode.LIVRE));
+                        List.of(), List.of(), ClusterNavigationMode.FREE));
     }
 
     // ── RF-MN-07: Distâncias ─────────────────────────────────────────────────
 
     @Test
     void navigationService_distanciaBase_pontoMesmo() {
-        assertEquals(0.0, NavigationService.distanceBaseKm(1.0, 1.0, 1.0, 1.0), 1e-9);
+        assertEquals(0.0, NavigationService.baseDistanceKm(1.0, 1.0, 1.0, 1.0), 1e-9);
     }
 
     @Test
     void navigationService_distanciaBase_horizontalUmUnidade() {
         // sqrt(1^2 + 0^2) × 10 = 10 km
-        assertEquals(10.0, NavigationService.distanceBaseKm(0.0, 0.0, 1.0, 0.0), 1e-9);
+        assertEquals(10.0, NavigationService.baseDistanceKm(0.0, 0.0, 1.0, 0.0), 1e-9);
     }
 
     @Test
     void navigationService_distanciaBase_diagonal() {
         // sqrt(3^2 + 4^2) × 10 = 5 × 10 = 50 km
-        assertEquals(50.0, NavigationService.distanceBaseKm(0, 0, 3, 4), 1e-9);
+        assertEquals(50.0, NavigationService.baseDistanceKm(0, 0, 3, 4), 1e-9);
     }
 
     @Test
     void navigationService_distanciaAjustada_semPenalidade() {
-        assertEquals(50.0, NavigationService.distanceAdjustedKm(50.0, 0.0), 1e-9);
+        assertEquals(50.0, NavigationService.adjustedDistanceKm(50.0, 0.0), 1e-9);
     }
 
     @Test
     void navigationService_distanciaAjustada_comPenalidade10Pct() {
         // 50 × 1.10 = 55
-        assertEquals(55.0, NavigationService.distanceAdjustedKm(50.0, 10.0), 1e-9);
+        assertEquals(55.0, NavigationService.adjustedDistanceKm(50.0, 10.0), 1e-9);
     }
 
     // ── RF-MN-08: Resolução de destino ──────────────────────────────────────
@@ -176,18 +176,18 @@ class WorldNavigationTest {
 
     @Test
     void navigationService_interrupcao_segmentoCompleto() {
-        assertEquals(10.0, NavigationService.interruptionChanceForSegment(10.0, 1.0), 1e-9);
+        assertEquals(10.0, NavigationService.interruptionChancePerSegment(10.0, 1.0), 1e-9);
     }
 
     @Test
     void navigationService_interrupcao_segmentoParcial() {
         // chance 10% × 0.5 km = 5%
-        assertEquals(5.0, NavigationService.interruptionChanceForSegment(10.0, 0.5), 1e-9);
+        assertEquals(5.0, NavigationService.interruptionChancePerSegment(10.0, 0.5), 1e-9);
     }
 
     @Test
     void navigationService_interrupcao_acimaDe1kmUsaChanceDireta() {
-        assertEquals(10.0, NavigationService.interruptionChanceForSegment(10.0, 5.0), 1e-9);
+        assertEquals(10.0, NavigationService.interruptionChancePerSegment(10.0, 5.0), 1e-9);
     }
 
     // ── RF-MN-10: Tempo de deslocamento ─────────────────────────────────────
@@ -219,12 +219,12 @@ class WorldNavigationTest {
 
     @Test
     void worldConfig_criacaoValida() {
-        WorldConfig config = buildWorldConfig();
-        assertEquals("mundo_teste", config.idMundo());
-        assertEquals(60, config.minutosPorHora());
-        assertEquals(24, config.horasPorDia());
-        assertEquals(360, config.diasPorAno());
-        assertEquals(1440, config.minutosPorDia());
+        WorldConfig config = buildConfiguracaoMundo();
+        assertEquals("mundo_teste", config.worldId());
+        assertEquals(60, config.minutesPerHour());
+        assertEquals(24, config.hoursPerDay());
+        assertEquals(360, config.daysPerYear());
+        assertEquals(1440, config.minutesPerDay());
     }
 
     @Test
@@ -248,8 +248,8 @@ class WorldNavigationTest {
     @Test
     void dayPhase_criacaoValida() {
         DayPhase fase = new DayPhase("dia", 360, 1080);
-        assertEquals("dia", fase.idFase());
-        assertEquals(360, fase.inicioMinDia());
+        assertEquals("dia", fase.phaseId());
+        assertEquals(360, fase.startMinOfDay());
     }
 
     @Test
@@ -260,7 +260,7 @@ class WorldNavigationTest {
     @Test
     void season_criacaoValida() {
         Season s = new Season("verao", 1, 90);
-        assertEquals("verao", s.idEstacao());
+        assertEquals("verao", s.seasonId());
     }
 
     @Test
@@ -284,15 +284,15 @@ class WorldNavigationTest {
 
     @Test
     void worldTimeService_minuteOfDay() {
-        WorldConfig config = buildWorldConfig(); // 1440 min/dia
-        assertEquals(0, WorldTimeService.minuteOfDay(0L, config));
-        assertEquals(60, WorldTimeService.minuteOfDay(60L, config));
-        assertEquals(0, WorldTimeService.minuteOfDay(1440L, config)); // novo dia
+        WorldConfig config = buildConfiguracaoMundo(); // 1440 min/dia
+        assertEquals(0, WorldTimeService.minutesOfDay(0L, config));
+        assertEquals(60, WorldTimeService.minutesOfDay(60L, config));
+        assertEquals(0, WorldTimeService.minutesOfDay(1440L, config)); // novo dia
     }
 
     @Test
     void worldTimeService_dayOfYear() {
-        WorldConfig config = buildWorldConfig(); // 360 dias/ano
+        WorldConfig config = buildConfiguracaoMundo(); // 360 dias/ano
         assertEquals(1L, WorldTimeService.dayOfYear(0L, config));
         assertEquals(1L, WorldTimeService.dayOfYear(1439L, config));
         assertEquals(2L, WorldTimeService.dayOfYear(1440L, config)); // segundo dia
@@ -300,48 +300,48 @@ class WorldNavigationTest {
 
     @Test
     void worldTimeService_year() {
-        WorldConfig config = buildWorldConfig(); // 360 dias/ano × 1440 min/dia
+        WorldConfig config = buildConfiguracaoMundo(); // 360 dias/ano × 1440 min/dia
         long minPorAno = 360L * 1440L;
-        assertEquals(1L, WorldTimeService.year(0L, config));
-        assertEquals(2L, WorldTimeService.year(minPorAno, config));
+        assertEquals(1L, WorldTimeService.ano(0L, config));
+        assertEquals(2L, WorldTimeService.ano(minPorAno, config));
     }
 
     @Test
     void worldTimeService_hourOfDay() {
-        WorldConfig config = buildWorldConfig(); // 60 min/hora
+        WorldConfig config = buildConfiguracaoMundo(); // 60 min/hora
         assertEquals(1, WorldTimeService.hourOfDay(60L, config));
         assertEquals(2, WorldTimeService.hourOfDay(120L, config));
     }
 
     @Test
     void worldTimeService_formatTime() {
-        WorldConfig config = buildWorldConfig();
+        WorldConfig config = buildConfiguracaoMundo();
         String fmt = WorldTimeService.formatTime(0L, config);
         assertEquals("Ano1 D1-00:00", fmt);
     }
 
     @Test
     void worldTimeService_formatTime_segundoDia() {
-        WorldConfig config = buildWorldConfig();
+        WorldConfig config = buildConfiguracaoMundo();
         String fmt = WorldTimeService.formatTime(1440L, config);
         assertEquals("Ano1 D2-00:00", fmt);
     }
 
     @Test
-    void worldTimeService_currentDayPhase() {
-        WorldConfig config = buildWorldConfig();
+    void worldTimeService_currentFaseDia() {
+        WorldConfig config = buildConfiguracaoMundo();
         // A config tem fase "dia" de 360 a 1080 min
         DayPhase fase = WorldTimeService.currentDayPhase(360L, config);
         assertNotNull(fase);
-        assertEquals("dia", fase.idFase());
+        assertEquals("dia", fase.phaseId());
     }
 
     @Test
     void worldTimeService_currentSeason() {
-        WorldConfig config = buildWorldConfig();
+        WorldConfig config = buildConfiguracaoMundo();
         Season estacao = WorldTimeService.currentSeason(0L, config);
         assertNotNull(estacao);
-        assertEquals("unica_estacao", estacao.idEstacao());
+        assertEquals("unica_estacao", estacao.seasonId());
     }
 
     // ── RF-MN-06: validações hierárquicas ────────────────────────────────────
@@ -356,8 +356,8 @@ class WorldNavigationTest {
     @Test
     void hierarchyValidation_prefixoAmbienteValido() {
         // RF-MN-06
-        assertTrue(HierarchyValidationService.validateAmbientePrefix("amb_taverna"));
-        assertFalse(HierarchyValidationService.validateAmbientePrefix("taverna"));
+        assertTrue(HierarchyValidationService.validateEnvironmentPrefix("amb_taverna"));
+        assertFalse(HierarchyValidationService.validateEnvironmentPrefix("taverna"));
     }
 
     @Test
@@ -401,26 +401,26 @@ class WorldNavigationTest {
     @Test
     void hierarchyValidation_tipoNavegavelCoerente() {
         // RF-MN-06
-        assertTrue(HierarchyValidationService.tipoNavegavelCoherent("ZONA", "zona"));
-        assertFalse(HierarchyValidationService.tipoNavegavelCoherent("ambiente", "zona"));
+        assertTrue(HierarchyValidationService.isNavigableTypeCoherent("ZONA", "zona"));
+        assertFalse(HierarchyValidationService.isNavigableTypeCoherent("ambiente", "zona"));
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private Zone buildZone(String id, String nome) {
-        return new Zone(id, nome, "loc_cidade", 1.0, 1.0, true, "Descrição.");
+    private Zone buildZona(String id, String name) {
+        return new Zone(id, name, "loc_cidade", 1.0, 1.0, true, "Descrição.");
     }
 
     private GameEnvironment buildEnv(String id) {
         return new GameEnvironment(id, "Taverna do Lobo", "zona_praca", 1.1, 1.1, true, null);
     }
 
-    private Connection buildConnection(String id, String origem, List<String> destinos) {
-        return new Connection(id, origem, destinos, false,
-                ConnectionClassification.PACIFICADO, 5.0, 10.0, "tab_001");
+    private Connection buildConnection(String id, String origin, List<String> destinos) {
+        return new Connection(id, origin, destinos, false,
+                ConnectionClassification.PACIFIED, 5.0, 10.0, "tab_001");
     }
 
-    private WorldConfig buildWorldConfig() {
+    private WorldConfig buildConfiguracaoMundo() {
         return new WorldConfig(
                 "mundo_teste",
                 60,  // minutos por hora

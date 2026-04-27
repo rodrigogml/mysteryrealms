@@ -5,33 +5,33 @@ package br.eng.rodrigogml.mysteryrealms.domain.combat.enums;
  */
 public enum ResistanceType {
 
-    CORTE("corte"),
-    PERFURACAO("perfuracao"),
-    ESMAGAMENTO("esmagamento"),
-    FOGO("fogo"),
-    GELO("gelo"),
-    RAIO("raio"),
-    ACIDO("acido"),
-    MAGIA_PURA("magia_pura"),
-    ENCANTAMENTO("encantamento"),
-    VENENO("veneno"),
-    DOENCA("doenca"),
-    SANGRAMENTO("sangramento"),
-    FADIGA("fadiga"),
-    DOR("dor"),
-    SOM("som"),
-    CONFUSAO("confusao"),
-    ILUSAO("ilusao"),
-    CONTROLE_MENTAL("controle_mental"),
-    CORRUPCAO_ESPIRITUAL("corrupcao_espiritual");
+    SLASHING("corte"),
+    PIERCING("perfuracao"),
+    BLUDGEONING("esmagamento"),
+    FIRE("fogo"),
+    ICE("gelo"),
+    LIGHTNING("raio"),
+    ACID("acido"),
+    PURE_MAGIC("magia_pura"),
+    ENCHANTMENT("encantamento"),
+    POISON("veneno"),
+    DISEASE("doenca"),
+    BLEEDING("sangramento"),
+    FATIGUE("fadiga"),
+    PAIN("dor"),
+    SOUND("som"),
+    CONFUSION("confusao"),
+    ILLUSION("ilusao"),
+    MIND_CONTROL("controle_mental"),
+    SPIRITUAL_CORRUPTION("corrupcao_espiritual");
 
-    private final String chave;
+    private final String key;
 
-    ResistanceType(String chave) {
-        this.chave = chave;
+    ResistanceType(String key) {
+        this.key = key;
     }
 
-    public String getChave() {
-        return chave;
+    public String getKey() {
+        return key;
     }
 }

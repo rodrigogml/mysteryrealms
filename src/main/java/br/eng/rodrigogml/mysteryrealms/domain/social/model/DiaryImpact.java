@@ -7,24 +7,24 @@ import java.util.Map;
  * Impactos registrados numa entrada de diário — RF-SS-08.
  */
 public record DiaryImpact(
-        Map<String, Integer> deltasRelacionamentoNpc,
-        Map<String, Integer> deltasReputacaoLocalidade,
-        Map<String, Integer> deltasReputacaoFaccao,
-        List<String> marcadoresAlterados) {
+        Map<String, Integer> npcRelationshipDeltas,
+        Map<String, Integer> localityReputationDeltas,
+        Map<String, Integer> factionReputationDeltas,
+        List<String> alteredMarkers) {
 
     public DiaryImpact {
-        if (deltasRelacionamentoNpc == null)
-            deltasRelacionamentoNpc = Map.of();
-        if (deltasReputacaoLocalidade == null)
-            deltasReputacaoLocalidade = Map.of();
-        if (deltasReputacaoFaccao == null)
-            deltasReputacaoFaccao = Map.of();
-        if (marcadoresAlterados == null)
-            marcadoresAlterados = List.of();
-        deltasRelacionamentoNpc = Map.copyOf(deltasRelacionamentoNpc);
-        deltasReputacaoLocalidade = Map.copyOf(deltasReputacaoLocalidade);
-        deltasReputacaoFaccao = Map.copyOf(deltasReputacaoFaccao);
-        marcadoresAlterados = List.copyOf(marcadoresAlterados);
+        if (npcRelationshipDeltas == null)
+            npcRelationshipDeltas = Map.of();
+        if (localityReputationDeltas == null)
+            localityReputationDeltas = Map.of();
+        if (factionReputationDeltas == null)
+            factionReputationDeltas = Map.of();
+        if (alteredMarkers == null)
+            alteredMarkers = List.of();
+        npcRelationshipDeltas = Map.copyOf(npcRelationshipDeltas);
+        localityReputationDeltas = Map.copyOf(localityReputationDeltas);
+        factionReputationDeltas = Map.copyOf(factionReputationDeltas);
+        alteredMarkers = List.copyOf(alteredMarkers);
     }
 
     public static DiaryImpact empty() {

@@ -1,100 +1,156 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social.model;
 
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType;
+
 /**
- * Marcador de progresso social — RF-SS-09.
+ * Marker de progresso social — RF-SS-09.
  *
  * Convenção de ID: {@code mk_<dominio>_<descricaoCamelCase>}.
  */
 public class Marker {
 
     private final String id;
-    private final br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType tipo;
+    private final MarkerType type;
     /** Boolean para FLAG; Integer para STAGE e COUNTER. */
-    private Object valor;
+    private Object value;
 
-    public Marker(String id, br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType tipo, Object valorInicial) {
+    /**
+     * Cria um marcador.
+     *
+     * @param id           identificador único com prefixo {@code mk_}
+     * @param type         type do marcador
+     * @param valorInicial value initial compatível com o type
+     * @throws IllegalArgumentException se id, type ou value forem inválidos
+     */
+    public Marker(String id, MarkerType type, Object valorInicial) {
         if (id == null || id.isBlank())
             throw new IllegalArgumentException("id do marcador não pode ser vazio");
         if (!id.startsWith("mk_"))
             throw new IllegalArgumentException("id do marcador deve começar com 'mk_': " + id);
-        if (tipo == null)
+        if (type == null)
             throw new IllegalArgumentException("tipo do marcador não pode ser nulo");
-        validarValor(tipo, valorInicial);
+        validarValor(type, valorInicial);
 
         this.id = id;
-        this.tipo = tipo;
-        this.valor = valorInicial;
+        this.type = type;
+        this.value = valorInicial;
     }
 
-    /** Cria um marcador FLAG ativo (true). */
+    /**
+     * Cria um marcador {@link MarkerType#FLAG} ativo (true).
+     *
+     * @param id identificador único com prefixo {@code mk_}
+     * @return novo marcador ativo
+     */
     public static Marker flag(String id) {
-        return new Marker(id, br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.FLAG, Boolean.TRUE);
+        return new Marker(id, MarkerType.FLAG, Boolean.TRUE);
     }
 
-    /** Cria um marcador FLAG inativo (false). */
-    public static Marker flagInativo(String id) {
-        return new Marker(id, br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.FLAG, Boolean.FALSE);
+    /**
+     * Cria um marcador {@link MarkerType#FLAG} inativo (false).
+     *
+     * @param id identificador único com prefixo {@code mk_}
+     * @return novo marcador inativo
+     */
+    public static Marker inactiveFlag(String id) {
+        return new Marker(id, MarkerType.FLAG, Boolean.FALSE);
     }
 
-    /** Cria um marcador STAGE com valor inicial 0. */
+    /**
+     * Cria um marcador {@link MarkerType#STAGE} com value initial 0.
+     *
+     * @param id identificador único com prefixo {@code mk_}
+     * @return novo marcador de estágio
+     */
     public static Marker stage(String id) {
-        return new Marker(id, br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.STAGE, 0);
+        return new Marker(id, MarkerType.STAGE, 0);
     }
 
-    /** Cria um marcador COUNTER com valor inicial 0. */
+    /**
+     * Cria um marcador {@link MarkerType#COUNTER} com value initial 0.
+     *
+     * @param id identificador único com prefixo {@code mk_}
+     * @return novo marcador counter
+     */
     public static Marker counter(String id) {
-        return new Marker(id, br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.COUNTER, 0);
+        return new Marker(id, MarkerType.COUNTER, 0);
     }
 
     public String getId() { return id; }
-    public br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType getTipo() { return tipo; }
-    public Object getValor() { return valor; }
+    public MarkerType getType() { return type; }
+    public Object getValue() { return value; }
 
-    public boolean isFlagAtivo() {
-        if (tipo != br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.FLAG)
-            throw new IllegalStateException("Marcador não é do tipo FLAG");
-        return Boolean.TRUE.equals(valor);
+    /**
+     * Retorna {@code true} se este marcador {@link MarkerType#FLAG} estiver ativo.
+     *
+     * @return estado do flag
+     * @throws IllegalStateException se o type não for FLAG
+     */
+    public boolean isFlagActive() {
+        if (type != MarkerType.FLAG)
+            throw new IllegalStateException("Marcador não é do tipo SINALIZADOR");
+        return Boolean.TRUE.equals(value);
     }
 
-    public int getValorInteiro() {
-        if (tipo == br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.FLAG)
-            throw new IllegalStateException("Marcador FLAG não tem valor inteiro");
-        return (Integer) valor;
+    /**
+     * Retorna o value inteiro de marcadores {@link MarkerType#STAGE} ou {@link MarkerType#COUNTER}.
+     *
+     * @return value inteiro atual
+     * @throws IllegalStateException se o type for FLAG
+     */
+    public int intValue() {
+        if (type == MarkerType.FLAG)
+            throw new IllegalStateException("Marcador SINALIZADOR não tem valor inteiro");
+        return (Integer) value;
     }
 
-    /** Ativa/desativa um marcador FLAG. */
+    /**
+     * Ativa/desativa um marcador {@link MarkerType#FLAG}.
+     *
+     * @param ativo novo estado
+     * @throws IllegalStateException se o type não for FLAG
+     */
     public void setFlag(boolean ativo) {
-        if (tipo != br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.FLAG)
-            throw new IllegalStateException("setFlag só é válido para tipo FLAG");
-        this.valor = ativo;
+        if (type != MarkerType.FLAG)
+            throw new IllegalStateException("definirSinalizador só é válido para tipo SINALIZADOR");
+        this.value = ativo;
     }
 
-    /** Define o estágio de um marcador STAGE. */
-    public void setStage(int estagio) {
-        if (tipo != br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.STAGE)
-            throw new IllegalStateException("setStage só é válido para tipo STAGE");
-        this.valor = estagio;
+    /**
+     * Define o estágio de um marcador {@link MarkerType#STAGE}.
+     *
+     * @param stage novo value de estágio
+     * @throws IllegalStateException se o type não for STAGE
+     */
+    public void setStage(int stage) {
+        if (type != MarkerType.STAGE)
+            throw new IllegalStateException("definirEstagio só é válido para tipo ESTAGIO");
+        this.value = stage;
     }
 
-    /** Incrementa um marcador numérico (STAGE ou COUNTER). */
+    /**
+     * Incrementa um marcador numérico ({@link MarkerType#STAGE} ou {@link MarkerType#COUNTER}).
+     *
+     * @param delta value a adicionar (pode ser negativo)
+     * @throws IllegalStateException se o type for FLAG
+     */
     public void increment(int delta) {
-        if (tipo == br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType.FLAG)
-            throw new IllegalStateException("increment não é válido para tipo FLAG");
-        this.valor = (Integer) this.valor + delta;
+        if (type == MarkerType.FLAG)
+            throw new IllegalStateException("incrementar não é válido para tipo SINALIZADOR");
+        this.value = (Integer) this.value + delta;
     }
 
-    private static void validarValor(
-            br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType tipo, Object valor) {
-        if (valor == null) throw new IllegalArgumentException("valor do marcador não pode ser nulo");
-        switch (tipo) {
+    private static void validarValor(MarkerType type, Object value) {
+        if (value == null) throw new IllegalArgumentException("valor do marcador não pode ser nulo");
+        switch (type) {
             case FLAG:
-                if (!(valor instanceof Boolean))
-                    throw new IllegalArgumentException("FLAG requer valor Boolean");
+                if (!(value instanceof Boolean))
+                    throw new IllegalArgumentException("SINALIZADOR requer valor Boolean");
                 break;
             case STAGE:
             case COUNTER:
-                if (!(valor instanceof Integer))
-                    throw new IllegalArgumentException("STAGE/COUNTER requerem valor Integer");
+                if (!(value instanceof Integer))
+                    throw new IllegalArgumentException("ESTAGIO/CONTADOR requerem valor Integer");
                 break;
         }
     }

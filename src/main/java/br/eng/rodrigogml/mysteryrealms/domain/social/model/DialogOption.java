@@ -1,31 +1,31 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social.model;
 
-import br.eng.rodrigogml.mysteryrealms.domain.social.enums.SpeechStyle;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyle;
 
 /**
  * Opção dentro de um nó de diálogo — RF-SS-01.
  */
-public record DialogueOption(
-        String opcaoId,
-        SpeechStyle estiloFala,
-        String textoOpcao,
+public record DialogOption(
+        String optionId,
+        DiscourseStyle talkStyle,
+        String optionText,
         /** Presente quando há risco ou oposição — RF-SS-01. */
-        SocialTest testeSocial,
+        SocialTest socialTest,
         /** Efeitos quando não há teste ou teste passa — RF-SS-01. */
-        DialogueEffects efeitosSucesso,
-        /** Obrigatório quando {@code testeSocial} estiver presente — RF-SS-01. */
-        DialogueEffects efeitosFalha) {
+        DialogEffects successEffects,
+        /** Obrigatório quando {@code socialTest} estiver presente — RF-SS-01. */
+        DialogEffects failureEffects) {
 
-    public DialogueOption {
-        if (opcaoId == null || opcaoId.isBlank())
+    public DialogOption {
+        if (optionId == null || optionId.isBlank())
             throw new IllegalArgumentException("opcaoId não pode ser vazio");
-        if (estiloFala == null)
+        if (talkStyle == null)
             throw new IllegalArgumentException("estiloFala não pode ser nulo");
-        if (textoOpcao == null || textoOpcao.isBlank())
+        if (optionText == null || optionText.isBlank())
             throw new IllegalArgumentException("textoOpcao não pode ser vazio");
-        if (efeitosSucesso == null)
+        if (successEffects == null)
             throw new IllegalArgumentException("efeitosSucesso não pode ser nulo");
-        if (testeSocial != null && efeitosFalha == null)
+        if (socialTest != null && failureEffects == null)
             throw new IllegalArgumentException("efeitosFalha é obrigatório quando testeSocial estiver presente");
     }
 }
