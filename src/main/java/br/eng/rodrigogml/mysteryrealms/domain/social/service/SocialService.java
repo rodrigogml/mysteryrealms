@@ -165,7 +165,7 @@ public final class SocialService {
             Map<String, Integer> todosFac = new HashMap<>(deltasFac);
             List<String> marcadoresIds = new ArrayList<>();
 
-            DiaryImpact impactos = new DiaryImpact(todosNpc, todosLoc, todosLoc.isEmpty() ? todosFac : todosLoc, marcadoresIds);
+            DiaryImpact impactos = new DiaryImpact(todosNpc, todosLoc, todosFac, marcadoresIds);
 
             diaryEntry = new DiaryEntry(
                     entradaId, titulo, resumo, dataJogo,
