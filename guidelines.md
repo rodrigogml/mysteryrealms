@@ -113,3 +113,25 @@ Documentação relevante sobre as definições da implementação do sistema.
     - Casos de dois ou mais relacionamentos para a mesma tabela: utilizar o prefixo `id` concatenado com o significado do relacionamento, sem a necessidade de incluir o nome da tabela. Exemplos: `idPreviousItem` e `idNextItem`, imaginando um relacionamento linear entre objetos da mesma tabela.
   - Tabelas de relacionamento N:N devem ter o nome das tabelas que relacionam separados por `_`. Exemplo: `user_userGroup`. A utilização de `_` nesse caso é uma exceção prevista, com o objetivo de facilitar a identificação visual das tabelas de relacionamento em relação às tabelas de dados.
   - Tipos de enumeração Java (`enum`) devem ser persistidos no banco pelo nome do valor da enum, em colunas do tipo `VARCHAR(50)`.
+
+# Código Java
+
+## Idioma do Código
+- Identificadores Java — nomes de classes, interfaces, enums, records, métodos, campos, variáveis e parâmetros — devem ser escritos em português, sem acentuação e sem cedilha.
+  > Observação: a ausência de acentuação e cedilha evita conflitos de encoding em ferramentas que não suportam UTF-8 nativamente (IDEs, terminais, diff viewers) e garante portabilidade do código-fonte.
+- Comentários no código devem ser escritos em português.
+- Comentários do tipo TODO são permitidos, no formato `// TODO`.
+- Todas as mensagens e textos expostos ao usuário devem ser internacionalizados via i18n.
+- O idioma padrão e obrigatório para as mensagens i18n é o inglês.
+
+## Javadoc
+- Todo tipo público — classe, interface, enum ou record — deve possuir Javadoc descrevendo o seu propósito.
+- Todo método público não trivialmente autoexplicativo deve possuir Javadoc. Métodos triviais como getters simples estão dispensados.
+- Toda referência a outro tipo, método ou campo dentro de um Javadoc deve utilizar obrigatoriamente a tag `{@link}`. O uso de `{@link}` é obrigatório e padronizado; referências em texto livre sem `{@link}` não são permitidas.
+- As tags `@param`, `@return` e `@throws` são obrigatórias quando aplicáveis a métodos públicos documentados.
+
+## Modelos de Dados
+- Classes de modelo de dados — DTOs, _value objects_, resultados de operações e demais objetos de transferência ou representação — devem ser **imutáveis**.
+  > Uma classe é considerada imutável quando: todos os campos são `final`; não há métodos _setter_; coleções expostas publicamente são retornadas apenas como cópias ou vistas não modificáveis (e.g., `Collections.unmodifiableList`); e o estado do objeto não pode ser alterado após a construção.
+- O uso de Java `record` é a forma preferida para implementar modelos imutáveis simples, mas não é obrigatório.
+- Quando não for possível ou adequado usar `record`, a imutabilidade deve ser garantida explicitamente: todos os campos declarados como `final`, ausência de _setters_ e coleções expostas apenas de forma não modificável.
