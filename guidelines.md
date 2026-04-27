@@ -128,13 +128,16 @@ Documentação relevante sobre as definições da implementação do sistema.
 - O uso de nomes canônicos (fully qualified names) diretamente no corpo do código — fora de declarações `package` e `import` — é proibido, salvo nos casos em que duas classes de pacotes distintos possuem o mesmo nome simples e o uso do nome canônico é necessário para diferenciá-las.
 
 ## Javadoc
+- Toda classe deve ter javadoc da classe explicando o objetivo, escopo e se for o caso definições de organização (prefixos/sufixos de métodos, patterns da classe, etc.). Incluir a tag @autor (com nome do autor, se não definido utilizar '?')) e tag @since com a data no formato DD-MM-YYYY.
 - Todo tipo público — classe, interface, enum ou record — deve possuir Javadoc descrevendo o seu propósito.
 - Todo método público não trivialmente autoexplicativo deve possuir Javadoc. Métodos triviais como getters simples estão dispensados.
 - Toda referência a outro tipo, método ou campo dentro de um Javadoc deve utilizar obrigatoriamente a tag `{@link}`. O uso de `{@link}` é obrigatório e padronizado; referências em texto livre sem `{@link}` não são permitidas.
 - As tags `@param`, `@return` e `@throws` são obrigatórias quando aplicáveis a métodos públicos documentados.
 
 ## Modelos de Dados
-- Classes de modelo de dados — DTOs, _value objects_, resultados de operações e demais objetos de transferência ou representação — devem ser **imutáveis**.
-  > Uma classe é considerada imutável quando: todos os campos são `final`; não há métodos _setter_; coleções expostas publicamente são retornadas apenas como cópias ou vistas não modificáveis (e.g., `Collections.unmodifiableList`); e o estado do objeto não pode ser alterado após a construção.
-- O uso de Java `record` é a forma preferida para implementar modelos imutáveis simples, mas não é obrigatório.
-- Quando não for possível ou adequado usar `record`, a imutabilidade deve ser garantida explicitamente: todos os campos declarados como `final`, ausência de _setters_ e coleções expostas apenas de forma não modificável.
+- Sufixo VO (Value Objects) - são objetos imutáveis, utilizados para retorno de dados que não devem ser alterados.
+  > Uma classe é considerada imutável quando: todos os campos são `final`; não há métodos _setter_; coleções expostas publicamente são retornadas apenas como cópias ou vistas não modificáveis (e.g., `Collections.unmodifiableList`); e o estado do objeto não pode ser alterado após a construção. O uso de Java `record` é a forma preferida para implementar modelos imutáveis simples (VOs), mas não é obrigatório.
+- Sufixo DTO (Data Transfer Objects) - são objetos de representação do sistema que podem ser alterados em ao menos 1 atributo. Utilizado para enviar dados para UI, pela API, etc.
+  > DTOs devem ter apenas atributos e métodos getters e setters, nenhuma lógica, permitido apenas métodos get que sejam composição, calculados, safe-operations baseado em outros atributos da própria classe ou objetos de atributos do próprio DTO.
+- Sufixo Entity - Objetos de banco (entidades JPA)
+- Sufixo Enum - Classes de definição de enumerations.
