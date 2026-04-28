@@ -1,17 +1,21 @@
 package br.eng.rodrigogml.mysteryrealms.application.coop.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
+import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterRepository;
 import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopParticipantEntity;
 import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopSessionEntity;
 import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopSessionStatus;
 import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopParticipantRepository;
 import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopSessionRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanceRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Serviço de aplicação responsável pelo gerenciamento de sessões cooperativas:
- * criação, entrada, saída, encerramento e listagem.
+ * criação, entrada, saída, encerramento, listagem e regras de convidado (RF-MJ-03 a RF-MJ-05).
  *
  * @author ?
  * @since 28-04-2026
@@ -20,17 +24,25 @@ public class CoopSessionService {
 
     private final CoopSessionRepository sessionRepository;
     private final CoopParticipantRepository participantRepository;
+    private final CharacterRepository characterRepository;
+    private final WorldInstanceRepository worldInstanceRepository;
 
     /**
      * Cria o serviço com as dependências necessárias.
      *
-     * @param sessionRepository     repositório de sessões cooperativas
-     * @param participantRepository repositório de participantes
+     * @param sessionRepository       repositório de sessões cooperativas
+     * @param participantRepository   repositório de participantes
+     * @param characterRepository     repositório de personagens
+     * @param worldInstanceRepository repositório de instâncias de mundo
      */
     public CoopSessionService(CoopSessionRepository sessionRepository,
-            CoopParticipantRepository participantRepository) {
+            CoopParticipantRepository participantRepository,
+            CharacterRepository characterRepository,
+            WorldInstanceRepository worldInstanceRepository) {
         this.sessionRepository = sessionRepository;
         this.participantRepository = participantRepository;
+        this.characterRepository = characterRepository;
+        this.worldInstanceRepository = worldInstanceRepository;
     }
 
     /**
@@ -186,6 +198,105 @@ public class CoopSessionService {
             }
         }
         return false;
+    }
+
+    /**
+     * Retorna o {@link CharacterEntity} de um participante ativo da sessão, confirmando que o
+     * convidado entra no mundo do anfitrião com o <em>seu próprio personagem</em> — RF-MJ-03.
+     *
+     * @param sessionId   o ID da sessão co-op ativa
+     * @param characterId o ID do personagem do convidado
+     * @return o personagem do convidado
+     * @throws IllegalArgumentException se a sessão não existir, não estiver ativa, o participante
+     *                                  não estiver na sessão ou o personagem não for encontrado
+     */
+    public CharacterEntity getParticipantCharacter(Long sessionId, Long characterId) {
+        CoopSessionEntity session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+
+        requireActiveSession(session);
+
+        participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+
+        return characterRepository.findById(characterId)
+                .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+    }
+
+    /**
+     * Persiste os dados pessoais do personagem convidado após alterações ocorridas durante a
+     * sessão co-op — RF-MJ-04.
+     *
+     * <p>Os dados pessoais (PV, fadiga, fome, sede, morale, XP, nível, moedas, versão de
+     * balanceamento) são de propriedade do convidado e devem ser salvos no
+     * {@link CharacterEntity} do convidado, independentemente de qual mundo foi jogado.</p>
+     *
+     * @param sessionId           o ID da sessão co-op ativa
+     * @param guestCharacterId    o ID do personagem convidado (não pode ser o anfitrião)
+     * @param updatedCharacter    o personagem com os dados atualizados a persistir
+     * @throws IllegalArgumentException se a sessão não existir, o personagem for o anfitrião
+     *                                  ou o participante não estiver ativo na sessão
+     */
+    public void syncGuestPersonalData(Long sessionId, Long guestCharacterId,
+            CharacterEntity updatedCharacter) {
+        CoopSessionEntity session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+
+        if (session.getIdHostCharacter().equals(guestCharacterId)) {
+            throw new IllegalArgumentException("coop.error.hostCannotBeGuest");
+        }
+
+        participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+
+        characterRepository.save(updatedCharacter);
+    }
+
+    /**
+     * Retorna a instância de mundo <em>própria</em> do personagem convidado — RF-MJ-05.
+     *
+     * <p>O mundo do convidado é completamente isolado do mundo da sessão: NPCs, missões,
+     * localidades e marcadores do mundo do anfitrião não se transferem para o mundo do
+     * convidado.</p>
+     *
+     * @param sessionId        o ID da sessão co-op ativa
+     * @param guestCharacterId o ID do personagem convidado
+     * @return a instância de mundo própria do convidado
+     * @throws IllegalArgumentException se a sessão não existir, o participante não estiver ativo
+     *                                  ou a instância de mundo do convidado não existir
+     */
+    public WorldInstanceEntity getGuestOwnWorldInstance(Long sessionId, Long guestCharacterId) {
+        CoopSessionEntity session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+
+        requireActiveSession(session);
+
+        participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+
+        WorldInstanceEntity guestWorld = worldInstanceRepository.findByIdCharacter(guestCharacterId)
+                .orElseThrow(() -> new IllegalArgumentException("world.error.instanceNotFound"));
+
+        // Garante que a instância do convidado é diferente da instância da sessão (mundo do anfitrião)
+        if (guestWorld.getId().equals(session.getIdWorldInstance())) {
+            throw new IllegalStateException("world.error.guestWorldConflict");
+        }
+
+        return guestWorld;
+    }
+
+    // ── Helpers privados ─────────────────────────────────────────────────────
+
+    /**
+     * Valida que a sessão está ativa.
+     *
+     * @param session a sessão a validar
+     * @throws IllegalArgumentException se a sessão não estiver ativa
+     */
+    private void requireActiveSession(CoopSessionEntity session) {
+        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
+            throw new IllegalArgumentException("coop.error.sessionNotActive");
+        }
     }
 }
 

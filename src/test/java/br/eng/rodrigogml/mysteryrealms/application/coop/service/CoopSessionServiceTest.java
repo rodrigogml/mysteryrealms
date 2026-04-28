@@ -1,10 +1,14 @@
 package br.eng.rodrigogml.mysteryrealms.application.coop.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
+import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterRepository;
 import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopParticipantEntity;
 import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopSessionEntity;
 import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopSessionStatus;
 import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopParticipantRepository;
 import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopSessionRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,12 +34,15 @@ class CoopSessionServiceTest {
 
     @Mock private CoopSessionRepository sessionRepository;
     @Mock private CoopParticipantRepository participantRepository;
+    @Mock private CharacterRepository characterRepository;
+    @Mock private WorldInstanceRepository worldInstanceRepository;
 
     private CoopSessionService service;
 
     @BeforeEach
     void setUp() {
-        service = new CoopSessionService(sessionRepository, participantRepository);
+        service = new CoopSessionService(sessionRepository, participantRepository,
+                characterRepository, worldInstanceRepository);
     }
 
     // ── RF-MJ-01: Modo solo / listagem ───────────────────────────────────────
@@ -244,6 +251,153 @@ class CoopSessionServiceTest {
         assertNull(result.get(0).getLeftAt());
     }
 
+    // ── RF-MJ-03: Regras do jogador convidado ────────────────────────────────
+
+    @Test
+    void getParticipantCharacter_convidadoAtivo_retornaPersonagemProprio() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+
+        CharacterEntity character = new CharacterEntity();
+        character.setId(2L);
+        character.setName("Aragorn");
+        when(characterRepository.findById(2L)).thenReturn(Optional.of(character));
+
+        CharacterEntity result = service.getParticipantCharacter(1L, 2L);
+
+        assertEquals(2L, result.getId());
+        assertEquals("Aragorn", result.getName());
+    }
+
+    @Test
+    void getParticipantCharacter_sessaoNaoAtiva_lancaExcecao() {
+        CoopSessionEntity session = new CoopSessionEntity();
+        session.setStatus(CoopSessionStatus.CLOSED);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+
+        assertThrows(IllegalArgumentException.class, () -> service.getParticipantCharacter(1L, 2L));
+    }
+
+    @Test
+    void getParticipantCharacter_participanteForaDaSessao_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 99L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> service.getParticipantCharacter(1L, 99L));
+    }
+
+    @Test
+    void getParticipantCharacter_personagemNaoEncontrado_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+        when(characterRepository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> service.getParticipantCharacter(1L, 2L));
+    }
+
+    // ── RF-MJ-04: Persistência de dados pessoais do convidado ────────────────
+
+    @Test
+    void syncGuestPersonalData_convidadoAtivo_salvaDadosPessoais() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+        when(characterRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        CharacterEntity snapshot = new CharacterEntity();
+        snapshot.setId(2L);
+        snapshot.setHealthPoints(75.0);
+        snapshot.setAccumulatedXp(500L);
+
+        service.syncGuestPersonalData(1L, 2L, snapshot);
+
+        verify(characterRepository).save(argThat(c -> c.getHealthPoints() == 75.0 && c.getAccumulatedXp() == 500L));
+    }
+
+    @Test
+    void syncGuestPersonalData_anfitriaoNaoPodeSerSincronizadoComoConvidado_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+
+        CharacterEntity snapshot = new CharacterEntity();
+        snapshot.setId(1L);
+
+        assertThrows(IllegalArgumentException.class, () -> service.syncGuestPersonalData(1L, 1L, snapshot));
+    }
+
+    @Test
+    void syncGuestPersonalData_participanteForaDaSessao_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 99L))
+                .thenReturn(Optional.empty());
+
+        CharacterEntity snapshot = new CharacterEntity();
+        snapshot.setId(99L);
+
+        assertThrows(IllegalArgumentException.class, () -> service.syncGuestPersonalData(1L, 99L, snapshot));
+    }
+
+    // ── RF-MJ-05: Isolamento da progressão de mundo do convidado ─────────────
+
+    @Test
+    void getGuestOwnWorldInstance_convidadoAtivo_retornaMundoProprioDoConvidado() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        session.setIdWorldInstance(10L); // mundo do anfitrião
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+
+        WorldInstanceEntity guestWorld = new WorldInstanceEntity();
+        guestWorld.setId(20L); // mundo próprio do convidado — diferente do anfitrião
+        guestWorld.setIdCharacter(2L);
+        when(worldInstanceRepository.findByIdCharacter(2L)).thenReturn(Optional.of(guestWorld));
+
+        WorldInstanceEntity result = service.getGuestOwnWorldInstance(1L, 2L);
+
+        assertEquals(20L, result.getId());
+        assertEquals(2L, result.getIdCharacter());
+    }
+
+    @Test
+    void getGuestOwnWorldInstance_mundoConvidadoIgualAnfitriao_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        session.setIdWorldInstance(10L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+
+        WorldInstanceEntity conflictingWorld = new WorldInstanceEntity();
+        conflictingWorld.setId(10L); // mesmo ID que o mundo da sessão — conflito
+        conflictingWorld.setIdCharacter(2L);
+        when(worldInstanceRepository.findByIdCharacter(2L)).thenReturn(Optional.of(conflictingWorld));
+
+        assertThrows(IllegalStateException.class, () -> service.getGuestOwnWorldInstance(1L, 2L));
+    }
+
+    @Test
+    void getGuestOwnWorldInstance_participanteNaoAtivo_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 99L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> service.getGuestOwnWorldInstance(1L, 99L));
+    }
+
+    @Test
+    void getGuestOwnWorldInstance_instanciaMundoNaoEncontrada_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        session.setIdWorldInstance(10L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+        when(worldInstanceRepository.findByIdCharacter(2L)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> service.getGuestOwnWorldInstance(1L, 2L));
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────────────
 
     private CoopSessionEntity activeSession(Long id, Long hostCharacterId) {
@@ -255,5 +409,14 @@ class CoopSessionServiceTest {
         s.setStatus(CoopSessionStatus.ACTIVE);
         s.setCreatedAt(LocalDateTime.now());
         return s;
+    }
+
+    private void activeParticipant(Long sessionId, Long characterId) {
+        CoopParticipantEntity p = new CoopParticipantEntity();
+        p.setIdCoopSession(sessionId);
+        p.setIdCharacter(characterId);
+        p.setJoinedAt(LocalDateTime.now());
+        when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId))
+                .thenReturn(Optional.of(p));
     }
 }
