@@ -1,5 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.world.service;
 
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.service.PhysiologyService;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.Connection;
 
 import java.util.List;
@@ -112,5 +113,27 @@ public final class NavigationService {
      */
     public static double fatigueCostPerSegment(double custoPorMinuto, long minutosTrecho) {
         return custoPorMinuto * minutosTrecho;
+    }
+
+    /**
+     * Calcula o delta de sede para um trecho de deslocamento — RF-MN-11.
+     * {@code delta_sede_pct = THIRST_RATE_PCT_PER_MIN × minutosTrecho}
+     *
+     * @param minutosTrecho duração do trecho em minutos
+     * @return variação de sede_pct (não clampada; aplicar clamp [0, 100] ao persistir)
+     */
+    public static double thirstDeltaPerSegment(long minutosTrecho) {
+        return PhysiologyService.THIRST_RATE_PCT_PER_MIN * minutosTrecho;
+    }
+
+    /**
+     * Calcula o delta de fome para um trecho de deslocamento — RF-MN-11.
+     * {@code delta_fome_pct = HUNGER_RATE_PCT_PER_MIN × minutosTrecho}
+     *
+     * @param minutosTrecho duração do trecho em minutos
+     * @return variação de fome_pct (não clampada; aplicar clamp [0, 100] ao persistir)
+     */
+    public static double hungerDeltaPerSegment(long minutosTrecho) {
+        return PhysiologyService.HUNGER_RATE_PCT_PER_MIN * minutosTrecho;
     }
 }

@@ -1,5 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.combat.service;
 
+import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.MovementType;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.model.DiceRoller;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Testes de resolução de combate — RF-CT-01 a RF-CT-13.
  */
 class CombatServiceTest {
-
     private static final DiceRoller FIXO_10 = DiceRoller.fixed(10);
     private static final DiceRoller FIXO_1  = DiceRoller.fixed(1);
     private static final DiceRoller FIXO_20 = DiceRoller.fixed(20);
@@ -312,5 +312,79 @@ class CombatServiceTest {
         // RF-CT-12
         assertTrue(CombatService.preparedActionCanceled(
                 false, false, false, false, false, true));
+    }
+
+    // ── RF-CT-06: ciclo de batalha — movimentação ─────────────────────────────
+
+    @Test
+    void movementType_short_limite3m_semCustoEPenalidadeAcao() {
+        // RF-CT-06
+        assertEquals(3.0, MovementType.SHORT.getMaxDistanceMeters(), 1e-9);
+        assertFalse(MovementType.SHORT.isConsumesMainAction());
+        assertFalse(MovementType.SHORT.isAppliesPenalty());
+    }
+
+    @Test
+    void movementType_standard_limite9m_consumeAcaoPrincipal() {
+        // RF-CT-06
+        assertEquals(9.0, MovementType.STANDARD.getMaxDistanceMeters(), 1e-9);
+        assertTrue(MovementType.STANDARD.isConsumesMainAction());
+        assertFalse(MovementType.STANDARD.isAppliesPenalty());
+    }
+
+    @Test
+    void movementType_extended_limite18m_consumeAcaoEAplicaPenalidade() {
+        // RF-CT-06
+        assertEquals(18.0, MovementType.EXTENDED.getMaxDistanceMeters(), 1e-9);
+        assertTrue(MovementType.EXTENDED.isConsumesMainAction());
+        assertTrue(MovementType.EXTENDED.isAppliesPenalty());
+    }
+
+    @Test
+    void movementType_penalty_valorMenosDois() {
+        // RF-CT-06 — penalidade do movimento estendido é -2
+        assertEquals(-2, MovementType.PENALTY);
+    }
+
+    @Test
+    void movementTypeFor_3m_retornaShort() {
+        // RF-CT-06
+        assertEquals(MovementType.SHORT, CombatService.movementTypeFor(3.0));
+    }
+
+    @Test
+    void movementTypeFor_9m_retornaStandard() {
+        // RF-CT-06 — 4 m não cabe em SHORT, cabe em STANDARD
+        assertEquals(MovementType.STANDARD, CombatService.movementTypeFor(4.0));
+    }
+
+    @Test
+    void movementTypeFor_18m_retornaExtended() {
+        // RF-CT-06
+        assertEquals(MovementType.EXTENDED, CombatService.movementTypeFor(18.0));
+    }
+
+    @Test
+    void movementTypeFor_acimaDe18m_retornaNull() {
+        // RF-CT-06 — distância acima do limite máximo não tem tipo válido
+        assertNull(CombatService.movementTypeFor(18.1));
+    }
+
+    @Test
+    void movementCombatPenalty_extended_retornaMenosDois() {
+        // RF-CT-06
+        assertEquals(-2, CombatService.movementCombatPenalty(MovementType.EXTENDED));
+    }
+
+    @Test
+    void movementCombatPenalty_short_retornaZero() {
+        // RF-CT-06 — movimento curto não aplica penalidade
+        assertEquals(0, CombatService.movementCombatPenalty(MovementType.SHORT));
+    }
+
+    @Test
+    void movementCombatPenalty_standard_retornaZero() {
+        // RF-CT-06
+        assertEquals(0, CombatService.movementCombatPenalty(MovementType.STANDARD));
     }
 }

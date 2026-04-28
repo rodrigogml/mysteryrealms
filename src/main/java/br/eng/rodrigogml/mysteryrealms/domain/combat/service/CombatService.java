@@ -1,13 +1,14 @@
 package br.eng.rodrigogml.mysteryrealms.domain.combat.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.character.service.CharacterAttributeService;
+import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.MovementType;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.model.DiceRoller;
 
 /**
  * Serviço de resolução de combate — RF-CT-01 a RF-CT-13.
  *
- * Implementa o pipeline de resolução (RF-CT-07) e as fórmulas de teste, acerto,
- * bloqueio, resistência e aflição.
+ * Implementa o pipeline de resolução (RF-CT-07), o ciclo de batalha com regras de
+ * movimentação (RF-CT-06) e as fórmulas de teste, acerto, bloqueio, resistência e aflição.
  */
 public final class CombatService {
 
@@ -179,6 +180,36 @@ public final class CombatService {
      */
     public static boolean detectVersusCD(int perceptionRoll, int cdAmbiente) {
         return perceptionRoll >= cdAmbiente;
+    }
+
+    // ── RF-CT-06: ciclo de batalha — movimentação ────────────────────────────
+
+    /**
+     * Retorna o tipo de movimento adequado à distância informada — RF-CT-06.
+     * Seleciona o tipo menos custoso que suporte a distância requerida.
+     *
+     * @param distanceMeters distância a percorrer em metros (>= 0)
+     * @return {@link MovementType} adequado, ou {@code null} se a distância
+     *         exceder o limite máximo do movimento estendido
+     */
+    public static MovementType movementTypeFor(double distanceMeters) {
+        for (MovementType mt : MovementType.values()) {
+            if (distanceMeters <= mt.getMaxDistanceMeters()) {
+                return mt;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Retorna a penalidade de combate aplicada pelo tipo de movimento — RF-CT-06.
+     * O valor é negativo (ou zero quando não há penalidade).
+     *
+     * @param movementType tipo de movimento executado
+     * @return {@link MovementType#PENALTY} se o movimento aplica penalidade, {@code 0} caso contrário
+     */
+    public static int movementCombatPenalty(MovementType movementType) {
+        return movementType.isAppliesPenalty() ? MovementType.PENALTY : 0;
     }
 
     // ── RF-CT-12: ação preparada ──────────────────────────────────────────────
