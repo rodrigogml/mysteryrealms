@@ -8,5 +8,6 @@ package br.eng.rodrigogml.mysteryrealms.application.user.entity;
  */
 public enum EmailConfirmationType {
     REGISTRATION,
-    EMAIL_CHANGE
+    EMAIL_CHANGE,
+    ACCOUNT_DELETION
 }

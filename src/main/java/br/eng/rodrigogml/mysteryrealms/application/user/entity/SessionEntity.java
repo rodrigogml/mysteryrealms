@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @since 28-04-2026
  */
 @Entity
-@Table(name = "appSession")
+@Table(name = "session")
 public class SessionEntity {
 
     @Id

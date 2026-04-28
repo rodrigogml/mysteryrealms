@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * @since 28-04-2026
  */
 @Entity
-@Table(name = "appUser")
+@Table(name = "user")
 public class UserEntity {
 
     @Id
