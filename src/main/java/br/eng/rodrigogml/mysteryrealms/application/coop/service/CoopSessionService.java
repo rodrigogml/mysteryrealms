@@ -214,9 +214,7 @@ public class CoopSessionService {
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
 
-        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
-            throw new IllegalArgumentException("coop.error.sessionNotActive");
-        }
+        requireActiveSession(session);
 
         participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
@@ -245,7 +243,7 @@ public class CoopSessionService {
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
 
         if (session.getIdHostCharacter().equals(guestCharacterId)) {
-            throw new IllegalArgumentException("coop.error.notHost");
+            throw new IllegalArgumentException("coop.error.hostCannotBeGuest");
         }
 
         participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
@@ -271,9 +269,7 @@ public class CoopSessionService {
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
 
-        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
-            throw new IllegalArgumentException("coop.error.sessionNotActive");
-        }
+        requireActiveSession(session);
 
         participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
@@ -287,6 +283,20 @@ public class CoopSessionService {
         }
 
         return guestWorld;
+    }
+
+    // ── Helpers privados ─────────────────────────────────────────────────────
+
+    /**
+     * Valida que a sessão está ativa.
+     *
+     * @param session a sessão a validar
+     * @throws IllegalArgumentException se a sessão não estiver ativa
+     */
+    private void requireActiveSession(CoopSessionEntity session) {
+        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
+            throw new IllegalArgumentException("coop.error.sessionNotActive");
+        }
     }
 }
 
