@@ -43,7 +43,7 @@ public class CoopSessionService {
      * @throws IllegalArgumentException se maxPlayers estiver fora do intervalo permitido
      */
     public CoopSessionEntity createSession(Long hostCharacterId, Long worldInstanceId, int maxPlayers) {
-        if (maxPlayers < 2 || maxPlayers > 8) {
+        if (maxPlayers < 2 || maxPlayers > 4) {
             throw new IllegalArgumentException("coop.error.invalidMaxPlayers");
         }
 
