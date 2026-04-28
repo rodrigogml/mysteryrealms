@@ -1,5 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.application.user.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
+import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterRepository;
+import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.AccountLockEntity;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.EmailConfirmationEntity;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.EmailConfirmationType;
@@ -65,6 +68,8 @@ class UserServiceTest {
     @Mock private PasswordResetRepository passwordResetRepository;
     @Mock private TwoFactorAuthRepository twoFactorAuthRepository;
     @Mock private RecoveryCodeRepository recoveryCodeRepository;
+    @Mock private CharacterRepository characterRepository;
+    @Mock private CharacterService characterService;
 
     private UserService service;
 
@@ -72,7 +77,8 @@ class UserServiceTest {
     void setUp() {
         service = new UserService(userRepository, sessionRepository, loginAttemptRepository,
                 accountLockRepository, unlockCodeRepository, emailConfirmationRepository,
-                passwordResetRepository, twoFactorAuthRepository, recoveryCodeRepository);
+                passwordResetRepository, twoFactorAuthRepository, recoveryCodeRepository,
+                characterRepository, characterService);
     }
 
     @Test
@@ -514,12 +520,17 @@ class UserServiceTest {
         confirmation.setExpiresAt(LocalDateTime.now().plusHours(1));
 
         UserEntity user = activeUser();
+        CharacterEntity character = new CharacterEntity();
+        character.setId(10L);
+        character.setIdUser(1L);
         when(emailConfirmationRepository.findByToken("delete-token")).thenReturn(Optional.of(confirmation));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(loginAttemptRepository.findByIdUserAndAttemptTimeAfter(eq(1L), any())).thenReturn(Collections.emptyList());
+        when(characterRepository.findAllByIdUser(1L)).thenReturn(List.of(character));
 
         service.confirmAccountDeletion("delete-token");
 
+        verify(characterService).deleteCharacter(1L, 10L);
         verify(sessionRepository).deleteAllByIdUser(1L);
         verify(emailConfirmationRepository).deleteAllByIdUser(1L);
         verify(passwordResetRepository).deleteAllByIdUser(1L);

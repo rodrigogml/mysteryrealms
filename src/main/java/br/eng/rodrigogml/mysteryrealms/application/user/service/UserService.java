@@ -1,5 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.application.user.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
+import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterRepository;
+import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.AccountLockEntity;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.EmailConfirmationEntity;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.EmailConfirmationType;
@@ -65,6 +68,8 @@ public class UserService {
     private final PasswordResetRepository passwordResetRepository;
     private final TwoFactorAuthRepository twoFactorAuthRepository;
     private final RecoveryCodeRepository recoveryCodeRepository;
+    private final CharacterRepository characterRepository;
+    private final CharacterService characterService;
 
     /**
      * Cria o serviço com as dependências necessárias.
@@ -78,12 +83,15 @@ public class UserService {
      * @param passwordResetRepository repositório de redefinições de senha
      * @param twoFactorAuthRepository repositório de autenticação de dois fatores
      * @param recoveryCodeRepository repositório de códigos de recuperação
+     * @param characterRepository repositório de personagens
+     * @param characterService serviço de personagens para remoção em cascata
      */
     public UserService(UserRepository userRepository, SessionRepository sessionRepository,
             LoginAttemptRepository loginAttemptRepository, AccountLockRepository accountLockRepository,
             UnlockCodeRepository unlockCodeRepository, EmailConfirmationRepository emailConfirmationRepository,
             PasswordResetRepository passwordResetRepository, TwoFactorAuthRepository twoFactorAuthRepository,
-            RecoveryCodeRepository recoveryCodeRepository) {
+            RecoveryCodeRepository recoveryCodeRepository, CharacterRepository characterRepository,
+            CharacterService characterService) {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
         this.loginAttemptRepository = loginAttemptRepository;
@@ -93,6 +101,8 @@ public class UserService {
         this.passwordResetRepository = passwordResetRepository;
         this.twoFactorAuthRepository = twoFactorAuthRepository;
         this.recoveryCodeRepository = recoveryCodeRepository;
+        this.characterRepository = characterRepository;
+        this.characterService = characterService;
     }
 
     private String hashPassword(String raw) {
@@ -585,6 +595,10 @@ public class UserService {
     }
 
     private void deleteAccountData(Long userId, UserEntity user) {
+        for (CharacterEntity character : characterRepository.findAllByIdUser(userId)) {
+            characterService.deleteCharacter(userId, character.getId());
+        }
+
         sessionRepository.deleteAllByIdUser(userId);
         emailConfirmationRepository.deleteAllByIdUser(userId);
         passwordResetRepository.deleteAllByIdUser(userId);

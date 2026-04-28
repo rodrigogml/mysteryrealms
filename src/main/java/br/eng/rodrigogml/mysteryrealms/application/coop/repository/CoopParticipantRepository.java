@@ -3,6 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.application.coop.repository;
 import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopParticipantEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,4 +56,20 @@ public interface CoopParticipantRepository extends JpaRepository<CoopParticipant
      * @return quantidade de participantes ativos
      */
     long countByIdCoopSessionAndLeftAtIsNull(Long idCoopSession);
+
+    /**
+     * Remove todas as participações de uma sessão co-op.
+     *
+     * @param idCoopSession o ID da sessão co-op
+     */
+    @Transactional
+    void deleteAllByIdCoopSession(Long idCoopSession);
+
+    /**
+     * Remove todas as participações de um personagem.
+     *
+     * @param idCharacter o ID do personagem
+     */
+    @Transactional
+    void deleteAllByIdCharacter(Long idCharacter);
 }

@@ -8,8 +8,20 @@ import br.eng.rodrigogml.mysteryrealms.application.character.repository.Characte
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterNpcRelationshipRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterSkillPointsRepository;
+import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopSessionEntity;
+import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopParticipantRepository;
+import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopSessionRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.DiaryEntryEntity;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryEntryRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryImpactMarkerRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryImpactRelationshipRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryImpactReputationRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanceRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldLocationStateRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldMarkerRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldNpcStateRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldQuestStateRepository;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
@@ -36,6 +48,16 @@ public class CharacterService {
     private final CharacterEquippedItemRepository equippedItemRepository;
     private final CharacterBackpackItemRepository backpackItemRepository;
     private final WorldInstanceRepository worldInstanceRepository;
+    private final WorldQuestStateRepository worldQuestStateRepository;
+    private final WorldNpcStateRepository worldNpcStateRepository;
+    private final WorldLocationStateRepository worldLocationStateRepository;
+    private final WorldMarkerRepository worldMarkerRepository;
+    private final DiaryEntryRepository diaryEntryRepository;
+    private final DiaryImpactRelationshipRepository diaryImpactRelationshipRepository;
+    private final DiaryImpactReputationRepository diaryImpactReputationRepository;
+    private final DiaryImpactMarkerRepository diaryImpactMarkerRepository;
+    private final CoopSessionRepository coopSessionRepository;
+    private final CoopParticipantRepository coopParticipantRepository;
 
     /**
      * Cria o serviço com as dependências necessárias.
@@ -48,6 +70,16 @@ public class CharacterService {
      * @param equippedItemRepository       repositório de itens equipados
      * @param backpackItemRepository       repositório de itens na mochila
      * @param worldInstanceRepository      repositório de instâncias de mundo
+     * @param worldQuestStateRepository    repositório de estados de quests do mundo
+     * @param worldNpcStateRepository      repositório de estados de NPCs do mundo
+     * @param worldLocationStateRepository repositório de estados de localidades do mundo
+     * @param worldMarkerRepository        repositório de marcadores do mundo
+     * @param diaryEntryRepository         repositório de entradas de diário
+     * @param diaryImpactRelationshipRepository repositório de impactos de relacionamento do diário
+     * @param diaryImpactReputationRepository  repositório de impactos de reputação do diário
+     * @param diaryImpactMarkerRepository       repositório de impactos de marcador do diário
+     * @param coopSessionRepository        repositório de sessões cooperativas
+     * @param coopParticipantRepository    repositório de participantes cooperativos
      */
     public CharacterService(CharacterRepository characterRepository,
             CharacterNpcRelationshipRepository npcRelationshipRepository,
@@ -56,7 +88,17 @@ public class CharacterService {
             CharacterSkillPointsRepository skillPointsRepository,
             CharacterEquippedItemRepository equippedItemRepository,
             CharacterBackpackItemRepository backpackItemRepository,
-            WorldInstanceRepository worldInstanceRepository) {
+            WorldInstanceRepository worldInstanceRepository,
+            WorldQuestStateRepository worldQuestStateRepository,
+            WorldNpcStateRepository worldNpcStateRepository,
+            WorldLocationStateRepository worldLocationStateRepository,
+            WorldMarkerRepository worldMarkerRepository,
+            DiaryEntryRepository diaryEntryRepository,
+            DiaryImpactRelationshipRepository diaryImpactRelationshipRepository,
+            DiaryImpactReputationRepository diaryImpactReputationRepository,
+            DiaryImpactMarkerRepository diaryImpactMarkerRepository,
+            CoopSessionRepository coopSessionRepository,
+            CoopParticipantRepository coopParticipantRepository) {
         this.characterRepository = characterRepository;
         this.npcRelationshipRepository = npcRelationshipRepository;
         this.localityReputationRepository = localityReputationRepository;
@@ -65,6 +107,16 @@ public class CharacterService {
         this.equippedItemRepository = equippedItemRepository;
         this.backpackItemRepository = backpackItemRepository;
         this.worldInstanceRepository = worldInstanceRepository;
+        this.worldQuestStateRepository = worldQuestStateRepository;
+        this.worldNpcStateRepository = worldNpcStateRepository;
+        this.worldLocationStateRepository = worldLocationStateRepository;
+        this.worldMarkerRepository = worldMarkerRepository;
+        this.diaryEntryRepository = diaryEntryRepository;
+        this.diaryImpactRelationshipRepository = diaryImpactRelationshipRepository;
+        this.diaryImpactReputationRepository = diaryImpactReputationRepository;
+        this.diaryImpactMarkerRepository = diaryImpactMarkerRepository;
+        this.coopSessionRepository = coopSessionRepository;
+        this.coopParticipantRepository = coopParticipantRepository;
     }
 
     /**
@@ -210,7 +262,8 @@ public class CharacterService {
             throw new IllegalArgumentException("character.error.notOwned");
         }
 
-        worldInstanceRepository.deleteByIdCharacter(characterId);
+        coopParticipantRepository.deleteAllByIdCharacter(characterId);
+        worldInstanceRepository.findByIdCharacter(characterId).ifPresent(this::deleteWorldInstanceGraph);
         npcRelationshipRepository.deleteAllByIdCharacter(characterId);
         localityReputationRepository.deleteAllByIdCharacter(characterId);
         factionReputationRepository.deleteAllByIdCharacter(characterId);
@@ -218,5 +271,27 @@ public class CharacterService {
         equippedItemRepository.deleteAllByIdCharacter(characterId);
         backpackItemRepository.deleteAllByIdCharacter(characterId);
         characterRepository.delete(character);
+    }
+
+    private void deleteWorldInstanceGraph(WorldInstanceEntity worldInstance) {
+        Long worldInstanceId = worldInstance.getId();
+
+        for (CoopSessionEntity session : coopSessionRepository.findAllByIdWorldInstance(worldInstanceId)) {
+            coopParticipantRepository.deleteAllByIdCoopSession(session.getId());
+        }
+        coopSessionRepository.deleteAllByIdWorldInstance(worldInstanceId);
+
+        for (DiaryEntryEntity diaryEntry : diaryEntryRepository.findAllByIdWorldInstance(worldInstanceId)) {
+            diaryImpactRelationshipRepository.deleteAllByIdDiaryEntry(diaryEntry.getId());
+            diaryImpactReputationRepository.deleteAllByIdDiaryEntry(diaryEntry.getId());
+            diaryImpactMarkerRepository.deleteAllByIdDiaryEntry(diaryEntry.getId());
+        }
+        diaryEntryRepository.deleteAllByIdWorldInstance(worldInstanceId);
+
+        worldQuestStateRepository.deleteAllByIdWorldInstance(worldInstanceId);
+        worldNpcStateRepository.deleteAllByIdWorldInstance(worldInstanceId);
+        worldLocationStateRepository.deleteAllByIdWorldInstance(worldInstanceId);
+        worldMarkerRepository.deleteAllByIdWorldInstance(worldInstanceId);
+        worldInstanceRepository.deleteByIdCharacter(worldInstance.getIdCharacter());
     }
 }

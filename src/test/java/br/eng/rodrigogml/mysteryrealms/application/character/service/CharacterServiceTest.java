@@ -8,7 +8,20 @@ import br.eng.rodrigogml.mysteryrealms.application.character.repository.Characte
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterNpcRelationshipRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterSkillPointsRepository;
+import br.eng.rodrigogml.mysteryrealms.application.coop.entity.CoopSessionEntity;
+import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopParticipantRepository;
+import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopSessionRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.DiaryEntryEntity;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryEntryRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryImpactMarkerRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryImpactRelationshipRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.DiaryImpactReputationRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanceRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldLocationStateRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldMarkerRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldNpcStateRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldQuestStateRepository;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
@@ -43,6 +56,16 @@ class CharacterServiceTest {
     @Mock private CharacterEquippedItemRepository equippedItemRepository;
     @Mock private CharacterBackpackItemRepository backpackItemRepository;
     @Mock private WorldInstanceRepository worldInstanceRepository;
+    @Mock private WorldQuestStateRepository worldQuestStateRepository;
+    @Mock private WorldNpcStateRepository worldNpcStateRepository;
+    @Mock private WorldLocationStateRepository worldLocationStateRepository;
+    @Mock private WorldMarkerRepository worldMarkerRepository;
+    @Mock private DiaryEntryRepository diaryEntryRepository;
+    @Mock private DiaryImpactRelationshipRepository diaryImpactRelationshipRepository;
+    @Mock private DiaryImpactReputationRepository diaryImpactReputationRepository;
+    @Mock private DiaryImpactMarkerRepository diaryImpactMarkerRepository;
+    @Mock private CoopSessionRepository coopSessionRepository;
+    @Mock private CoopParticipantRepository coopParticipantRepository;
 
     private CharacterService service;
 
@@ -50,7 +73,11 @@ class CharacterServiceTest {
     void setUp() {
         service = new CharacterService(characterRepository, npcRelationshipRepository,
                 localityReputationRepository, factionReputationRepository, skillPointsRepository,
-                equippedItemRepository, backpackItemRepository, worldInstanceRepository);
+                equippedItemRepository, backpackItemRepository, worldInstanceRepository,
+                worldQuestStateRepository, worldNpcStateRepository, worldLocationStateRepository,
+                worldMarkerRepository, diaryEntryRepository, diaryImpactRelationshipRepository,
+                diaryImpactReputationRepository, diaryImpactMarkerRepository,
+                coopSessionRepository, coopParticipantRepository);
     }
 
     // ── RF-PE-01: Múltiplos personagens por usuário ──────────────────────────
@@ -176,10 +203,31 @@ class CharacterServiceTest {
     @Test
     void deleteCharacter_pertenceAoUsuario_removeTodasAsDependencias() {
         CharacterEntity character = buildEntity(1L, 1L, "Sam");
+        WorldInstanceEntity worldInstance = new WorldInstanceEntity();
+        worldInstance.setId(10L);
+        worldInstance.setIdCharacter(1L);
+        DiaryEntryEntity diaryEntry = new DiaryEntryEntity();
+        diaryEntry.setId(100L);
+        CoopSessionEntity coopSession = new CoopSessionEntity();
+        coopSession.setId(200L);
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.of(worldInstance));
+        when(diaryEntryRepository.findAllByIdWorldInstance(10L)).thenReturn(List.of(diaryEntry));
+        when(coopSessionRepository.findAllByIdWorldInstance(10L)).thenReturn(List.of(coopSession));
 
         service.deleteCharacter(1L, 1L);
 
+        verify(coopParticipantRepository).deleteAllByIdCharacter(1L);
+        verify(coopParticipantRepository).deleteAllByIdCoopSession(200L);
+        verify(coopSessionRepository).deleteAllByIdWorldInstance(10L);
+        verify(diaryImpactRelationshipRepository).deleteAllByIdDiaryEntry(100L);
+        verify(diaryImpactReputationRepository).deleteAllByIdDiaryEntry(100L);
+        verify(diaryImpactMarkerRepository).deleteAllByIdDiaryEntry(100L);
+        verify(diaryEntryRepository).deleteAllByIdWorldInstance(10L);
+        verify(worldQuestStateRepository).deleteAllByIdWorldInstance(10L);
+        verify(worldNpcStateRepository).deleteAllByIdWorldInstance(10L);
+        verify(worldLocationStateRepository).deleteAllByIdWorldInstance(10L);
+        verify(worldMarkerRepository).deleteAllByIdWorldInstance(10L);
         verify(worldInstanceRepository).deleteByIdCharacter(1L);
         verify(npcRelationshipRepository).deleteAllByIdCharacter(1L);
         verify(localityReputationRepository).deleteAllByIdCharacter(1L);
@@ -201,6 +249,19 @@ class CharacterServiceTest {
         CharacterEntity character = buildEntity(1L, 2L, "Sam");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
         assertThrows(IllegalArgumentException.class, () -> service.deleteCharacter(1L, 1L));
+    }
+
+    @Test
+    void deleteCharacter_semInstanciaDeMundo_aindaRemoveDependenciasDoPersonagem() {
+        CharacterEntity character = buildEntity(1L, 1L, "Sam");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
+
+        service.deleteCharacter(1L, 1L);
+
+        verify(coopParticipantRepository).deleteAllByIdCharacter(1L);
+        verify(worldInstanceRepository, never()).deleteByIdCharacter(1L);
+        verify(characterRepository).delete(character);
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
