@@ -239,7 +239,25 @@ class ProgressionServiceTest {
         }
     }
 
-    // ── RF-PP-07: marcos de nível ─────────────────────────────────────────────
+    // ── RF-PP-08: versionamento de balanceamento ──────────────────────────────
+
+    @Test
+    void balanceVersion_naoNuloENaoVazio() {
+        // RF-PP-08
+        assertNotNull(ProgressionService.BALANCE_VERSION,
+                "Versão de balanceamento não pode ser nula");
+        assertFalse(ProgressionService.BALANCE_VERSION.isBlank(),
+                "Versão de balanceamento não pode ser vazia");
+    }
+
+    @Test
+    void balanceVersion_formatoSemantic() {
+        // RF-PP-08 — formato esperado: BAL-<major>.<minor>.<patch>
+        assertTrue(ProgressionService.BALANCE_VERSION.matches("BAL-\\d+\\.\\d+\\.\\d+"),
+                "Versão de balanceamento deve seguir o formato BAL-<major>.<minor>.<patch>");
+    }
+
+
 
     @Test
     void abilitySlot_slot1DesbloqueadoNivel3() {
