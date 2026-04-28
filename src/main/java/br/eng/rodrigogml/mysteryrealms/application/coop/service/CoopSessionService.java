@@ -82,11 +82,11 @@ public class CoopSessionService {
 
         long count = participantRepository.countByIdCoopSessionAndLeftAtIsNull(sessionId);
         if (count >= session.getMaxPlayers()) {
-            throw new IllegalArgumentException("coop.error.sessionFull");
+            throw new IllegalArgumentException("coop.error.playerLimitReached");
         }
 
         if (participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId).isPresent()) {
-            throw new IllegalArgumentException("coop.error.alreadyParticipant");
+            throw new IllegalArgumentException("coop.error.alreadyInSession");
         }
 
         CoopParticipantEntity participant = new CoopParticipantEntity();
@@ -110,7 +110,7 @@ public class CoopSessionService {
 
         CoopParticipantEntity participant = participantRepository
                 .findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.notParticipant"));
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
 
         participant.setLeftAt(LocalDateTime.now());
         participantRepository.save(participant);
