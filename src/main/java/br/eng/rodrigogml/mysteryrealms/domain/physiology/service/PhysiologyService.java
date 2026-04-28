@@ -22,6 +22,12 @@ public final class PhysiologyService {
     /** Minutos até fome_pct chegar a 100 (7 dias) — RF-EF-01. */
     private static final double MINUTOS_FOME_TOTAL = 7.0 * 24.0 * 60.0;
 
+    /** Taxa de incremento de sede por minuto (% por minuto) — RF-EF-01 / RF-MN-11. */
+    public static final double THIRST_RATE_PCT_PER_MIN = 100.0 / MINUTOS_SEDE_TOTAL;
+
+    /** Taxa de incremento de fome por minuto (% por minuto) — RF-EF-01 / RF-MN-11. */
+    public static final double HUNGER_RATE_PCT_PER_MIN = 100.0 / MINUTOS_FOME_TOTAL;
+
     /** Limiar de colapso de fadiga: 120% de fadiga_max — RF-EF-02. */
     public static final double FATIGUE_COLLAPSE_THRESHOLD = 1.2;
 
@@ -42,8 +48,8 @@ public final class PhysiologyService {
     public static void applyMinuteTick(PhysiologyState state) {
         double newFadigaMin = state.getMinFatigue() + state.getMaxFatigue() / MINUTOS_DIA;
         double newFadigaAtual = Math.max(state.getCurrentFatigue(), newFadigaMin);
-        double newSede = Math.min(100.0, state.getThirstPct() + 100.0 / MINUTOS_SEDE_TOTAL);
-        double newFome = Math.min(100.0, state.getHungerPct() + 100.0 / MINUTOS_FOME_TOTAL);
+        double newSede = Math.min(100.0, state.getThirstPct() + THIRST_RATE_PCT_PER_MIN);
+        double newFome = Math.min(100.0, state.getHungerPct() + HUNGER_RATE_PCT_PER_MIN);
 
         state.setMinFatigue(newFadigaMin);
         state.setCurrentFatigue(newFadigaAtual);

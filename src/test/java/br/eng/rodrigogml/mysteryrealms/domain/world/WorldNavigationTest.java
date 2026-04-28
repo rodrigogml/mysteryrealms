@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.service.PhysiologyService;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -434,5 +436,52 @@ class WorldNavigationTest {
                 List.of(new Season("unica_estacao", 1, 360)),
                 0
         );
+    }
+
+    // ── RF-MN-11: atualização fisiológica por trecho ─────────────────────────
+
+    @Test
+    void navigationService_fatigueCostPerSegment_proporcionalAoTempo() {
+        // RF-MN-11
+        double custo = NavigationService.fatigueCostPerSegment(2.0, 10L);
+        assertEquals(20.0, custo, 1e-9);
+    }
+
+    @Test
+    void navigationService_fatigueCostPerSegment_custoZeroMinutos0() {
+        // RF-MN-11
+        assertEquals(0.0, NavigationService.fatigueCostPerSegment(3.0, 0L), 1e-9);
+    }
+
+    @Test
+    void navigationService_thirstDeltaPerSegment_proporcionalAoTempo() {
+        // RF-MN-11 — delta de sede para 60 minutos = 60 × (100/2880) ≈ 2,0833...
+        double esperado = PhysiologyService.THIRST_RATE_PCT_PER_MIN * 60;
+        assertEquals(esperado, NavigationService.thirstDeltaPerSegment(60L), 1e-9);
+    }
+
+    @Test
+    void navigationService_hungerDeltaPerSegment_proporcionalAoTempo() {
+        // RF-MN-11 — delta de fome para 60 minutos
+        double esperado = PhysiologyService.HUNGER_RATE_PCT_PER_MIN * 60;
+        assertEquals(esperado, NavigationService.hungerDeltaPerSegment(60L), 1e-9);
+    }
+
+    @Test
+    void navigationService_thirstDeltaPerSegment_1minuteConsistente() {
+        // RF-MN-11 — delta por minuto deve ser consistente com THIRST_RATE_PCT_PER_MIN
+        assertEquals(
+                PhysiologyService.THIRST_RATE_PCT_PER_MIN,
+                NavigationService.thirstDeltaPerSegment(1L),
+                1e-9);
+    }
+
+    @Test
+    void navigationService_hungerDeltaPerSegment_1minuteConsistente() {
+        // RF-MN-11 — delta por minuto deve ser consistente com HUNGER_RATE_PCT_PER_MIN
+        assertEquals(
+                PhysiologyService.HUNGER_RATE_PCT_PER_MIN,
+                NavigationService.hungerDeltaPerSegment(1L),
+                1e-9);
     }
 }

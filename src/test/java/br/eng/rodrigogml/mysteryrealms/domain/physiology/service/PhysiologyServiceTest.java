@@ -2,6 +2,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.physiology.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.CombinedPhysiologyEffect;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.ConsciousnessTestResult;
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.PhysiologyResolutionPriority;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.PhysiologyState;
 import org.junit.jupiter.api.Test;
 
@@ -552,5 +553,57 @@ class PhysiologyServiceTest {
         s.setMorale(50);
         PhysiologyService.applyMoraleDeltaInterruptedSleep(s);
         assertEquals(42, s.getMorale());
+    }
+
+    // ── RF-EF-06: tabela de precedência de estados ────────────────────────────
+
+    @Test
+    void resolutionPriority_colapsoEhPrioridade1() {
+        // RF-EF-06
+        assertEquals(1, PhysiologyResolutionPriority.COLLAPSE_UNCONSCIOUSNESS.getPriority());
+    }
+
+    @Test
+    void resolutionPriority_estadoCriticoEhPrioridade2() {
+        // RF-EF-06
+        assertEquals(2, PhysiologyResolutionPriority.CRITICAL_HP_STATE.getPriority());
+    }
+
+    @Test
+    void resolutionPriority_estadosGravesEhPrioridade3() {
+        // RF-EF-06
+        assertEquals(3, PhysiologyResolutionPriority.SEVERE_PHYSIOLOGY_STATES.getPriority());
+    }
+
+    @Test
+    void resolutionPriority_aflicoesDebilitantesEhPrioridade4() {
+        // RF-EF-06
+        assertEquals(4, PhysiologyResolutionPriority.COMBAT_AFFLICTIONS.getPriority());
+    }
+
+    @Test
+    void resolutionPriority_estadosModeradosEhPrioridade5() {
+        // RF-EF-06
+        assertEquals(5, PhysiologyResolutionPriority.MODERATE_PHYSIOLOGY_STATES.getPriority());
+    }
+
+    @Test
+    void resolutionPriority_ordemCorreta_colapsoAntesCritico() {
+        // RF-EF-06 — prioridade 1 < prioridade 2 (menor = mais prioritário)
+        assertTrue(
+                PhysiologyResolutionPriority.COLLAPSE_UNCONSCIOUSNESS.getPriority()
+                        < PhysiologyResolutionPriority.CRITICAL_HP_STATE.getPriority());
+    }
+
+    @Test
+    void resolutionPriority_ordemCorreta_todosCincoValoresDistintos() {
+        // RF-EF-06 — tabela deve ter exatamente 5 categorias com prioridades únicas
+        PhysiologyResolutionPriority[] values = PhysiologyResolutionPriority.values();
+        assertEquals(5, values.length);
+        long distinct = java.util.Arrays.stream(values)
+                .mapToInt(PhysiologyResolutionPriority::getPriority)
+                .distinct()
+                .count();
+        assertEquals(5, distinct);
     }
 }
