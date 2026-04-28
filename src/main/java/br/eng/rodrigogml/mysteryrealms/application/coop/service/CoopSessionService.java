@@ -285,6 +285,39 @@ public class CoopSessionService {
         return guestWorld;
     }
 
+    /**
+     * Registra a desconexão inesperada de um jogador convidado — RF-MJ-07.
+     *
+     * <p>Os dados pessoais do convidado são salvos automaticamente no estado mais recente
+     * conhecido antes de marcar a saída da sessão. A sessão do anfitrião continua normalmente
+     * sem o jogador desconectado.</p>
+     *
+     * @param sessionId          o ID da sessão co-op
+     * @param guestCharacterId   o ID do personagem convidado (não pode ser o anfitrião)
+     * @param lastKnownCharacter o estado mais recente do personagem antes da desconexão
+     * @throws IllegalArgumentException se a sessão não existir, o personagem for o anfitrião
+     *                                  ou o participante não estiver ativo na sessão
+     */
+    public void disconnectGuest(Long sessionId, Long guestCharacterId,
+            CharacterEntity lastKnownCharacter) {
+        CoopSessionEntity session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+
+        if (session.getIdHostCharacter().equals(guestCharacterId)) {
+            throw new IllegalArgumentException("coop.error.hostCannotBeGuest");
+        }
+
+        CoopParticipantEntity participant = participantRepository
+                .findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+
+        // Persiste os dados pessoais do convidado no ponto da última ação sincronizada
+        characterRepository.save(lastKnownCharacter);
+
+        participant.setLeftAt(LocalDateTime.now());
+        participantRepository.save(participant);
+    }
+
     // ── Helpers privados ─────────────────────────────────────────────────────
 
     /**

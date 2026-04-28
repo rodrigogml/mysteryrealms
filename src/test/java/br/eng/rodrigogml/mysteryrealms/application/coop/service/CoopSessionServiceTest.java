@@ -251,6 +251,66 @@ class CoopSessionServiceTest {
         assertNull(result.get(0).getLeftAt());
     }
 
+    @Test
+    void disconnectGuest_salvaDadosPessoaisEMarcaLeftAt() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+
+        CoopParticipantEntity participant = new CoopParticipantEntity();
+        participant.setIdCoopSession(1L);
+        participant.setIdCharacter(2L);
+        participant.setJoinedAt(LocalDateTime.now());
+        when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 2L))
+                .thenReturn(Optional.of(participant));
+        when(participantRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(characterRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        CharacterEntity snapshot = new CharacterEntity();
+        snapshot.setId(2L);
+        snapshot.setHealthPoints(50.0);
+
+        service.disconnectGuest(1L, 2L, snapshot);
+
+        verify(characterRepository).save(argThat(c -> c.getHealthPoints() == 50.0));
+        assertNotNull(participant.getLeftAt());
+    }
+
+    @Test
+    void disconnectGuest_anfitriao_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.disconnectGuest(1L, 1L, new CharacterEntity()));
+    }
+
+    @Test
+    void disconnectGuest_participanteNaoAtivo_lancaExcecao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 2L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.disconnectGuest(1L, 2L, new CharacterEntity()));
+    }
+
+    @Test
+    void rejoinSession_aposDesconexao_permiteReentrada() {
+        // RF-MJ-07: após desconexão (leftAt definido), o convidado pode reingressar na sessão ativa
+        CoopSessionEntity session = activeSession(1L, 1L);
+        session.setMaxPlayers(4);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(participantRepository.countByIdCoopSessionAndLeftAtIsNull(1L)).thenReturn(1L);
+        // convidado anteriormente desconectado — nenhum registro ativo encontrado
+        when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 2L))
+                .thenReturn(Optional.empty());
+        when(participantRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        assertDoesNotThrow(() -> service.joinSession(1L, 2L));
+        verify(participantRepository).save(argThat(p -> p.getIdCharacter().equals(2L)));
+    }
+
     // ── RF-MJ-03: Regras do jogador convidado ────────────────────────────────
 
     @Test
