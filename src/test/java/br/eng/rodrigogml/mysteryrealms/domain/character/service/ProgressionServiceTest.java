@@ -260,6 +260,14 @@ class ProgressionServiceTest {
 
 
     @Test
+    void utilityTraitUnlocked_nivel5() {
+        // RF-PP-07
+        assertFalse(ProgressionService.isUtilityTraitUnlocked(4));
+        assertTrue(ProgressionService.isUtilityTraitUnlocked(5));
+        assertTrue(ProgressionService.isUtilityTraitUnlocked(10));
+    }
+
+    @Test
     void abilitySlot_slot1DesbloqueadoNivel3() {
         // RF-PP-07
         assertFalse(ProgressionService.isSkillSlotUnlocked(2, 1));

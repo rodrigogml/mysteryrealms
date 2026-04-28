@@ -126,6 +126,17 @@ public final class ProgressionService {
     // ── RF-PP-07: marcos de nível ─────────────────────────────────────────────
 
     /**
+     * Verifica se o traço utilitário de classe/racial avançado está desbloqueado — RF-PP-07.
+     * Marco: nível 5.
+     *
+     * @param level nível atual do personagem
+     * @return {@code true} se o traço utilitário estiver desbloqueado
+     */
+    public static boolean isUtilityTraitUnlocked(int level) {
+        return level >= 5;
+    }
+
+    /**
      * Verifica se o slot de habilidade ativa está desbloqueado para o nível informado — RF-PP-07.
      * <ul>
      *   <li>Slot 1: nível >= 3</li>
