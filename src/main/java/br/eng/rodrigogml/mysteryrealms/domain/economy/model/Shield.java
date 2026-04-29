@@ -34,6 +34,9 @@ public class Shield extends HandItem {
 
         super(name, HandItemSubtype.ESCUDO, 1, HandItemCategory.DEFENSE, weightKg, basePrice);
 
+        if (baseBlockValue < 0)
+            throw new IllegalArgumentException("baseBlockValue deve ser >= 0, recebido: " + baseBlockValue);
+
         this.baseBlockValue = baseBlockValue;
         this.coverage = coverage;
         this.dexPenalty = dexPenalty;

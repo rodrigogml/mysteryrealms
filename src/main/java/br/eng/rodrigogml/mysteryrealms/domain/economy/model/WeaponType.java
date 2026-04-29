@@ -82,7 +82,7 @@ public class WeaponType {
         this.criticalProfile = criticalProfile;
         this.compatibilities = (compatibilities == null)
                 ? Collections.emptyList()
-                : Collections.unmodifiableList(compatibilities);
+                : List.copyOf(compatibilities);
     }
 
     /**

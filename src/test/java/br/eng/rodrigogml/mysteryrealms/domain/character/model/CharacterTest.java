@@ -4,23 +4,27 @@ import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Skill;
+import br.eng.rodrigogml.mysteryrealms.domain.character.service.CharacterAttributeService;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.MonetaryValue;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.Weapon;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Testes do modelo de Character — RF-FP-01 a RF-FP-10.
+ * Testes do modelo de Character - RF-FP-01 a RF-FP-10.
  */
 class CharacterTest {
 
     private Character buildHuman() {
         return new Character("Aragorn", "Elessar", Gender.MALE, Race.HUMAN, CharacterClass.WARRIOR, 25);
     }
-
-    // ── RF-FP-01: Identidade ──────────────────────────────────────────────────
 
     @Test
     void character_identidadeArmazenada() {
@@ -57,11 +61,8 @@ class CharacterTest {
                 () -> new Character("Aragorn", "Elessar", null, Race.HUMAN, CharacterClass.WARRIOR, 25));
     }
 
-    // ── RF-FP-02: Atributos combinados raça + classe ──────────────────────────
-
     @Test
     void character_atributosCombinamRacaEClasse() {
-        // Humano: (3,3,3,3,3,3,3) + Guerreiro: (3,1,2,0,0,0,0) = (6,4,5,3,3,3,3)
         Character c = buildHuman();
         AttributeSet attrs = c.getAttributes();
         assertEquals(6, attrs.strength());
@@ -69,8 +70,6 @@ class CharacterTest {
         assertEquals(5, attrs.constitution());
         assertEquals(3, attrs.intellect());
     }
-
-    // ── RF-FP-04: Estado initial ──────────────────────────────────────────────
 
     @Test
     void character_estadoInicialNivel1() {
@@ -81,7 +80,6 @@ class CharacterTest {
 
     @Test
     void character_pvMaxCalculadoDaConstituicao() {
-        // Humano + Guerreiro: constitution = 5 → PV max = 50
         Character c = buildHuman();
         assertEquals(50.0, c.getMaxHealthPoints(), 1e-9);
         assertEquals(50.0, c.getHealthPoints(), 1e-9);
@@ -89,7 +87,6 @@ class CharacterTest {
 
     @Test
     void character_fadigaMaxCalculada() {
-        // constitution=5, willpower=3 → fadiga max = (5+3)×100 = 800
         Character c = buildHuman();
         assertEquals(800.0, c.getMaxFatigue(), 1e-9);
     }
@@ -124,7 +121,7 @@ class CharacterTest {
     void character_fadigaAtualNuncaMenorQueFadigaMin() {
         Character c = buildHuman();
         c.setMinFatigue(200.0);
-        c.setCurrentFatigue(100.0); // abaixo do min → deve subir para 200
+        c.setCurrentFatigue(100.0);
         assertEquals(200.0, c.getCurrentFatigue(), 1e-9);
     }
 
@@ -137,7 +134,12 @@ class CharacterTest {
         assertEquals(0, c.getMorale());
     }
 
-    // ── RF-FP-05: Inventário ──────────────────────────────────────────────────
+    @Test
+    void character_fadigaAtualClampadaEm120PctDaFadigaMax() {
+        Character c = buildHuman();
+        c.setCurrentFatigue(9999.0);
+        assertEquals(c.getMaxFatigue() * 1.2, c.getCurrentFatigue(), 1e-9);
+    }
 
     @Test
     void character_inventarioInicialVazio() {
@@ -166,7 +168,6 @@ class CharacterTest {
         Character c = buildHuman();
         c.equipItem(buildArma(1));
         c.equipItem(buildArma(1));
-        // Terceiro item (mesmo uma mão): não há mais espaço
         assertThrows(IllegalStateException.class, () -> c.equipItem(buildArma(1)));
     }
 
@@ -185,7 +186,14 @@ class CharacterTest {
         assertTrue(c.getCurrentLoadKg() > 0);
     }
 
-    // ── RF-FP-09: Relacionamento e reputação ──────────────────────────────────
+    @Test
+    void character_pesoCapacidadesDerivadasBatemComServico() {
+        Character c = buildHuman();
+        assertEquals(CharacterAttributeService.characterWeight(Race.HUMAN.getBaseWeightKg(Gender.MALE), 5),
+                c.getCharacterWeightKg(), 1e-9);
+        assertEquals(CharacterAttributeService.maxLoadCapacity(6), c.getMaxLoadCapacityKg(), 1e-9);
+        assertEquals(CharacterAttributeService.criticalLoadCapacity(60), c.getCriticalLoadCapacityKg(), 1e-9);
+    }
 
     @Test
     void character_relacionamentoNpcPadraoZero() {
@@ -226,93 +234,108 @@ class CharacterTest {
         assertEquals(-30, c.getFactionReputation("fac_guilda"));
     }
 
-    // ── RF-FP-03: Habilidades canônicas ──────────────────────────────────────
-
     @Test
     void skill_possuiExatamente12ValoresCanonicos() {
-        // RF-FP-03
         assertEquals(12, Skill.values().length,
-                "Habilidade deve ter exatamente 12 habilidades canônicas");
+                "Habilidade deve ter exatamente 12 habilidades canonicas");
     }
 
     @Test
     void skill_chavesTecnicasCorretas() {
-        // RF-FP-03
-        assertEquals("persuasao",           Skill.PERSUASION.getKey());
-        assertEquals("intimidacao",         Skill.INTIMIDATION.getKey());
-        assertEquals("enganacao",           Skill.DECEPTION.getKey());
+        assertEquals("persuasao", Skill.PERSUASION.getKey());
+        assertEquals("intimidacao", Skill.INTIMIDATION.getKey());
+        assertEquals("enganacao", Skill.DECEPTION.getKey());
         assertEquals("conhecimento_arcano", Skill.ARCANE_KNOWLEDGE.getKey());
         assertEquals("conhecimento_historia", Skill.HISTORY_KNOWLEDGE.getKey());
         assertEquals("conhecimento_reliquias", Skill.RELIC_KNOWLEDGE.getKey());
-        assertEquals("herbalismo",          Skill.HERBALISM.getKey());
-        assertEquals("alquimia",            Skill.ALCHEMY.getKey());
-        assertEquals("furtividade",         Skill.STEALTH.getKey());
-        assertEquals("sobrevivencia",       Skill.SURVIVAL.getKey());
-        assertEquals("manuseio_armas",      Skill.WEAPON_HANDLING.getKey());
-        assertEquals("uso_magia",           Skill.MAGIC_USE.getKey());
+        assertEquals("herbalismo", Skill.HERBALISM.getKey());
+        assertEquals("alquimia", Skill.ALCHEMY.getKey());
+        assertEquals("furtividade", Skill.STEALTH.getKey());
+        assertEquals("sobrevivencia", Skill.SURVIVAL.getKey());
+        assertEquals("manuseio_armas", Skill.WEAPON_HANDLING.getKey());
+        assertEquals("uso_magia", Skill.MAGIC_USE.getKey());
     }
-
-    // ── RF-FP-07: Raças canônicas ─────────────────────────────────────────────
 
     @Test
     void race_possuiExatamente8Valores() {
-        // RF-FP-07
         assertEquals(8, Race.values().length,
-                "Raca deve ter exatamente 8 raças canônicas");
+                "Raca deve ter exatamente 8 racas canonicas");
     }
 
     @Test
     void race_todasTemAtributosBaseNaoNulos() {
-        // RF-FP-07
         for (Race r : Race.values()) {
             assertNotNull(r.getBaseAttributes(),
-                    "getAtributosBase() não pode ser nulo para " + r);
+                    "getBaseAttributes() nao pode ser nulo para " + r);
         }
     }
 
-    // ── RF-FP-08: Classes canônicas ───────────────────────────────────────────
+    @Test
+    void race_todasTemPesoBasePorGeneroValido() {
+        for (Race r : Race.values()) {
+            assertTrue(r.getBaseWeightKg(Gender.MALE) > 0);
+            assertTrue(r.getBaseWeightKg(Gender.FEMALE) > 0);
+            assertTrue(r.getBaseWeightKg(Gender.OTHER) > 0);
+        }
+    }
 
     @Test
     void characterClass_possuiExatamente12Valores() {
-        // RF-FP-08
         assertEquals(12, CharacterClass.values().length,
-                "ClassePersonagem deve ter exatamente 12 classes canônicas");
+                "CharacterClass deve ter exatamente 12 classes canonicas");
     }
 
     @Test
     void characterClass_todasTemBonusAtributosNaoNulos() {
-        // RF-FP-08
         for (CharacterClass cc : CharacterClass.values()) {
             assertNotNull(cc.getAttributeBonus(),
-                    "getBonusAtributos() não pode ser nulo para " + cc);
+                    "getAttributeBonus() nao pode ser nulo para " + cc);
         }
     }
 
-    // ── RF-FP-10: Recálculo de derivados ─────────────────────────────────────
+    @Test
+    void raceEClasse_expoemBonificacoesDeHabilidade() {
+        assertEquals(2, Race.ELF.getSkillBonuses().getBonus(Skill.ARCANE_KNOWLEDGE));
+        assertEquals(3, CharacterClass.HUNTER.getSkillBonuses().getBonus(Skill.SURVIVAL));
+    }
+
+    @Test
+    void skillBonuses_mergeSomaValoresEPreservaImutabilidade() {
+        SkillBonuses base = new SkillBonuses(Map.of(Skill.STEALTH, 2));
+        SkillBonuses extra = new SkillBonuses(Map.of(Skill.STEALTH, 1, Skill.SURVIVAL, 3));
+
+        SkillBonuses merged = base.merge(extra);
+
+        assertEquals(3, merged.getBonus(Skill.STEALTH));
+        assertEquals(3, merged.getBonus(Skill.SURVIVAL));
+        assertThrows(UnsupportedOperationException.class,
+                () -> merged.bonuses().put(Skill.PERSUASION, 1));
+    }
 
     @Test
     void setAtributos_recalculaPvMaxEFadigaMax() {
-        // RF-FP-10
         Character c = buildHuman();
-        double pvMaxAntes    = c.getMaxHealthPoints();
+        double pvMaxAntes = c.getMaxHealthPoints();
         double fadigaMaxAntes = c.getMaxFatigue();
 
-        // Novo atributo com constitution=10 (muito maior)
         AttributeSet novosAtributos = new AttributeSet(6, 4, 10, 3, 3, 3, 3);
         c.setAttributes(novosAtributos);
 
-        // pvMax = constitution × 10 = 100
         assertEquals(100.0, c.getMaxHealthPoints(), 1e-9);
-        assertTrue(c.getMaxHealthPoints() > pvMaxAntes,
-                "pvMax deve aumentar quando constituicao aumenta");
-
-        // maxFatigue = (const + vont) × 100 = (10+3)×100 = 1300
+        assertTrue(c.getMaxHealthPoints() > pvMaxAntes);
         assertEquals(1300.0, c.getMaxFatigue(), 1e-9);
-        assertTrue(c.getMaxFatigue() > fadigaMaxAntes,
-                "fadigaMax deve aumentar quando constituicao aumenta");
+        assertTrue(c.getMaxFatigue() > fadigaMaxAntes);
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    @Test
+    void setAtributos_reclampaFadigaAtualQuandoFadigaMaxDiminui() {
+        Character c = buildHuman();
+        c.setCurrentFatigue(c.getMaxFatigue() * 1.2);
+
+        c.setAttributes(new AttributeSet(6, 4, 2, 3, 3, 3, 1));
+
+        assertEquals(c.getMaxFatigue() * 1.2, c.getCurrentFatigue(), 1e-9);
+    }
 
     private Weapon buildArma(int maos) {
         return new Weapon("Espada", maos, 1.5, MonetaryValue.ofMp(10),

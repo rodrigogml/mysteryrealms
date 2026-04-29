@@ -9,6 +9,9 @@ import br.eng.rodrigogml.mysteryrealms.domain.combat.model.DiceRoller;
  *
  * Implementa o pipeline de resolução (RF-CT-07), o ciclo de batalha com regras de
  * movimentação (RF-CT-06) e as fórmulas de teste, acerto, bloqueio, resistência e aflição.
+ *
+ * @author ?
+ * @since 28-04-2026
  */
 public final class CombatService {
 
@@ -55,6 +58,39 @@ public final class CombatService {
      */
     public static int rollInitiative(int dexterity, int perception, DiceRoller dice) {
         return dice.d20() + dexterity + perception;
+    }
+
+    /**
+     * Determina qual participante atua primeiro na ordem de iniciativa — RF-CT-04.
+     *
+     * @param initiativeFirst resultado de iniciativa do primeiro participante
+     * @param dexterityFirst destreza do primeiro participante
+     * @param perceptionFirst percepção do primeiro participante
+     * @param initiativeSecond resultado de iniciativa do segundo participante
+     * @param dexteritySecond destreza do segundo participante
+     * @param perceptionSecond percepção do segundo participante
+     * @param dice rolagem usada apenas no último critério de sorteio
+     * @return {@code 1} quando o primeiro participante age antes; {@code 2} quando o segundo age antes
+     */
+    public static int determineInitiativeWinner(
+            int initiativeFirst,
+            int dexterityFirst,
+            int perceptionFirst,
+            int initiativeSecond,
+            int dexteritySecond,
+            int perceptionSecond,
+            DiceRoller dice) {
+
+        if (initiativeFirst != initiativeSecond) {
+            return initiativeFirst > initiativeSecond ? 1 : 2;
+        }
+        if (dexterityFirst != dexteritySecond) {
+            return dexterityFirst > dexteritySecond ? 1 : 2;
+        }
+        if (perceptionFirst != perceptionSecond) {
+            return perceptionFirst > perceptionSecond ? 1 : 2;
+        }
+        return dice.d20() > 10 ? 1 : 2;
     }
 
     // ── RF-CT-08: teste de acerto vs defesaFinal ─────────────────────────────
@@ -104,7 +140,8 @@ public final class CombatService {
      * Aplica o limite máximo de resistência para personagens jogadores — RF-CT-10.
      */
     public static double limitPlayerResistance(double resistenciaTipo) {
-        return Math.min(resistenciaTipo, CharacterAttributeService.MAX_PLAYER_RESISTANCE);
+        double resistClamp = Math.max(0.0, resistenciaTipo);
+        return Math.min(resistClamp, CharacterAttributeService.MAX_PLAYER_RESISTANCE);
     }
 
     // ── RF-CT-11: aflições ───────────────────────────────────────────────────
@@ -116,6 +153,26 @@ public final class CombatService {
     public static double afflictionChance(double chanceBase, double resistenciaAflicao, double minChance) {
         double resistClamp = Math.max(0.0, Math.min(1.0, resistenciaAflicao));
         return Math.max(minChance, chanceBase * (1.0 - resistClamp));
+    }
+
+    /**
+     * Calcula chance final de aplicação de aflição considerando imunidade explícita — RF-CT-11.
+     *
+     * @param chanceBase chance base da aflição
+     * @param resistenciaAflicao resistência da aflição em fração [0,0 a 1,0]
+     * @param minChance chance mínima aplicável quando não há imunidade explícita
+     * @param explicitImmunity {@code true} quando a imunidade explícita anula a aflição
+     * @return {@code 0.0} em imunidade explícita; caso contrário, a chance calculada normalmente
+     */
+    public static double afflictionChance(
+            double chanceBase,
+            double resistenciaAflicao,
+            double minChance,
+            boolean explicitImmunity) {
+        if (explicitImmunity) {
+            return 0.0;
+        }
+        return afflictionChance(chanceBase, resistenciaAflicao, minChance);
     }
 
     /**
@@ -193,6 +250,9 @@ public final class CombatService {
      *         exceder o limite máximo do movimento estendido
      */
     public static MovementType movementTypeFor(double distanceMeters) {
+        if (Double.isNaN(distanceMeters) || distanceMeters < 0.0) {
+            return null;
+        }
         for (MovementType mt : MovementType.values()) {
             if (distanceMeters <= mt.getMaxDistanceMeters()) {
                 return mt;

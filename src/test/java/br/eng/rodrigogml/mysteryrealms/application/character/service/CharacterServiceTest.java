@@ -239,7 +239,7 @@ class CharacterServiceTest {
         when(diaryEntryRepository.findAllByIdWorldInstance(10L)).thenReturn(List.of(diaryEntry));
         when(coopSessionRepository.findAllByIdWorldInstance(10L)).thenReturn(List.of(coopSession));
 
-        service.deleteCharacter(1L, 1L);
+        service.deleteCharacter(1L, 1L, true);
 
         verify(coopParticipantRepository).deleteAllByIdCharacter(1L);
         verify(coopParticipantRepository).deleteAllByIdCoopSession(200L);
@@ -265,14 +265,14 @@ class CharacterServiceTest {
     @Test
     void deleteCharacter_naoEncontrado_lancaExcecao() {
         when(characterRepository.findById(99L)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> service.deleteCharacter(1L, 99L));
+        assertThrows(IllegalArgumentException.class, () -> service.deleteCharacter(1L, 99L, true));
     }
 
     @Test
     void deleteCharacter_naoPertencoAoUsuario_lancaExcecao() {
         CharacterEntity character = buildEntity(1L, 2L, "Sam");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
-        assertThrows(IllegalArgumentException.class, () -> service.deleteCharacter(1L, 1L));
+        assertThrows(IllegalArgumentException.class, () -> service.deleteCharacter(1L, 1L, true));
     }
 
     @Test
@@ -281,11 +281,21 @@ class CharacterServiceTest {
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
         when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
 
-        service.deleteCharacter(1L, 1L);
+        service.deleteCharacter(1L, 1L, true);
 
         verify(coopParticipantRepository).deleteAllByIdCharacter(1L);
         verify(worldInstanceRepository, never()).deleteByIdCharacter(1L);
         verify(characterRepository).delete(character);
+    }
+
+    @Test
+    void deleteCharacter_semConfirmacaoExplicita_lancaExcecaoSemConsultarRepositorio() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.deleteCharacter(1L, 1L));
+
+        assertEquals("character.error.deleteConfirmationRequired", ex.getMessage());
+        verify(characterRepository, never()).findById(anyLong());
+        verify(characterRepository, never()).delete(any());
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────

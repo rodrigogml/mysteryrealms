@@ -98,6 +98,16 @@ class WorldInstanceServiceTest {
     }
 
     @Test
+    void createWorldInstance_personagemInvalido_lancaExcecaoSemConsultarRepositorio() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.createWorldInstance(0L));
+
+        assertEquals("world.error.invalidCharacterId", ex.getMessage());
+        verify(worldInstanceRepository, never()).findByIdCharacter(0L);
+        verify(worldInstanceRepository, never()).save(any());
+    }
+
+    @Test
     void loadWorldInstance_instanciaExistente_retornaInstancia() {
         WorldInstanceEntity instance = new WorldInstanceEntity();
         instance.setId(1L);
@@ -126,6 +136,19 @@ class WorldInstanceServiceTest {
 
         assertEquals(60L, result.getCurrentTimeMin());
         verify(worldInstanceRepository).save(instance);
+    }
+
+    @Test
+    void saveWorldInstance_tempoNegativo_lancaExcecao() {
+        WorldInstanceEntity instance = new WorldInstanceEntity();
+        instance.setIdCharacter(1L);
+        instance.setCurrentTimeMin(-1L);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.saveWorldInstance(instance));
+
+        assertEquals("world.error.invalidCurrentTime", ex.getMessage());
+        verify(worldInstanceRepository, never()).save(any());
     }
 
     @Test
@@ -178,6 +201,15 @@ class WorldInstanceServiceTest {
         verify(questStateRepository).save(captor.capture());
         assertEquals(QuestState.COMPLETED, captor.getValue().getState());
         assertEquals("quest001", captor.getValue().getQuestId());
+    }
+
+    @Test
+    void setQuestState_estadoNulo_lancaExcecaoSemPersistir() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.setQuestState(1L, "quest001", null));
+
+        assertEquals("world.error.invalidQuestState", ex.getMessage());
+        verify(questStateRepository, never()).save(any());
     }
 
     @Test
@@ -298,5 +330,23 @@ class WorldInstanceServiceTest {
         verify(markerRepository).save(captor.capture());
         assertNull(captor.getValue().getFlagValue());
         assertNull(captor.getValue().getIntValue());
+    }
+
+    @Test
+    void setMarker_tipoFlagComValorInteiro_lancaExcecao() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.setMarker(1L, "flag001", MarkerType.FLAG, 1));
+
+        assertEquals("world.error.invalidMarkerValue", ex.getMessage());
+        verify(markerRepository, never()).save(any());
+    }
+
+    @Test
+    void getMarker_idMarcadorEmBranco_lancaExcecao() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.getMarker(1L, " "));
+
+        assertEquals("world.error.invalidMarkerId", ex.getMessage());
+        verify(markerRepository, never()).findByIdWorldInstanceAndMarkerId(any(), any());
     }
 }

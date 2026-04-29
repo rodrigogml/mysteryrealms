@@ -2,17 +2,19 @@ package br.eng.rodrigogml.mysteryrealms.domain.character.service;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Testes da fórmula de progressão do personagem — RF-PP-02 a RF-PP-08.
  */
 class ProgressionServiceTest {
 
-    // ── RF-PP-02 / RF-PP-03: fórmula de XP ───────────────────────────────────
-
     @Test
-    void xpForLevel_lançaExcecaoParaNivelMenorQueUm() {
+    void xpForLevel_lancaExcecaoParaNivelMenorQueUm() {
         assertThrows(IllegalArgumentException.class, () -> ProgressionService.xpForLevel(0));
         assertThrows(IllegalArgumentException.class, () -> ProgressionService.xpForLevel(-1));
     }
@@ -20,8 +22,7 @@ class ProgressionServiceTest {
     @Test
     void xpForLevel_retornaValorPositivo() {
         for (int n = 1; n <= 20; n++) {
-            assertTrue(ProgressionService.xpForLevel(n) > 0,
-                    "XP deve ser > 0 para nível " + n);
+            assertTrue(ProgressionService.xpForLevel(n) > 0, "XP deve ser > 0 para nível " + n);
         }
     }
 
@@ -30,44 +31,49 @@ class ProgressionServiceTest {
         long prev = 0;
         for (int n = 1; n <= 50; n++) {
             long xp = ProgressionService.xpForLevel(n);
-            assertTrue(xp > prev,
-                    "XP do nível " + n + " deve ser maior que do nível " + (n - 1));
+            assertTrue(xp > prev, "XP do nível " + n + " deve ser maior que do nível " + (n - 1));
             prev = xp;
         }
     }
 
     @Test
-    void xpForLevel_correspondeFórmulaMatemática() {
+    void xpForLevel_correspondeFormulaMatematica() {
         for (int n = 1; n <= 10; n++) {
             long expected = (long) Math.ceil(50.0 * Math.pow(Math.log(n + 10.0), 10.0));
-            assertEquals(expected, ProgressionService.xpForLevel(n),
-                    "XP para nível " + n + " deve corresponder a ceil(50 × pow(ln(n+10), 10))");
+            assertEquals(expected, ProgressionService.xpForLevel(n));
         }
     }
 
     @Test
-    void xpTotalForLevel_éSomaCumulativa() {
+    void totalXpForLevel_lancaExcecaoParaNivelMenorQueUm() {
+        assertThrows(IllegalArgumentException.class, () -> ProgressionService.totalXpForLevel(0));
+        assertThrows(IllegalArgumentException.class, () -> ProgressionService.totalXpForLevel(-1));
+    }
+
+    @Test
+    void totalXpForLevel_eSomaCumulativa() {
         long soma = 0;
         for (int n = 1; n <= 10; n++) {
             soma += ProgressionService.xpForLevel(n);
-            assertEquals(soma, ProgressionService.totalXpForLevel(n),
-                    "xpTotalParaNivel(" + n + ") deve ser a soma de xpParaNivel(1) a xpParaNivel(" + n + ")");
+            assertEquals(soma, ProgressionService.totalXpForLevel(n));
         }
     }
 
-    // ── RF-PP-04: subida de nível ─────────────────────────────────────────────
-
     @Test
     void shouldLevelUp_falsoComXpInsuficiente() {
-        assertFalse(ProgressionService.shouldLevelUp(0L, 1),
-                "Sem XP não deve subir de nível");
+        assertFalse(ProgressionService.shouldLevelUp(0L, 1));
+    }
+
+    @Test
+    void shouldLevelUp_lancaExcecaoParaEntradasInvalidas() {
+        assertThrows(IllegalArgumentException.class, () -> ProgressionService.shouldLevelUp(-1L, 1));
+        assertThrows(IllegalArgumentException.class, () -> ProgressionService.shouldLevelUp(0L, 0));
     }
 
     @Test
     void shouldLevelUp_verdadeiroAoAtingirLimiar() {
         long limiar = ProgressionService.totalXpForLevel(2);
-        assertTrue(ProgressionService.shouldLevelUp(limiar, 1),
-                "Deve subir de nível ao atingir exatamente o XP total do próximo nível");
+        assertTrue(ProgressionService.shouldLevelUp(limiar, 1));
     }
 
     @Test
@@ -82,7 +88,29 @@ class ProgressionServiceTest {
         assertFalse(ProgressionService.shouldLevelUp(limiar - 1, 1));
     }
 
-    // ── RF-PP-05: PEA ─────────────────────────────────────────────────────────
+    @Test
+    void levelFromAccumulatedXp_retornaNivel1SemXp() {
+        assertEquals(1, ProgressionService.levelFromAccumulatedXp(0L));
+    }
+
+    @Test
+    void levelFromAccumulatedXp_lancaExcecaoParaXpNegativo() {
+        assertThrows(IllegalArgumentException.class, () -> ProgressionService.levelFromAccumulatedXp(-1L));
+    }
+
+    @Test
+    void levelFromAccumulatedXp_sobeMultiplosNiveisQuandoUltrapassaVariosLimiares() {
+        long xpNivel3 = ProgressionService.totalXpForLevel(3);
+        assertEquals(3, ProgressionService.levelFromAccumulatedXp(xpNivel3));
+        assertEquals(2, ProgressionService.levelsGained(xpNivel3, 1));
+    }
+
+    @Test
+    void levelFromAccumulatedXp_respeitaLimiarExatoDoNivelAnterior() {
+        long xpUmAbaixoDoNivel3 = ProgressionService.totalXpForLevel(3) - 1;
+        assertEquals(2, ProgressionService.levelFromAccumulatedXp(xpUmAbaixoDoNivel3));
+        assertEquals(0, ProgressionService.levelsGained(xpUmAbaixoDoNivel3, 2));
+    }
 
     @Test
     void totalPeaAtLevel_zeroPadraoEmNivel1() {
@@ -92,34 +120,40 @@ class ProgressionServiceTest {
     @Test
     void totalPeaAtLevel_umPorNivelDe2a10() {
         for (int level = 2; level <= 10; level++) {
-            assertEquals(level - 1, ProgressionService.totalPeaAtLevel(level),
-                    "Total PEA no nível " + level + " deve ser " + (level - 1));
+            assertEquals(level - 1, ProgressionService.totalPeaAtLevel(level));
         }
     }
 
     @Test
     void peaOnLevelUp_umPorNivelEntre2e10() {
         for (int level = 2; level <= 10; level++) {
-            assertEquals(1, ProgressionService.peaOnLevelUp(level),
-                    "PEA ao subir para nível " + level + " deve ser 1");
+            assertEquals(1, ProgressionService.peaOnLevelUp(level));
         }
     }
 
     @Test
     void peaOnLevelUp_aCada2NiveisEntre11e30() {
-        int totalPEA = 9; // 9 PEA acumulados até nível 10
+        int totalPea = 9;
         for (int level = 11; level <= 30; level++) {
             int pea = ProgressionService.peaOnLevelUp(level);
-            assertTrue(pea == 0 || pea == 1,
-                    "PEA ao subir para nível " + level + " deve ser 0 ou 1");
-            totalPEA += pea;
+            assertTrue(pea == 0 || pea == 1);
+            totalPea += pea;
         }
-        assertEquals(9 + 10, totalPEA, "Total de PEA de nível 11 a 30 deve ser 10");
+        assertEquals(19, totalPea);
     }
 
     @Test
-    void peaOnLevelUp_aCada3NiveisApartirDe31() {
-        // a cada 3 níveis: PEA em 33, 36, 39, ...
+    void totalPeaAtLevel_respeitaMarcosDeFaixa() {
+        assertEquals(9, ProgressionService.totalPeaAtLevel(10));
+        assertEquals(9, ProgressionService.totalPeaAtLevel(11));
+        assertEquals(10, ProgressionService.totalPeaAtLevel(12));
+        assertEquals(19, ProgressionService.totalPeaAtLevel(30));
+        assertEquals(19, ProgressionService.totalPeaAtLevel(31));
+        assertEquals(20, ProgressionService.totalPeaAtLevel(33));
+    }
+
+    @Test
+    void peaOnLevelUp_aCada3NiveisAPartirDe31() {
         assertEquals(0, ProgressionService.peaOnLevelUp(31));
         assertEquals(0, ProgressionService.peaOnLevelUp(32));
         assertEquals(1, ProgressionService.peaOnLevelUp(33));
@@ -128,26 +162,22 @@ class ProgressionServiceTest {
         assertEquals(1, ProgressionService.peaOnLevelUp(36));
     }
 
-    // ── RF-PP-06: PP ──────────────────────────────────────────────────────────
-
     @Test
     void ppOnLevelUp_umEmNivelImpar() {
         for (int level = 1; level <= 20; level += 2) {
-            assertEquals(1, ProgressionService.ppOnLevelUp(level),
-                    "PP ao subir para nível ímpar " + level + " deve ser 1");
+            assertEquals(1, ProgressionService.ppOnLevelUp(level));
         }
     }
 
     @Test
     void ppOnLevelUp_zeroEmNivelPar() {
         for (int level = 2; level <= 20; level += 2) {
-            assertEquals(0, ProgressionService.ppOnLevelUp(level),
-                    "PP ao subir para nível par " + level + " deve ser 0");
+            assertEquals(0, ProgressionService.ppOnLevelUp(level));
         }
     }
 
     @Test
-    void totalPpAtLevel_cresceApenadEmNiveisImpares() {
+    void totalPpAtLevel_cresceApenasEmNiveisImpares() {
         assertEquals(1, ProgressionService.totalPpAtLevel(1));
         assertEquals(1, ProgressionService.totalPpAtLevel(2));
         assertEquals(2, ProgressionService.totalPpAtLevel(3));
@@ -155,155 +185,97 @@ class ProgressionServiceTest {
         assertEquals(3, ProgressionService.totalPpAtLevel(5));
     }
 
-    // ── RF-PP-06: bônus de proficiência ──────────────────────────────────────
-
     @Test
-    void proficiencyBonus_zeroPadraoAbaixoDe10() {
-        for (int level = 1; level <= 9; level++) {
-            assertEquals(0, ProgressionService.proficiencyBonus(level));
-        }
+    void totalPpAtLevel_lancaExcecaoParaNivelMenorQueUm() {
+        assertThrows(IllegalArgumentException.class, () -> ProgressionService.totalPpAtLevel(0));
     }
 
     @Test
-    void proficiencyBonus_umEntre10e24() {
+    void proficiencyBonus_respeitaFaixas() {
+        assertEquals(0, ProgressionService.proficiencyBonus(1));
+        assertEquals(0, ProgressionService.proficiencyBonus(9));
         assertEquals(1, ProgressionService.proficiencyBonus(10));
         assertEquals(1, ProgressionService.proficiencyBonus(24));
-    }
-
-    @Test
-    void proficiencyBonus_doisEntre25e49() {
         assertEquals(2, ProgressionService.proficiencyBonus(25));
         assertEquals(2, ProgressionService.proficiencyBonus(49));
-    }
-
-    @Test
-    void proficiencyBonus_tresAPartirDe50() {
         assertEquals(3, ProgressionService.proficiencyBonus(50));
         assertEquals(3, ProgressionService.proficiencyBonus(100));
     }
 
-    // ── RF-PP-05: limite suave de atributo ───────────────────────────────────
-
     @Test
-    void attributeSoftCap_nivel1() {
+    void attributeSoftCap_respeitaFormula() {
         assertEquals(10, ProgressionService.softCapAttribute(1));
-    }
-
-    @Test
-    void attributeSoftCap_nivel5() {
         assertEquals(11, ProgressionService.softCapAttribute(5));
-    }
-
-    @Test
-    void attributeSoftCap_nivel10() {
         assertEquals(12, ProgressionService.softCapAttribute(10));
-    }
-
-    @Test
-    void attributeSoftCap_nivel20() {
         assertEquals(14, ProgressionService.softCapAttribute(20));
     }
 
-    // ── RF-PP-06: habilidade final ────────────────────────────────────────────
-
     @Test
     void skillFinalValue_somaCorretamente() {
-        // atributo=4, pp=2, level=10 (bonusProficiency=1), mod=1 → 4+2+1+1=8
         assertEquals(8, ProgressionService.finalSkillValue(4, 2, 10, 1));
     }
 
     @Test
     void skillFinalValue_semModificadores() {
-        // atributo=5, pp=0, level=1 (bonus=0), mod=0 → 5
         assertEquals(5, ProgressionService.finalSkillValue(5, 0, 1, 0));
     }
 
-    // ── RF-PP-01: XP nunca diminui ───────────────────────────────────────────
-
     @Test
-    void xpNuncaDiminui_semXpNaoSobe() {
-        // RF-PP-01
-        assertFalse(ProgressionService.shouldLevelUp(0L, 1),
-                "Sem XP acumulado, personagem não deve subir de nível");
-    }
-
-    @Test
-    void xpNuncaDiminui_xpCrescente() {
-        // RF-PP-01 — totalXpForLevel é crescente (XP não diminui)
+    void xpNuncaDiminui_totalXpPermaneceCrescente() {
         long prev = 0;
         for (int n = 1; n <= 20; n++) {
             long total = ProgressionService.totalXpForLevel(n);
-            assertTrue(total >= prev,
-                    "xpTotalParaNivel deve ser crescente: nível " + n);
+            assertTrue(total >= prev);
             prev = total;
         }
     }
 
-    // ── RF-PP-08: versionamento de balanceamento ──────────────────────────────
-
     @Test
     void balanceVersion_naoNuloENaoVazio() {
-        // RF-PP-08
-        assertNotNull(ProgressionService.BALANCE_VERSION,
-                "Versão de balanceamento não pode ser nula");
-        assertFalse(ProgressionService.BALANCE_VERSION.isBlank(),
-                "Versão de balanceamento não pode ser vazia");
+        assertNotNull(ProgressionService.BALANCE_VERSION);
+        assertFalse(ProgressionService.BALANCE_VERSION.isBlank());
     }
 
     @Test
-    void balanceVersion_formatoSemantic() {
-        // RF-PP-08 — formato esperado: BAL-<major>.<minor>.<patch>
-        assertTrue(ProgressionService.BALANCE_VERSION.matches("BAL-\\d+\\.\\d+\\.\\d+"),
-                "Versão de balanceamento deve seguir o formato BAL-<major>.<minor>.<patch>");
+    void balanceVersion_formatoSemantico() {
+        assertTrue(ProgressionService.BALANCE_VERSION.matches("BAL-\\d+\\.\\d+\\.\\d+"));
     }
 
-
+    @Test
+    void balanceVersion_correspondeVersaoAtivaDoRequisito() {
+        assertEquals("BAL-1.0.0", ProgressionService.BALANCE_VERSION);
+    }
 
     @Test
     void utilityTraitUnlocked_nivel5() {
-        // RF-PP-07
         assertFalse(ProgressionService.isUtilityTraitUnlocked(4));
         assertTrue(ProgressionService.isUtilityTraitUnlocked(5));
         assertTrue(ProgressionService.isUtilityTraitUnlocked(10));
     }
 
     @Test
-    void abilitySlot_slot1DesbloqueadoNivel3() {
-        // RF-PP-07
+    void abilitySlot_respeitaMarcos() {
         assertFalse(ProgressionService.isSkillSlotUnlocked(2, 1));
         assertTrue(ProgressionService.isSkillSlotUnlocked(3, 1));
-    }
-
-    @Test
-    void abilitySlot_slot2DesbloqueadoNivel8() {
-        // RF-PP-07
         assertFalse(ProgressionService.isSkillSlotUnlocked(7, 2));
         assertTrue(ProgressionService.isSkillSlotUnlocked(8, 2));
-    }
-
-    @Test
-    void abilitySlot_slotInexistente_false() {
-        // RF-PP-07
         assertFalse(ProgressionService.isSkillSlotUnlocked(99, 3));
     }
 
     @Test
     void signatureAbilityUnlocked_nivel12() {
-        // RF-PP-07
         assertFalse(ProgressionService.isSignatureSkillUnlocked(11));
         assertTrue(ProgressionService.isSignatureSkillUnlocked(12));
     }
 
     @Test
     void advancedSpecializationUnlocked_nivel20() {
-        // RF-PP-07
         assertFalse(ProgressionService.isAdvancedSpecializationUnlocked(19));
         assertTrue(ProgressionService.isAdvancedSpecializationUnlocked(20));
     }
 
     @Test
     void masteryCycleActive_nivel30() {
-        // RF-PP-07
         assertFalse(ProgressionService.isMasteryCycleActive(29));
         assertTrue(ProgressionService.isMasteryCycleActive(30));
     }

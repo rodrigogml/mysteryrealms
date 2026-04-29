@@ -17,6 +17,7 @@ public class PhysiologyState {
     private int morale;
     private double healthPoints;
     private double maxHealthPoints;
+    private boolean severeHungerThirstCombinationActive;
 
     public PhysiologyState(
             double minFatigue,
@@ -26,7 +27,8 @@ public class PhysiologyState {
             double hungerPct,
             int morale,
             double healthPoints,
-            double maxHealthPoints) {
+            double maxHealthPoints,
+            boolean severeHungerThirstCombinationActive) {
         this.minFatigue = minFatigue;
         this.currentFatigue = currentFatigue;
         this.maxFatigue = maxFatigue;
@@ -35,11 +37,12 @@ public class PhysiologyState {
         this.morale = morale;
         this.healthPoints = healthPoints;
         this.maxHealthPoints = maxHealthPoints;
+        this.severeHungerThirstCombinationActive = severeHungerThirstCombinationActive;
     }
 
     /** Cria um estado initial "zerado" a partir dos attributes base. */
     public static PhysiologyState initial(double maxFatigue, double maxHealthPoints) {
-        return new PhysiologyState(0.0, 0.0, maxFatigue, 0.0, 0.0, 75, maxHealthPoints, maxHealthPoints);
+        return new PhysiologyState(0.0, 0.0, maxFatigue, 0.0, 0.0, 75, maxHealthPoints, maxHealthPoints, false);
     }
 
     public double getMinFatigue() { return minFatigue; }
@@ -65,4 +68,9 @@ public class PhysiologyState {
 
     public double getMaxHealthPoints() { return maxHealthPoints; }
     public void setMaxHealthPoints(double maxHealthPoints) { this.maxHealthPoints = maxHealthPoints; }
+
+    public boolean isSevereHungerThirstCombinationActive() { return severeHungerThirstCombinationActive; }
+    public void setSevereHungerThirstCombinationActive(boolean severeHungerThirstCombinationActive) {
+        this.severeHungerThirstCombinationActive = severeHungerThirstCombinationActive;
+    }
 }

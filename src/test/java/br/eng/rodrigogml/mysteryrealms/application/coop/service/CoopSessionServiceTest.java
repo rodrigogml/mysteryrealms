@@ -84,6 +84,7 @@ class CoopSessionServiceTest {
     void createSession_parametrosValidos_criaSessaoComAnfitriao() {
         CoopSessionEntity saved = activeSession(1L, 10L);
         saved.setId(1L);
+        allowHostWorld(10L, 5L);
         when(sessionRepository.save(any())).thenReturn(saved);
         when(participantRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -106,10 +107,26 @@ class CoopSessionServiceTest {
     @Test
     void createSession_maxPlayersIgual4_permitido() {
         CoopSessionEntity saved = activeSession(1L, 10L);
+        allowHostWorld(10L, 5L);
         when(sessionRepository.save(any())).thenReturn(saved);
         when(participantRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         assertDoesNotThrow(() -> service.createSession(10L, 5L, 4));
+    }
+
+    @Test
+    void createSession_mundoNaoPertenceAoAnfitriao_lancaExcecao() {
+        WorldInstanceEntity world = new WorldInstanceEntity();
+        world.setId(5L);
+        world.setIdCharacter(99L);
+        when(worldInstanceRepository.findById(5L)).thenReturn(Optional.of(world));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.createSession(10L, 5L, 4));
+
+        assertEquals("coop.error.hostWorldMismatch", ex.getMessage());
+        verify(sessionRepository, never()).save(any());
+        verify(participantRepository, never()).save(any());
     }
 
     @Test
@@ -222,6 +239,7 @@ class CoopSessionServiceTest {
     @Test
     void createSession_maxPlayers2_permitido() {
         CoopSessionEntity saved = activeSession(1L, 10L);
+        allowHostWorld(10L, 5L);
         when(sessionRepository.save(any())).thenReturn(saved);
         when(participantRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -231,6 +249,7 @@ class CoopSessionServiceTest {
     @Test
     void createSession_maxPlayers3_permitido() {
         CoopSessionEntity saved = activeSession(1L, 10L);
+        allowHostWorld(10L, 5L);
         when(sessionRepository.save(any())).thenReturn(saved);
         when(participantRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -280,8 +299,11 @@ class CoopSessionServiceTest {
         CoopSessionEntity session = activeSession(1L, 1L);
         when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
+        CharacterEntity snapshot = new CharacterEntity();
+        snapshot.setId(1L);
+
         assertThrows(IllegalArgumentException.class,
-                () -> service.disconnectGuest(1L, 1L, new CharacterEntity()));
+                () -> service.disconnectGuest(1L, 1L, snapshot));
     }
 
     @Test
@@ -291,8 +313,11 @@ class CoopSessionServiceTest {
         when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 2L))
                 .thenReturn(Optional.empty());
 
+        CharacterEntity snapshot = new CharacterEntity();
+        snapshot.setId(2L);
+
         assertThrows(IllegalArgumentException.class,
-                () -> service.disconnectGuest(1L, 2L, new CharacterEntity()));
+                () -> service.disconnectGuest(1L, 2L, snapshot));
     }
 
     @Test
@@ -478,5 +503,12 @@ class CoopSessionServiceTest {
         p.setJoinedAt(LocalDateTime.now());
         when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId))
                 .thenReturn(Optional.of(p));
+    }
+
+    private void allowHostWorld(Long hostCharacterId, Long worldInstanceId) {
+        WorldInstanceEntity world = new WorldInstanceEntity();
+        world.setId(worldInstanceId);
+        world.setIdCharacter(hostCharacterId);
+        when(worldInstanceRepository.findById(worldInstanceId)).thenReturn(Optional.of(world));
     }
 }

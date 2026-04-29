@@ -2,6 +2,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier.model;
 
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.ModifierOrigin;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.StackingRule;
+import java.util.regex.Pattern;
 
 /**
  * Estrutura de um modificador — RF-MAR-04.
@@ -18,10 +19,12 @@ public record Modifier(
         StackingRule stackingRule,
         ModifierOrigin origin) {
 
+    private static final Pattern ID_PATTERN = Pattern.compile("^[a-z0-9]+(?:_[a-z0-9]+)*$");
+
     public Modifier {
         if (id == null || id.isBlank())
             throw new IllegalArgumentException("id do modificador não pode ser vazio");
-        if (!id.equals(id.toLowerCase()) || id.contains(" "))
+        if (!ID_PATTERN.matcher(id).matches())
             throw new IllegalArgumentException("id deve ser snake_case sem acentos: " + id);
         if (displayName == null || displayName.isBlank())
             throw new IllegalArgumentException("nomeExibicao não pode ser vazio");

@@ -63,6 +63,8 @@ public class WorldInstanceService {
      * @return a instância de mundo criada
      */
     public WorldInstanceEntity createWorldInstance(Long characterId) {
+        requirePositiveId(characterId, "world.error.invalidCharacterId");
+
         if (worldInstanceRepository.findByIdCharacter(characterId).isPresent()) {
             throw new IllegalArgumentException("world.error.instanceAlreadyExists");
         }
@@ -82,6 +84,8 @@ public class WorldInstanceService {
      * @throws IllegalArgumentException se a instância não for encontrada
      */
     public WorldInstanceEntity loadWorldInstance(Long characterId) {
+        requirePositiveId(characterId, "world.error.invalidCharacterId");
+
         return worldInstanceRepository.findByIdCharacter(characterId)
                 .orElseThrow(() -> new IllegalArgumentException("world.error.instanceNotFound"));
     }
@@ -93,6 +97,14 @@ public class WorldInstanceService {
      * @return a instância salva
      */
     public WorldInstanceEntity saveWorldInstance(WorldInstanceEntity state) {
+        if (state == null) {
+            throw new IllegalArgumentException("world.error.instanceRequired");
+        }
+        requirePositiveId(state.getIdCharacter(), "world.error.invalidCharacterId");
+        if (state.getCurrentTimeMin() < 0) {
+            throw new IllegalArgumentException("world.error.invalidCurrentTime");
+        }
+
         return worldInstanceRepository.save(state);
     }
 
@@ -104,6 +116,9 @@ public class WorldInstanceService {
      * @return o estado da quest, ou vazio se não registrado
      */
     public Optional<WorldQuestStateEntity> getQuestState(Long worldInstanceId, String questId) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(questId, "world.error.invalidQuestId");
+
         return questStateRepository.findByIdWorldInstanceAndQuestId(worldInstanceId, questId);
     }
 
@@ -115,6 +130,12 @@ public class WorldInstanceService {
      * @param state           o novo estado da quest
      */
     public void setQuestState(Long worldInstanceId, String questId, QuestState state) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(questId, "world.error.invalidQuestId");
+        if (state == null) {
+            throw new IllegalArgumentException("world.error.invalidQuestState");
+        }
+
         WorldQuestStateEntity entity = questStateRepository
                 .findByIdWorldInstanceAndQuestId(worldInstanceId, questId)
                 .orElseGet(WorldQuestStateEntity::new);
@@ -132,6 +153,9 @@ public class WorldInstanceService {
      * @return o estado do NPC, ou vazio se não registrado
      */
     public Optional<WorldNpcStateEntity> getNpcState(Long worldInstanceId, String npcId) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(npcId, "world.error.invalidNpcId");
+
         return npcStateRepository.findByIdWorldInstanceAndNpcId(worldInstanceId, npcId);
     }
 
@@ -144,6 +168,9 @@ public class WorldInstanceService {
      * @param dialogState     o estado atual do diálogo do NPC
      */
     public void setNpcState(Long worldInstanceId, String npcId, boolean alive, String dialogState) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(npcId, "world.error.invalidNpcId");
+
         WorldNpcStateEntity entity = npcStateRepository
                 .findByIdWorldInstanceAndNpcId(worldInstanceId, npcId)
                 .orElseGet(WorldNpcStateEntity::new);
@@ -162,6 +189,9 @@ public class WorldInstanceService {
      * @return o estado da localidade, ou vazio se não registrado
      */
     public Optional<WorldLocationStateEntity> getLocationState(Long worldInstanceId, String locationId) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(locationId, "world.error.invalidLocationId");
+
         return locationStateRepository.findByIdWorldInstanceAndLocationId(worldInstanceId, locationId);
     }
 
@@ -174,6 +204,9 @@ public class WorldInstanceService {
      * @param accessible      se a localidade está acessível
      */
     public void setLocationState(Long worldInstanceId, String locationId, boolean discovered, boolean accessible) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(locationId, "world.error.invalidLocationId");
+
         WorldLocationStateEntity entity = locationStateRepository
                 .findByIdWorldInstanceAndLocationId(worldInstanceId, locationId)
                 .orElseGet(WorldLocationStateEntity::new);
@@ -192,6 +225,9 @@ public class WorldInstanceService {
      * @return o marcador encontrado, ou vazio
      */
     public Optional<WorldMarkerEntity> getMarker(Long worldInstanceId, String markerId) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(markerId, "world.error.invalidMarkerId");
+
         return markerRepository.findByIdWorldInstanceAndMarkerId(worldInstanceId, markerId);
     }
 
@@ -204,6 +240,18 @@ public class WorldInstanceService {
      * @param value           o valor do marcador (Boolean para FLAG, Integer para COUNTER/STAGE, null para limpar)
      */
     public void setMarker(Long worldInstanceId, String markerId, MarkerType type, Object value) {
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+        requireText(markerId, "world.error.invalidMarkerId");
+        if (type == null) {
+            throw new IllegalArgumentException("world.error.invalidMarkerType");
+        }
+        if (value != null && type == MarkerType.FLAG && !(value instanceof Boolean)) {
+            throw new IllegalArgumentException("world.error.invalidMarkerValue");
+        }
+        if (value != null && type != MarkerType.FLAG && !(value instanceof Integer)) {
+            throw new IllegalArgumentException("world.error.invalidMarkerValue");
+        }
+
         WorldMarkerEntity entity = markerRepository
                 .findByIdWorldInstanceAndMarkerId(worldInstanceId, markerId)
                 .orElseGet(WorldMarkerEntity::new);
@@ -223,5 +271,17 @@ public class WorldInstanceService {
         }
 
         markerRepository.save(entity);
+    }
+
+    private void requirePositiveId(Long id, String message) {
+        if (id == null || id <= 0L) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private void requireText(String value, String message) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(message);
+        }
     }
 }

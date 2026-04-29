@@ -126,6 +126,12 @@ class UserServiceTest {
     }
 
     @Test
+    void register_nomeUsuarioComTab_lancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> service.register("jo\tgador", "jogador@email.com", "Senha123!"));
+    }
+
+    @Test
     void register_emailInvalido_lancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> service.register("jogador1", "emailinvalido", "Senha123!"));
@@ -202,6 +208,32 @@ class UserServiceTest {
     }
 
     @Test
+    void purgeExpiredPendingRegistrations_removeContaPendenteExpirada() {
+        EmailConfirmationEntity confirmation = new EmailConfirmationEntity();
+        confirmation.setIdUser(1L);
+        confirmation.setType(EmailConfirmationType.REGISTRATION);
+        confirmation.setExpiresAt(LocalDateTime.now().minusMinutes(1));
+
+        UserEntity user = new UserEntity();
+        user.setId(1L);
+        user.setStatus(UserStatus.PENDING_CONFIRMATION);
+        user.setEmailConfirmed(false);
+
+        when(emailConfirmationRepository.findAllByTypeAndExpiresAtBefore(eq(EmailConfirmationType.REGISTRATION), any()))
+                .thenReturn(List.of(confirmation));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(characterRepository.findAllByIdUser(1L)).thenReturn(Collections.emptyList());
+        when(loginAttemptRepository.findByIdUserAndAttemptTimeAfter(eq(1L), any())).thenReturn(Collections.emptyList());
+
+        int removed = service.purgeExpiredPendingRegistrations();
+
+        assertEquals(1, removed);
+        verify(sessionRepository).deleteAllByIdUser(1L);
+        verify(emailConfirmationRepository).deleteAllByIdUser(1L);
+        verify(userRepository).delete(user);
+    }
+
+    @Test
     void login_credenciaisValidas_retornaSessao() {
         UserEntity user = activeUser();
         when(userRepository.findByEmail("jogador@email.com")).thenReturn(Optional.of(user));
@@ -265,6 +297,29 @@ class UserServiceTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> service.login("jogador@email.com", "Senha123!", "127.0.0.1"));
+    }
+
+    @Test
+    void login_bloqueioExpirado_desbloqueiaAutomaticamente() {
+        UserEntity user = activeUser();
+        user.setStatus(UserStatus.LOCKED);
+        AccountLockEntity lock = new AccountLockEntity();
+        lock.setUnlockAt(LocalDateTime.now().minusMinutes(1));
+
+        when(userRepository.findByEmail("jogador@email.com")).thenReturn(Optional.of(user));
+        when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.of(lock));
+        when(userRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(twoFactorAuthRepository.findByIdUser(1L)).thenReturn(Optional.empty());
+        when(loginAttemptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        SessionEntity session = new SessionEntity();
+        session.setToken("tok");
+        when(sessionRepository.save(any())).thenReturn(session);
+
+        LoginResultVO result = service.login("jogador@email.com", "Senha123!", "127.0.0.1");
+
+        assertEquals(LoginResultVO.Status.AUTHENTICATED, result.status());
+        assertEquals(UserStatus.ACTIVE, user.getStatus());
+        verify(accountLockRepository).deleteAllByIdUser(1L);
     }
 
     @Test
@@ -350,6 +405,22 @@ class UserServiceTest {
 
         assertEquals("tok", result.getToken());
         assertTrue(challenge.isUsed());
+    }
+
+    @Test
+    void completeTwoFactorLogin_usuarioNaoAtivo_lancaExcecao() {
+        UserEntity user = new UserEntity();
+        user.setId(1L);
+        user.setStatus(UserStatus.PENDING_CONFIRMATION);
+        user.setEmailConfirmed(false);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.empty());
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.completeTwoFactorLogin(1L, "123456"));
+
+        assertEquals("user.error.userNotActive", ex.getMessage());
+        verify(sessionRepository, never()).save(any());
     }
 
     @Test

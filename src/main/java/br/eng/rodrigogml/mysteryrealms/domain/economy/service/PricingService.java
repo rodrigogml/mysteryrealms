@@ -48,11 +48,18 @@ public final class PricingService {
             double fatorOfertaDemanda,
             double fatorVenda) {
 
+        if (basePrice == null) {
+            throw new IllegalArgumentException("basePrice não pode ser nulo");
+        }
+
         validateFactor("fatorLugar", fatorLugar);
         validateFactor("fatorReputacao", fatorReputacao);
         validateFactor("fatorRelacionamento", fatorRelacionamento);
         validateFactor("fatorOfertaDemanda", fatorOfertaDemanda);
         validateFactor("fatorVenda", fatorVenda);
+        if (fatorVenda > 1.0) {
+            throw new IllegalArgumentException("fatorVenda deve ser <= 1.0, recebido: " + fatorVenda);
+        }
 
         double fatorTotal = fatorLugar * fatorReputacao * fatorRelacionamento
                 * fatorOfertaDemanda * fatorVenda;
@@ -67,7 +74,7 @@ public final class PricingService {
     }
 
     private static void validateFactor(String name, double value) {
-        if (value < FACTOR_MIN || value > FACTOR_MAX) {
+        if (!Double.isFinite(value) || value < FACTOR_MIN || value > FACTOR_MAX) {
             throw new IllegalArgumentException(
                     name + " deve estar em [" + FACTOR_MIN + ", " + FACTOR_MAX + "], recebido: " + value);
         }

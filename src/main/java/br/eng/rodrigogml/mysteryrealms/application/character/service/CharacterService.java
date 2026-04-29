@@ -256,13 +256,30 @@ public class CharacterService {
     }
 
     /**
+     * Bloqueia a exclusão sem confirmação explícita.
+     *
+     * @param userId      o ID do usuário
+     * @param characterId o ID do personagem
+     * @throws IllegalArgumentException sempre, pois a exclusão exige confirmação explícita
+     */
+    public void deleteCharacter(Long userId, Long characterId) {
+        deleteCharacter(userId, characterId, false);
+    }
+
+    /**
      * Exclui permanentemente um personagem e todos os seus dados relacionados.
      *
      * @param userId      o ID do usuário
      * @param characterId o ID do personagem
-     * @throws IllegalArgumentException se o personagem não existir ou não pertencer ao usuário
+     * @param confirmed   indica se o usuário confirmou explicitamente a exclusão
+     * @throws IllegalArgumentException se a exclusão não for confirmada, se o personagem não existir
+     *                                  ou não pertencer ao usuário
      */
-    public void deleteCharacter(Long userId, Long characterId) {
+    public void deleteCharacter(Long userId, Long characterId, boolean confirmed) {
+        if (!confirmed) {
+            throw new IllegalArgumentException("character.error.deleteConfirmationRequired");
+        }
+
         CharacterEntity character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
 

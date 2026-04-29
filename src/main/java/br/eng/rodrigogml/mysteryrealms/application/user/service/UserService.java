@@ -34,8 +34,10 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -126,7 +128,7 @@ public class UserService {
         if (username.length() < 3) {
             throw new IllegalArgumentException("user.error.usernameTooShort");
         }
-        if (username.contains(" ")) {
+        if (username.chars().anyMatch(Character::isWhitespace)) {
             throw new IllegalArgumentException("user.error.usernameHasSpaces");
         }
     }
@@ -162,6 +164,7 @@ public class UserService {
      * @throws IllegalArgumentException se qualquer validação falhar ou o nome/e-mail já existir
      */
     public UserEntity register(String username, String email, String rawPassword) {
+        purgeExpiredPendingRegistrations();
         validateUsername(username);
         validateEmail(email);
         validatePassword(rawPassword);
@@ -245,6 +248,7 @@ public class UserService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
 
+        reconcileExpiredAccountLock(user);
         ensureActiveUser(user);
         ensureAccountNotLocked(user.getId());
 
@@ -278,9 +282,11 @@ public class UserService {
      * @throws IllegalArgumentException se o usuário não existir, estiver bloqueado ou o código for inválido
      */
     public SessionEntity completeTwoFactorLogin(Long userId, String code) {
-        userRepository.findById(userId)
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
 
+        reconcileExpiredAccountLock(user);
+        ensureActiveUser(user);
         ensureAccountNotLocked(userId);
         if (!validateSecondFactorCode(userId, code)) {
             throw new IllegalArgumentException("user.error.invalidSecondFactorCode");
@@ -352,6 +358,38 @@ public class UserService {
         accountLockRepository.deleteAllByIdUser(userId);
         user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
+    }
+
+    /**
+     * Remove contas pendentes cuja confirmação de cadastro expirou.
+     *
+     * @return quantidade de contas pendentes removidas
+     */
+    public int purgeExpiredPendingRegistrations() {
+        List<EmailConfirmationEntity> expiredConfirmations = emailConfirmationRepository
+                .findAllByTypeAndExpiresAtBefore(EmailConfirmationType.REGISTRATION, LocalDateTime.now());
+        Set<Long> processedUsers = new HashSet<>();
+        int removedUsers = 0;
+
+        for (EmailConfirmationEntity confirmation : expiredConfirmations) {
+            Long userId = confirmation.getIdUser();
+            if (userId == null || !processedUsers.add(userId)) {
+                emailConfirmationRepository.delete(confirmation);
+                continue;
+            }
+
+            Optional<UserEntity> userOpt = userRepository.findById(userId);
+            if (userOpt.isPresent()
+                    && userOpt.get().getStatus() == UserStatus.PENDING_CONFIRMATION
+                    && !userOpt.get().isEmailConfirmed()) {
+                deleteAccountData(userId, userOpt.get());
+                removedUsers++;
+            } else {
+                emailConfirmationRepository.delete(confirmation);
+            }
+        }
+
+        return removedUsers;
     }
 
     private void checkBruteForce(UserEntity user) {
@@ -713,6 +751,17 @@ public class UserService {
         Optional<AccountLockEntity> lock = accountLockRepository.findTopByIdUserOrderByLockedAtDesc(userId);
         if (lock.isPresent() && LocalDateTime.now().isBefore(lock.get().getUnlockAt())) {
             throw new IllegalArgumentException("user.error.accountLocked");
+        }
+    }
+
+    private void reconcileExpiredAccountLock(UserEntity user) {
+        Optional<AccountLockEntity> lock = accountLockRepository.findTopByIdUserOrderByLockedAtDesc(user.getId());
+        if (lock.isPresent() && !LocalDateTime.now().isBefore(lock.get().getUnlockAt())) {
+            accountLockRepository.deleteAllByIdUser(user.getId());
+            if (user.getStatus() == UserStatus.LOCKED) {
+                user.setStatus(UserStatus.ACTIVE);
+                userRepository.save(user);
+            }
         }
     }
 

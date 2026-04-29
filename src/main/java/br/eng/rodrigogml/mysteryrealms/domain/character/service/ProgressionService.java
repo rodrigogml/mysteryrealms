@@ -6,10 +6,13 @@ package br.eng.rodrigogml.mysteryrealms.domain.character.service;
  * Versão de balanceamento ativa: BAL-1.0.0 (RF-PP-08).
  *
  * Fórmulas conforme RF-PP-02 e RF-PP-03:
- *   xp_nivel(n) = ceil(A × pow(ln(n + B), C))
- *   xp_total(n) = soma de xp_nivel(i), para i de 1 até n
+ * xp_nivel(n) = ceil(A × pow(ln(n + B), C))
+ * xp_total(n) = soma de xp_nivel(i), para i de 1 até n
  *
  * Parâmetros BAL-1.0.0: A=50, B=10, C=10.
+ *
+ * @author ?
+ * @since 28-04-2026
  */
 public final class ProgressionService {
 
@@ -21,11 +24,11 @@ public final class ProgressionService {
 
     private ProgressionService() {}
 
-    // ── XP ────────────────────────────────────────────────────────────────────
-
     /**
      * XP incremental necessário para avançar do nível {@code n} para o nível {@code n+1}.
-     * Fórmula: ceil(A × pow(ln(n + B), C)) — RF-PP-02.
+     *
+     * @param n nível atual
+     * @return XP necessário para o próximo nível
      */
     public static long xpForLevel(int n) {
         if (n < 1) throw new IllegalArgumentException("Nível deve ser >= 1, recebido: " + n);
@@ -34,10 +37,13 @@ public final class ProgressionService {
 
     /**
      * XP total acumulado necessário para atingir o estado de ter completado {@code n} níveis.
-     * xp_total(n) = soma de xp_nivel(i), para i de 1 até n — RF-PP-02.
+     *
+     * @param n nível de referência
+     * @return soma acumulada do XP por nível
      */
     public static long totalXpForLevel(int n) {
         if (n < 1) throw new IllegalArgumentException("Nível deve ser >= 1, recebido: " + n);
+
         long total = 0;
         for (int i = 1; i <= n; i++) {
             total += xpForLevel(i);
@@ -46,43 +52,76 @@ public final class ProgressionService {
     }
 
     /**
-     * Verifica se o personagem deve subir de nível.
-     * Condição: xpAccumulated >= xp_total(currentLevel + 1) — RF-PP-04.
+     * Calcula o nível correspondente ao XP acumulado informado.
+     * Permite múltiplas subidas em sequência conforme RF-PP-04.
+     *
+     * @param xpAccumulated XP acumulado do personagem
+     * @return nível resultante para o XP informado
      */
-    public static boolean shouldLevelUp(long xpAccumulated, int currentLevel) {
-        if (currentLevel < 1) throw new IllegalArgumentException("Nível atual deve ser >= 1");
-        return xpAccumulated >= totalXpForLevel(currentLevel + 1);
+    public static int levelFromAccumulatedXp(long xpAccumulated) {
+        if (xpAccumulated < 0) throw new IllegalArgumentException("XP acumulado deve ser >= 0");
+
+        int level = 1;
+        long nextLevelThreshold = totalXpForLevel(2);
+        while (xpAccumulated >= nextLevelThreshold) {
+            level++;
+            nextLevelThreshold += xpForLevel(level + 1);
+        }
+        return level;
     }
 
-    // ── PEA ───────────────────────────────────────────────────────────────────
+    /**
+     * Calcula quantos níveis o personagem deve ganhar para o XP acumulado atual.
+     *
+     * @param xpAccumulated XP acumulado do personagem
+     * @param currentLevel nível atual persistido
+     * @return quantidade de níveis a avançar
+     */
+    public static int levelsGained(long xpAccumulated, int currentLevel) {
+        if (currentLevel < 1) throw new IllegalArgumentException("Nível atual deve ser >= 1");
+        return Math.max(0, levelFromAccumulatedXp(xpAccumulated) - currentLevel);
+    }
+
+    /**
+     * Verifica se o personagem deve subir de nível.
+     *
+     * @param xpAccumulated XP acumulado do personagem
+     * @param currentLevel nível atual persistido
+     * @return {@code true} quando há pelo menos uma subida pendente
+     */
+    public static boolean shouldLevelUp(long xpAccumulated, int currentLevel) {
+        return levelsGained(xpAccumulated, currentLevel) > 0;
+    }
 
     /**
      * Total de Pontos de Evolução de Atributo (PEA) acumulados ao atingir o nível {@code level}.
-     * Faixas — RF-PP-05:
-     *   2 a 10: +1 PEA por nível  →  9 PEA total no nível 10
-     *   11 a 30: +1 PEA a cada 2 níveis
-     *   31+: +1 PEA a cada 3 níveis
+     *
+     * @param level nível de referência
+     * @return total acumulado de PEA
      */
     public static int totalPeaAtLevel(int level) {
         if (level < 2) return 0;
         if (level <= 10) return level - 1;
         if (level <= 30) return 9 + (level - 10) / 2;
-        return 9 + 10 + (level - 30) / 3;
+        return 19 + (level - 30) / 3;
     }
 
     /**
-     * PEA recebido ao subir para {@code newLevel} — RF-PP-05.
+     * PEA recebido ao subir para {@code newLevel}.
+     *
+     * @param newLevel novo nível atingido
+     * @return PEA concedido nessa subida
      */
     public static int peaOnLevelUp(int newLevel) {
         if (newLevel < 2) return 0;
         return totalPeaAtLevel(newLevel) - totalPeaAtLevel(newLevel - 1);
     }
 
-    // ── PP ────────────────────────────────────────────────────────────────────
-
     /**
      * Total de Pontos de Proficiência (PP) acumulados ao atingir o nível {@code level}.
-     * +1 PP a cada nível ímpar — RF-PP-06.
+     *
+     * @param level nível de referência
+     * @return total acumulado de PP
      */
     public static int totalPpAtLevel(int level) {
         if (level < 1) throw new IllegalArgumentException("Nível deve ser >= 1");
@@ -90,7 +129,10 @@ public final class ProgressionService {
     }
 
     /**
-     * PP recebido ao subir para {@code newLevel} — RF-PP-06.
+     * PP recebido ao subir para {@code newLevel}.
+     *
+     * @param newLevel novo nível atingido
+     * @return PP concedido nessa subida
      */
     public static int ppOnLevelUp(int newLevel) {
         if (newLevel < 1) return 0;
@@ -98,8 +140,10 @@ public final class ProgressionService {
     }
 
     /**
-     * Bônus de proficiência de faixa para o nível informado — RF-PP-06.
-     * Faixas: 1–9 → +0 | 10–24 → +1 | 25–49 → +2 | 50+ → +3.
+     * Bônus de proficiência de faixa para o nível informado.
+     *
+     * @param level nível atual
+     * @return bônus de proficiência da faixa
      */
     public static int proficiencyBonus(int level) {
         if (level >= 50) return 3;
@@ -109,42 +153,43 @@ public final class ProgressionService {
     }
 
     /**
-     * Valor final de habilidade — RF-PP-06.
-     * habilidade_final = atributo_base + pp_da_habilidade + bonus_proficiencia_faixa + modificadores
+     * Valor final de habilidade.
+     *
+     * @param atributoBase atributo base da habilidade
+     * @param ppDaHabilidade pontos de proficiência investidos
+     * @param level nível atual do personagem
+     * @param modificadores modificadores adicionais
+     * @return valor final da habilidade
      */
     public static int finalSkillValue(int atributoBase, int ppDaHabilidade, int level, int modificadores) {
         return atributoBase + ppDaHabilidade + proficiencyBonus(level) + modificadores;
     }
 
     /**
-     * Limite suave de atributo por nível: 10 + floor(level / 5) — RF-PP-05.
+     * Limite suave de atributo por nível.
+     *
+     * @param level nível atual
+     * @return valor máximo suave do atributo
      */
     public static int softCapAttribute(int level) {
         return 10 + level / 5;
     }
 
-    // ── RF-PP-07: marcos de nível ─────────────────────────────────────────────
-
     /**
-     * Verifica se o traço utilitário de classe/racial avançado está desbloqueado — RF-PP-07.
-     * Marco: nível 5.
+     * Verifica se o traço utilitário de classe/racial avançado está desbloqueado.
      *
      * @param level nível atual do personagem
-     * @return {@code true} se o traço utilitário estiver desbloqueado
+     * @return {@code true} se o traço estiver desbloqueado
      */
     public static boolean isUtilityTraitUnlocked(int level) {
         return level >= 5;
     }
 
     /**
-     * Verifica se o slot de habilidade ativa está desbloqueado para o nível informado — RF-PP-07.
-     * <ul>
-     *   <li>Slot 1: nível >= 3</li>
-     *   <li>Slot 2: nível >= 8</li>
-     * </ul>
+     * Verifica se o slot de habilidade ativa está desbloqueado para o nível informado.
      *
-     * @param level     nível atual do personagem
-     * @param slotIndex índice do slot (1-based)
+     * @param level nível atual do personagem
+     * @param slotIndex índice do slot com base 1
      * @return {@code true} se o slot estiver desbloqueado
      */
     public static boolean isSkillSlotUnlocked(int level, int slotIndex) {
@@ -156,24 +201,30 @@ public final class ProgressionService {
     }
 
     /**
-     * Verifica se a habilidade de assinatura (tier intermediário) está desbloqueada — RF-PP-07.
-     * Marco: nível 12.
+     * Verifica se a habilidade de assinatura está desbloqueada.
+     *
+     * @param level nível atual do personagem
+     * @return {@code true} se a habilidade estiver desbloqueada
      */
     public static boolean isSignatureSkillUnlocked(int level) {
         return level >= 12;
     }
 
     /**
-     * Verifica se a especialização avançada (ramificação de build) está desbloqueada — RF-PP-07.
-     * Marco: nível 20.
+     * Verifica se a especialização avançada está desbloqueada.
+     *
+     * @param level nível atual do personagem
+     * @return {@code true} se a especialização estiver desbloqueada
      */
     public static boolean isAdvancedSpecializationUnlocked(int level) {
         return level >= 20;
     }
 
     /**
-     * Verifica se os ciclos de maestria repetíveis estão ativos — RF-PP-07.
-     * Marco: nível 30+.
+     * Verifica se os ciclos de maestria repetíveis estão ativos.
+     *
+     * @param level nível atual do personagem
+     * @return {@code true} se o personagem já entrou na faixa de maestria
      */
     public static boolean isMasteryCycleActive(int level) {
         return level >= 30;

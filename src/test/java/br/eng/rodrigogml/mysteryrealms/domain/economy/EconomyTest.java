@@ -7,6 +7,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.economy.model.*;
 import br.eng.rodrigogml.mysteryrealms.domain.economy.service.PricingService;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,6 +97,16 @@ class EconomyTest {
                         "tipo_espada", "1d8", DamageType.SLASHING, "curto", "20/x2", 0, 0, 0, 0));
     }
 
+    @Test
+    void handItem_pesoNaoFinitoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Weapon("Espada", 1, Double.NaN, MonetaryValue.ofMp(10),
+                        "tipo_espada", "1d8", DamageType.SLASHING, "curto", "20/x2", 0, 0, 0, 0));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Weapon("Espada", 1, Double.POSITIVE_INFINITY, MonetaryValue.ofMp(10),
+                        "tipo_espada", "1d8", DamageType.SLASHING, "curto", "20/x2", 0, 0, 0, 0));
+    }
+
     // ── RF-EI-04: Canais de bônus ─────────────────────────────────────────────
 
     @Test
@@ -147,6 +158,12 @@ class EconomyTest {
         assertEquals(20, escudo.getBaseBlockValue());
     }
 
+    @Test
+    void shield_bloqueioBaseNegativoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> buildEscudo("Escudo Quebrado", -1, 0, 0, 0, 0.0));
+    }
+
     // ── RF-EI-02: fórmula de preço ────────────────────────────────────────────
 
     @Test
@@ -182,6 +199,31 @@ class EconomyTest {
                 () -> PricingService.applyPrice(base, 0.4, 1.0, 1.0, 1.0, 1.0));
         assertThrows(IllegalArgumentException.class,
                 () -> PricingService.applyPrice(base, 1.0, 2.1, 1.0, 1.0, 1.0));
+    }
+
+    @Test
+    void pricing_fatorNaoFinitoLancaExcecao() {
+        // RF-EI-02
+        MonetaryValue base = MonetaryValue.ofMp(10);
+        assertThrows(IllegalArgumentException.class,
+                () -> PricingService.applyPrice(base, Double.NaN, 1.0, 1.0, 1.0, 1.0));
+        assertThrows(IllegalArgumentException.class,
+                () -> PricingService.applyPrice(base, 1.0, Double.POSITIVE_INFINITY, 1.0, 1.0, 1.0));
+    }
+
+    @Test
+    void pricing_precoBaseNuloLancaExcecao() {
+        // RF-EI-02
+        assertThrows(IllegalArgumentException.class,
+                () -> PricingService.applyPrice(null, 1.0, 1.0, 1.0, 1.0, 1.0));
+    }
+
+    @Test
+    void pricing_fatorVendaMaiorQue1LancaExcecao() {
+        // RF-EI-02
+        MonetaryValue base = MonetaryValue.ofMp(10);
+        assertThrows(IllegalArgumentException.class,
+                () -> PricingService.applyPrice(base, 1.0, 1.0, 1.0, 1.0, 1.1));
     }
 
     @Test
@@ -239,6 +281,16 @@ class EconomyTest {
         assertTrue(hands.isEquipped(arma1));
         assertTrue(hands.isEquipped(arma2));
         assertFalse(hands.hasFreeSlot());
+    }
+
+    @Test
+    void equippedHands_equiparMesmoItemDuasVezes_lancaExcecao() {
+        // RF-EI-05
+        EquippedHands hands = new EquippedHands();
+        Weapon arma = buildArma("Espada");
+        hands.equip(arma);
+        assertFalse(hands.canEquip(arma));
+        assertThrows(IllegalStateException.class, () -> hands.equip(arma));
     }
 
     @Test
@@ -304,6 +356,17 @@ class EconomyTest {
         assertFalse(hands.isEquipped(armaMagica));
     }
 
+    @Test
+    void equippedHands_naoPermiteDoisEscudosAtivos() {
+        // RF-EI-08
+        EquippedHands hands = new EquippedHands();
+        Shield escudo1 = buildEscudo("Escudo de Ferro", 20, 0, 0, 5, 0.0);
+        Shield escudo2 = buildEscudo("Escudo de Aco", 25, 0, 0, 6, 0.0);
+        hands.equip(escudo1);
+        assertFalse(hands.canEquip(escudo2));
+        assertThrows(IllegalStateException.class, () -> hands.equip(escudo2));
+    }
+
     // ── RF-EI-06: tipos de armas ──────────────────────────────────────────────
 
     @Test
@@ -328,6 +391,18 @@ class EconomyTest {
                 critico, List.of("ranger", "elfo"));
         assertEquals(2, tipo.getCompatibilities().size());
         assertTrue(tipo.getCompatibilities().contains("ranger"));
+    }
+
+    @Test
+    void weaponType_compatibilidadesSaoCopiaImutavel() {
+        // RF-EI-06
+        ArrayList<String> compatibilidades = new ArrayList<>();
+        compatibilidades.add("ranger");
+        WeaponType tipo = new WeaponType("arco_longo", "distancia", "destreza", 2, "longo",
+                new CriticalProfile(19, 2), compatibilidades);
+        compatibilidades.add("ladino");
+        assertEquals(List.of("ranger"), tipo.getCompatibilities());
+        assertThrows(UnsupportedOperationException.class, () -> tipo.getCompatibilities().add("guerreiro"));
     }
 
     @Test

@@ -1,10 +1,13 @@
 package br.eng.rodrigogml.mysteryrealms.application.user.repository;
 
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.EmailConfirmationEntity;
+import br.eng.rodrigogml.mysteryrealms.application.user.entity.EmailConfirmationType;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,6 +25,15 @@ public interface EmailConfirmationRepository extends JpaRepository<EmailConfirma
      * @return a confirmação encontrada, ou vazio
      */
     Optional<EmailConfirmationEntity> findByToken(String token);
+
+    /**
+     * Busca confirmações de e-mail expiradas por tipo.
+     *
+     * @param type o tipo da confirmação
+     * @param expiresAt a data/hora máxima de expiração
+     * @return confirmações expiradas encontradas
+     */
+    List<EmailConfirmationEntity> findAllByTypeAndExpiresAtBefore(EmailConfirmationType type, LocalDateTime expiresAt);
 
     /**
      * Remove todas as confirmações de e-mail do usuário informado.

@@ -4,7 +4,9 @@ import br.eng.rodrigogml.mysteryrealms.domain.world.model.Connection;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Validações de consistência hierárquica do mundo — RF-MN-06.
@@ -12,6 +14,9 @@ import java.util.Set;
  * Todos os métodos são estáticos e stateless.
  */
 public final class HierarchyValidationService {
+
+    private static final Pattern CANONICAL_ID_PATTERN = Pattern.compile("^[a-z0-9_]+$");
+    private static final Pattern NAVIGABLE_ID_PATTERN = Pattern.compile("^(zona|amb)_[a-z0-9_]+$");
 
     private HierarchyValidationService() {}
 
@@ -22,7 +27,7 @@ public final class HierarchyValidationService {
      */
     public static boolean hasValidPrefix(String id, String expectedPrefix) {
         if (id == null || expectedPrefix == null) return false;
-        return id.startsWith(expectedPrefix);
+        return id.startsWith(expectedPrefix) && CANONICAL_ID_PATTERN.matcher(id).matches();
     }
 
     /**
@@ -67,6 +72,14 @@ public final class HierarchyValidationService {
     }
 
     /**
+     * Verifica se o ID navegável pertence ao formato canônico de Zona/Ambiente — RF-MN-01, RF-MN-06.
+     */
+    public static boolean isValidNavigableId(String id) {
+        if (id == null) return false;
+        return NAVIGABLE_ID_PATTERN.matcher(id).matches();
+    }
+
+    /**
      * Verifica se todos os destinos e a origin de uma Conexão existem no conjunto de nós conhecidos — RF-MN-06.
      *
      * @param conn         conexão a validar
@@ -74,11 +87,30 @@ public final class HierarchyValidationService {
      * @return {@code true} se origin e todos os destinos forem encontrados
      */
     public static boolean connectionDestinationsExist(Connection conn, Set<String> knownNodeIds) {
-        if (!knownNodeIds.contains(conn.originId())) return false;
+        if (!isValidNavigableId(conn.originId()) || !knownNodeIds.contains(conn.originId())) return false;
         for (String destId : conn.prioritizedDestinations()) {
-            if (!knownNodeIds.contains(destId)) return false;
+            if (!isValidNavigableId(destId) || !knownNodeIds.contains(destId)) return false;
         }
         return true;
+    }
+
+    /**
+     * Verifica se origem e ao menos um destino elegível da conexão estão acessíveis — RF-MN-06.
+     *
+     * @param conn conexão a validar
+     * @param accessibleNodes mapa de id → acessibilidade dos nós conhecidos
+     * @return {@code true} se a origem e pelo menos um destino estiverem acessíveis
+     */
+    public static boolean connectionHasAccessibleEndpoint(Connection conn, Map<String, Boolean> accessibleNodes) {
+        if (!Boolean.TRUE.equals(accessibleNodes.get(conn.originId()))) {
+            return false;
+        }
+        for (String destId : conn.prioritizedDestinations()) {
+            if (Boolean.TRUE.equals(accessibleNodes.get(destId))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

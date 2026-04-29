@@ -83,6 +83,27 @@ class CombatServiceTest {
         assertEquals(15, CombatService.rollInitiative(3, 2, FIXO_10));
     }
 
+    @Test
+    void determineInitiativeWinner_maiorIniciativaVence() {
+        assertEquals(1, CombatService.determineInitiativeWinner(15, 1, 1, 14, 99, 99, FIXO_10));
+    }
+
+    @Test
+    void determineInitiativeWinner_empateDesempatadoPorDestreza() {
+        assertEquals(1, CombatService.determineInitiativeWinner(15, 4, 1, 15, 3, 99, FIXO_10));
+    }
+
+    @Test
+    void determineInitiativeWinner_empateDesempatadoPorPercepcao() {
+        assertEquals(2, CombatService.determineInitiativeWinner(15, 4, 1, 15, 4, 2, FIXO_10));
+    }
+
+    @Test
+    void determineInitiativeWinner_empateTotalUsaSorteio() {
+        assertEquals(1, CombatService.determineInitiativeWinner(15, 4, 2, 15, 4, 2, FIXO_20));
+        assertEquals(2, CombatService.determineInitiativeWinner(15, 4, 2, 15, 4, 2, FIXO_1));
+    }
+
     // ── RF-CT-08: teste de acerto ────────────────────────────────────────────
 
     @Test
@@ -165,6 +186,11 @@ class CombatServiceTest {
     }
 
     @Test
+    void clampPlayerResistance_valoresNegativosVirAmZero() {
+        assertEquals(0.0, CombatService.limitPlayerResistance(-0.10), 1e-9);
+    }
+
+    @Test
     void damageAfterResistance_comLimiteJogador_naoZera() {
         double resistEncampada = CombatService.limitPlayerResistance(0.90);
         int dano = CombatService.damageAfterResistance(100, resistEncampada);
@@ -188,6 +214,11 @@ class CombatServiceTest {
         double min = 0.05;
         double chance = CombatService.afflictionChance(0.5, 1.0, min);
         assertEquals(min, chance, 1e-9);
+    }
+
+    @Test
+    void afflictionChance_imunidadeExplicitaZeraChance() {
+        assertEquals(0.0, CombatService.afflictionChance(0.5, 1.0, 0.05, true), 1e-9);
     }
 
     @Test
@@ -350,6 +381,11 @@ class CombatServiceTest {
     void movementTypeFor_3m_retornaShort() {
         // RF-CT-06
         assertEquals(MovementType.SHORT, CombatService.movementTypeFor(3.0));
+    }
+
+    @Test
+    void movementTypeFor_distanciaNegativa_retornaNull() {
+        assertNull(CombatService.movementTypeFor(-0.1));
     }
 
     @Test

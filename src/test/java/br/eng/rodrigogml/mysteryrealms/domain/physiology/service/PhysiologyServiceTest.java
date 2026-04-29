@@ -606,4 +606,82 @@ class PhysiologyServiceTest {
                 .count();
         assertEquals(5, distinct);
     }
+
+    @Test
+    void restRecovery_fatorAtividadeNegativoNaoAumentaFadiga() {
+        PhysiologyState s = freshState();
+        s.setCurrentFatigue(300.0);
+        PhysiologyService.applyRestTick(s, -1.0);
+        assertEquals(300.0, s.getCurrentFatigue(), 1e-9);
+    }
+
+    @Test
+    void restRecovery_fatorAtividadeMaiorQueUmUsaLimiteMaximo() {
+        PhysiologyState s1 = freshState();
+        s1.setCurrentFatigue(300.0);
+        PhysiologyService.applyRestTick(s1, 1.0);
+
+        PhysiologyState s2 = freshState();
+        s2.setCurrentFatigue(300.0);
+        PhysiologyService.applyRestTick(s2, 2.0);
+
+        assertEquals(s1.getCurrentFatigue(), s2.getCurrentFatigue(), 1e-9);
+    }
+
+    @Test
+    void sleepTick_fatorAbaixoDoMinimoUsaClamp() {
+        PhysiologyState s1 = freshState();
+        s1.setCurrentFatigue(400.0);
+        s1.setMinFatigue(100.0);
+        s1.setHealthPoints(10.0);
+        PhysiologyService.applySleepTick(s1, 0.1);
+
+        PhysiologyState s2 = freshState();
+        s2.setCurrentFatigue(400.0);
+        s2.setMinFatigue(100.0);
+        s2.setHealthPoints(10.0);
+        PhysiologyService.applySleepTick(s2, 0.5);
+
+        assertEquals(s2.getCurrentFatigue(), s1.getCurrentFatigue(), 1e-9);
+        assertEquals(s2.getMinFatigue(), s1.getMinFatigue(), 1e-9);
+        assertEquals(s2.getHealthPoints(), s1.getHealthPoints(), 1e-9);
+    }
+
+    @Test
+    void hpRecoveryPerMinute_fatorAbaixoDoMinimoUsaClamp() {
+        PhysiologyState s = freshState();
+        assertEquals(
+                PhysiologyService.hpRecoveryPerMinute(s, 0.5),
+                PhysiologyService.hpRecoveryPerMinute(s, 0.1),
+                1e-9);
+    }
+
+    @Test
+    void combinedEffect_fomeSede_aplicaMoralSoNaEntrada() {
+        PhysiologyState s = freshState();
+        s.setMorale(75);
+        s.setHungerPct(90.0);
+        s.setThirstPct(70.0);
+
+        PhysiologyService.combinedEffect(s);
+        PhysiologyService.combinedEffect(s);
+
+        assertEquals(60, s.getMorale(), "moral nao deve cair de novo sem sair da combinacao");
+    }
+
+    @Test
+    void combinedEffect_fomeSede_reaplicaAposSairERetornar() {
+        PhysiologyState s = freshState();
+        s.setMorale(75);
+        s.setHungerPct(90.0);
+        s.setThirstPct(70.0);
+
+        PhysiologyService.combinedEffect(s);
+        s.setThirstPct(50.0);
+        PhysiologyService.combinedEffect(s);
+        s.setThirstPct(70.0);
+        PhysiologyService.combinedEffect(s);
+
+        assertEquals(45, s.getMorale(), "moral deve cair novamente ao reentrar na combinacao");
+    }
 }

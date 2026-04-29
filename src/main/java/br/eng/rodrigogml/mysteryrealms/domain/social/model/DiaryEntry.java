@@ -1,11 +1,14 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social.model;
 
 /**
- * Entrada do diário do jogador — RF-SS-08.
+ * Entrada do diario do jogador, conforme RF-SS-08.
  *
  * {@code entryId} deve usar prefixo {@code diary_}.
- * {@code title} deve ter no máximo 8 palavras.
+ * {@code title} deve ter no maximo 8 palavras.
  * {@code gameDate} segue o formato {@code D<n>-HH:MM}.
+ *
+ * @author ?
+ * @since 29-04-2026
  */
 public record DiaryEntry(
         String entryId,
@@ -18,22 +21,24 @@ public record DiaryEntry(
 
     public DiaryEntry {
         if (entryId == null || entryId.isBlank())
-            throw new IllegalArgumentException("entradaId não pode ser vazio");
+            throw new IllegalArgumentException("entradaId nao pode ser vazio");
         if (!entryId.startsWith("diary_"))
-            throw new IllegalArgumentException("entradaId deve começar com 'diary_': " + entryId);
+            throw new IllegalArgumentException("entradaId deve comecar com 'diary_': " + entryId);
         if (title == null || title.isBlank())
-            throw new IllegalArgumentException("titulo não pode ser vazio");
+            throw new IllegalArgumentException("titulo nao pode ser vazio");
         if (title.trim().split("\\s+").length > 8)
-            throw new IllegalArgumentException("titulo deve ter no máximo 8 palavras: " + title);
+            throw new IllegalArgumentException("titulo deve ter no maximo 8 palavras: " + title);
         if (summary == null || summary.isBlank())
-            throw new IllegalArgumentException("resumo não pode ser vazio");
+            throw new IllegalArgumentException("resumo nao pode ser vazio");
         if (gameDate == null || !gameDate.matches("D\\d+-\\d{2}:\\d{2}"))
             throw new IllegalArgumentException("dataJogo deve seguir o formato D<n>-HH:MM: " + gameDate);
         if (dialogOriginId == null || dialogOriginId.isBlank())
-            throw new IllegalArgumentException("origemDialogoId não pode ser vazio");
+            throw new IllegalArgumentException("origemDialogoId nao pode ser vazio");
+        if (!dialogOriginId.startsWith("dlg_"))
+            throw new IllegalArgumentException("origemDialogoId deve comecar com 'dlg_': " + dialogOriginId);
         if (optionOriginId == null || optionOriginId.isBlank())
-            throw new IllegalArgumentException("origemOpcaoId não pode ser vazio");
+            throw new IllegalArgumentException("origemOpcaoId nao pode ser vazio");
         if (impacts == null)
-            throw new IllegalArgumentException("impactos não pode ser nulo");
+            throw new IllegalArgumentException("impactos nao pode ser nulo");
     }
 }

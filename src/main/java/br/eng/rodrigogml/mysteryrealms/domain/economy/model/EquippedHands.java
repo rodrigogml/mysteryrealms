@@ -37,6 +37,8 @@ public class EquippedHands {
      */
     public boolean canEquip(HandItem item) {
         if (item == null) throw new IllegalArgumentException("item não pode ser nulo");
+        if (isEquipped(item)) return false;
+        if (item instanceof Shield && hasShieldEquipped()) return false;
         if (item.getHandsRequired() == 2) {
             return slotOne == null && slotTwo == null;
         }
@@ -129,5 +131,9 @@ public class EquippedHands {
      */
     public HandItem getSlotTwo() {
         return slotTwo;
+    }
+
+    private boolean hasShieldEquipped() {
+        return slotOne instanceof Shield || slotTwo instanceof Shield;
     }
 }

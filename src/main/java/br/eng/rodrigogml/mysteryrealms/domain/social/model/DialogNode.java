@@ -1,6 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social.model;
 
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Nó de diálogo — RF-SS-01.
@@ -26,5 +28,10 @@ public record DialogNode(
         if (options == null || options.isEmpty())
             throw new IllegalArgumentException("opcoes deve ter pelo menos 1 elemento");
         options = List.copyOf(options);
+        Set<String> optionIds = new HashSet<>();
+        for (DialogOption option : options) {
+            if (!optionIds.add(option.optionId()))
+                throw new IllegalArgumentException("opcaoId deve ser unico dentro do no: " + option.optionId());
+        }
     }
 }

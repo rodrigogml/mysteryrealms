@@ -39,6 +39,10 @@ public final class PhysiologyService {
 
     private PhysiologyService() {}
 
+    private static double clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
     // ── RF-EF-01: tick de minuto ──────────────────────────────────────────────
 
     /**
@@ -134,7 +138,8 @@ public final class PhysiologyService {
      * Não recupera fadiga_min nem points de vida.
      */
     public static void applyRestTick(PhysiologyState state, double fatorAtividade) {
-        double recovery = RECUPERACAO_DESCANSO_PCT * state.getMaxFatigue() * fatorAtividade;
+        double activityFactor = clamp(fatorAtividade, 0.0, 1.0);
+        double recovery = RECUPERACAO_DESCANSO_PCT * state.getMaxFatigue() * activityFactor;
         double newFadiga = Math.max(state.getMinFatigue(), state.getCurrentFatigue() - recovery);
         state.setCurrentFatigue(newFadiga);
     }
@@ -158,10 +163,11 @@ public final class PhysiologyService {
      * Aplica recuperação por um minuto de sono — RF-EF-08.
      */
     public static void applySleepTick(PhysiologyState state, double sleepQualityFactor) {
-        double recoveryFadiga = RECUPERACAO_SONO_PCT * state.getMaxFatigue() * sleepQualityFactor;
-        double recoveryFadigaMin = RECUPERACAO_SONO_PCT * state.getMaxFatigue() * sleepQualityFactor;
+        double effectiveSleepQualityFactor = clamp(sleepQualityFactor, 0.5, 1.0);
+        double recoveryFadiga = RECUPERACAO_SONO_PCT * state.getMaxFatigue() * effectiveSleepQualityFactor;
+        double recoveryFadigaMin = RECUPERACAO_SONO_PCT * state.getMaxFatigue() * effectiveSleepQualityFactor;
         double recoveryPv = (state.getMaxHealthPoints() > 0)
-                ? (/* constitution embutida na formula RF-EF-08 */ hpRecoveryPerMinute(state, sleepQualityFactor))
+                ? (/* constitution embutida na formula RF-EF-08 */ hpRecoveryPerMinute(state, effectiveSleepQualityFactor))
                 : 0.0;
 
         state.setMinFatigue(Math.max(0.0, state.getMinFatigue() - recoveryFadigaMin));
@@ -175,7 +181,7 @@ public final class PhysiologyService {
      */
     public static double hpRecoveryPerMinute(PhysiologyState state, double sleepQualityFactor) {
         double constitution = state.getMaxHealthPoints() / 10.0;
-        return (constitution / 120.0) * sleepQualityFactor;
+        return (constitution / 120.0) * clamp(sleepQualityFactor, 0.5, 1.0);
     }
 
     // ── RF-EF-10: critérios de despertar ─────────────────────────────────────
@@ -242,11 +248,16 @@ public final class PhysiologyService {
         boolean isExaustao      = fatigueState(state) == EstadoFadiga.EXAUSTAO;
         boolean isSedeAgravada  = thirstState(state)  == EstadoSede.SEDE_AGRAVADA;
         boolean isFomeAgravada  = hungerState(state)  == EstadoFome.FOME_AGRAVADA;
+        boolean severeHungerThirstActive = isFomeAgravada && isSedeAgravada;
 
-        if (isFomeAgravada && isSedeAgravada) {
-            applyMoraleDeltaHungerThirst(state);
+        if (severeHungerThirstActive) {
+            if (!state.isSevereHungerThirstCombinationActive()) {
+                applyMoraleDeltaHungerThirst(state);
+            }
+            state.setSevereHungerThirstCombinationActive(true);
             return CombinedPhysiologyEffect.SEVERE_HUNGER_THIRST;
         }
+        state.setSevereHungerThirstCombinationActive(false);
         if (isSedeAgravada && isExaustao) {
             return CombinedPhysiologyEffect.THIRST_EXHAUSTION;
         }

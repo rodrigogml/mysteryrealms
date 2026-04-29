@@ -169,7 +169,8 @@ public class Character {
     public double getCurrentFatigue() { return currentFatigue; }
 
     public void setCurrentFatigue(double currentFatigue) {
-        this.currentFatigue = Math.max(minFatigue, currentFatigue);
+        double maxAllowedFatigue = maxFatigue * 1.2;
+        this.currentFatigue = Math.max(minFatigue, Math.min(maxAllowedFatigue, currentFatigue));
     }
 
     public double getMinFatigue() { return minFatigue; }
@@ -267,6 +268,21 @@ public class Character {
         return CharacterAttributeService.currentLoad(pesoEquipados, pesoBolsa, currencyWeight);
     }
 
+    /** Peso do personagem em kg — RF-FP-06.3. */
+    public double getCharacterWeightKg() {
+        return CharacterAttributeService.characterWeight(raca.getBaseWeightKg(gender), attributes.constitution());
+    }
+
+    /** Capacidade de carga máxima sem montaria em kg — RF-FP-06.4. */
+    public double getMaxLoadCapacityKg() {
+        return CharacterAttributeService.maxLoadCapacity(attributes.strength());
+    }
+
+    /** Capacidade de carga crítica sem montaria em kg — RF-FP-06.4. */
+    public double getCriticalLoadCapacityKg() {
+        return CharacterAttributeService.criticalLoadCapacity(getMaxLoadCapacityKg());
+    }
+
     // ── RF-FP-09: Relacionamento e reputação ─────────────────────────────────
 
     /**
@@ -329,5 +345,6 @@ public class Character {
         }
         this.maxHealthPoints = novoPvMax;
         this.maxFatigue = novaFadigaMax;
+        this.currentFatigue = Math.max(minFatigue, Math.min(this.currentFatigue, this.maxFatigue * 1.2));
     }
 }

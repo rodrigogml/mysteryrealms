@@ -1,26 +1,43 @@
 package br.eng.rodrigogml.mysteryrealms.domain.modifier.model;
 
 /**
- * Duração de um modificador — RF-MAR-04.
- *
- * Pode ser permanente ou ter uma duração em turns/minutes.
+ * Duracao de um modificador.
  */
 public record ModifierDuration(int value, String unidade, boolean permanente) {
 
-    /** Cria uma duração permanente. */
+    public ModifierDuration {
+        if (permanente) {
+            if (value != 0) {
+                throw new IllegalArgumentException("duracao permanente deve ter valor 0");
+            }
+            if (unidade != null) {
+                throw new IllegalArgumentException("duracao permanente nao pode ter unidade");
+            }
+        } else {
+            if (value < 1) {
+                throw new IllegalArgumentException("duracao temporaria deve ser >= 1");
+            }
+            if (!"turnos".equals(unidade) && !"minutos".equals(unidade)) {
+                throw new IllegalArgumentException("unidade de duracao invalida: " + unidade);
+            }
+        }
+    }
+
     public static ModifierDuration ofPermanent() {
         return new ModifierDuration(0, null, true);
     }
 
-    /** Cria uma duração em turns. */
     public static ModifierDuration turns(int turns) {
-        if (turns < 1) throw new IllegalArgumentException("turnos deve ser >= 1");
+        if (turns < 1) {
+            throw new IllegalArgumentException("turnos deve ser >= 1");
+        }
         return new ModifierDuration(turns, "turnos", false);
     }
 
-    /** Cria uma duração em minutes. */
     public static ModifierDuration minutes(int minutes) {
-        if (minutes < 1) throw new IllegalArgumentException("minutos deve ser >= 1");
+        if (minutes < 1) {
+            throw new IllegalArgumentException("minutos deve ser >= 1");
+        }
         return new ModifierDuration(minutes, "minutos", false);
     }
 

@@ -50,6 +50,24 @@ class WorldNavigationTest {
                 () -> new Zone("zona_praca", "", "loc_cidade", 1.0, 1.0, true, null));
     }
 
+    @Test
+    void zone_idComMaiusculaLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Zone("zona_Praca", "Praça", "loc_cidade", 1.0, 1.0, true, null));
+    }
+
+    @Test
+    void zone_idLocalidadeSemPrefixoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Zone("zona_praca", "Praça", "cidade", 1.0, 1.0, true, null));
+    }
+
+    @Test
+    void zone_coordenadaInvalidaLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Zone("zona_praca", "Praça", "loc_cidade", Double.NaN, 1.0, true, null));
+    }
+
     // ── RF-MN-03: GameEnvironment ────────────────────────────────────────────
 
     @Test
@@ -68,6 +86,18 @@ class WorldNavigationTest {
     void environment_idSemPrefixoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameEnvironment("taverna", "Taverna", "zona_praca", 0, 0, true, null));
+    }
+
+    @Test
+    void environment_idZonaSemPrefixoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new GameEnvironment("amb_taverna", "Taverna", "praca", 0, 0, true, null));
+    }
+
+    @Test
+    void environment_coordenadaInvalidaLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new GameEnvironment("amb_taverna", "Taverna", "zona_praca", 0, Double.POSITIVE_INFINITY, true, null));
     }
 
     // ── RF-MN-04: Connection ────────────────────────────────────────────────
@@ -99,6 +129,20 @@ class WorldNavigationTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new Connection("conn_001", "zona_praca", List.of("zona_m"),
                         true, ConnectionClassification.PACIFIED, 5, 101, "tab_001"));
+    }
+
+    @Test
+    void connection_origemInvalidaLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Connection("conn_001", "origem", List.of("zona_m"),
+                        true, ConnectionClassification.PACIFIED, 5, 10, "tab_001"));
+    }
+
+    @Test
+    void connection_destinoInvalidoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Connection("conn_001", "zona_praca", List.of("mercado"),
+                        true, ConnectionClassification.PACIFIED, 5, 10, "tab_001"));
     }
 
     // ── RF-MN-05: Cluster ───────────────────────────────────────────────────
@@ -153,7 +197,7 @@ class WorldNavigationTest {
 
     @Test
     void navigationService_resolveDestination_primeiroAcessivel() {
-        Connection conn = buildConnection("c", "o", List.of("zona_a", "zona_b", "zona_c"));
+        Connection conn = buildConnection("c", "zona_origem", List.of("zona_a", "zona_b", "zona_c"));
         Map<String, Boolean> nodes = Map.of("zona_a", false, "zona_b", true, "zona_c", true);
         Optional<String> dest = NavigationService.resolveDestination(conn, nodes);
         assertTrue(dest.isPresent());
@@ -162,14 +206,14 @@ class WorldNavigationTest {
 
     @Test
     void navigationService_resolveDestination_nenhumAcessivel() {
-        Connection conn = buildConnection("c", "o", List.of("zona_a", "zona_b"));
+        Connection conn = buildConnection("c", "zona_origem", List.of("zona_a", "zona_b"));
         Map<String, Boolean> nodes = Map.of("zona_a", false, "zona_b", false);
         assertTrue(NavigationService.resolveDestination(conn, nodes).isEmpty());
     }
 
     @Test
     void navigationService_resolveDestination_nodeDesconhecidoNaoAcessivel() {
-        Connection conn = buildConnection("c", "o", List.of("zona_x"));
+        Connection conn = buildConnection("c", "zona_origem", List.of("zona_x"));
         // "zona_x" não está no mapa → não é acessível
         assertTrue(NavigationService.resolveDestination(conn, Map.of()).isEmpty());
     }
@@ -232,7 +276,7 @@ class WorldNavigationTest {
     @Test
     void worldConfig_minutosPorHoraInvalidoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new WorldConfig("m", 0, 24, 360,
+                () -> new WorldConfig("mundo_teste", 0, 24, 360,
                         List.of(new DayPhase("dia", 0, 1439)),
                         List.of(new Season("verao", 1, 360)), 0));
     }
@@ -240,9 +284,47 @@ class WorldNavigationTest {
     @Test
     void worldConfig_semFazesDiaLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new WorldConfig("m", 60, 24, 360,
+                () -> new WorldConfig("mundo_teste", 60, 24, 360,
                         List.of(),
                         List.of(new Season("verao", 1, 360)), 0));
+    }
+
+    @Test
+    void worldConfig_idSemPrefixoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new WorldConfig("teste", 60, 24, 360,
+                        List.of(new DayPhase("dia", 0, 1439)),
+                        List.of(new Season("verao", 1, 360)), 0));
+    }
+
+    @Test
+    void worldConfig_fasesDiaComLacunaLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new WorldConfig("mundo_teste", 60, 24, 360,
+                        List.of(
+                                new DayPhase("noite", 0, 300),
+                                new DayPhase("dia", 302, 1439)
+                        ),
+                        List.of(new Season("verao", 1, 360)), 0));
+    }
+
+    @Test
+    void worldConfig_fasesDiaNaoCobremDiaCompletoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new WorldConfig("mundo_teste", 60, 24, 360,
+                        List.of(new DayPhase("dia", 0, 1438)),
+                        List.of(new Season("verao", 1, 360)), 0));
+    }
+
+    @Test
+    void worldConfig_estacoesComLacunaLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new WorldConfig("mundo_teste", 60, 24, 360,
+                        List.of(new DayPhase("dia", 0, 1439)),
+                        List.of(
+                                new Season("verao", 1, 100),
+                                new Season("outono", 102, 360)
+                        ), 0));
     }
 
     // ── RF-MN-12: DayPhase e Season ─────────────────────────────────────────
@@ -398,6 +480,25 @@ class WorldNavigationTest {
         Connection conn = buildConnection("conn_02", "zona_a", List.of("zona_b"));
         Set<String> nos = Set.of("zona_a"); // zona_b ausente
         assertFalse(HierarchyValidationService.connectionDestinationsExist(conn, nos));
+    }
+
+    @Test
+    void hierarchyValidation_idNavegavelCanonico() {
+        assertTrue(HierarchyValidationService.isValidNavigableId("zona_mercado_1"));
+        assertTrue(HierarchyValidationService.isValidNavigableId("amb_taverna"));
+        assertFalse(HierarchyValidationService.isValidNavigableId("Zona_mercado"));
+        assertFalse(HierarchyValidationService.isValidNavigableId("loc_cidade"));
+    }
+
+    @Test
+    void hierarchyValidation_conexaoPrecisaTerOrigemEAoMenosUmDestinoAcessivel() {
+        Connection conn = buildConnection("conn_03", "zona_a", List.of("zona_b", "amb_x"));
+        assertTrue(HierarchyValidationService.connectionHasAccessibleEndpoint(
+                conn, Map.of("zona_a", true, "zona_b", false, "amb_x", true)));
+        assertFalse(HierarchyValidationService.connectionHasAccessibleEndpoint(
+                conn, Map.of("zona_a", false, "zona_b", true, "amb_x", true)));
+        assertFalse(HierarchyValidationService.connectionHasAccessibleEndpoint(
+                conn, Map.of("zona_a", true, "zona_b", false, "amb_x", false)));
     }
 
     @Test

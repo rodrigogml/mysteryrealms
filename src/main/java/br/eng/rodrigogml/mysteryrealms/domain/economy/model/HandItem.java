@@ -36,7 +36,7 @@ public abstract class HandItem {
             throw new IllegalArgumentException("maosNecessarias deve ser 1 ou 2, recebido: " + handsRequired);
         if (useCategory == null)
             throw new IllegalArgumentException("categoriaUso não pode ser nulo");
-        if (weightKg < 0)
+        if (!Double.isFinite(weightKg) || weightKg < 0)
             throw new IllegalArgumentException("pesoKg deve ser >= 0, recebido: " + weightKg);
         if (basePrice == null)
             throw new IllegalArgumentException("precoBase não pode ser nulo");

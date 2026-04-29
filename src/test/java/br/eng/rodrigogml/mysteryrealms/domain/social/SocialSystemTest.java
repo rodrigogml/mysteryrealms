@@ -9,6 +9,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.social.service.SocialService;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,13 @@ class SocialSystemTest {
     }
 
     @Test
+    void dialogueNode_opcaoDuplicadaLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new DialogNode("dlg_001", "npc_x", "Ola",
+                        List.of(buildOption("op1"), buildOption("op1"))));
+    }
+
+    @Test
     void dialogueNode_textVazioLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
                 () -> new DialogNode("dlg_001", "npc_x", "", List.of(buildOption("op1"))));
@@ -64,6 +72,29 @@ class SocialSystemTest {
                 "Opção", null, DialogEffects.empty(), null);
         assertNull(op.socialTest());
         assertNull(op.failureEffects());
+    }
+
+    @Test
+    void dialogEffects_validaPrefixosDeAlvos() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new DialogEffects(Map.of("ferreiro", 1), Map.of(), Map.of(), ""));
+        assertThrows(IllegalArgumentException.class,
+                () -> new DialogEffects(Map.of(), Map.of("cidade", 1), Map.of(), ""));
+        assertThrows(IllegalArgumentException.class,
+                () -> new DialogEffects(Map.of(), Map.of(), Map.of("guilda", 1), ""));
+    }
+
+    @Test
+    void dialogEffects_copiaMapasDefensivamente() {
+        HashMap<String, Integer> relationship = new HashMap<>();
+        relationship.put("npc_ferreiro", 1);
+        DialogEffects effects = new DialogEffects(relationship, null, null, null);
+        relationship.put("npc_ferreiro", 99);
+
+        assertEquals(1, effects.npcRelationshipDeltas().get("npc_ferreiro"));
+        assertTrue(effects.localityReputationDeltas().isEmpty());
+        assertTrue(effects.factionReputationDeltas().isEmpty());
+        assertEquals("", effects.narrativeText());
     }
 
     // ── RF-SS-03: Estilos de fala ─────────────────────────────────────────────
@@ -190,6 +221,23 @@ class SocialSystemTest {
     }
 
     @Test
+    void diaryEntry_origemDialogoSemPrefixoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new DiaryEntry("diary_001", "Titulo", "Resumo.", "D1-08:00",
+                        "dialogo_001", "op1", DiaryImpact.empty()));
+    }
+
+    @Test
+    void diaryImpact_validaAlvosEMarcadores() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new DiaryImpact(Map.of("ferreiro", 1), Map.of(), Map.of(), List.of()));
+        assertThrows(IllegalArgumentException.class,
+                () -> new DiaryImpact(Map.of(), Map.of("loc_langur", 1), Map.of("guilda", 1), List.of()));
+        assertThrows(IllegalArgumentException.class,
+                () -> new DiaryImpact(Map.of(), Map.of(), Map.of(), List.of("mk_x")));
+    }
+
+    @Test
     void diaryEntry_dataJogoFormatoValido() {
         DiaryEntry e = buildEntradaDiario();
         assertTrue(e.gameDate().matches("D\\d+-\\d{2}:\\d{2}"));
@@ -248,14 +296,43 @@ class SocialSystemTest {
 
     @Test
     void marker_flagNaoTemValorInteiro() {
-        Marker m = Marker.flag("mk_x");
+        Marker m = Marker.flag("mk_quest_x");
         assertThrows(IllegalStateException.class, m::intValue);
     }
 
     @Test
     void marker_incrementFlagLancaExcecao() {
-        Marker m = Marker.flag("mk_x");
+        Marker m = Marker.flag("mk_quest_x");
         assertThrows(IllegalStateException.class, () -> m.increment(1));
+    }
+
+    @Test
+    void marker_idSemDescricaoCamelCaseLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Marker("mk_x", MarkerType.FLAG, Boolean.TRUE));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Marker("mk_quest_etapa-final", MarkerType.FLAG, Boolean.TRUE));
+    }
+
+    @Test
+    void marker_decrementaNumericoEValidaPreCondicao() {
+        Marker m = Marker.counter("mk_npc_visitas");
+        m.increment(3);
+        m.decrement(1);
+
+        assertEquals(2, m.intValue());
+        assertTrue(m.matchesExpectedValue(2));
+        assertFalse(m.matchesExpectedValue(3));
+    }
+
+    @Test
+    void marker_valorNumericoNaoPodeFicarNegativo() {
+        Marker m = Marker.stage("mk_quest_estagio");
+
+        assertThrows(IllegalArgumentException.class, () -> m.decrement(1));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Marker("mk_quest_estagio", MarkerType.COUNTER, -1));
+        assertThrows(IllegalArgumentException.class, () -> m.setStage(-1));
     }
 
     // ── RF-SS-02: Ciclo social obrigatório ───────────────────────────────────

@@ -134,6 +134,11 @@ class CharacterAttributeServiceTest {
         assertEquals(0, CharacterAttributeService.calculateFinalDefense(0, 0, 0, 0, 0, 0, 1.5, 0, 0));
     }
 
+    @Test
+    void calculateFinalDefense_ordemCorretaFloorAntesFlat() {
+        assertEquals(12, CharacterAttributeService.calculateFinalDefense(10, 0, 0, 0, 0, 0.15, 0, 1, 0));
+    }
+
     // ── RF-FP-06.8: bloqueio final ────────────────────────────────────────────
 
     @Test
@@ -144,5 +149,10 @@ class CharacterAttributeServiceTest {
     @Test
     void calculateFinalBlock_nunca_negativo() {
         assertEquals(0, CharacterAttributeService.calculateFinalBlock(0, 0, 0, 0, 0, 0, 0, 100));
+    }
+
+    @Test
+    void calculateFinalBlock_ordemCorretaFloorAntesFlat() {
+        assertEquals(12, CharacterAttributeService.calculateFinalBlock(10, 0, 0, 0, 0.15, 0, 1, 0));
     }
 }

@@ -50,14 +50,17 @@ public class CoopSessionService {
      *
      * @param hostCharacterId o ID do personagem anfitrião
      * @param worldInstanceId o ID da instância de mundo compartilhada
-     * @param maxPlayers      o número máximo de jogadores (2 a 8)
+     * @param maxPlayers      o número máximo de jogadores (2 a 4)
      * @return a sessão cooperativa criada
      * @throws IllegalArgumentException se maxPlayers estiver fora do intervalo permitido
      */
     public CoopSessionEntity createSession(Long hostCharacterId, Long worldInstanceId, int maxPlayers) {
+        requirePositiveId(hostCharacterId, "coop.error.invalidHostCharacterId");
+        requirePositiveId(worldInstanceId, "coop.error.invalidWorldInstanceId");
         if (maxPlayers < 2 || maxPlayers > 4) {
             throw new IllegalArgumentException("coop.error.invalidMaxPlayers");
         }
+        requireHostWorld(hostCharacterId, worldInstanceId);
 
         CoopSessionEntity session = new CoopSessionEntity();
         session.setIdHostCharacter(hostCharacterId);
@@ -85,6 +88,9 @@ public class CoopSessionService {
      *                                  ou o personagem já for participante ativo
      */
     public void joinSession(Long sessionId, Long characterId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(characterId, "coop.error.invalidCharacterId");
+
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
 
@@ -117,8 +123,12 @@ public class CoopSessionService {
      * @throws IllegalArgumentException se a sessão ou o participante não existirem como ativos
      */
     public void leaveSession(Long sessionId, Long characterId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(characterId, "coop.error.invalidCharacterId");
+
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+        requireActiveSession(session);
 
         CoopParticipantEntity participant = participantRepository
                 .findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId)
@@ -142,8 +152,12 @@ public class CoopSessionService {
      * @throws IllegalArgumentException se a sessão não existir ou o personagem não for o anfitrião
      */
     public void closeSession(Long sessionId, Long hostCharacterId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(hostCharacterId, "coop.error.invalidHostCharacterId");
+
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+        requireActiveSession(session);
 
         if (!session.getIdHostCharacter().equals(hostCharacterId)) {
             throw new IllegalArgumentException("coop.error.notHost");
@@ -168,6 +182,8 @@ public class CoopSessionService {
      * @return lista de participantes ativos
      */
     public List<CoopParticipantEntity> listParticipants(Long sessionId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+
         return participantRepository.findAllByIdCoopSessionAndLeftAtIsNull(sessionId);
     }
 
@@ -187,6 +203,8 @@ public class CoopSessionService {
      * @return {@code true} se o personagem estiver em alguma sessão ativa
      */
     public boolean isParticipating(Long characterId) {
+        requirePositiveId(characterId, "coop.error.invalidCharacterId");
+
         List<CoopParticipantEntity> participations = participantRepository.findAllByIdCharacter(characterId);
         for (CoopParticipantEntity p : participations) {
             if (p.getLeftAt() != null) {
@@ -211,6 +229,9 @@ public class CoopSessionService {
      *                                  não estiver na sessão ou o personagem não for encontrado
      */
     public CharacterEntity getParticipantCharacter(Long sessionId, Long characterId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(characterId, "coop.error.invalidCharacterId");
+
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
 
@@ -239,8 +260,13 @@ public class CoopSessionService {
      */
     public void syncGuestPersonalData(Long sessionId, Long guestCharacterId,
             CharacterEntity updatedCharacter) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(guestCharacterId, "coop.error.invalidCharacterId");
+        requireCharacterSnapshot(guestCharacterId, updatedCharacter);
+
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+        requireActiveSession(session);
 
         if (session.getIdHostCharacter().equals(guestCharacterId)) {
             throw new IllegalArgumentException("coop.error.hostCannotBeGuest");
@@ -266,6 +292,9 @@ public class CoopSessionService {
      *                                  ou a instância de mundo do convidado não existir
      */
     public WorldInstanceEntity getGuestOwnWorldInstance(Long sessionId, Long guestCharacterId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(guestCharacterId, "coop.error.invalidCharacterId");
+
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
 
@@ -300,8 +329,13 @@ public class CoopSessionService {
      */
     public void disconnectGuest(Long sessionId, Long guestCharacterId,
             CharacterEntity lastKnownCharacter) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(guestCharacterId, "coop.error.invalidCharacterId");
+        requireCharacterSnapshot(guestCharacterId, lastKnownCharacter);
+
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+        requireActiveSession(session);
 
         if (session.getIdHostCharacter().equals(guestCharacterId)) {
             throw new IllegalArgumentException("coop.error.hostCannotBeGuest");
@@ -331,5 +365,24 @@ public class CoopSessionService {
             throw new IllegalArgumentException("coop.error.sessionNotActive");
         }
     }
-}
 
+    private void requireHostWorld(Long hostCharacterId, Long worldInstanceId) {
+        WorldInstanceEntity worldInstance = worldInstanceRepository.findById(worldInstanceId)
+                .orElseThrow(() -> new IllegalArgumentException("world.error.instanceNotFound"));
+        if (!hostCharacterId.equals(worldInstance.getIdCharacter())) {
+            throw new IllegalArgumentException("coop.error.hostWorldMismatch");
+        }
+    }
+
+    private void requireCharacterSnapshot(Long expectedCharacterId, CharacterEntity snapshot) {
+        if (snapshot == null || !expectedCharacterId.equals(snapshot.getId())) {
+            throw new IllegalArgumentException("coop.error.invalidCharacterSnapshot");
+        }
+    }
+
+    private void requirePositiveId(Long id, String message) {
+        if (id == null || id <= 0L) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+}
