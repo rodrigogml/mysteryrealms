@@ -302,6 +302,26 @@ public class UserService {
     }
 
     /**
+     * Valida uma sessão autenticada e renova sua expiração quando ainda está ativa.
+     *
+     * @param token o token da sessão
+     * @return a sessão renovada
+     * @throws IllegalArgumentException se o token não for encontrado ou a sessão já estiver expirada
+     */
+    public SessionEntity validateSession(String token) {
+        SessionEntity session = sessionRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("user.error.tokenNotFound"));
+
+        if (!isSessionActive(session)) {
+            sessionRepository.delete(session);
+            throw new IllegalArgumentException("user.error.sessionExpired");
+        }
+
+        renewSessionExpiration(session);
+        return sessionRepository.save(session);
+    }
+
+    /**
      * Desbloqueia imediatamente a conta do usuário por meio de código numérico.
      *
      * @param userId o ID do usuário
@@ -336,7 +356,7 @@ public class UserService {
 
     private void checkBruteForce(UserEntity user) {
         LocalDateTime since = LocalDateTime.now().minusMinutes(BRUTE_FORCE_WINDOW_MINUTES);
-        long failedCount = loginAttemptRepository.countByIdUserAndSuccessFalseAndAttemptTimeAfter(user.getId(), since);
+        long failedCount = countConsecutiveFailedAttempts(user.getId(), since);
         if (failedCount >= BRUTE_FORCE_MAX_ATTEMPTS) {
             AccountLockEntity lock = new AccountLockEntity();
             lock.setIdUser(user.getId());
@@ -349,6 +369,19 @@ public class UserService {
             issueUnlockCode(user.getId());
             throw new IllegalArgumentException("user.error.accountLocked");
         }
+    }
+
+    private long countConsecutiveFailedAttempts(Long userId, LocalDateTime since) {
+        long consecutiveFailures = 0;
+        List<LoginAttemptEntity> recentAttempts = loginAttemptRepository
+                .findByIdUserAndAttemptTimeAfterOrderByAttemptTimeDesc(userId, since);
+        for (LoginAttemptEntity attempt : recentAttempts) {
+            if (attempt.isSuccess()) {
+                break;
+            }
+            consecutiveFailures++;
+        }
+        return consecutiveFailures;
     }
 
     /**
@@ -693,13 +726,20 @@ public class UserService {
     }
 
     private SessionEntity createSession(Long userId) {
-        // TODO renovar automaticamente a sessao enquanto o usuario permanecer ativo.
         SessionEntity session = new SessionEntity();
         session.setIdUser(userId);
         session.setToken(UUID.randomUUID().toString());
         session.setCreatedAt(LocalDateTime.now());
-        session.setExpiresAt(LocalDateTime.now().plusHours(SESSION_HOURS));
+        renewSessionExpiration(session);
         return sessionRepository.save(session);
+    }
+
+    private boolean isSessionActive(SessionEntity session) {
+        return !LocalDateTime.now().isAfter(session.getExpiresAt());
+    }
+
+    private void renewSessionExpiration(SessionEntity session) {
+        session.setExpiresAt(LocalDateTime.now().plusHours(SESSION_HOURS));
     }
 
     private List<String> generateRecoveryCodes(Long userId) {

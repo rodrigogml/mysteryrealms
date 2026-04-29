@@ -107,8 +107,9 @@ class CharacterServiceTest {
 
     @Test
     void createCharacter_nomeVazio_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class,
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> service.createCharacter(1L, "", Race.HUMAN, CharacterClass.WARRIOR));
+        assertEquals("character.error.nameBlank", ex.getMessage());
     }
 
     @Test
@@ -181,6 +182,29 @@ class CharacterServiceTest {
         service.renameCharacter(1L, 1L, "Bilbo");
 
         verify(characterRepository).save(argThat(c -> "Bilbo".equals(c.getName())));
+    }
+
+    @Test
+    void renameCharacter_nomeEmBranco_lancaExcecao() {
+        CharacterEntity character = buildEntity(1L, 1L, "Frodo");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.renameCharacter(1L, 1L, "   "));
+
+        assertEquals("character.error.nameBlank", ex.getMessage());
+        verify(characterRepository, never()).save(any());
+    }
+
+    @Test
+    void renameCharacter_mesmoNomeNaoPersisteNovamente() {
+        CharacterEntity character = buildEntity(1L, 1L, "Frodo");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+
+        service.renameCharacter(1L, 1L, " Frodo ");
+
+        verify(characterRepository, never()).existsByIdUserAndName(anyLong(), anyString());
+        verify(characterRepository, never()).save(any());
     }
 
     @Test

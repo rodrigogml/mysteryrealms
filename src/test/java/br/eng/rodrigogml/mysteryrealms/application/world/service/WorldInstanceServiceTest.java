@@ -22,12 +22,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
- * Testes do serviço de instância de mundo — RF-IM-01 a RF-IM-05.
+ * Testes do serviço de instância de mundo - RF-IM-01 a RF-IM-05.
  *
  * @author ?
  * @since 28-04-2026
@@ -50,10 +57,9 @@ class WorldInstanceServiceTest {
                 npcStateRepository, locationStateRepository, markerRepository, diaryEntryRepository);
     }
 
-    // ── RF-IM-01: Uma instância de mundo por personagem ──────────────────────
-
     @Test
     void createWorldInstance_persisteInstanciaVinculadaAoPersonagem() {
+        when(worldInstanceRepository.findByIdCharacter(42L)).thenReturn(Optional.empty());
         when(worldInstanceRepository.save(any())).thenAnswer(i -> {
             WorldInstanceEntity w = i.getArgument(0);
             w.setId(1L);
@@ -67,10 +73,9 @@ class WorldInstanceServiceTest {
         assertNull(result.getCurrentLocationId());
     }
 
-    // ── RF-IM-02: Estado inicial do mundo ────────────────────────────────────
-
     @Test
     void createWorldInstance_tempoInicialZero() {
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
         when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         WorldInstanceEntity result = service.createWorldInstance(1L);
@@ -78,7 +83,19 @@ class WorldInstanceServiceTest {
         assertEquals(0L, result.getCurrentTimeMin());
     }
 
-    // ── RF-IM-03: Persistência do estado do mundo ────────────────────────────
+    @Test
+    void createWorldInstance_instanciaJaExistente_lancaExcecao() {
+        WorldInstanceEntity existing = new WorldInstanceEntity();
+        existing.setId(5L);
+        existing.setIdCharacter(42L);
+        when(worldInstanceRepository.findByIdCharacter(42L)).thenReturn(Optional.of(existing));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.createWorldInstance(42L));
+
+        assertEquals("world.error.instanceAlreadyExists", ex.getMessage());
+        verify(worldInstanceRepository, never()).save(any());
+    }
 
     @Test
     void loadWorldInstance_instanciaExistente_retornaInstancia() {
@@ -111,13 +128,13 @@ class WorldInstanceServiceTest {
         verify(worldInstanceRepository).save(instance);
     }
 
-    // ── RF-IM-04: Isolamento entre instâncias ────────────────────────────────
-
     @Test
     void createWorldInstance_personagensDiferentes_instanciasSeparadas() {
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
+        when(worldInstanceRepository.findByIdCharacter(2L)).thenReturn(Optional.empty());
         when(worldInstanceRepository.save(any())).thenAnswer(i -> {
             WorldInstanceEntity w = i.getArgument(0);
-            w.setId(w.getIdCharacter()); // id = characterId para simular separação
+            w.setId(w.getIdCharacter());
             return w;
         });
 
@@ -127,8 +144,6 @@ class WorldInstanceServiceTest {
         assertNotEquals(w1.getId(), w2.getId());
         assertNotEquals(w1.getIdCharacter(), w2.getIdCharacter());
     }
-
-    // ── RF-IM-05: Consulta do estado do mundo ────────────────────────────────
 
     @Test
     void getQuestState_existente_retornaEstado() {

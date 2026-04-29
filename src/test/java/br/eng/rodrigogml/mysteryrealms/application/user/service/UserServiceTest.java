@@ -247,7 +247,8 @@ class UserServiceTest {
         when(userRepository.findByEmail("jogador@email.com")).thenReturn(Optional.of(user));
         when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.empty());
         when(loginAttemptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-        when(loginAttemptRepository.countByIdUserAndSuccessFalseAndAttemptTimeAfter(eq(1L), any())).thenReturn(0L);
+        when(loginAttemptRepository.findByIdUserAndAttemptTimeAfterOrderByAttemptTimeDesc(eq(1L), any()))
+                .thenReturn(List.of(failedAttempt()));
 
         assertThrows(IllegalArgumentException.class,
                 () -> service.login("jogador@email.com", "SenhaErrada1!", "127.0.0.1"));
@@ -283,7 +284,13 @@ class UserServiceTest {
         when(userRepository.findByEmail("jogador@email.com")).thenReturn(Optional.of(user));
         when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.empty());
         when(loginAttemptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-        when(loginAttemptRepository.countByIdUserAndSuccessFalseAndAttemptTimeAfter(eq(1L), any())).thenReturn(5L);
+        when(loginAttemptRepository.findByIdUserAndAttemptTimeAfterOrderByAttemptTimeDesc(eq(1L), any()))
+                .thenReturn(List.of(
+                        failedAttempt(),
+                        failedAttempt(),
+                        failedAttempt(),
+                        failedAttempt(),
+                        failedAttempt()));
         when(userRepository.save(any())).thenAnswer(i -> i.getArgument(0));
         when(unlockCodeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -291,6 +298,29 @@ class UserServiceTest {
                 () -> service.login("jogador@email.com", "SenhaErrada1!", "127.0.0.1"));
         verify(accountLockRepository).save(any(AccountLockEntity.class));
         verify(unlockCodeRepository).save(any(UnlockCodeEntity.class));
+    }
+
+    @Test
+    void login_cincoFalhasNaoConsecutivas_naoBloqueiaConta() {
+        UserEntity user = activeUser();
+        when(userRepository.findByEmail("jogador@email.com")).thenReturn(Optional.of(user));
+        when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.empty());
+        when(loginAttemptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(loginAttemptRepository.findByIdUserAndAttemptTimeAfterOrderByAttemptTimeDesc(eq(1L), any()))
+                .thenReturn(List.of(
+                        failedAttempt(),
+                        successfulAttempt(),
+                        failedAttempt(),
+                        failedAttempt(),
+                        failedAttempt(),
+                        failedAttempt()));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.login("jogador@email.com", "SenhaErrada1!", "127.0.0.1"));
+
+        assertEquals("user.error.passwordMismatch", ex.getMessage());
+        verify(accountLockRepository, never()).save(any(AccountLockEntity.class));
+        verify(unlockCodeRepository, never()).save(any(UnlockCodeEntity.class));
     }
 
     @Test
@@ -337,6 +367,49 @@ class UserServiceTest {
     void logout_tokenInvalido_lancaExcecao() {
         when(sessionRepository.findByToken("invalido")).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> service.logout("invalido"));
+    }
+
+    @Test
+    void validateSession_tokenValido_renovaExpiracao() {
+        SessionEntity session = new SessionEntity();
+        session.setIdUser(1L);
+        session.setToken("tok");
+        session.setCreatedAt(LocalDateTime.now().minusHours(2));
+        session.setExpiresAt(LocalDateTime.now().plusMinutes(5));
+        when(sessionRepository.findByToken("tok")).thenReturn(Optional.of(session));
+        when(sessionRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        LocalDateTime previousExpiration = session.getExpiresAt();
+        SessionEntity result = service.validateSession("tok");
+
+        assertEquals("tok", result.getToken());
+        assertTrue(result.getExpiresAt().isAfter(previousExpiration));
+        verify(sessionRepository).save(session);
+    }
+
+    @Test
+    void validateSession_tokenExpirado_removeSessaoELancaExcecao() {
+        SessionEntity session = new SessionEntity();
+        session.setToken("tok");
+        session.setExpiresAt(LocalDateTime.now().minusSeconds(1));
+        when(sessionRepository.findByToken("tok")).thenReturn(Optional.of(session));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.validateSession("tok"));
+
+        assertEquals("user.error.sessionExpired", ex.getMessage());
+        verify(sessionRepository).delete(session);
+        verify(sessionRepository, never()).save(any());
+    }
+
+    @Test
+    void validateSession_tokenInvalido_lancaExcecao() {
+        when(sessionRepository.findByToken("invalido")).thenReturn(Optional.empty());
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.validateSession("invalido"));
+
+        assertEquals("user.error.tokenNotFound", ex.getMessage());
     }
 
     @Test
@@ -783,5 +856,19 @@ class UserServiceTest {
         user.setStatus(UserStatus.ACTIVE);
         user.setCreatedAt(LocalDateTime.now());
         return user;
+    }
+
+    private LoginAttemptEntity failedAttempt() {
+        LoginAttemptEntity attempt = new LoginAttemptEntity();
+        attempt.setSuccess(false);
+        attempt.setAttemptTime(LocalDateTime.now());
+        return attempt;
+    }
+
+    private LoginAttemptEntity successfulAttempt() {
+        LoginAttemptEntity attempt = new LoginAttemptEntity();
+        attempt.setSuccess(true);
+        attempt.setAttemptTime(LocalDateTime.now());
+        return attempt;
     }
 }

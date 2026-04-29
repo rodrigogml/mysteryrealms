@@ -25,6 +25,15 @@ public interface LoginAttemptRepository extends JpaRepository<LoginAttemptEntity
     List<LoginAttemptEntity> findByIdUserAndAttemptTimeAfter(Long idUser, LocalDateTime since);
 
     /**
+     * Busca tentativas de login de um usuário após uma data/hora em ordem decrescente.
+     *
+     * @param idUser o ID do usuário
+     * @param since a data/hora mínima
+     * @return lista de tentativas da mais recente para a mais antiga
+     */
+    List<LoginAttemptEntity> findByIdUserAndAttemptTimeAfterOrderByAttemptTimeDesc(Long idUser, LocalDateTime since);
+
+    /**
      * Conta tentativas de login falhas de um usuário após uma data/hora.
      *
      * @param idUser  o ID do usuário

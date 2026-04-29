@@ -131,26 +131,21 @@ public class CharacterService {
      *                                  ou já existir um personagem com o mesmo nome
      */
     public CharacterEntity createCharacter(Long userId, String name, Race race, CharacterClass characterClass) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("character name cannot be blank");
-        }
-        if (name.length() > 100) {
-            throw new IllegalArgumentException("character.error.nameTooLong");
-        }
+        String normalizedName = normalizeAndValidateCharacterName(name);
         if (characterRepository.countByIdUser(userId) >= 50) {
             throw new IllegalArgumentException("character.error.limitReached");
         }
-        if (characterRepository.existsByIdUserAndName(userId, name)) {
+        if (characterRepository.existsByIdUserAndName(userId, normalizedName)) {
             throw new IllegalArgumentException("character.error.nameTaken");
         }
 
         // Utiliza o domínio para calcular atributos iniciais
-        Character domainChar = new Character(name, "Unknown", Gender.OTHER, race, characterClass, 20);
+        Character domainChar = new Character(normalizedName, "Unknown", Gender.OTHER, race, characterClass, 20);
         AttributeSet attrs = domainChar.getAttributes();
 
         CharacterEntity entity = new CharacterEntity();
         entity.setIdUser(userId);
-        entity.setName(domainChar.getName());
+        entity.setName(normalizedName);
         entity.setSurname(domainChar.getSurname());
         entity.setGender(domainChar.getGender());
         entity.setRace(domainChar.getRace());
@@ -232,19 +227,32 @@ public class CharacterService {
     public void renameCharacter(Long userId, Long characterId, String newName) {
         CharacterEntity character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+        String normalizedName = normalizeAndValidateCharacterName(newName);
 
         if (!character.getIdUser().equals(userId)) {
             throw new IllegalArgumentException("character.error.notOwned");
         }
-        if (newName.length() > 100) {
-            throw new IllegalArgumentException("character.error.nameTooLong");
+        if (character.getName().equals(normalizedName)) {
+            return;
         }
-        if (characterRepository.existsByIdUserAndName(userId, newName)) {
+        if (characterRepository.existsByIdUserAndName(userId, normalizedName)) {
             throw new IllegalArgumentException("character.error.nameTaken");
         }
 
-        character.setName(newName);
+        character.setName(normalizedName);
         characterRepository.save(character);
+    }
+
+    private String normalizeAndValidateCharacterName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("character.error.nameBlank");
+        }
+
+        String normalizedName = name.trim();
+        if (normalizedName.length() > 100) {
+            throw new IllegalArgumentException("character.error.nameTooLong");
+        }
+        return normalizedName;
     }
 
     /**

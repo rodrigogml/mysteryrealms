@@ -63,6 +63,10 @@ public class WorldInstanceService {
      * @return a instância de mundo criada
      */
     public WorldInstanceEntity createWorldInstance(Long characterId) {
+        if (worldInstanceRepository.findByIdCharacter(characterId).isPresent()) {
+            throw new IllegalArgumentException("world.error.instanceAlreadyExists");
+        }
+
         WorldInstanceEntity instance = new WorldInstanceEntity();
         instance.setIdCharacter(characterId);
         instance.setCurrentTimeMin(0);
