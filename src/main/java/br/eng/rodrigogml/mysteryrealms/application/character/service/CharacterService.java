@@ -131,6 +131,7 @@ public class CharacterService {
      *                                  ou já existir um personagem com o mesmo nome
      */
     public CharacterEntity createCharacter(Long userId, String name, Race race, CharacterClass characterClass) {
+        requirePositiveId(userId, "character.error.invalidUserId");
         String normalizedName = normalizeAndValidateCharacterName(name);
         if (characterRepository.countByIdUser(userId) >= 50) {
             throw new IllegalArgumentException("character.error.limitReached");
@@ -192,6 +193,7 @@ public class CharacterService {
      * @return lista de personagens do usuário
      */
     public List<CharacterEntity> listCharacters(Long userId) {
+        requirePositiveId(userId, "character.error.invalidUserId");
         return characterRepository.findAllByIdUser(userId);
     }
 
@@ -204,6 +206,9 @@ public class CharacterService {
      * @throws IllegalArgumentException se o personagem não existir ou não pertencer ao usuário
      */
     public CharacterEntity selectCharacter(Long userId, Long characterId) {
+        requirePositiveId(userId, "character.error.invalidUserId");
+        requirePositiveId(characterId, "character.error.invalidCharacterId");
+
         CharacterEntity character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
 
@@ -225,6 +230,9 @@ public class CharacterService {
      *                                  o nome exceder o limite ou já existir outro personagem com o mesmo nome
      */
     public void renameCharacter(Long userId, Long characterId, String newName) {
+        requirePositiveId(userId, "character.error.invalidUserId");
+        requirePositiveId(characterId, "character.error.invalidCharacterId");
+
         CharacterEntity character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
         String normalizedName = normalizeAndValidateCharacterName(newName);
@@ -255,6 +263,12 @@ public class CharacterService {
         return normalizedName;
     }
 
+    private void requirePositiveId(Long id, String message) {
+        if (id == null || id <= 0L) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
     /**
      * Bloqueia a exclusão sem confirmação explícita.
      *
@@ -276,6 +290,9 @@ public class CharacterService {
      *                                  ou não pertencer ao usuário
      */
     public void deleteCharacter(Long userId, Long characterId, boolean confirmed) {
+        requirePositiveId(userId, "character.error.invalidUserId");
+        requirePositiveId(characterId, "character.error.invalidCharacterId");
+
         if (!confirmed) {
             throw new IllegalArgumentException("character.error.deleteConfirmationRequired");
         }

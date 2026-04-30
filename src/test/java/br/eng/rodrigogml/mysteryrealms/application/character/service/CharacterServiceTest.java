@@ -113,6 +113,15 @@ class CharacterServiceTest {
     }
 
     @Test
+    void createCharacter_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.createCharacter(0L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
+
+        assertEquals("character.error.invalidUserId", ex.getMessage());
+        verify(characterRepository, never()).countByIdUser(anyLong());
+    }
+
+    @Test
     void createCharacter_nomeDuplicado_lancaExcecao() {
         when(characterRepository.countByIdUser(1L)).thenReturn(0L);
         when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(true);
@@ -147,6 +156,15 @@ class CharacterServiceTest {
     }
 
     @Test
+    void listCharacters_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.listCharacters(null));
+
+        assertEquals("character.error.invalidUserId", ex.getMessage());
+        verify(characterRepository, never()).findAllByIdUser(any());
+    }
+
+    @Test
     void selectCharacter_pertenceAoUsuario_atualizaLastAccessed() {
         CharacterEntity character = buildEntity(1L, 1L, "Frodo");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
@@ -161,6 +179,15 @@ class CharacterServiceTest {
     void selectCharacter_naoEncontrado_lancaExcecao() {
         when(characterRepository.findById(99L)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> service.selectCharacter(1L, 99L));
+    }
+
+    @Test
+    void selectCharacter_personagemInvalido_lancaExcecaoSemConsultarRepositorio() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.selectCharacter(1L, 0L));
+
+        assertEquals("character.error.invalidCharacterId", ex.getMessage());
+        verify(characterRepository, never()).findById(anyLong());
     }
 
     @Test
@@ -182,6 +209,15 @@ class CharacterServiceTest {
         service.renameCharacter(1L, 1L, "Bilbo");
 
         verify(characterRepository).save(argThat(c -> "Bilbo".equals(c.getName())));
+    }
+
+    @Test
+    void renameCharacter_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.renameCharacter(-1L, 1L, "Bilbo"));
+
+        assertEquals("character.error.invalidUserId", ex.getMessage());
+        verify(characterRepository, never()).findById(anyLong());
     }
 
     @Test
@@ -294,6 +330,16 @@ class CharacterServiceTest {
                 () -> service.deleteCharacter(1L, 1L));
 
         assertEquals("character.error.deleteConfirmationRequired", ex.getMessage());
+        verify(characterRepository, never()).findById(anyLong());
+        verify(characterRepository, never()).delete(any());
+    }
+
+    @Test
+    void deleteCharacter_personagemInvalido_lancaExcecaoSemConsultarRepositorio() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> service.deleteCharacter(1L, null, true));
+
+        assertEquals("character.error.invalidCharacterId", ex.getMessage());
         verify(characterRepository, never()).findById(anyLong());
         verify(characterRepository, never()).delete(any());
     }
