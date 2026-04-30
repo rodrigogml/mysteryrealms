@@ -70,6 +70,7 @@ class UserServiceTest {
     @Mock private RecoveryCodeRepository recoveryCodeRepository;
     @Mock private CharacterRepository characterRepository;
     @Mock private CharacterService characterService;
+    @Mock private EmailService emailService;
 
     private UserService service;
 
@@ -78,7 +79,7 @@ class UserServiceTest {
         service = new UserService(userRepository, sessionRepository, loginAttemptRepository,
                 accountLockRepository, unlockCodeRepository, emailConfirmationRepository,
                 passwordResetRepository, twoFactorAuthRepository, recoveryCodeRepository,
-                characterRepository, characterService);
+                characterRepository, characterService, emailService);
     }
 
     @Test
@@ -96,6 +97,7 @@ class UserServiceTest {
 
         assertEquals(UserStatus.PENDING_CONFIRMATION, result.getStatus());
         verify(emailConfirmationRepository).save(any(EmailConfirmationEntity.class));
+        verify(emailService).sendRegistrationConfirmation(eq(saved), any());
     }
 
     @Test

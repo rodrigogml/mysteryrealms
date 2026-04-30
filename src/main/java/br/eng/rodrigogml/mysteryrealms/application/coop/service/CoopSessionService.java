@@ -10,6 +10,9 @@ import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopSessionRe
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanceRepository;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,6 +23,8 @@ import java.util.List;
  * @author ?
  * @since 28-04-2026
  */
+@Service
+@Transactional
 public class CoopSessionService {
 
     private final CoopSessionRepository sessionRepository;

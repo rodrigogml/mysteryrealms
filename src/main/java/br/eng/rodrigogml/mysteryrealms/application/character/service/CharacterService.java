@@ -28,6 +28,9 @@ import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.Character;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,6 +41,8 @@ import java.util.List;
  * @author ?
  * @since 28-04-2026
  */
+@Service
+@Transactional
 public class CharacterService {
 
     private final CharacterRepository characterRepository;

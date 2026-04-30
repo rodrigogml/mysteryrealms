@@ -14,6 +14,9 @@ import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldMarkerR
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldNpcStateRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldQuestStateRepository;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 /**
@@ -23,6 +26,8 @@ import java.util.Optional;
  * @author ?
  * @since 28-04-2026
  */
+@Service
+@Transactional
 public class WorldInstanceService {
 
     private final WorldInstanceRepository worldInstanceRepository;

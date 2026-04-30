@@ -25,6 +25,9 @@ import br.eng.rodrigogml.mysteryrealms.application.user.repository.TwoFactorAuth
 import br.eng.rodrigogml.mysteryrealms.application.user.repository.UnlockCodeRepository;
 import br.eng.rodrigogml.mysteryrealms.application.user.repository.UserRepository;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -47,6 +50,8 @@ import java.util.UUID;
  * @author ?
  * @since 28-04-2026
  */
+@Service
+@Transactional
 public class UserService {
 
     private static final int REGISTRATION_CONFIRMATION_HOURS = 48;
@@ -72,6 +77,7 @@ public class UserService {
     private final RecoveryCodeRepository recoveryCodeRepository;
     private final CharacterRepository characterRepository;
     private final CharacterService characterService;
+    private final EmailService emailService;
 
     /**
      * Cria o serviço com as dependências necessárias.
@@ -87,13 +93,14 @@ public class UserService {
      * @param recoveryCodeRepository repositório de códigos de recuperação
      * @param characterRepository repositório de personagens
      * @param characterService serviço de personagens para remoção em cascata
+     * @param emailService serviço de envio de e-mails transacionais
      */
     public UserService(UserRepository userRepository, SessionRepository sessionRepository,
             LoginAttemptRepository loginAttemptRepository, AccountLockRepository accountLockRepository,
             UnlockCodeRepository unlockCodeRepository, EmailConfirmationRepository emailConfirmationRepository,
             PasswordResetRepository passwordResetRepository, TwoFactorAuthRepository twoFactorAuthRepository,
             RecoveryCodeRepository recoveryCodeRepository, CharacterRepository characterRepository,
-            CharacterService characterService) {
+            CharacterService characterService, EmailService emailService) {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
         this.loginAttemptRepository = loginAttemptRepository;
@@ -105,6 +112,7 @@ public class UserService {
         this.recoveryCodeRepository = recoveryCodeRepository;
         this.characterRepository = characterRepository;
         this.characterService = characterService;
+        this.emailService = emailService;
     }
 
     private String hashPassword(String raw) {
@@ -192,7 +200,7 @@ public class UserService {
         confirmation.setNewEmail(null);
         confirmation.setExpiresAt(LocalDateTime.now().plusHours(REGISTRATION_CONFIRMATION_HOURS));
         emailConfirmationRepository.save(confirmation);
-        // TODO integrar envio real de e-mail para confirmacao de cadastro.
+        emailService.sendRegistrationConfirmation(user, confirmation.getToken());
 
         return user;
     }
@@ -545,7 +553,7 @@ public class UserService {
         confirmation.setNewEmail(newEmail);
         confirmation.setExpiresAt(LocalDateTime.now().plusHours(EMAIL_CHANGE_CONFIRMATION_HOURS));
         emailConfirmationRepository.save(confirmation);
-        // TODO integrar envio real de e-mail para confirmacao de troca de endereco.
+        emailService.sendEmailChangeConfirmation(newEmail, confirmation.getToken());
     }
 
     /**
@@ -572,7 +580,7 @@ public class UserService {
         confirmation.setNewEmail(null);
         confirmation.setExpiresAt(LocalDateTime.now().plusHours(ACCOUNT_DELETION_CONFIRMATION_HOURS));
         emailConfirmationRepository.save(confirmation);
-        // TODO integrar envio real de e-mail para confirmacao de exclusao de conta.
+        emailService.sendAccountDeletionConfirmation(user, confirmation.getToken());
         return confirmation.getToken();
     }
 
