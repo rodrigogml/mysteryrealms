@@ -1,6 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipRange;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipState;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.ReputationRange;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyleEvaluation;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.DiaryEntry;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.DiaryImpact;
@@ -75,7 +77,40 @@ public final class SocialService {
      * @return novo value
      */
     public static int applyReputationDelta(int valorAtual, int delta) {
-        return valorAtual + delta;
+        int weightedDelta = computeReputationImpact(valorAtual, delta);
+        return valorAtual + weightedDelta;
+    }
+
+    /**
+     * Determina a faixa de reputação para um valor consolidado.
+     */
+    public static ReputationRange reputationRange(int value) {
+        return ReputationRange.of(value);
+    }
+
+    /**
+     * Converte score num estado semântico de relacionamento.
+     */
+    public static RelationshipState relationshipState(int value) {
+        return RelationshipState.fromScore(value);
+    }
+
+    /**
+     * Calcula impacto final do delta conforme a faixa atual de reputação.
+     *
+     * Ações positivas escalam melhor para personagens bem reputados,
+     * enquanto ações negativas punem mais personagens infames.
+     */
+    public static int computeReputationImpact(int valorAtual, int delta) {
+        if (delta == 0) {
+            return 0;
+        }
+        ReputationRange currentRange = ReputationRange.of(valorAtual);
+        int adjustment = currentRange.impactBonus();
+        if (delta > 0) {
+            return delta + adjustment;
+        }
+        return delta - adjustment;
     }
 
     // ── RF-SS-02: Ciclo social obrigatório ───────────────────────────────────
