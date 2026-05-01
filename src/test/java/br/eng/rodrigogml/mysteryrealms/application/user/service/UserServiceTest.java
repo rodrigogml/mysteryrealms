@@ -73,6 +73,7 @@ class UserServiceTest {
     @Mock private CharacterRepository characterRepository;
     @Mock private CharacterService characterService;
     @Mock private EmailService emailService;
+    @Mock private UserInputValidationService userInputValidationService;
 
     private UserService service;
 
@@ -81,7 +82,7 @@ class UserServiceTest {
         service = new UserService(userRepository, sessionRepository, loginAttemptRepository,
                 accountLockRepository, unlockCodeRepository, emailConfirmationRepository,
                 passwordResetRepository, twoFactorAuthRepository, recoveryCodeRepository,
-                characterRepository, characterService, emailService);
+                characterRepository, characterService, emailService, userInputValidationService);
     }
 
     @Test
@@ -439,6 +440,21 @@ class UserServiceTest {
     }
 
     @Test
+    void logout_tokenAtivo_invalidaSessaoParaValidacoesPosteriores() {
+        SessionEntity session = new SessionEntity();
+        session.setToken("tok");
+        when(sessionRepository.findByToken("tok"))
+                .thenReturn(Optional.of(session))
+                .thenReturn(Optional.empty());
+
+        service.logout("tok");
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.validateSession("tok"));
+        assertEquals("user.error.tokenNotFound", ex.getMessage());
+    }
+
+    @Test
     void logout_tokenInvalido_lancaExcecao() {
         when(sessionRepository.findByToken("invalido")).thenReturn(Optional.empty());
         assertThrows(ValidationException.class, () -> service.logout("invalido"));
@@ -475,6 +491,23 @@ class UserServiceTest {
         assertEquals("user.error.sessionExpired", ex.getMessage());
         verify(sessionRepository).delete(session);
         verify(sessionRepository, never()).save(any());
+    }
+
+    @Test
+    void validateSession_tokenExpiraNoInstanteAtual_aindaPermiteRenovacao() {
+        SessionEntity session = new SessionEntity();
+        session.setIdUser(1L);
+        session.setToken("tok");
+        session.setCreatedAt(LocalDateTime.now().minusHours(1));
+        session.setExpiresAt(LocalDateTime.now());
+        when(sessionRepository.findByToken("tok")).thenReturn(Optional.of(session));
+        when(sessionRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        SessionEntity result = service.validateSession("tok");
+
+        assertEquals("tok", result.getToken());
+        assertTrue(result.getExpiresAt().isAfter(LocalDateTime.now()));
+        verify(sessionRepository).save(session);
     }
 
     @Test
@@ -919,6 +952,23 @@ class UserServiceTest {
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.unlockAccount(1L, "111111"));
         assertEquals("user.error.unlockCodeInvalid", ex.getMessage());
+    }
+
+    @Test
+    void unlockAccount_bloqueioExpirado_rejeitaDesbloqueioPorCodigo() {
+        UserEntity user = activeUser();
+        user.setStatus(UserStatus.LOCKED);
+        AccountLockEntity lock = new AccountLockEntity();
+        lock.setIdUser(1L);
+        lock.setUnlockAt(LocalDateTime.now().minusSeconds(1));
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.of(lock));
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.unlockAccount(1L, "654321"));
+        assertEquals("user.error.unlockCodeNotFound", ex.getMessage());
+        verify(unlockCodeRepository, never()).findTopByIdUserAndUsedFalseOrderByExpiresAtDesc(any());
     }
 
     private UserEntity activeUser() {
