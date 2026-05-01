@@ -339,3 +339,14 @@ Documentação de apoio técnico para planejamento e execução da implementaç�
   - [Módulo: Economia e Inventário](./implementacao/backlogTecnico.md#módulo-economia-e-inventário)
     - [Épico 6 — Consistência de itens, preço e equipamento](./implementacao/backlogTecnico.md#épico-6--consistência-de-itens-preço-e-equipamento)
   - [Sequência sugerida de execução](./implementacao/backlogTecnico.md#sequência-sugerida-de-execução)
+
+## Implementação do Sistema
+
+- [Arquitetura](./arquitetura.md)
+  - [Visão geral](./arquitetura.md#visão-geral)
+  - [Diagrama textual dos componentes](./arquitetura.md#diagrama-textual-dos-componentes)
+  - [Camadas e responsabilidades por pasta/módulo](./arquitetura.md#camadas-e-responsabilidades-por-pastamódulo)
+  - [Bibliotecas externas principais](./arquitetura.md#bibliotecas-externas-principais)
+  - [Fluxos principais identificados](./arquitetura.md#fluxos-principais-identificados)
+  - [Dependências críticas e riscos de manutenção](./arquitetura.md#dependências-críticas-e-riscos-de-manutenção)
+  - [Hotspots (arquivos sensíveis a mudanças)](./arquitetura.md#hotspots-arquivos-sensíveis-a-mudanças)
