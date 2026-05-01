@@ -70,12 +70,12 @@ class CoopSessionServiceTest {
     @Test
     void listActiveSessions_retornaApenasAtivas() {
         CoopSessionEntity s = activeSession(1L, 1L);
-        when(sessionRepository.findAllByStatus(CoopSessionStatus.ACTIVE)).thenReturn(List.of(s));
+        when(sessionRepository.findAllByStatus(CoopSessionStatus.LOBBY)).thenReturn(List.of(s));
 
         List<CoopSessionEntity> result = service.listActiveSessions();
 
         assertEquals(1, result.size());
-        assertEquals(CoopSessionStatus.ACTIVE, result.get(0).getStatus());
+        assertEquals(CoopSessionStatus.LOBBY, result.get(0).getStatus());
     }
 
     // ── RF-MJ-02: Convite de jogadores (criação de sessão) ───────────────────
@@ -90,7 +90,7 @@ class CoopSessionServiceTest {
 
         CoopSessionEntity result = service.createSession(10L, 5L, 4);
 
-        assertEquals(CoopSessionStatus.ACTIVE, result.getStatus());
+        assertEquals(CoopSessionStatus.LOBBY, result.getStatus());
         verify(participantRepository).save(argThat(p -> p.getIdCharacter().equals(10L)));
     }
 
@@ -483,7 +483,58 @@ class CoopSessionServiceTest {
         assertThrows(IllegalArgumentException.class, () -> service.getGuestOwnWorldInstance(1L, 2L));
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    
+    @Test
+    void startPauseResumeEnd_fluxoValido_transicionaEstados() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(participantRepository.countByIdCoopSessionAndLeftAtIsNull(1L)).thenReturn(2L);
+        when(sessionRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(participantRepository.findAllByIdCoopSessionAndLeftAtIsNull(1L)).thenReturn(List.of());
+
+        service.startSession(1L, 1L);
+        assertEquals(CoopSessionStatus.IN_PROGRESS, session.getStatus());
+
+        service.pauseSession(1L, 1L);
+        assertEquals(CoopSessionStatus.PAUSED, session.getStatus());
+
+        service.resumeSession(1L, 1L);
+        assertEquals(CoopSessionStatus.IN_PROGRESS, session.getStatus());
+
+        service.closeSession(1L, 1L);
+        assertEquals(CoopSessionStatus.CLOSED, session.getStatus());
+    }
+
+    @Test
+    void startSession_comMenosDeDoisJogadores_lancaConflito() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(participantRepository.countByIdCoopSessionAndLeftAtIsNull(1L)).thenReturn(1L);
+
+        assertThrows(IllegalArgumentException.class, () -> service.startSession(1L, 1L));
+    }
+
+    @Test
+    void validateTurnAction_foraDoTurno_lancaConflito() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        session.setStatus(CoopSessionStatus.IN_PROGRESS);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+
+        assertThrows(IllegalArgumentException.class, () -> service.validateTurnAction(1L, 2L, 3L));
+    }
+
+    @Test
+    void validateTurnAction_aposRecuperacaoNoTurno_permiteAcao() {
+        CoopSessionEntity session = activeSession(1L, 1L);
+        session.setStatus(CoopSessionStatus.IN_PROGRESS);
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        activeParticipant(1L, 2L);
+
+        assertDoesNotThrow(() -> service.validateTurnAction(1L, 2L, 2L));
+    }
+
+// ── Helpers ──────────────────────────────────────────────────────────────
 
     private CoopSessionEntity activeSession(Long id, Long hostCharacterId) {
         CoopSessionEntity s = new CoopSessionEntity();
@@ -491,7 +542,7 @@ class CoopSessionServiceTest {
         s.setIdHostCharacter(hostCharacterId);
         s.setIdWorldInstance(99L);
         s.setMaxPlayers(4);
-        s.setStatus(CoopSessionStatus.ACTIVE);
+        s.setStatus(CoopSessionStatus.LOBBY);
         s.setCreatedAt(LocalDateTime.now());
         return s;
     }
