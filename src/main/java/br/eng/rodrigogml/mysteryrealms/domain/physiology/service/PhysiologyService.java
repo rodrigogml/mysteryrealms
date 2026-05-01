@@ -3,6 +3,10 @@ package br.eng.rodrigogml.mysteryrealms.domain.physiology.service;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.CombinedPhysiologyEffect;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.ConsciousnessTestResult;
 import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.PhysiologyState;
+import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.PhysiologyResolutionPriority;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Serviço de estado fisiológico do personagem — RF-EF-01 a RF-EF-16.
@@ -41,6 +45,94 @@ public final class PhysiologyService {
 
     private static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
+    }
+
+    public enum TransitionAction {
+        NO_OP,
+        APPLY_SEVERE_HUNGER_THIRST_MORALE_DELTA,
+        ENTER_COLLAPSE
+    }
+
+    public record StateTransition(PhysiologyResolutionPriority priority, TransitionAction action) {}
+
+    private static final Map<EstadoFadiga, Set<EstadoFadiga>> FATIGUE_ALLOWED_TRANSITIONS = Map.of(
+            EstadoFadiga.NORMAL, Set.of(EstadoFadiga.EXAUSTAO),
+            EstadoFadiga.EXAUSTAO, Set.of(EstadoFadiga.NORMAL, EstadoFadiga.COLAPSO_FADIGA),
+            EstadoFadiga.COLAPSO_FADIGA, Set.of(EstadoFadiga.EXAUSTAO)
+    );
+
+    private static final Map<EstadoSede, Set<EstadoSede>> THIRST_ALLOWED_TRANSITIONS = Map.of(
+            EstadoSede.NORMAL, Set.of(EstadoSede.SEDE),
+            EstadoSede.SEDE, Set.of(EstadoSede.NORMAL, EstadoSede.SEDE_AGRAVADA),
+            EstadoSede.SEDE_AGRAVADA, Set.of(EstadoSede.SEDE, EstadoSede.COLAPSO_SEDE),
+            EstadoSede.COLAPSO_SEDE, Set.of(EstadoSede.SEDE_AGRAVADA)
+    );
+
+    private static final Map<EstadoFome, Set<EstadoFome>> HUNGER_ALLOWED_TRANSITIONS = Map.of(
+            EstadoFome.NORMAL, Set.of(EstadoFome.FOME),
+            EstadoFome.FOME, Set.of(EstadoFome.NORMAL, EstadoFome.FOME_AGRAVADA),
+            EstadoFome.FOME_AGRAVADA, Set.of(EstadoFome.FOME, EstadoFome.COLAPSO_FOME),
+            EstadoFome.COLAPSO_FOME, Set.of(EstadoFome.FOME_AGRAVADA)
+    );
+
+    private static final Map<EstadoMoral, Set<EstadoMoral>> MORALE_ALLOWED_TRANSITIONS = Map.of(
+            EstadoMoral.COLAPSO_EMOCIONAL, Set.of(EstadoMoral.MORAL_BAIXA),
+            EstadoMoral.MORAL_BAIXA, Set.of(EstadoMoral.COLAPSO_EMOCIONAL, EstadoMoral.MORAL_ESTAVEL),
+            EstadoMoral.MORAL_ESTAVEL, Set.of(EstadoMoral.MORAL_BAIXA, EstadoMoral.MORAL_ALTA),
+            EstadoMoral.MORAL_ALTA, Set.of(EstadoMoral.MORAL_ESTAVEL)
+    );
+
+    public static <T extends Enum<T>> boolean isValidTransition(T origin, T destination, Map<T, Set<T>> transitionMap) {
+        if (origin == destination) return true;
+        Set<T> allowed = transitionMap.get(origin);
+        return allowed != null && allowed.contains(destination);
+    }
+
+    public static StateTransition resolveTransition(PhysiologyState previous, PhysiologyState current) {
+        EstadoFadiga prevFatigue = fatigueState(previous);
+        EstadoFadiga nowFatigue = fatigueState(current);
+        EstadoSede prevThirst = thirstState(previous);
+        EstadoSede nowThirst = thirstState(current);
+        EstadoFome prevHunger = hungerState(previous);
+        EstadoFome nowHunger = hungerState(current);
+
+        if (!isValidTransition(prevFatigue, nowFatigue, FATIGUE_ALLOWED_TRANSITIONS)
+                || !isValidTransition(prevThirst, nowThirst, THIRST_ALLOWED_TRANSITIONS)
+                || !isValidTransition(prevHunger, nowHunger, HUNGER_ALLOWED_TRANSITIONS)
+                || !isValidTransition(moraleState(previous), moraleState(current), MORALE_ALLOWED_TRANSITIONS)) {
+            throw new IllegalStateException("Transição fisiológica inválida entre ticks.");
+        }
+
+        if (nowFatigue == EstadoFadiga.COLAPSO_FADIGA || nowThirst == EstadoSede.COLAPSO_SEDE || nowHunger == EstadoFome.COLAPSO_FOME) {
+            return new StateTransition(PhysiologyResolutionPriority.COLLAPSE_UNCONSCIOUSNESS, TransitionAction.ENTER_COLLAPSE);
+        }
+
+        boolean enteredSevereHungerThirst = prevHunger != EstadoFome.FOME_AGRAVADA
+                && prevThirst != EstadoSede.SEDE_AGRAVADA
+                && nowHunger == EstadoFome.FOME_AGRAVADA
+                && nowThirst == EstadoSede.SEDE_AGRAVADA;
+        if (enteredSevereHungerThirst) {
+            return new StateTransition(PhysiologyResolutionPriority.SEVERE_PHYSIOLOGY_STATES,
+                    TransitionAction.APPLY_SEVERE_HUNGER_THIRST_MORALE_DELTA);
+        }
+
+        return new StateTransition(PhysiologyResolutionPriority.MODERATE_PHYSIOLOGY_STATES, TransitionAction.NO_OP);
+    }
+
+    public static boolean isValidFatigueTransition(EstadoFadiga origin, EstadoFadiga destination) {
+        return isValidTransition(origin, destination, FATIGUE_ALLOWED_TRANSITIONS);
+    }
+
+    public static boolean isValidThirstTransition(EstadoSede origin, EstadoSede destination) {
+        return isValidTransition(origin, destination, THIRST_ALLOWED_TRANSITIONS);
+    }
+
+    public static boolean isValidHungerTransition(EstadoFome origin, EstadoFome destination) {
+        return isValidTransition(origin, destination, HUNGER_ALLOWED_TRANSITIONS);
+    }
+
+    public static boolean isValidMoraleTransition(EstadoMoral origin, EstadoMoral destination) {
+        return isValidTransition(origin, destination, MORALE_ALLOWED_TRANSITIONS);
     }
 
     // ── RF-EF-01: tick de minuto ──────────────────────────────────────────────

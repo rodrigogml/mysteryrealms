@@ -684,4 +684,60 @@ class PhysiologyServiceTest {
 
         assertEquals(45, s.getMorale(), "moral deve cair novamente ao reentrar na combinacao");
     }
+
+    @Test
+    void transicaoValida_fadigaNormalParaExaustao() {
+        assertTrue(PhysiologyService.isValidFatigueTransition(
+                PhysiologyService.EstadoFadiga.NORMAL,
+                PhysiologyService.EstadoFadiga.EXAUSTAO));
+    }
+
+    @Test
+    void transicaoInvalida_fadigaNormalParaColapsoBloqueada() {
+        assertFalse(PhysiologyService.isValidFatigueTransition(
+                PhysiologyService.EstadoFadiga.NORMAL,
+                PhysiologyService.EstadoFadiga.COLAPSO_FADIGA));
+    }
+
+    @Test
+    void resolveTransition_bloqueiaSaltoInvalidoEntreTicks() {
+        PhysiologyState previous = freshState();
+        previous.setCurrentFatigue(FADIGA_MAX * 0.90);
+
+        PhysiologyState current = freshState();
+        current.setCurrentFatigue(FADIGA_MAX * 1.20);
+
+        assertThrows(IllegalStateException.class, () -> PhysiologyService.resolveTransition(previous, current));
+    }
+
+    @Test
+    void resolveTransition_priorizaColapsoSobreEstadosModerados() {
+        PhysiologyState previous = freshState();
+        previous.setThirstPct(99.0);
+
+        PhysiologyState current = freshState();
+        current.setThirstPct(100.0);
+
+        PhysiologyService.StateTransition transition = PhysiologyService.resolveTransition(previous, current);
+
+        assertEquals(PhysiologyResolutionPriority.COLLAPSE_UNCONSCIOUSNESS, transition.priority());
+        assertEquals(PhysiologyService.TransitionAction.ENTER_COLLAPSE, transition.action());
+    }
+
+    @Test
+    void resolveTransition_priorizaEstadosGravesNaEntradaCombinacaoFomeSedeAgravada() {
+        PhysiologyState previous = freshState();
+        previous.setHungerPct(84.0);
+        previous.setThirstPct(64.0);
+
+        PhysiologyState current = freshState();
+        current.setHungerPct(85.0);
+        current.setThirstPct(65.0);
+
+        PhysiologyService.StateTransition transition = PhysiologyService.resolveTransition(previous, current);
+
+        assertEquals(PhysiologyResolutionPriority.SEVERE_PHYSIOLOGY_STATES, transition.priority());
+        assertEquals(PhysiologyService.TransitionAction.APPLY_SEVERE_HUNGER_THIRST_MORALE_DELTA, transition.action());
+    }
+
 }

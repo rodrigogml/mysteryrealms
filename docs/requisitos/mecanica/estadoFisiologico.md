@@ -238,3 +238,23 @@ colapso/desmaio → estado_critico (PV) → estados fisiológicos graves
 2. Aplicar deltas de moral disparados no tick.
 3. Recalcular faixa de moral ativa e seus efeitos.
 4. Se qualquer limiar de colapso for atingido após o recálculo, aplicar desmaio (prioridade 1).
+
+---
+
+## Regras explícitas de transição (implementação)
+
+A camada de serviço mantém mapas explícitos de transição permitida por faixa:
+
+- Fadiga: `NORMAL -> EXAUSTAO -> COLAPSO_FADIGA` (com retorno gradual).
+- Sede: `NORMAL -> SEDE -> SEDE_AGRAVADA -> COLAPSO_SEDE` (com retorno gradual).
+- Fome: `NORMAL -> FOME -> FOME_AGRAVADA -> COLAPSO_FOME` (com retorno gradual).
+- Moral: `COLAPSO_EMOCIONAL <-> MORAL_BAIXA <-> MORAL_ESTAVEL <-> MORAL_ALTA`.
+
+Saltos de faixa que pulam um estado intermediário no mesmo tick são considerados inválidos e devem ser bloqueados.
+
+### Exemplos curtos (entrada → saída)
+
+- `fadiga: NORMAL(99%) -> EXAUSTAO(100%)` → válido.
+- `fadiga: NORMAL(99%) -> COLAPSO_FADIGA(120%)` → inválido (salto bloqueado).
+- `sede: SEDE_AGRAVADA(80%) -> COLAPSO_SEDE(100%)` → válido e com prioridade `COLLAPSE_UNCONSCIOUSNESS`.
+- `fome+sede: FOME/SEDE -> FOME_AGRAVADA/SEDE_AGRAVADA` → ação `APPLY_SEVERE_HUNGER_THIRST_MORALE_DELTA` com prioridade `SEVERE_PHYSIOLOGY_STATES`.
