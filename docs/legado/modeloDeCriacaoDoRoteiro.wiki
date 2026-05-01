@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Aqui ficam documentados os padrões de criação dos roteiros do jogo. O objetivo é documentar as regras e padrões para que todo o jogo seja criado de forma consistente, coerente e visual padronizado.
 
 = Estrutura Narrativa Visual =

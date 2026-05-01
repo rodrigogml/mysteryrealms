@@ -1,4 +1,12 @@
 
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
+
 As '''classes''' definem o estilo de jogo do personagem, suas aptidões em combate, habilidades sociais, domínio mágico ou capacidade de exploração. Ao contrário das '''raças''', que representam origem e fisiologia, as '''classes''' representam função, treinamento e papel ativo na jornada.
 
 A escolha da classe impacta diretamente nos '''atributos iniciais''', '''habilidades secundárias''', '''recursos disponíveis''', e na forma como o personagem interage com o mundo — tanto nos diálogos quanto em combate ou na resolução de problemas.

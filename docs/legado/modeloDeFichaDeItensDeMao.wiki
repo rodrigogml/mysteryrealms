@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Esta página define os campos obrigatórios comuns a todos os itens classificados como '''Itens de Mão'''. Esses campos devem sempre aparecer no topo de qualquer ficha de item de mão, independentemente do subtipo (Arma, Escudo, Foco Mágico, Relíquia, etc.).
 
 

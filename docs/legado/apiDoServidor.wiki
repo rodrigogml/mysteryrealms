@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Esta página documenta as interfaces públicas (HTTP Handlers) expostas pelo servidor da Engine e do Jogo. A API segue o padrão RESTful com comunicação via JSON padronizada através do modelo '''ApiResponseDTO'''.
 
 = Organização dos Handlers =

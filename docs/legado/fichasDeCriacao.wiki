@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 = Ficha de Lugar =
 As fichas de lugares mudam de acordo com o tipo do lugar. A seguir os modelos e descrição de como elas devem ser criadas.
 

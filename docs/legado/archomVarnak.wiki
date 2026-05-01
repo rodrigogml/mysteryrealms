@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 [[Arquivo:ArchomVarnak.png|thumb|right|300px|Archom Varnak]]
 
 * '''Bio:''' Archom Varnak foi um arcanista e historiador lendário que viveu há cerca de 300 anos. Fundador da [[Langur#Biblioteca_Varnak|Biblioteca Varnak]], no Anel Central de [[Langur]], é lembrado como um dos maiores colecionadores e estudiosos de magia ancestral e conhecimento proibido. Desapareceu nos andares superiores da própria biblioteca durante experimentos com realidades paralelas. Muitos acreditam que sua consciência permanece fundida à estrutura arcana da torre. Encantamentos e dispositivos mágicos ainda respondem ao seu nome, e há quem afirme ouvir sua voz sussurrando nos corredores mais antigos.

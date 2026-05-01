@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 = Testes de Atributo ou Habilidade =
 
 Os testes de atributo ou habilidade são o pilar central de todas as mecânicas de verificação de sucesso no jogo. Eles determinam se o personagem consegue executar uma ação com sucesso, como convencer alguém, abrir uma fechadura, resistir a um veneno ou identificar uma armadilha.

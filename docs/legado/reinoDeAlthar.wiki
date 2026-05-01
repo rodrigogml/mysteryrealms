@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 * '''Descrição Geral:'''
 :* Um dos domínios humanos mais antigos e consolidados do continente, o Reino de Althar é conhecido por sua organização militar, tradição em honra e festas sazonais. Seu território abrange vastas planícies e cordilheiras estratégicas.
 

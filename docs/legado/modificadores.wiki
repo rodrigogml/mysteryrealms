@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Modificadores representam condições aplicadas ao jogador ou criatura que alteram temporariamente seu desempenho no jogo. Eles podem representar estados físicos, mentais, mágicos ou ambientais, e gerar '''bônus''', '''penalidades''', ou '''ambos''' ao mesmo tempo.
 
 Modificadores podem ser aplicados por ações, falhas, sucessos, efeitos de itens, habilidades, condições climáticas ou mágicas. Cada modificador possui efeitos definidos, e deve ser registrado com nome e descrição clara de suas consequências mecânicas.

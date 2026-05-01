@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 * '''Descrição Geral:'''
 :* Thámyros é um mundo físico completo, com estrutura e funcionamento muito semelhantes ao planeta Terra. Possui um único sol, uma lua com fases regulares, estações do ano bem definidas e um ciclo natural de rotação e translação. A gravidade, atmosfera e composição geográfica seguem padrões naturais, permitindo biomas variados e vida inteligente complexa.
 :* Diversas raças habitam este mundo, incluindo humanos, elfos, anões, meio-orcs, draconatos, tieflings, halflings e meio-elfos. Essas civilizações se espalham por diferentes continentes, moldando culturas, reinos e zonas de conflito.

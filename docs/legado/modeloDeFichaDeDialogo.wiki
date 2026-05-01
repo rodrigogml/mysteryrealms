@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 A Ficha de Diálogo é um formulário narrativo-técnico que deve ser preenchido antes da criação de qualquer novo diálogo no sistema. Seu objetivo é orientar a criação de diálogos coesos, emocionantes e funcionais, alinhados com a narrativa, as mecânicas de jogo e a personalidade do NPC envolvido.
 
 Esta ficha '''não é parte do conteúdo que o jogador verá''' — ela serve como planejamento prévio para que o criador ou a IA gerem o diálogo de forma precisa e inspiradora.

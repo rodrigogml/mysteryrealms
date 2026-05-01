@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 A ficha de escudo é utilizada para descrever escudos no universo do jogo. Escudos são itens de mão do subtipo '''Escudo''' e sua função primária é a '''defesa'''. Eles são empunhados pelo personagem e fornecem valores de bloqueio, resistência e outras propriedades defensivas.
 
 Cada escudo deve ser descrito em uma ficha própria utilizando o modelo abaixo. As instruções de preenchimento estão descritas ao lado de cada campo.

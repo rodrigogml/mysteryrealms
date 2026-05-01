@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 = Controle do Tempo =
 
 A '''PlayTale Engine''' utiliza um sistema padronizado de controle temporal baseado em unidades absolutas de tempo, medido em '''minutos inteiros'''. Internamente, o tempo é representado como um contador crescente que inicia em '''0''' no momento em que o jogador começa sua jornada.

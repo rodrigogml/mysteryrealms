@@ -120,3 +120,14 @@ Após resolver o evento, o jogador continua. Em seguida, entra em faixa de sede 
 - [ ] Processar interrupções por trecho percorrido.
 - [ ] Atualizar tempo e fisiologia em cada trecho.
 - [ ] Recalcular velocidade quando estado fisiológico mudar.
+
+
+## Estado da implementação
+
+- **Status:** Parcialmente implementado (cálculo de navegação e validações básicas disponíveis; interrupções narrativas em evolução).
+- **Classes Java relacionadas:**
+  - [`NavigationService`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/service/NavigationService.java)
+  - [`Connection`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/Connection.java)
+  - [`LocationType`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/enums/LocationType.java)
+  - [`WorldNavigationTest`](../../src/test/java/br/eng/rodrigogml/mysteryrealms/domain/world/WorldNavigationTest.java)
+

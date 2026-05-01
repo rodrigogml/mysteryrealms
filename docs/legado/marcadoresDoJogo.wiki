@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Esta página documenta todos os marcadores utilizados no jogo ''Mystery Realms''. Ela serve como referência para desenvolvedores, roteiristas e colaboradores que precisem consultar quais eventos, relações e descobertas podem ser rastreadas pelo sistema de marcadores.
 
 Para informações sobre a estrutura e funcionamento dos marcadores, consulte a página [[Sistema_de_Marcadores|Sistema de Marcadores]].

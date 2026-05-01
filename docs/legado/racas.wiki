@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 As '''raças''' definem vários aspectos do personagem (NPCs e Jogadores), e embora o universo de '''Mystery Realms''' tenha diversas Raças, nem todas são '''jogáveis'''. As classes que são '''jogáveis''' estão marcadas.
 
 As '''raças''' são escolhidas na criação do personagem e definem parte de sua identidade, capacidades físicas, afinidade mágica, reputação social e relações com NPCs.

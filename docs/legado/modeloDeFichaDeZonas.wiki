@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 A ficha de zona deve incluir a imagem da zona com o seguinte código wiki (sem as tags 'pre'):
 <pre>[[Arquivo:NomeDaZona.png|thumb|right|300px|Nome da Zona]]</pre>
 

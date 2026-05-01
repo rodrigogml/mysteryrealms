@@ -280,3 +280,41 @@ Requisitos que traduzem as regras da Mecânica do Jogo em comportamentos impleme
 - [Estrutura de ficha de escudo](./mecanica/escudos.md#estrutura-de-ficha-de-escudo)
 - [Integração com Defesa e Bloqueio](./mecanica/escudos.md#integração-com-defesa-e-bloqueio)
 - [Regras de acúmulo](./mecanica/escudos.md#regras-de-acúmulo)
+
+
+## Navegação rápida por domínio
+
+### Combate
+- [Requisitos: Combate e Testes](./requisitos/mecanica/combateETestes.md)
+- [Mecânica: Ciclo de Batalha](./mecanica/cicloDeBatalha.md)
+- [Mecânica: Defesa e Bloqueio](./mecanica/defesaEBloqueio.md)
+- [Mecânica: Danos, Aflições e Resistências](./mecanica/danosAflicoesResistencias.md)
+
+### Fisiologia
+- [Requisitos: Estado Fisiológico](./requisitos/mecanica/estadoFisiologico.md)
+- [Mecânica: Fadiga, Fome e Sede](./mecanica/fadigaFomeSede.md)
+- [Mecânica: Recuperação](./mecanica/recuperacao.md)
+- [Mecânica: Moral](./mecanica/moral.md)
+
+### Social
+- [Requisitos: Sistema Social](./requisitos/mecanica/sistemaSocial.md)
+- [Mecânica: Estrutura de Diálogo](./mecanica/estruturaDeDialogo.md)
+- [Mecânica: Estilos de Fala e Valoração](./mecanica/estilosDeFalaEValoracao.md)
+- [Mecânica: Sistema de Marcadores](./mecanica/sistemaDeMarcadores.md)
+
+### Economia
+- [Requisitos: Economia e Inventário](./requisitos/mecanica/economiaEInventario.md)
+- [Mecânica: Economia](./mecanica/economia.md)
+- [Mecânica: Itens de Mão](./mecanica/itensDeMao.md)
+- [Mecânica: Armas](./mecanica/armas.md)
+
+### Mundo
+- [Requisitos: Mundo e Navegação](./requisitos/mecanica/mundoENavegacao.md)
+- [Mundo: Estrutura de Localização](./mundo/estruturaDeLocalizacao.md)
+- [Mundo: Mapa e Movimentação](./mundo/mapaEMovimentacao.md)
+- [Mundo: Estrutura Temporal](./mundo/estruturaTemporal.md)
+- [Mundo: Modelos de Ficha](./mundo/modelosDeFicha.md)
+
+### Coop
+- [Requisitos de Aplicação: Multijogador](./requisitos/aplicacao/multijogador.md)
+- [Requisitos de Aplicação: Instância de Mundo](./requisitos/aplicacao/instanciaDeMundo.md)

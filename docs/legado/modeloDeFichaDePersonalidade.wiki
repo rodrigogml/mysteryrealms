@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Para criar uma ficha de Personalidade (personagem histórico, lendário ou notável que não interage diretamente com o jogador), deve-se utilizar o modelo a seguir, preenchendo cada campo conforme instruções:
 
 <pre>

@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 A economia na engine '''PlayTale''' define os princípios e estruturas para controle monetário, comércio e precificação dentro de qualquer mundo de RPG implementado com essa engine.
 
 

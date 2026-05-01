@@ -79,3 +79,14 @@ Resultado:
 - Avanço temporal: `+79 min`.
 - Aplicação de desgaste fisiológico por 79 minutos.
 - Revalidação de estados antes de permitir a próxima conexão.
+
+
+## Estado da implementação
+
+- **Status:** Parcialmente implementado (serviços de avanço temporal e integração com navegação presentes).
+- **Classes Java relacionadas:**
+  - [`WorldTimeService`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/service/WorldTimeService.java)
+  - [`WorldConfig`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/WorldConfig.java)
+  - [`DayPhase`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/DayPhase.java)
+  - [`Season`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/Season.java)
+

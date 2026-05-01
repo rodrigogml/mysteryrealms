@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Esta página define os diferentes tipos de efeitos prejudiciais que podem ser aplicados a personagens durante o jogo. Esses efeitos são divididos em duas categorias principais: '''Danos''' e '''Aflições'''. Ambos interagem com sistemas como [[Tipos_de_Resistências|Resistências]], [[Testes_de_Jogo|Testes de Jogo]] e [[Fadiga,_Fome_e_Sede|Fadiga]].
 
 = Tipos Suportados pela Engine =

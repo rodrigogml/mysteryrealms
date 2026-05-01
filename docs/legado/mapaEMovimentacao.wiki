@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 A '''PlayTale Engine''' oferece suporte para dois tipos complementares de movimentação do jogador: entre '''Localidades''' e dentro de uma '''Localidade'''. Cada um desses modos utiliza lógicas distintas, mas coerentes com a [[Estrutura de Localização]].
 
 = Mapa =
