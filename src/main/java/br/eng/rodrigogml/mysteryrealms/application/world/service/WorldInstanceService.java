@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de aplicação responsável pelo gerenciamento de instâncias de mundo,
@@ -71,7 +73,7 @@ public class WorldInstanceService {
         requirePositiveId(characterId, "world.error.invalidCharacterId");
 
         if (worldInstanceRepository.findByIdCharacter(characterId).isPresent()) {
-            throw new IllegalArgumentException("world.error.instanceAlreadyExists");
+            throw new ValidationException("world.error.instanceAlreadyExists");
         }
 
         WorldInstanceEntity instance = new WorldInstanceEntity();
@@ -92,7 +94,7 @@ public class WorldInstanceService {
         requirePositiveId(characterId, "world.error.invalidCharacterId");
 
         return worldInstanceRepository.findByIdCharacter(characterId)
-                .orElseThrow(() -> new IllegalArgumentException("world.error.instanceNotFound"));
+                .orElseThrow(() -> new ValidationException("world.error.instanceNotFound"));
     }
 
     /**
@@ -103,11 +105,11 @@ public class WorldInstanceService {
      */
     public WorldInstanceEntity saveWorldInstance(WorldInstanceEntity state) {
         if (state == null) {
-            throw new IllegalArgumentException("world.error.instanceRequired");
+            throw new ValidationException("world.error.instanceRequired");
         }
         requirePositiveId(state.getIdCharacter(), "world.error.invalidCharacterId");
         if (state.getCurrentTimeMin() < 0) {
-            throw new IllegalArgumentException("world.error.invalidCurrentTime");
+            throw new ValidationException("world.error.invalidCurrentTime");
         }
 
         return worldInstanceRepository.save(state);
@@ -138,7 +140,7 @@ public class WorldInstanceService {
         requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
         requireText(questId, "world.error.invalidQuestId");
         if (state == null) {
-            throw new IllegalArgumentException("world.error.invalidQuestState");
+            throw new ValidationException("world.error.invalidQuestState");
         }
 
         WorldQuestStateEntity entity = questStateRepository
@@ -248,13 +250,13 @@ public class WorldInstanceService {
         requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
         requireText(markerId, "world.error.invalidMarkerId");
         if (type == null) {
-            throw new IllegalArgumentException("world.error.invalidMarkerType");
+            throw new ValidationException("world.error.invalidMarkerType");
         }
         if (value != null && type == MarkerType.FLAG && !(value instanceof Boolean)) {
-            throw new IllegalArgumentException("world.error.invalidMarkerValue");
+            throw new ValidationException("world.error.invalidMarkerValue");
         }
         if (value != null && type != MarkerType.FLAG && !(value instanceof Integer)) {
-            throw new IllegalArgumentException("world.error.invalidMarkerValue");
+            throw new ValidationException("world.error.invalidMarkerValue");
         }
 
         WorldMarkerEntity entity = markerRepository
@@ -280,13 +282,13 @@ public class WorldInstanceService {
 
     private void requirePositiveId(Long id, String message) {
         if (id == null || id <= 0L) {
-            throw new IllegalArgumentException(message);
+            throw new ValidationException(message);
         }
     }
 
     private void requireText(String value, String message) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(message);
+            throw new ValidationException(message);
         }
     }
 }

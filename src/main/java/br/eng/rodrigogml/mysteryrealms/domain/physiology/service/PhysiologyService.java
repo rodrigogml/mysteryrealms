@@ -7,6 +7,8 @@ import br.eng.rodrigogml.mysteryrealms.domain.physiology.enums.PhysiologyResolut
 
 import java.util.Map;
 import java.util.Set;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de estado fisiológico do personagem — RF-EF-01 a RF-EF-16.
@@ -100,7 +102,7 @@ public final class PhysiologyService {
                 || !isValidTransition(prevThirst, nowThirst, THIRST_ALLOWED_TRANSITIONS)
                 || !isValidTransition(prevHunger, nowHunger, HUNGER_ALLOWED_TRANSITIONS)
                 || !isValidTransition(moraleState(previous), moraleState(current), MORALE_ALLOWED_TRANSITIONS)) {
-            throw new IllegalStateException("Transição fisiológica inválida entre ticks.");
+            throw new DomainException("physiology.error.invalidTransition");
         }
 
         if (nowFatigue == EstadoFadiga.COLAPSO_FADIGA || nowThirst == EstadoSede.COLAPSO_SEDE || nowHunger == EstadoFome.COLAPSO_FOME) {

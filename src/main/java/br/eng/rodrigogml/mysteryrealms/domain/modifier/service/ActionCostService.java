@@ -2,6 +2,8 @@ package br.eng.rodrigogml.mysteryrealms.domain.modifier.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.enums.ActionClass;
 import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.ActionCost;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de custo de ações do jogador — RF-MAR-07, RF-MAR-08, RF-MAR-09.
@@ -75,7 +77,7 @@ public final class ActionCostService {
     public static void applyLoadModifier(ActionCost cost, ActionClass actionClass, double cargaRatio) {
         if (cargaRatio > 1.0) {
             if (actionClass == ActionClass.DEMANDING) {
-                throw new IllegalStateException(
+                throw new DomainException(
                         "Ação EXIGENTE bloqueada: carga acima de 100% da capacidade (ratio=" + cargaRatio + ")");
             }
             cost.setFatigueCost(cost.getFatigueCost() * 1.50);
@@ -116,7 +118,7 @@ public final class ActionCostService {
             boolean isEstadoCritico) {
 
         if (isDesmaio || isEstadoCritico) {
-            throw new IllegalStateException(
+            throw new DomainException(
                     "Ação cancelada: personagem em estado de desmaio ou estado crítico");
         }
 

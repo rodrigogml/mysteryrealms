@@ -1,5 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.domain.character.service;
 
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
+
 /**
  * Serviço de progressão do personagem: fórmulas de XP, nível, PEA e PP.
  *
@@ -52,7 +55,7 @@ public final class ProgressionService {
      * @return XP necessário para o próximo nível
      */
     public static long xpForLevel(int n) {
-        if (n < 1) throw new IllegalArgumentException("Nível deve ser >= 1, recebido: " + n);
+        if (n < 1) throw new ValidationException("Nível deve ser >= 1, recebido: " + n);
         return (long) Math.ceil(XP_A * Math.pow(Math.log(n + XP_B), XP_C));
     }
 
@@ -63,7 +66,7 @@ public final class ProgressionService {
      * @return soma acumulada do XP por nível
      */
     public static long totalXpForLevel(int n) {
-        if (n < 1) throw new IllegalArgumentException("Nível deve ser >= 1, recebido: " + n);
+        if (n < 1) throw new ValidationException("Nível deve ser >= 1, recebido: " + n);
 
         long total = 0;
         for (int i = 1; i <= n; i++) {
@@ -80,7 +83,7 @@ public final class ProgressionService {
      * @return nível resultante para o XP informado
      */
     public static int levelFromAccumulatedXp(long xpAccumulated) {
-        if (xpAccumulated < 0) throw new IllegalArgumentException("XP acumulado deve ser >= 0");
+        if (xpAccumulated < 0) throw new ValidationException("XP acumulado deve ser >= 0");
 
         int level = 1;
         long nextLevelThreshold = totalXpForLevel(2);
@@ -99,7 +102,7 @@ public final class ProgressionService {
      * @return quantidade de níveis a avançar
      */
     public static int levelsGained(long xpAccumulated, int currentLevel) {
-        if (currentLevel < 1) throw new IllegalArgumentException("Nível atual deve ser >= 1");
+        if (currentLevel < 1) throw new ValidationException("Nível atual deve ser >= 1");
         return Math.max(0, levelFromAccumulatedXp(xpAccumulated) - currentLevel);
     }
 
@@ -121,7 +124,7 @@ public final class ProgressionService {
     }
 
     public static LevelUpResult evaluateLevelUp(long xpAccumulated, int currentLevel) {
-        if (currentLevel < 1) throw new IllegalArgumentException("Nível atual deve ser >= 1");
+        if (currentLevel < 1) throw new ValidationException("Nível atual deve ser >= 1");
         int targetLevel = levelFromAccumulatedXp(xpAccumulated);
         if (targetLevel <= currentLevel) {
             return new LevelUpResult(currentLevel, 0, 0, 0, 0);
@@ -180,7 +183,7 @@ public final class ProgressionService {
      * @return total acumulado de PP
      */
     public static int totalPpAtLevel(int level) {
-        if (level < 1) throw new IllegalArgumentException("Nível deve ser >= 1");
+        if (level < 1) throw new ValidationException("Nível deve ser >= 1");
         return (level + 1) / 2;
     }
 

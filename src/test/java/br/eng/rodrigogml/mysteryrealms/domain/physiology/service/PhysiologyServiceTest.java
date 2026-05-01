@@ -7,6 +7,8 @@ import br.eng.rodrigogml.mysteryrealms.domain.physiology.model.PhysiologyState;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Testes do serviço de estado fisiológico — RF-EF-01 a RF-EF-16.
@@ -707,7 +709,7 @@ class PhysiologyServiceTest {
         PhysiologyState current = freshState();
         current.setCurrentFatigue(FADIGA_MAX * 1.20);
 
-        assertThrows(IllegalStateException.class, () -> PhysiologyService.resolveTransition(previous, current));
+        assertThrows(DomainException.class, () -> PhysiologyService.resolveTransition(previous, current));
     }
 
     @Test

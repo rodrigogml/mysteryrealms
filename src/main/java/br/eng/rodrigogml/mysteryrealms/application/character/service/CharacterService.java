@@ -34,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de aplicação responsável pelo gerenciamento de personagens jogáveis:
@@ -140,10 +142,10 @@ public class CharacterService {
         requirePositiveId(userId, "character.error.invalidUserId");
         String normalizedName = normalizeAndValidateCharacterName(name);
         if (characterRepository.countByIdUser(userId) >= 50) {
-            throw new IllegalArgumentException("character.error.limitReached");
+            throw new ValidationException("character.error.limitReached");
         }
         if (characterRepository.existsByIdUserAndName(userId, normalizedName)) {
-            throw new IllegalArgumentException("character.error.nameTaken");
+            throw new ValidationException("character.error.nameTaken");
         }
 
         // Utiliza o domínio para calcular atributos iniciais
@@ -216,10 +218,10 @@ public class CharacterService {
         requirePositiveId(characterId, "character.error.invalidCharacterId");
 
         CharacterEntity character = characterRepository.findById(characterId)
-                .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+                .orElseThrow(() -> new ValidationException("character.error.notFound"));
 
         if (!character.getIdUser().equals(userId)) {
-            throw new IllegalArgumentException("character.error.notOwned");
+            throw new ValidationException("character.error.notOwned");
         }
 
         character.setLastAccessedAt(LocalDateTime.now());
@@ -240,17 +242,17 @@ public class CharacterService {
         requirePositiveId(characterId, "character.error.invalidCharacterId");
 
         CharacterEntity character = characterRepository.findById(characterId)
-                .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+                .orElseThrow(() -> new ValidationException("character.error.notFound"));
         String normalizedName = normalizeAndValidateCharacterName(newName);
 
         if (!character.getIdUser().equals(userId)) {
-            throw new IllegalArgumentException("character.error.notOwned");
+            throw new ValidationException("character.error.notOwned");
         }
         if (character.getName().equals(normalizedName)) {
             return;
         }
         if (characterRepository.existsByIdUserAndName(userId, normalizedName)) {
-            throw new IllegalArgumentException("character.error.nameTaken");
+            throw new ValidationException("character.error.nameTaken");
         }
 
         character.setName(normalizedName);
@@ -259,19 +261,19 @@ public class CharacterService {
 
     private String normalizeAndValidateCharacterName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("character.error.nameBlank");
+            throw new ValidationException("character.error.nameBlank");
         }
 
         String normalizedName = name.trim();
         if (normalizedName.length() > 100) {
-            throw new IllegalArgumentException("character.error.nameTooLong");
+            throw new ValidationException("character.error.nameTooLong");
         }
         return normalizedName;
     }
 
     private void requirePositiveId(Long id, String message) {
         if (id == null || id <= 0L) {
-            throw new IllegalArgumentException(message);
+            throw new ValidationException(message);
         }
     }
 
@@ -287,9 +289,9 @@ public class CharacterService {
         requirePositiveId(characterId, "character.error.invalidCharacterId");
 
         CharacterEntity character = characterRepository.findById(characterId)
-                .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+                .orElseThrow(() -> new ValidationException("character.error.notFound"));
         if (!character.getIdUser().equals(userId)) {
-            throw new IllegalArgumentException("character.error.notOwned");
+            throw new ValidationException("character.error.notOwned");
         }
 
         ProgressionService.LevelUpResult result = ProgressionService
@@ -329,14 +331,14 @@ public class CharacterService {
         requirePositiveId(characterId, "character.error.invalidCharacterId");
 
         if (!confirmed) {
-            throw new IllegalArgumentException("character.error.deleteConfirmationRequired");
+            throw new ValidationException("character.error.deleteConfirmationRequired");
         }
 
         CharacterEntity character = characterRepository.findById(characterId)
-                .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+                .orElseThrow(() -> new ValidationException("character.error.notFound"));
 
         if (!character.getIdUser().equals(userId)) {
-            throw new IllegalArgumentException("character.error.notOwned");
+            throw new ValidationException("character.error.notOwned");
         }
 
         coopParticipantRepository.deleteAllByIdCharacter(characterId);

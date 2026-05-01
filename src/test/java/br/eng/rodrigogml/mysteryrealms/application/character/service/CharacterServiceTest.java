@@ -39,6 +39,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Testes do serviço de personagens de aplicação — RF-PE-01 a RF-PE-05.
@@ -86,7 +88,7 @@ class CharacterServiceTest {
     @Test
     void createCharacter_limiteAtingido_lancaExcecao() {
         when(characterRepository.countByIdUser(1L)).thenReturn(50L);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.createCharacter(1L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
     }
 
@@ -108,14 +110,14 @@ class CharacterServiceTest {
 
     @Test
     void createCharacter_nomeVazio_lancaExcecao() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.createCharacter(1L, "", Race.HUMAN, CharacterClass.WARRIOR));
         assertEquals("character.error.nameBlank", ex.getMessage());
     }
 
     @Test
     void createCharacter_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.createCharacter(0L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
 
         assertEquals("character.error.invalidUserId", ex.getMessage());
@@ -126,7 +128,7 @@ class CharacterServiceTest {
     void createCharacter_nomeDuplicado_lancaExcecao() {
         when(characterRepository.countByIdUser(1L)).thenReturn(0L);
         when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.createCharacter(1L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
     }
 
@@ -158,7 +160,7 @@ class CharacterServiceTest {
 
     @Test
     void listCharacters_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.listCharacters(null));
 
         assertEquals("character.error.invalidUserId", ex.getMessage());
@@ -179,12 +181,12 @@ class CharacterServiceTest {
     @Test
     void selectCharacter_naoEncontrado_lancaExcecao() {
         when(characterRepository.findById(99L)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> service.selectCharacter(1L, 99L));
+        assertThrows(ValidationException.class, () -> service.selectCharacter(1L, 99L));
     }
 
     @Test
     void selectCharacter_personagemInvalido_lancaExcecaoSemConsultarRepositorio() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.selectCharacter(1L, 0L));
 
         assertEquals("character.error.invalidCharacterId", ex.getMessage());
@@ -195,7 +197,7 @@ class CharacterServiceTest {
     void selectCharacter_naoPertencoAoUsuario_lancaExcecao() {
         CharacterEntity character = buildEntity(1L, 2L, "Frodo");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
-        assertThrows(IllegalArgumentException.class, () -> service.selectCharacter(1L, 1L));
+        assertThrows(ValidationException.class, () -> service.selectCharacter(1L, 1L));
     }
 
     // ── RF-PE-04: Renomeação de personagem ───────────────────────────────────
@@ -214,7 +216,7 @@ class CharacterServiceTest {
 
     @Test
     void renameCharacter_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.renameCharacter(-1L, 1L, "Bilbo"));
 
         assertEquals("character.error.invalidUserId", ex.getMessage());
@@ -226,7 +228,7 @@ class CharacterServiceTest {
         CharacterEntity character = buildEntity(1L, 1L, "Frodo");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.renameCharacter(1L, 1L, "   "));
 
         assertEquals("character.error.nameBlank", ex.getMessage());
@@ -249,14 +251,14 @@ class CharacterServiceTest {
         CharacterEntity character = buildEntity(1L, 1L, "Frodo");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
         when(characterRepository.existsByIdUserAndName(1L, "Bilbo")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class, () -> service.renameCharacter(1L, 1L, "Bilbo"));
+        assertThrows(ValidationException.class, () -> service.renameCharacter(1L, 1L, "Bilbo"));
     }
 
     @Test
     void renameCharacter_naoPertencoAoUsuario_lancaExcecao() {
         CharacterEntity character = buildEntity(1L, 2L, "Frodo");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
-        assertThrows(IllegalArgumentException.class, () -> service.renameCharacter(1L, 1L, "Bilbo"));
+        assertThrows(ValidationException.class, () -> service.renameCharacter(1L, 1L, "Bilbo"));
     }
 
     @Test
@@ -317,14 +319,14 @@ class CharacterServiceTest {
     @Test
     void deleteCharacter_naoEncontrado_lancaExcecao() {
         when(characterRepository.findById(99L)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> service.deleteCharacter(1L, 99L, true));
+        assertThrows(ValidationException.class, () -> service.deleteCharacter(1L, 99L, true));
     }
 
     @Test
     void deleteCharacter_naoPertencoAoUsuario_lancaExcecao() {
         CharacterEntity character = buildEntity(1L, 2L, "Sam");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
-        assertThrows(IllegalArgumentException.class, () -> service.deleteCharacter(1L, 1L, true));
+        assertThrows(ValidationException.class, () -> service.deleteCharacter(1L, 1L, true));
     }
 
     @Test
@@ -342,7 +344,7 @@ class CharacterServiceTest {
 
     @Test
     void deleteCharacter_semConfirmacaoExplicita_lancaExcecaoSemConsultarRepositorio() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.deleteCharacter(1L, 1L));
 
         assertEquals("character.error.deleteConfirmationRequired", ex.getMessage());
@@ -352,7 +354,7 @@ class CharacterServiceTest {
 
     @Test
     void deleteCharacter_personagemInvalido_lancaExcecaoSemConsultarRepositorio() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.deleteCharacter(1L, null, true));
 
         assertEquals("character.error.invalidCharacterId", ex.getMessage());

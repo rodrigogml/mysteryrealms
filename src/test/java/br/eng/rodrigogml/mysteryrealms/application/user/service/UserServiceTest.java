@@ -49,6 +49,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Testes do serviço de usuário — RF-UA-01 a RF-UA-06.
@@ -103,7 +105,7 @@ class UserServiceTest {
     @Test
     void register_nomeUsuarioJaExiste_lancaExcecao() {
         when(userRepository.existsByUsername("jogador1")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("jogador1", "jogador@email.com", "Senha123!"));
     }
 
@@ -111,43 +113,43 @@ class UserServiceTest {
     void register_emailJaExiste_lancaExcecao() {
         when(userRepository.existsByUsername("jogador1")).thenReturn(false);
         when(userRepository.existsByEmail("jogador@email.com")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("jogador1", "jogador@email.com", "Senha123!"));
     }
 
     @Test
     void register_nomeUsuarioMenorQue3_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("ab", "jogador@email.com", "Senha123!"));
     }
 
     @Test
     void register_nomeUsuarioComEspaco_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("jo gador", "jogador@email.com", "Senha123!"));
     }
 
     @Test
     void register_nomeUsuarioComTab_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("jo\tgador", "jogador@email.com", "Senha123!"));
     }
 
     @Test
     void register_emailInvalido_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("jogador1", "emailinvalido", "Senha123!"));
     }
 
     @Test
     void register_senhaFraca_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("jogador1", "jogador@email.com", "senhafraca"));
     }
 
     @Test
     void register_senhaCurtaDemais_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.register("jogador1", "jogador@email.com", "Ab1!"));
     }
 
@@ -196,7 +198,7 @@ class UserServiceTest {
     @Test
     void confirmEmail_tokenNaoEncontrado_lancaExcecao() {
         when(emailConfirmationRepository.findByToken("invalido")).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> service.confirmEmail("invalido"));
+        assertThrows(ValidationException.class, () -> service.confirmEmail("invalido"));
     }
 
     @Test
@@ -206,7 +208,7 @@ class UserServiceTest {
         conf.setToken("tok");
         conf.setExpiresAt(LocalDateTime.now().minusHours(1));
         when(emailConfirmationRepository.findByToken("tok")).thenReturn(Optional.of(conf));
-        assertThrows(IllegalArgumentException.class, () -> service.confirmEmail("tok"));
+        assertThrows(ValidationException.class, () -> service.confirmEmail("tok"));
     }
 
     @Test
@@ -284,7 +286,7 @@ class UserServiceTest {
         when(loginAttemptRepository.findByIdUserAndAttemptTimeAfterOrderByAttemptTimeDesc(eq(1L), any()))
                 .thenReturn(List.of(failedAttempt()));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.login("jogador@email.com", "SenhaErrada1!", "127.0.0.1"));
     }
 
@@ -297,7 +299,7 @@ class UserServiceTest {
         lock.setUnlockAt(LocalDateTime.now().plusMinutes(20));
         when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.of(lock));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.login("jogador@email.com", "Senha123!", "127.0.0.1"));
     }
 
@@ -331,7 +333,7 @@ class UserServiceTest {
         user.setStatus(UserStatus.PENDING_CONFIRMATION);
         when(userRepository.findByEmail("jogador@email.com")).thenReturn(Optional.of(user));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.login("jogador@email.com", "Senha123!", "127.0.0.1"));
     }
 
@@ -351,7 +353,7 @@ class UserServiceTest {
         when(userRepository.save(any())).thenAnswer(i -> i.getArgument(0));
         when(unlockCodeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.login("jogador@email.com", "SenhaErrada1!", "127.0.0.1"));
         verify(accountLockRepository).save(any(AccountLockEntity.class));
         verify(unlockCodeRepository).save(any(UnlockCodeEntity.class));
@@ -372,7 +374,7 @@ class UserServiceTest {
                         failedAttempt(),
                         failedAttempt()));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.login("jogador@email.com", "SenhaErrada1!", "127.0.0.1"));
 
         assertEquals("user.error.passwordMismatch", ex.getMessage());
@@ -418,7 +420,7 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.empty());
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.completeTwoFactorLogin(1L, "123456"));
 
         assertEquals("user.error.userNotActive", ex.getMessage());
@@ -439,7 +441,7 @@ class UserServiceTest {
     @Test
     void logout_tokenInvalido_lancaExcecao() {
         when(sessionRepository.findByToken("invalido")).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> service.logout("invalido"));
+        assertThrows(ValidationException.class, () -> service.logout("invalido"));
     }
 
     @Test
@@ -467,7 +469,7 @@ class UserServiceTest {
         session.setExpiresAt(LocalDateTime.now().minusSeconds(1));
         when(sessionRepository.findByToken("tok")).thenReturn(Optional.of(session));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.validateSession("tok"));
 
         assertEquals("user.error.sessionExpired", ex.getMessage());
@@ -479,7 +481,7 @@ class UserServiceTest {
     void validateSession_tokenInvalido_lancaExcecao() {
         when(sessionRepository.findByToken("invalido")).thenReturn(Optional.empty());
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.validateSession("invalido"));
 
         assertEquals("user.error.tokenNotFound", ex.getMessage());
@@ -536,7 +538,7 @@ class UserServiceTest {
         reset.setUsed(false);
         when(passwordResetRepository.findByTokenAndUsedFalse("tok")).thenReturn(Optional.of(reset));
 
-        assertThrows(IllegalArgumentException.class, () -> service.resetPassword("tok", "NovaSenha1!"));
+        assertThrows(ValidationException.class, () -> service.resetPassword("tok", "NovaSenha1!"));
     }
 
     @Test
@@ -555,7 +557,7 @@ class UserServiceTest {
     void changeUsername_nomeEmUso_lancaExcecao() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(activeUser()));
         when(userRepository.existsByUsername("novoNome")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class, () -> service.changeUsername(1L, "novoNome"));
+        assertThrows(ValidationException.class, () -> service.changeUsername(1L, "novoNome"));
     }
 
     @Test
@@ -574,7 +576,7 @@ class UserServiceTest {
         UserEntity user = activeUser();
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.changePassword(1L, "SenhaErrada1!", "NovaSenha1!"));
     }
 
@@ -595,7 +597,7 @@ class UserServiceTest {
     @Test
     void requestEmailChange_emailEmUso_lancaExcecao() {
         when(userRepository.existsByEmail("novo@email.com")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class, () -> service.requestEmailChange(1L, "novo@email.com"));
+        assertThrows(ValidationException.class, () -> service.requestEmailChange(1L, "novo@email.com"));
     }
 
     @Test
@@ -652,7 +654,7 @@ class UserServiceTest {
         when(unlockCodeRepository.findTopByIdUserAndUsedFalseOrderByExpiresAtDesc(1L)).thenReturn(Optional.empty());
         when(recoveryCodeRepository.findAllByIdUserAndUsedFalse(1L)).thenReturn(Collections.emptyList());
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.requestAccountDeletion(1L, "000000"));
         assertEquals("user.error.invalidSecondFactorCode", ex.getMessage());
     }
@@ -696,14 +698,14 @@ class UserServiceTest {
 
         when(emailConfirmationRepository.findByToken("delete-token")).thenReturn(Optional.of(confirmation));
 
-        assertThrows(IllegalArgumentException.class, () -> service.confirmAccountDeletion("delete-token"));
+        assertThrows(ValidationException.class, () -> service.confirmAccountDeletion("delete-token"));
     }
 
     @Test
     void confirmAccountDeletion_tokenNaoEncontrado_lancaExcecao() {
         when(emailConfirmationRepository.findByToken("delete-token")).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.confirmAccountDeletion("delete-token"));
+        assertThrows(ValidationException.class, () -> service.confirmAccountDeletion("delete-token"));
     }
 
     @Test
@@ -804,7 +806,7 @@ class UserServiceTest {
         when(unlockCodeRepository.findTopByIdUserAndUsedFalseOrderByExpiresAtDesc(1L)).thenReturn(Optional.empty());
         when(recoveryCodeRepository.findAllByIdUserAndUsedFalse(1L)).thenReturn(Collections.emptyList());
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.disableTwoFactor(1L, "000000"));
         assertEquals("user.error.invalidSecondFactorCode", ex.getMessage());
     }
@@ -814,7 +816,7 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(activeUser()));
         when(twoFactorAuthRepository.findByIdUser(1L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.disableTwoFactor(1L, "000000"));
+        assertThrows(ValidationException.class, () -> service.disableTwoFactor(1L, "000000"));
     }
 
     @Test
@@ -851,7 +853,7 @@ class UserServiceTest {
     @Test
     void validateTotpCode_tfaNaoHabilitado_lancaExcecao() {
         when(twoFactorAuthRepository.findByIdUser(1L)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> service.validateTotpCode(1L, "123456"));
+        assertThrows(ValidationException.class, () -> service.validateTotpCode(1L, "123456"));
     }
 
     @Test
@@ -892,7 +894,7 @@ class UserServiceTest {
         when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.of(lock));
         when(unlockCodeRepository.findTopByIdUserAndUsedFalseOrderByExpiresAtDesc(1L)).thenReturn(Optional.empty());
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.unlockAccount(1L, "654321"));
         assertEquals("user.error.unlockCodeNotFound", ex.getMessage());
     }
@@ -914,7 +916,7 @@ class UserServiceTest {
         when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.of(lock));
         when(unlockCodeRepository.findTopByIdUserAndUsedFalseOrderByExpiresAtDesc(1L)).thenReturn(Optional.of(code));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.unlockAccount(1L, "111111"));
         assertEquals("user.error.unlockCodeInvalid", ex.getMessage());
     }
