@@ -145,12 +145,29 @@ class CharacterServiceTest {
         verify(worldInstanceRepository).save(argThat(w -> w.getIdCharacter().equals(10L)));
     }
 
+    @Test
+    void createCharacter_comIdentidadeCompleta_persisteCamposInformados() {
+        when(characterRepository.countByIdUser(1L)).thenReturn(0L);
+        when(characterRepository.existsByIdUserAndName(1L, "Eowyn")).thenReturn(false);
+        CharacterEntity saved = buildEntity(11L, 1L, "Eowyn");
+        when(characterRepository.save(any())).thenReturn(saved);
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        service.createCharacter(1L, "Eowyn", "of Rohan", Gender.FEMALE, 22, Race.HUMAN, CharacterClass.WARRIOR);
+
+        verify(characterRepository).save(argThat(c ->
+                "Eowyn".equals(c.getName())
+                        && "of Rohan".equals(c.getSurname())
+                        && Gender.FEMALE == c.getGender()
+                        && c.getInitialAge() == 22));
+    }
+
     // ── RF-PE-03: Listagem e seleção de personagem ───────────────────────────
 
     @Test
     void listCharacters_retornaPersonagensDoUsuario() {
         List<CharacterEntity> lista = List.of(buildEntity(1L, 5L, "Gimli"));
-        when(characterRepository.findAllByIdUser(5L)).thenReturn(lista);
+        when(characterRepository.findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(5L)).thenReturn(lista);
 
         List<CharacterEntity> result = service.listCharacters(5L);
 
@@ -164,7 +181,7 @@ class CharacterServiceTest {
                 () -> service.listCharacters(null));
 
         assertEquals("character.error.invalidUserId", ex.getMessage());
-        verify(characterRepository, never()).findAllByIdUser(any());
+        verify(characterRepository, never()).findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(any());
     }
 
     @Test

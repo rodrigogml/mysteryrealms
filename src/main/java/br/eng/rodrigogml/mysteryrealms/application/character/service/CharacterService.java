@@ -139,8 +139,28 @@ public class CharacterService {
      *                                  ou já existir um personagem com o mesmo nome
      */
     public CharacterEntity createCharacter(Long userId, String name, Race race, CharacterClass characterClass) {
+        return createCharacter(userId, name, "Unknown", Gender.OTHER, 20, race, characterClass);
+    }
+
+    /**
+     * Cria um novo personagem para o usuário com identidade completa.
+     *
+     * @param userId         o ID do usuário dono do personagem
+     * @param name           o nome do personagem
+     * @param surname        o sobrenome do personagem
+     * @param gender         o gênero do personagem
+     * @param initialAge     idade inicial do personagem (>= 1)
+     * @param race           a raça do personagem
+     * @param characterClass a classe do personagem
+     * @return a entidade do personagem criado
+     */
+    public CharacterEntity createCharacter(Long userId, String name, String surname, Gender gender, int initialAge,
+            Race race, CharacterClass characterClass) {
         requirePositiveId(userId, "character.error.invalidUserId");
         String normalizedName = normalizeAndValidateCharacterName(name);
+        String normalizedSurname = normalizeAndValidateCharacterSurname(surname);
+        requireValidInitialAge(initialAge);
+        requireNonNullGender(gender);
         if (characterRepository.countByIdUser(userId) >= 50) {
             throw new ValidationException("character.error.limitReached");
         }
@@ -149,7 +169,7 @@ public class CharacterService {
         }
 
         // Utiliza o domínio para calcular atributos iniciais
-        Character domainChar = new Character(normalizedName, "Unknown", Gender.OTHER, race, characterClass, 20);
+        Character domainChar = new Character(normalizedName, normalizedSurname, gender, race, characterClass, initialAge);
         AttributeSet attrs = domainChar.getAttributes();
 
         CharacterEntity entity = new CharacterEntity();
@@ -202,7 +222,7 @@ public class CharacterService {
      */
     public List<CharacterEntity> listCharacters(Long userId) {
         requirePositiveId(userId, "character.error.invalidUserId");
-        return characterRepository.findAllByIdUser(userId);
+        return characterRepository.findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(userId);
     }
 
     /**
@@ -269,6 +289,29 @@ public class CharacterService {
             throw new ValidationException("character.error.nameTooLong");
         }
         return normalizedName;
+    }
+
+    private String normalizeAndValidateCharacterSurname(String surname) {
+        if (surname == null || surname.isBlank()) {
+            throw new ValidationException("character.error.surnameBlank");
+        }
+        String normalizedSurname = surname.trim();
+        if (normalizedSurname.length() > 100) {
+            throw new ValidationException("character.error.surnameTooLong");
+        }
+        return normalizedSurname;
+    }
+
+    private void requireValidInitialAge(int initialAge) {
+        if (initialAge < 1) {
+            throw new ValidationException("character.error.initialAgeInvalid");
+        }
+    }
+
+    private void requireNonNullGender(Gender gender) {
+        if (gender == null) {
+            throw new ValidationException("character.error.genderRequired");
+        }
     }
 
     private void requirePositiveId(Long id, String message) {
