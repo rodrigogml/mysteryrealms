@@ -8,6 +8,9 @@ import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyle;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyleEvaluation;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.*;
 import br.eng.rodrigogml.mysteryrealms.domain.social.service.SocialService;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.DiaryImpactMarkerEntity;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.DiaryImpactRelationshipEntity;
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.DiaryImpactReputationEntity;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.*;
 import org.junit.jupiter.api.Test;
 
@@ -465,6 +468,89 @@ class SocialSystemTest {
         assertEquals(-66, result.newReputation());
         assertNotNull(result.diaryEntry());
         assertEquals(-3, result.diaryEntry().impacts().factionReputationDeltas().get("faccao_mercadores"));
+    }
+
+
+    @Test
+    void socialCycle_sucesso_persisteHistoricoRelacionamentoEReputacao() {
+        DialogOption opcao = new DialogOption(
+                "op7", DiscourseStyle.DIPLOMATIC, "Negocio um acordo com os guardas.",
+                SocialTest.fixedDC("persuasao", 14),
+                new DialogEffects(
+                        Map.of("npc_ferreiro", 8),
+                        Map.of("loc_cidade", 3),
+                        Map.of(),
+                        "Acordo aceito."),
+                DialogEffects.empty());
+        DialogNode node = new DialogNode("dlg_007", "npc_ferreiro", "Qual sua proposta?", List.of(opcao));
+
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                10, 20, node, "op7", true, 485L, buildConfiguracaoMundo());
+
+        assertTrue(result.success());
+        assertEquals(18, result.newNpcRelationship());
+        assertEquals(24, result.newReputation());
+        assertNotNull(result.diaryEntry());
+        assertEquals(8, result.diaryEntry().impacts().npcRelationshipDeltas().get("npc_ferreiro"));
+        assertEquals(3, result.diaryEntry().impacts().localityReputationDeltas().get("loc_cidade"));
+
+        DiaryImpactRelationshipEntity relationshipEntity = new DiaryImpactRelationshipEntity();
+        relationshipEntity.setIdDiaryEntry(7L);
+        relationshipEntity.setTargetId("npc_ferreiro");
+        relationshipEntity.setDelta(result.diaryEntry().impacts().npcRelationshipDeltas().get("npc_ferreiro"));
+
+        DiaryImpactReputationEntity reputationEntity = new DiaryImpactReputationEntity();
+        reputationEntity.setIdDiaryEntry(7L);
+        reputationEntity.setTargetId("loc_cidade");
+        reputationEntity.setDelta(result.diaryEntry().impacts().localityReputationDeltas().get("loc_cidade"));
+
+        assertEquals(7L, relationshipEntity.getIdDiaryEntry());
+        assertEquals("npc_ferreiro", relationshipEntity.getTargetId());
+        assertEquals(8, relationshipEntity.getDelta());
+        assertEquals(7L, reputationEntity.getIdDiaryEntry());
+        assertEquals("loc_cidade", reputationEntity.getTargetId());
+        assertEquals(3, reputationEntity.getDelta());
+    }
+
+    @Test
+    void socialCycle_falha_persisteHistoricoComMarcador() {
+        DialogOption opcaoComTeste = new DialogOption(
+                "op8", DiscourseStyle.IRONIC, "Provoco o capitão.",
+                SocialTest.fixedDC("atuacao", 18),
+                DialogEffects.empty(),
+                new DialogEffects(
+                        Map.of("npc_capitao", -6),
+                        Map.of(),
+                        Map.of("faccao_guardas", -2),
+                        "O capitão ficou ofendido."));
+        DialogNode node = new DialogNode("dlg_008", "npc_capitao", "Cuidado com suas palavras", List.of(opcaoComTeste));
+
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                -5, -20, node, "op8", false, 500L, buildConfiguracaoMundo());
+
+        assertFalse(result.success());
+        assertEquals(-11, result.newNpcRelationship());
+        assertEquals(-22, result.newReputation());
+
+        DiaryImpact impactWithMarker = new DiaryImpact(
+                result.diaryEntry().impacts().npcRelationshipDeltas(),
+                result.diaryEntry().impacts().localityReputationDeltas(),
+                result.diaryEntry().impacts().factionReputationDeltas(),
+                List.of("mk_guardas_alertados"));
+
+        DiaryImpactMarkerEntity markerEntity = new DiaryImpactMarkerEntity();
+        markerEntity.setIdDiaryEntry(8L);
+        markerEntity.setMarkerId("mk_guardas_alertados");
+        markerEntity.setOperation("set_flag");
+        markerEntity.setValue(1);
+
+        assertEquals(-6, impactWithMarker.npcRelationshipDeltas().get("npc_capitao"));
+        assertEquals(-2, impactWithMarker.factionReputationDeltas().get("faccao_guardas"));
+        assertEquals(List.of("mk_guardas_alertados"), impactWithMarker.alteredMarkers());
+        assertEquals(8L, markerEntity.getIdDiaryEntry());
+        assertEquals("mk_guardas_alertados", markerEntity.getMarkerId());
+        assertEquals("set_flag", markerEntity.getOperation());
+        assertEquals(1, markerEntity.getValue());
     }
 
 // ── Helpers ───────────────────────────────────────────────────────────────
