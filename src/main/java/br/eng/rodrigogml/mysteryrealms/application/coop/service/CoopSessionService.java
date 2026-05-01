@@ -73,7 +73,7 @@ public class CoopSessionService {
         session.setIdHostCharacter(hostCharacterId);
         session.setIdWorldInstance(worldInstanceId);
         session.setMaxPlayers(maxPlayers);
-        session.setStatus(CoopSessionStatus.ACTIVE);
+        session.setStatus(CoopSessionStatus.LOBBY);
         session.setCreatedAt(LocalDateTime.now());
         session = sessionRepository.save(session);
 
@@ -182,6 +182,74 @@ public class CoopSessionService {
         sessionRepository.save(session);
     }
 
+
+    /**
+     * Inicia a sessão quando estiver no lobby e houver ao menos 2 participantes ativos.
+     *
+     * @param sessionId o ID da sessão
+     * @param hostCharacterId o ID do anfitrião
+     */
+    public void startSession(Long sessionId, Long hostCharacterId) {
+        CoopSessionEntity session = findActiveSessionById(sessionId);
+        validateHost(session, hostCharacterId);
+        if (session.getStatus() != CoopSessionStatus.LOBBY) {
+            throw new IllegalArgumentException("coop.error.sessionCannotStart");
+        }
+        long activeParticipants = participantRepository.countByIdCoopSessionAndLeftAtIsNull(sessionId);
+        if (activeParticipants < 2) {
+            throw new IllegalArgumentException("coop.error.notEnoughPlayers");
+        }
+        session.setStatus(CoopSessionStatus.IN_PROGRESS);
+        sessionRepository.save(session);
+    }
+
+    /**
+     * Pausa a sessão em andamento.
+     */
+    public void pauseSession(Long sessionId, Long hostCharacterId) {
+        CoopSessionEntity session = findActiveSessionById(sessionId);
+        validateHost(session, hostCharacterId);
+        if (session.getStatus() != CoopSessionStatus.IN_PROGRESS) {
+            throw new IllegalArgumentException("coop.error.sessionCannotPause");
+        }
+        session.setStatus(CoopSessionStatus.PAUSED);
+        sessionRepository.save(session);
+    }
+
+    /**
+     * Retoma a sessão pausada.
+     */
+    public void resumeSession(Long sessionId, Long hostCharacterId) {
+        CoopSessionEntity session = findActiveSessionById(sessionId);
+        validateHost(session, hostCharacterId);
+        if (session.getStatus() != CoopSessionStatus.PAUSED) {
+            throw new IllegalArgumentException("coop.error.sessionCannotResume");
+        }
+        session.setStatus(CoopSessionStatus.IN_PROGRESS);
+        sessionRepository.save(session);
+    }
+
+    /**
+     * Valida concorrência lógica para ação em turno.
+     */
+    public void validateTurnAction(Long sessionId, Long characterId, Long currentTurnCharacterId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        requirePositiveId(characterId, "coop.error.invalidCharacterId");
+        requirePositiveId(currentTurnCharacterId, "coop.error.invalidTurnCharacterId");
+
+        CoopSessionEntity session = findActiveSessionById(sessionId);
+        if (session.getStatus() != CoopSessionStatus.IN_PROGRESS) {
+            throw new IllegalArgumentException("coop.error.sessionNotInProgress");
+        }
+
+        participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+
+        if (!characterId.equals(currentTurnCharacterId)) {
+            throw new IllegalArgumentException("coop.error.actionOutOfTurn");
+        }
+    }
+
     /**
      * Lista os participantes ativos de uma sessão cooperativa.
      *
@@ -200,7 +268,7 @@ public class CoopSessionService {
      * @return lista de sessões ativas
      */
     public List<CoopSessionEntity> listActiveSessions() {
-        return sessionRepository.findAllByStatus(CoopSessionStatus.ACTIVE);
+        return sessionRepository.findAllByStatus(CoopSessionStatus.LOBBY);
     }
 
     /**
@@ -218,7 +286,7 @@ public class CoopSessionService {
                 continue;
             }
             CoopSessionEntity session = sessionRepository.findById(p.getIdCoopSession()).orElse(null);
-            if (session != null && session.getStatus() == CoopSessionStatus.ACTIVE) {
+            if (session != null && session.getStatus() != CoopSessionStatus.CLOSED) {
                 return true;
             }
         }
@@ -370,6 +438,22 @@ public class CoopSessionService {
     private void requireActiveSession(CoopSessionEntity session) {
         if (session.getStatus() != CoopSessionStatus.ACTIVE) {
             throw new ValidationException("coop.error.sessionNotActive");
+        }
+    }
+
+
+    private CoopSessionEntity findActiveSessionById(Long sessionId) {
+        requirePositiveId(sessionId, "coop.error.invalidSessionId");
+        CoopSessionEntity session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+        requireActiveSession(session);
+        return session;
+    }
+
+    private void validateHost(CoopSessionEntity session, Long hostCharacterId) {
+        requirePositiveId(hostCharacterId, "coop.error.invalidHostCharacterId");
+        if (!session.getIdHostCharacter().equals(hostCharacterId)) {
+            throw new IllegalArgumentException("coop.error.notHost");
         }
     }
 
