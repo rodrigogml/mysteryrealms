@@ -80,6 +80,7 @@ public class UserService {
     private final CharacterRepository characterRepository;
     private final CharacterService characterService;
     private final EmailService emailService;
+    private final UserInputValidationService userInputValidationService;
 
     /**
      * Cria o serviço com as dependências necessárias.
@@ -102,7 +103,8 @@ public class UserService {
             UnlockCodeRepository unlockCodeRepository, EmailConfirmationRepository emailConfirmationRepository,
             PasswordResetRepository passwordResetRepository, TwoFactorAuthRepository twoFactorAuthRepository,
             RecoveryCodeRepository recoveryCodeRepository, CharacterRepository characterRepository,
-            CharacterService characterService, EmailService emailService) {
+            CharacterService characterService, EmailService emailService,
+            UserInputValidationService userInputValidationService) {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
         this.loginAttemptRepository = loginAttemptRepository;
@@ -115,6 +117,7 @@ public class UserService {
         this.characterRepository = characterRepository;
         this.characterService = characterService;
         this.emailService = emailService;
+        this.userInputValidationService = userInputValidationService;
     }
 
     private String hashPassword(String raw) {
@@ -131,38 +134,6 @@ public class UserService {
         }
     }
 
-    private void validateUsername(String username) {
-        if (username == null || username.isBlank()) {
-            throw new ValidationException("user.error.usernameBlank");
-        }
-        if (username.length() < 3) {
-            throw new ValidationException("user.error.usernameTooShort");
-        }
-        if (username.chars().anyMatch(Character::isWhitespace)) {
-            throw new ValidationException("user.error.usernameHasSpaces");
-        }
-    }
-
-    private void validateEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new ValidationException("user.error.emailBlank");
-        }
-        if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
-            throw new ValidationException("user.error.emailInvalid");
-        }
-    }
-
-    private void validatePassword(String password) {
-        if (password == null || password.isBlank()) {
-            throw new ValidationException("user.error.passwordBlank");
-        }
-        if (password.length() < 8) {
-            throw new ValidationException("user.error.passwordTooShort");
-        }
-        if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*[\\d\\W]).*$")) {
-            throw new ValidationException("user.error.passwordWeak");
-        }
-    }
 
     /**
      * Registra um novo usuário no sistema com status pendente de confirmação de e-mail.
@@ -175,9 +146,9 @@ public class UserService {
      */
     public UserEntity register(String username, String email, String rawPassword) {
         purgeExpiredPendingRegistrations();
-        validateUsername(username);
-        validateEmail(email);
-        validatePassword(rawPassword);
+        userInputValidationService.validateUsername(username);
+        userInputValidationService.validateEmail(email);
+        userInputValidationService.validatePassword(rawPassword);
 
         if (userRepository.existsByUsername(username)) {
             throw new ValidationException("user.error.usernameTaken");
@@ -230,7 +201,7 @@ public class UserService {
             user.setStatus(UserStatus.ACTIVE);
         } else if (confirmation.getType() == EmailConfirmationType.EMAIL_CHANGE) {
             String newEmail = confirmation.getNewEmail();
-            validateEmail(newEmail);
+            userInputValidationService.validateEmail(newEmail);
             if (!user.getEmail().equals(newEmail) && userRepository.existsByEmail(newEmail)) {
                 throw new ValidationException("user.error.emailTaken");
             }
@@ -473,7 +444,7 @@ public class UserService {
             throw new ValidationException("user.error.tokenExpired");
         }
 
-        validatePassword(newPassword);
+        userInputValidationService.validatePassword(newPassword);
 
         UserEntity user = userRepository.findById(reset.getIdUser())
                 .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
@@ -505,7 +476,7 @@ public class UserService {
             throw new ValidationException("user.error.passwordMismatch");
         }
 
-        validatePassword(newPassword);
+        userInputValidationService.validatePassword(newPassword);
         user.setPasswordHash(hashPassword(newPassword));
         userRepository.save(user);
     }
@@ -518,7 +489,7 @@ public class UserService {
      * @throws IllegalArgumentException se o nome for inválido ou já estiver em uso
      */
     public void changeUsername(Long userId, String newUsername) {
-        validateUsername(newUsername);
+        userInputValidationService.validateUsername(newUsername);
 
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
@@ -539,7 +510,7 @@ public class UserService {
      * @throws IllegalArgumentException se o e-mail for inválido ou já estiver em uso
      */
     public void requestEmailChange(Long userId, String newEmail) {
-        validateEmail(newEmail);
+        userInputValidationService.validateEmail(newEmail);
 
         if (userRepository.existsByEmail(newEmail)) {
             throw new ValidationException("user.error.emailTaken");
