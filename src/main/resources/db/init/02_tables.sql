@@ -451,6 +451,8 @@ CREATE TABLE coopSession (
     id              BIGINT      NOT NULL AUTO_INCREMENT,
     -- Instância de mundo do anfitrião
     idWorldInstance BIGINT      NOT NULL,
+    -- Personagem anfitrião, dono da instância compartilhada
+    idHostCharacter BIGINT      NOT NULL,
     -- Máximo de jogadores simultâneos incluindo o anfitrião (RF-MJ-06)
     maxPlayers      INT         NOT NULL DEFAULT 4,
     -- Estado: ACTIVE, CLOSED
@@ -458,7 +460,10 @@ CREATE TABLE coopSession (
     createdAt       DATETIME(3) NOT NULL,
     PRIMARY KEY (id),
     KEY idx_coopSession_idWorldInstance (idWorldInstance),
-    CONSTRAINT fk_coopSession_worldInstance FOREIGN KEY (idWorldInstance) REFERENCES worldInstance (id)
+    KEY idx_coopSession_idHostCharacter (idHostCharacter),
+    UNIQUE KEY uk_coopSession_idWorldInstance_status (idWorldInstance, status),
+    CONSTRAINT fk_coopSession_worldInstance FOREIGN KEY (idWorldInstance) REFERENCES worldInstance (id),
+    CONSTRAINT fk_coopSession_hostCharacter FOREIGN KEY (idHostCharacter) REFERENCES character (id)
 );
 
 -- Participantes de uma sessão co-op (RF-MJ-03)
