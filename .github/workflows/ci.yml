@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-build:
+    name: Lint, type-check, tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25 with Maven cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - name: Install dependencies
+        run: mvn -B -ntp dependency:go-offline
+
+      - name: Lint (Maven validate)
+        run: mvn -B -ntp validate
+
+      - name: Type-check (Java compile)
+        run: mvn -B -ntp -DskipTests compile
+
+      - name: Run tests
+        run: mvn -B -ntp test
+
+      - name: Build validation
+        run: mvn -B -ntp -DskipTests package
