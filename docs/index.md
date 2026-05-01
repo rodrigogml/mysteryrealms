@@ -366,3 +366,14 @@ Documentação de apoio técnico para planejamento e execução da implementaç�
   - [Fluxos principais identificados](./arquitetura.md#fluxos-principais-identificados)
   - [Dependências críticas e riscos de manutenção](./arquitetura.md#dependências-críticas-e-riscos-de-manutenção)
   - [Hotspots (arquivos sensíveis a mudanças)](./arquitetura.md#hotspots-arquivos-sensíveis-a-mudanças)
+
+
+- [Suíte Mínima de Testes dos Módulos Core](./implementacao/suiteMinimaDeTestes.md)
+  - [Objetivo](./implementacao/suiteMinimaDeTestes.md#objetivo)
+  - [Módulos Core e Funcionalidades Essenciais](./implementacao/suiteMinimaDeTestes.md#módulos-core-e-funcionalidades-essenciais)
+  - [Cobertura Atual da Suíte Mínima](./implementacao/suiteMinimaDeTestes.md#cobertura-atual-da-suíte-mínima)
+    - [Testes unitários (regras de negócio principais)](./implementacao/suiteMinimaDeTestes.md#testes-unitários-regras-de-negócio-principais)
+    - [Testes de integração (fluxos ponta a ponta críticos)](./implementacao/suiteMinimaDeTestes.md#testes-de-integração-fluxos-ponta-a-ponta-críticos)
+  - [Dados de teste reutilizáveis](./implementacao/suiteMinimaDeTestes.md#dados-de-teste-reutilizáveis)
+  - [Meta inicial de cobertura](./implementacao/suiteMinimaDeTestes.md#meta-inicial-de-cobertura)
+  - [Próximos passos](./implementacao/suiteMinimaDeTestes.md#próximos-passos)
