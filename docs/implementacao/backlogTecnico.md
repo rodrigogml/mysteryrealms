@@ -93,3 +93,18 @@ Organizar épicos técnicos de curto e médio prazo para acelerar a evolução d
 2. P0 de progressão e combate (PP-01, PP-02, CF-01).
 3. P0 de instância de mundo e social (WM-01, SS-01).
 4. P1 remanescentes por módulo, priorizando os de maior dependência cruzada.
+
+
+## Módulo: Fluxo de Personagens (Pós-Login)
+
+### Épico 7 — Gestão e criação de personagem ponta a ponta
+| Item | Problema | Impacto | Prioridade | Esforço | Dependências | Classes/arquivos iniciais |
+|---|---|---|---|---|---|---|
+| FC-01 | Fluxo pós-login de personagens não está formalizado de ponta a ponta (listar, selecionar, criar, renomear, excluir). | Experiência inconsistente e risco de gaps de implementação entre backend/frontend. | P0 | M | Requisitos de Personagens e Instância de Mundo alinhados. | `docs/requisitos/aplicacao/personagens.md`, `docs/requisitos/aplicacao/instanciaDeMundo.md`, `docs/implementacao/fluxoCriacaoDePersonagem.md` |
+| FC-02 | Criação de personagem não está totalmente alinhada com campos obrigatórios da ficha (`sobrenome`, `genero`, `idadeInicial`). | Pode gerar inconsistência de dados e retrabalho de migração. | P0 | P | Alinhamento RF-PE-02 com RF-FP-01. | `docs/requisitos/aplicacao/personagens.md`, `docs/requisitos/mecanica/fichaDoPersonagem.md` |
+| FC-03 | Falta definição de bootstrap de mundo no momento da criação (origem inicial, seed de dados básicos). | Personagem criado pode iniciar em estado incompleto/inconsistente. | P1 | M | Definições de mundo mínimas aprovadas. | `docs/mundo/` (novos documentos), `docs/requisitos/aplicacao/instanciaDeMundo.md` |
+
+**Critérios de aceite do épico**
+- Fluxo pós-login documentado e validável por cenários funcionais.
+- Contrato de criação sem conflito com requisitos de ficha.
+- Definições mínimas de mundo para bootstrap inicial publicadas em `/docs/mundo/`.

@@ -3,6 +3,14 @@
 ## Requisitos do Sistema
 ## Implementação do Sistema
 
+- [Fluxo de Criação e Gestão de Personagens](./implementacao/fluxoCriacaoDePersonagem.md)
+  - [Objetivo](./implementacao/fluxoCriacaoDePersonagem.md#objetivo)
+  - [Escopo](./implementacao/fluxoCriacaoDePersonagem.md#escopo)
+  - [Fluxo principal (visão funcional)](./implementacao/fluxoCriacaoDePersonagem.md#fluxo-principal-visão-funcional)
+  - [Requisitos faltantes ou ambíguos](./implementacao/fluxoCriacaoDePersonagem.md#requisitos-faltantes-ou-ambíguos)
+  - [Plano de implementação (tarefas)](./implementacao/fluxoCriacaoDePersonagem.md#plano-de-implementação-tarefas)
+  - [Critérios de pronto (DoD)](./implementacao/fluxoCriacaoDePersonagem.md#critérios-de-pronto-dod)
+
 - [Roadmap do Projeto](./roadmap.md)
   - [Objetivo](./roadmap.md#objetivo)
   - [Backlog agrupado por épico](./roadmap.md#backlog-agrupado-por-épico)
