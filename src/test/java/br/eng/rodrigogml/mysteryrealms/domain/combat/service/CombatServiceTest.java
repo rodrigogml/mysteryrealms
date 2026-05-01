@@ -7,9 +7,6 @@ import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.ResistanceType;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.model.DiceRoller;
 import org.junit.jupiter.api.Test;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -142,6 +139,65 @@ class CombatServiceTest {
         int danoFinal = CombatService.resolveDamage(30, 0, fixture.resistanceFor(DamageType.SLASHING) / 100.0);
 
         assertEquals(22, danoFinal);
+    }
+
+    @Test
+    void pipelineEtapasControladas_acertoBloqueioResistenciaEAflicao() {
+        int testeAcerto = CombatService.rollAttack(7, DiceRoller.fixed(12));
+        assertTrue(CombatService.hit(testeAcerto, 18));
+
+        int posBloqueio = CombatService.damageAfterBlock(40, 25);
+        assertEquals(30, posBloqueio);
+
+        int posResistencia = CombatService.damageAfterResistance(posBloqueio, 0.20);
+        assertEquals(24, posResistencia);
+
+        double chanceAflicao = CombatService.afflictionChance(0.50, 0.30, 0.05);
+        assertEquals(0.35, chanceAflicao, 1e-9);
+    }
+
+    @Test
+    void pipelineComposto_deveAplicarTodasAsEtapasQuandoAtaqueAcerta() {
+        CombatService.OffensivePipelineResult resultado = CombatService.resolveOffensivePipeline(
+                7, 18, 40, 25, 0.20, 0.50, 0.30, 0.05, false, DiceRoller.fixed(12));
+
+        assertEquals(19, resultado.testeAcerto());
+        assertTrue(resultado.acertou());
+        assertEquals(24, resultado.danoFinal());
+        assertEquals(0.35, resultado.chanceFinalAflicao(), 1e-9);
+    }
+
+    @Test
+    void pipelineComposto_deveInterromperEmFalhaDeAcerto() {
+        CombatService.OffensivePipelineResult resultado = CombatService.resolveOffensivePipeline(
+                2, 18, 40, 25, 0.20, 0.50, 0.30, 0.05, false, DiceRoller.fixed(10));
+
+        assertEquals(12, resultado.testeAcerto());
+        assertFalse(resultado.acertou());
+        assertEquals(0, resultado.danoFinal());
+        assertEquals(0.0, resultado.chanceFinalAflicao(), 1e-9);
+    }
+
+    @Test
+    void pipelineComposto_deveZerarChanceDeAflicaoComImunidadeExplicita() {
+        CombatService.OffensivePipelineResult resultado = CombatService.resolveOffensivePipeline(
+                7, 18, 40, 25, 0.20, 0.50, 0.30, 0.05, true, DiceRoller.fixed(12));
+
+        assertTrue(resultado.acertou());
+        assertEquals(24, resultado.danoFinal());
+        assertEquals(0.0, resultado.chanceFinalAflicao(), 1e-9);
+    }
+
+    @Test
+    void pipelineComposto_comSequenciaControladaDeDadosPermiteReproducao() {
+        DiceRoller dadosControlados = CombatTestFixture.sequenceDice(12, 4);
+        CombatService.OffensivePipelineResult primeiro = CombatService.resolveOffensivePipeline(
+                7, 18, 40, 25, 0.20, 0.50, 0.30, 0.05, false, dadosControlados);
+        CombatService.OffensivePipelineResult segundo = CombatService.resolveOffensivePipeline(
+                7, 18, 40, 25, 0.20, 0.50, 0.30, 0.05, false, dadosControlados);
+
+        assertTrue(primeiro.acertou());
+        assertFalse(segundo.acertou());
     }
 
     // ── RF-CT-11: aflições ───────────────────────────────────────────────────

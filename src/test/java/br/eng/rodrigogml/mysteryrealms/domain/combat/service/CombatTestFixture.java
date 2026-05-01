@@ -3,6 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.domain.combat.service;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.AfflictionType;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.DamageType;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.enums.ResistanceType;
+import br.eng.rodrigogml.mysteryrealms.domain.combat.model.DiceRoller;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -56,5 +57,15 @@ final class CombatTestFixture {
 
     ResistanceType resistanceTypeFor(DamageType damageType) {
         return ResistanceType.valueOf(damageType.name());
+    }
+
+    static DiceRoller sequenceDice(int... values) {
+        int[] idx = {0};
+        return sides -> {
+            if (idx[0] >= values.length) {
+                throw new IllegalStateException("Sequência de rolagens esgotada");
+            }
+            return values[idx[0]++];
+        };
     }
 }

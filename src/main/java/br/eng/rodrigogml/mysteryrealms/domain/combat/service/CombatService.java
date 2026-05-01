@@ -109,6 +109,36 @@ public final class CombatService {
         return testeAcerto >= defesaFinal;
     }
 
+    /**
+     * Resolve o pipeline acerto → bloqueio → resistência → aflição com entradas explícitas — RF-CT-07/08/09/10/11.
+     */
+    public static OffensivePipelineResult resolveOffensivePipeline(
+            int precisaoFinal,
+            int defesaFinal,
+            int danoBruto,
+            int bloqueioFinal,
+            double resistenciaTipo,
+            double chanceBaseAflicao,
+            double resistenciaAflicao,
+            double minChanceAflicao,
+            boolean immunidadeExplicitaAflicao,
+            DiceRoller dice) {
+        int testeAcerto = rollAttack(precisaoFinal, dice);
+        boolean acertou = hit(testeAcerto, defesaFinal);
+        if (!acertou) {
+            return new OffensivePipelineResult(testeAcerto, false, 0, 0.0);
+        }
+
+        int danoPosBloqueio = damageAfterBlock(danoBruto, bloqueioFinal);
+        int danoFinal = damageAfterResistance(danoPosBloqueio, resistenciaTipo);
+        double chanceAflicao = afflictionChance(
+                chanceBaseAflicao,
+                resistenciaAflicao,
+                minChanceAflicao,
+                immunidadeExplicitaAflicao);
+        return new OffensivePipelineResult(testeAcerto, true, danoFinal, chanceAflicao);
+    }
+
     // ── RF-CT-09: bloqueio ───────────────────────────────────────────────────
 
     /**
@@ -299,5 +329,12 @@ public final class CombatService {
                 || forcedDisplacementOver3m
                 || triggerBecameInvalid
                 || nextTurnStarted;
+    }
+
+    public record OffensivePipelineResult(
+            int testeAcerto,
+            boolean acertou,
+            int danoFinal,
+            double chanceFinalAflicao) {
     }
 }
