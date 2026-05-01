@@ -16,6 +16,7 @@ import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanc
 import br.eng.rodrigogml.mysteryrealms.application.world.service.WorldInstanceService;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
+import br.eng.rodrigogml.mysteryrealms.support.TestDataFactory;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.service.CombatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,13 +72,15 @@ class IntegrationCriticalFlowsTest {
 
     @Test
     void shouldCreateUserAndCharacterWithInitialWorldInstance() {
-        UserEntity user = userService.register("heroUser", "hero@example.com", "StrongP@ss1");
+        TestDataFactory.RegistrationData registration = TestDataFactory.registration("hero");
+        UserEntity user = userService.register(registration.username(), registration.email(), registration.password());
 
+        TestDataFactory.CharacterCreationData characterData = TestDataFactory.warrior("Arannis");
         CharacterEntity character = characterService.createCharacter(
                 user.getId(),
-                "Arannis",
-                Race.HUMAN,
-                CharacterClass.WARRIOR);
+                characterData.name(),
+                characterData.race(),
+                characterData.characterClass());
 
         assertNotNull(character.getId());
         assertEquals(user.getId(), character.getIdUser());
@@ -86,11 +89,15 @@ class IntegrationCriticalFlowsTest {
 
     @Test
     void shouldJoinWorldInstanceThroughCoopSession() {
-        UserEntity hostUser = userService.register("hostUser", "host@example.com", "StrongP@ss1");
-        CharacterEntity host = characterService.createCharacter(hostUser.getId(), "Host", Race.HUMAN, CharacterClass.WARRIOR);
+        TestDataFactory.RegistrationData hostRegistration = TestDataFactory.registration("host");
+        UserEntity hostUser = userService.register(hostRegistration.username(), hostRegistration.email(), hostRegistration.password());
+        TestDataFactory.CharacterCreationData hostData = TestDataFactory.warrior("Host");
+        CharacterEntity host = characterService.createCharacter(hostUser.getId(), hostData.name(), hostData.race(), hostData.characterClass());
 
-        UserEntity guestUser = userService.register("guestUser", "guest@example.com", "StrongP@ss1");
-        CharacterEntity guest = characterService.createCharacter(guestUser.getId(), "Guest", Race.ELF, CharacterClass.MAGE);
+        TestDataFactory.RegistrationData guestRegistration = TestDataFactory.registration("guest");
+        UserEntity guestUser = userService.register(guestRegistration.username(), guestRegistration.email(), guestRegistration.password());
+        TestDataFactory.CharacterCreationData guestData = TestDataFactory.mage("Guest");
+        CharacterEntity guest = characterService.createCharacter(guestUser.getId(), guestData.name(), guestData.race(), guestData.characterClass());
 
         WorldInstanceEntity hostWorld = worldInstanceService.loadWorldInstance(host.getId());
         CoopSessionEntity session = coopSessionService.createSession(host.getId(), hostWorld.getId(), 2);
@@ -106,7 +113,7 @@ class IntegrationCriticalFlowsTest {
     void shouldPersistCharacterStateAfterCombatAction() {
         UserEntity user = userService.register("combatUser", "combat@example.com", "StrongP@ss1");
         CharacterEntity attacker = characterService.createCharacter(user.getId(), "Attacker", Race.HUMAN, CharacterClass.WARRIOR);
-        CharacterEntity defender = characterService.createCharacter(user.getId(), "Defender", Race.DWARF, CharacterClass.GUARDIAN);
+        CharacterEntity defender = characterService.createCharacter(user.getId(), "Defender", Race.DWARF, CharacterClass.CLERIC);
 
         int rawDamage = 20;
         int block = 10;

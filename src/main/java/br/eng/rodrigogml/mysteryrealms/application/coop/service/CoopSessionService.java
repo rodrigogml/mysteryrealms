@@ -101,7 +101,7 @@ public class CoopSessionService {
         CoopSessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
 
-        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
+        if (session.getStatus() != CoopSessionStatus.IN_PROGRESS) {
             throw new ValidationException("coop.error.sessionNotActive");
         }
 
@@ -436,7 +436,7 @@ public class CoopSessionService {
      * @throws IllegalArgumentException se a sessão não estiver ativa
      */
     private void requireActiveSession(CoopSessionEntity session) {
-        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
+        if (session.getStatus() != CoopSessionStatus.IN_PROGRESS) {
             throw new ValidationException("coop.error.sessionNotActive");
         }
     }
