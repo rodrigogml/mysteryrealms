@@ -318,3 +318,24 @@ Requisitos que traduzem as regras da Mecânica do Jogo em comportamentos impleme
 ### Coop
 - [Requisitos de Aplicação: Multijogador](./requisitos/aplicacao/multijogador.md)
 - [Requisitos de Aplicação: Instância de Mundo](./requisitos/aplicacao/instanciaDeMundo.md)
+
+## Implementação do Sistema
+
+Documentação de apoio técnico para planejamento e execução da implementação.
+
+- [Backlog Técnico por Módulo](./implementacao/backlogTecnico.md)
+  - [Objetivo](./implementacao/backlogTecnico.md#objetivo)
+  - [Escala usada](./implementacao/backlogTecnico.md#escala-usada)
+  - [Módulo: Usuários e Segurança](./implementacao/backlogTecnico.md#módulo-usuários-e-segurança)
+    - [Épico 1 — Fortalecer trilha de autenticação e sessão](./implementacao/backlogTecnico.md#épico-1--fortalecer-trilha-de-autenticação-e-sessão)
+  - [Módulo: Personagens e Progressão](./implementacao/backlogTecnico.md#módulo-personagens-e-progressão)
+    - [Épico 2 — Consistência de atributos derivados e progressão](./implementacao/backlogTecnico.md#épico-2--consistência-de-atributos-derivados-e-progressão)
+  - [Módulo: Instância de Mundo e Navegação](./implementacao/backlogTecnico.md#módulo-instância-de-mundo-e-navegação)
+    - [Épico 3 — Robustez de estado de mundo por personagem](./implementacao/backlogTecnico.md#épico-3--robustez-de-estado-de-mundo-por-personagem)
+  - [Módulo: Combate, Modificadores e Fisiologia](./implementacao/backlogTecnico.md#módulo-combate-modificadores-e-fisiologia)
+    - [Épico 4 — Pipeline determinístico de resolução de turno](./implementacao/backlogTecnico.md#épico-4--pipeline-determinístico-de-resolução-de-turno)
+  - [Módulo: Sistema Social e Diário](./implementacao/backlogTecnico.md#módulo-sistema-social-e-diário)
+    - [Épico 5 — Integridade de impacto social e rastreabilidade narrativa](./implementacao/backlogTecnico.md#épico-5--integridade-de-impacto-social-e-rastreabilidade-narrativa)
+  - [Módulo: Economia e Inventário](./implementacao/backlogTecnico.md#módulo-economia-e-inventário)
+    - [Épico 6 — Consistência de itens, preço e equipamento](./implementacao/backlogTecnico.md#épico-6--consistência-de-itens-preço-e-equipamento)
+  - [Sequência sugerida de execução](./implementacao/backlogTecnico.md#sequência-sugerida-de-execução)
