@@ -32,6 +32,16 @@ Requisitos funcionais relacionados ao cadastro, autenticação e gerenciamento d
   2. **Imediatamente**, por meio de código numérico de 6 dígitos enviado ao e-mail cadastrado. O código expira em **15 minutos** e é de uso único.
 - O sistema deve notificar o usuário por e-mail quando um bloqueio por tentativas for acionado, informando o endereço IP da tentativa.
 
+### Mensagens/erros esperados (sessão e bloqueio)
+
+- `user.error.sessionExpired`: sessão encontrada, porém com prazo de expiração ultrapassado; deve ser invalidada imediatamente.
+- `user.error.tokenNotFound`: token de sessão inexistente ou já invalidado por logout.
+- `user.error.passwordMismatch`: tentativa de login com senha inválida sem atingir limiar de bloqueio.
+- `user.error.accountLocked`: conta bloqueada após atingir o limiar de 5 falhas consecutivas.
+- `user.error.unlockCodeNotFound`: ausência de bloqueio ativo elegível para desbloqueio por código, ou ausência de código válido.
+- `user.error.unlockCodeInvalid`: código de desbloqueio informado não confere com o último código ativo.
+- `user.error.tokenExpired`: código de desbloqueio encontrado, porém expirado.
+
 ---
 
 ## RF-UA-03 — Recuperação de senha
@@ -111,4 +121,3 @@ Requisitos funcionais relacionados ao cadastro, autenticação e gerenciamento d
   - Alteração de senha.
   - Alteração de e-mail.
   - Solicitação de exclusão de conta.
-
