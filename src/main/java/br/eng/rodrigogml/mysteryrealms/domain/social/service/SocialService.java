@@ -1,5 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.domain.social.service;
 
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipRange;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipState;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.ReputationRange;

@@ -332,6 +332,13 @@ Requisitos que traduzem as regras da Mecânica do Jogo em comportamentos impleme
 
 Documentação de apoio técnico para planejamento e execução da implementação.
 
+- [Guideline de Erros](./implementacao/erros.md)
+  - [Objetivo](./implementacao/erros.md#objetivo)
+  - [Validação explícita por camada](./implementacao/erros.md#validação-explícita-por-camada)
+  - [Mapeamento de exceções](./implementacao/erros.md#mapeamento-de-exceções)
+  - [Payload padrão](./implementacao/erros.md#payload-padrão)
+  - [Exemplos](./implementacao/erros.md#exemplos)
+
 - [Backlog Técnico por Módulo](./implementacao/backlogTecnico.md)
   - [Objetivo](./implementacao/backlogTecnico.md#objetivo)
   - [Escala usada](./implementacao/backlogTecnico.md#escala-usada)

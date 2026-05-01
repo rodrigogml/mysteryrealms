@@ -3,6 +3,8 @@ package br.eng.rodrigogml.mysteryrealms.ui;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.SessionEntity;
 import br.eng.rodrigogml.mysteryrealms.application.user.service.LoginResultVO;
 import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
+import br.eng.rodrigogml.mysteryrealms.common.error.ErrorMapperService;
+import br.eng.rodrigogml.mysteryrealms.common.error.ErrorResponseVO;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -36,6 +38,7 @@ public class MainView extends VerticalLayout {
 
     private final UserService userService;
     private final MessageSource messageSource;
+    private final ErrorMapperService errorMapperService;
 
     /**
      * Cria a tela inicial do jogo.
@@ -43,9 +46,10 @@ public class MainView extends VerticalLayout {
      * @param userService serviço de usuários
      * @param messageSource mensagens internacionalizadas
      */
-    public MainView(UserService userService, MessageSource messageSource) {
+    public MainView(UserService userService, MessageSource messageSource, ErrorMapperService errorMapperService) {
         this.userService = userService;
         this.messageSource = messageSource;
+        this.errorMapperService = errorMapperService;
         setSizeFull();
         setPadding(false);
         setSpacing(false);
@@ -60,7 +64,7 @@ public class MainView extends VerticalLayout {
                 SessionEntity session = userService.validateSession(token);
                 renderAuthenticated(session);
                 return;
-            } catch (IllegalArgumentException ex) {
+            } catch (RuntimeException ex) {
                 VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, null);
             }
         }
@@ -111,8 +115,8 @@ public class MainView extends VerticalLayout {
                 email.clear();
                 password.clear();
                 Notification.show(message("ui.register.success"));
-            } catch (IllegalArgumentException ex) {
-                Notification.show(message(ex.getMessage()));
+            } catch (RuntimeException ex) {
+                showStandardError(ex);
             }
         });
 
@@ -138,8 +142,8 @@ public class MainView extends VerticalLayout {
                 }
                 VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, result.session().getToken());
                 renderAuthenticated(result.session());
-            } catch (IllegalArgumentException ex) {
-                Notification.show(message(ex.getMessage()));
+            } catch (RuntimeException ex) {
+                showStandardError(ex);
             }
         });
 
@@ -164,8 +168,8 @@ public class MainView extends VerticalLayout {
             if (token != null) {
                 try {
                     userService.logout(token);
-                } catch (IllegalArgumentException ex) {
-                    Notification.show(message(ex.getMessage()));
+                } catch (RuntimeException ex) {
+                    showStandardError(ex);
                 }
             }
             VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, null);
@@ -174,6 +178,11 @@ public class MainView extends VerticalLayout {
 
         shell.add(title, status, new HorizontalLayout(logout));
         add(shell);
+    }
+
+    private void showStandardError(RuntimeException exception) {
+        ErrorResponseVO error = errorMapperService.map(exception);
+        Notification.show(message(error.messageKey()) + " [" + error.code() + " | " + error.traceId() + "]");
     }
 
     private String clientIpAddress() {
