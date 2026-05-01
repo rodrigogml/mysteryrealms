@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 O '''Diário do Jogador''' é uma ferramenta essencial da engine '''PlayTale''', voltada para a organização e consulta das descobertas obtidas ao longo da jornada. Ele registra automaticamente conhecimentos adquiridos, pistas investigativas, avanços em missões e conclusões importantes para a resolução de mistérios.
 
 Em jogos com forte apelo narrativo e investigativo, o diário é a principal forma de manter o jogador informado sobre o que já descobriu, facilitando correlações, relembranças e o progresso lógico das tramas.

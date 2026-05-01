@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 A ficha de arma é utilizada para descrever armas no universo do jogo. Armas são itens de mão do subtipo '''Arma''' e sua função primária é o '''ataque'''. Podem ser usadas para combates corpo a corpo, à distância ou mágicos, variando em alcance, peso e forma de utilização.
 
 Cada arma deve ser descrita em uma ficha própria utilizando o modelo abaixo. As instruções de preenchimento estão descritas ao lado de cada campo.

@@ -254,3 +254,15 @@ coord_y: 0.2040
 tipo_navegavel: ambiente
 acessivel: true
 ```
+
+
+## Estado da implementação
+
+- **Status:** Em consolidação (fichas de domínio existentes; padronização documental serve como contrato para expansão).
+- **Classes Java relacionadas:**
+  - [`WorldConfig`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/WorldConfig.java)
+  - [`Zone`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/Zone.java)
+  - [`GameEnvironment`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/GameEnvironment.java)
+  - [`ConnectionClassification`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/enums/ConnectionClassification.java)
+  - [`ClusterNavigationMode`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/enums/ClusterNavigationMode.java)
+

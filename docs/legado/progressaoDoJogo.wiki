@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 = Level e Experiência =
 
 O sistema de evolução de personagens em '''Mystery Realms''' é baseado em um modelo de progressão contínua e infinita. Ou seja, não há um nível máximo: o jogador pode continuar evoluindo indefinidamente, embora o custo de experiência (XP) para avançar de nível se torne progressivamente maior.

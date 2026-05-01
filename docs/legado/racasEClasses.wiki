@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 = Raças =
 
 As '''Raças''' representam a origem biológica, étnica ou ancestral de um personagem dentro do universo de jogo. Elas determinam as características inatas do personagem — desde suas capacidades físicas e sensoriais até predisposições culturais, sociais ou mágicas. No contexto da engine '''PlayTale''', as Raças são elementos fundamentais para reforçar a diversidade narrativa e mecânica dos mundos criados.

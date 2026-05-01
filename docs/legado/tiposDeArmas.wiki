@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Os tipos de armas representam uma forma lógica e conceitual de agrupar armas com características semelhantes dentro da PlayTale Engine. Esta classificação '''não é fixa''' e '''não representa um conjunto universal de categorias''', mas sim um agrupamento criado pelo desenvolvedor do jogo com base em similaridades mecânicas e funcionais.
 
 A categorização em tipos é especialmente útil por vários motivos técnicos e organizacionais no sistema:

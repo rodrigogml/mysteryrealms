@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 O acampamento é uma estrutura temporária montada pelo jogador em regiões selvagens com o objetivo de melhorar as condições de descanso fora de estabelecimentos urbanos. Sua principal função é aumentar os níveis de '''Segurança (S)''' e '''Conforto (C)''' do local escolhido, diminuindo a '''chance de interrupções hostis''' durante o sono e melhorando a eficiência da recuperação.
 
 Ao montar um acampamento corretamente, o jogador reduz os efeitos adversos de ambientes naturalmente perigosos (com alto '''R - Risco de Hostilidade'''), aumentando a probabilidade de completar ciclos de sono e recuperar vida, moral ou energia conforme os parâmetros definidos para descanso.

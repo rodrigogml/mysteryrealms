@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Os '''Estilos de Fala''' definem o tom, abordagem e linguagem utilizados pelo jogador ao interagir com NPCs, assim como os estilos preferenciais e tolerados por cada NPC. Eles servem como base para o sistema de '''Tolerância de Personalidade''', afetando diretamente as chances de sucesso de uma fala, bem como sua influência no relacionamento com o NPC.
 
 Cada estilo possui:

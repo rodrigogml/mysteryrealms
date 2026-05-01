@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 [[Arquivo:LirianneMorth.png|thumb|right|300px|Lirianne Morth]]
 * '''Identificação'''
 :* '''Nome:''' Lirianne Morth

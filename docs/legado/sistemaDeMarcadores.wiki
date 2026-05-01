@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 = Sistema de Marcadores =
 
 O sistema de '''Marcadores''' da engine '''PlayTale''' é o mecanismo central de controle de progresso narrativo, condições lógicas e desbloqueio de conteúdo. Cada marcador representa um ponto de estado binário (presente ou ausente) na jornada do jogador, permitindo que o jogo reaja de forma dinâmica e consistente às ações e escolhas feitas.

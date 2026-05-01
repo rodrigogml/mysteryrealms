@@ -117,3 +117,15 @@ cluster:
     - cx_biblioteca_para_conselho
   modo_navegacao: livre
 ```
+
+
+## Estado da implementação
+
+- **Status:** Parcialmente implementado (modelos e validações centrais disponíveis no domínio `world`).
+- **Classes Java relacionadas:**
+  - [`Zone`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/Zone.java)
+  - [`GameEnvironment`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/GameEnvironment.java)
+  - [`Connection`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/Connection.java)
+  - [`Cluster`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/model/Cluster.java)
+  - [`HierarchyValidationService`](../../src/main/java/br/eng/rodrigogml/mysteryrealms/domain/world/service/HierarchyValidationService.java)
+

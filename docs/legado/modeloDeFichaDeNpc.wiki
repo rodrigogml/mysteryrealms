@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 Para criar uma ficha de NPC deve ser utilizado modelo a seguir (sem utilizar as tags 'pre') preenchendo cada campo conforme instruções:
 
 <pre>

@@ -1,3 +1,11 @@
+
+> ⚠️ **Documento legado**
+>
+> Este arquivo pertence ao acervo histórico e pode estar desatualizado.
+> Consulte a documentação atual no índice canônico: [docs/index.md](../index.md).
+>
+> **Documento atual equivalente:** ver seção temática correspondente em [docs/index.md](../index.md).
+
 * '''Descrição Geral:'''  
 A Floresta de Arvalem é uma região densa e vasta que cerca [[Lugares#Localidade:_Langur|Langur]], estendendo-se por dezenas de quilômetros em todas as direções. Suas árvores são altas, de copas espessas, com troncos cobertos de musgos e líquens encantados que brilham levemente sob a luz da lua. A região é marcada por antigos vestígios de civilizações esquecidas e trilhas ocultas que parecem se mover com o tempo. Dizem que o próprio chão emana resquícios de magia selvagem.
 
