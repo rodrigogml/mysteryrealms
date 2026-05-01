@@ -2,6 +2,8 @@ package br.eng.rodrigogml.mysteryrealms.domain.social;
 
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.MarkerType;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipRange;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.RelationshipState;
+import br.eng.rodrigogml.mysteryrealms.domain.social.enums.ReputationRange;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyle;
 import br.eng.rodrigogml.mysteryrealms.domain.social.enums.DiscourseStyleEvaluation;
 import br.eng.rodrigogml.mysteryrealms.domain.social.model.*;
@@ -181,13 +183,39 @@ class SocialSystemTest {
         assertEquals(RelationshipRange.FAVORABLE, SocialService.relationshipRange(40));
     }
 
-    // ── RF-SS-07: Reputação ──────────────────────────────────────────────────
+    
+    @Test
+    void socialService_estadoRelacionamento_hostil() {
+        assertEquals(RelationshipState.HOSTILE, SocialService.relationshipState(-45));
+    }
 
     @Test
-    void socialService_aplicaDeltaReputacao_semClamp() {
-        assertEquals(200, SocialService.applyReputationDelta(150, 50));
-        assertEquals(-500, SocialService.applyReputationDelta(-490, -10));
+    void socialService_estadoRelacionamento_aliado() {
+        assertEquals(RelationshipState.ALLY, SocialService.relationshipState(85));
     }
+
+// ── RF-SS-07: Reputação ──────────────────────────────────────────────────
+
+    @Test
+    void socialService_aplicaDeltaReputacao_comImpactoFaixaPositiva() {
+        assertEquals(66, SocialService.applyReputationDelta(60, 4));
+    }
+
+    @Test
+    void socialService_aplicaDeltaReputacao_comImpactoFaixaNegativa() {
+        assertEquals(-66, SocialService.applyReputationDelta(-60, -4));
+    }
+
+    @Test
+    void socialService_faixaReputacao_respeitado() {
+        assertEquals(ReputationRange.RESPECTED, SocialService.reputationRange(22));
+    }
+
+    @Test
+    void socialService_faixaReputacao_infame() {
+        assertEquals(ReputationRange.INFAMOUS, SocialService.reputationRange(-80));
+    }
+
 
     // ── RF-SS-08: DiaryEntry ─────────────────────────────────────────────────
 
@@ -404,7 +432,42 @@ class SocialSystemTest {
         assertTrue(result.diaryEntry().gameDate().matches("D\\d+-\\d{2}:\\d{2}"));
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    
+    @Test
+    void socialCycle_reputacaoGanhaPorAcao() {
+        DialogOption opcao = new DialogOption(
+                "op5", DiscourseStyle.DIPLOMATIC, "Ajudo os guardas.",
+                null,
+                new DialogEffects(Map.of(), Map.of("loc_cidade", 5), Map.of(), "Ajuda reconhecida."),
+                null);
+        DialogNode node = new DialogNode("dlg_005", "npc_guarda", "Precisamos de ajuda", List.of(opcao));
+
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                null, 30, node, "op5", true, 480L, buildConfiguracaoMundo());
+
+        assertEquals(36, result.newReputation());
+        assertNotNull(result.diaryEntry());
+        assertEquals(5, result.diaryEntry().impacts().localityReputationDeltas().get("loc_cidade"));
+    }
+
+    @Test
+    void socialCycle_reputacaoPerdidaPorAcao() {
+        DialogOption opcao = new DialogOption(
+                "op6", DiscourseStyle.INTIMIDATING, "Ameaço os mercadores.",
+                null,
+                new DialogEffects(Map.of(), Map.of(), Map.of("faccao_mercadores", -3), "Ameaça vista por todos."),
+                null);
+        DialogNode node = new DialogNode("dlg_006", "npc_mercador", "Não faça isso", List.of(opcao));
+
+        SocialCycleResult result = SocialService.executeSocialCycle(
+                null, -61, node, "op6", true, 480L, buildConfiguracaoMundo());
+
+        assertEquals(-66, result.newReputation());
+        assertNotNull(result.diaryEntry());
+        assertEquals(-3, result.diaryEntry().impacts().factionReputationDeltas().get("faccao_mercadores"));
+    }
+
+// ── Helpers ───────────────────────────────────────────────────────────────
 
     private WorldConfig buildConfiguracaoMundo() {
         return new WorldConfig(
