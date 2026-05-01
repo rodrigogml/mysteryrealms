@@ -7,6 +7,8 @@ import br.eng.rodrigogml.mysteryrealms.domain.modifier.model.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de resolução de empilhamento de modificadores — RF-MAR-06.
@@ -32,8 +34,8 @@ public final class ModifierService {
      * @return lista atualizada (mesma referência de {@code ativos})
      */
     public static List<Modifier> apply(List<Modifier> ativos, Modifier novo) {
-        if (ativos == null) throw new IllegalArgumentException("ativos não pode ser nulo");
-        if (novo == null) throw new IllegalArgumentException("modificador não pode ser nulo");
+        if (ativos == null) throw new ValidationException("modifier.error.activeListRequired");
+        if (novo == null) throw new ValidationException("modifier.error.modifierRequired");
 
         switch (novo.stackingRule()) {
             case ACCUMULATE -> ativos.add(novo);

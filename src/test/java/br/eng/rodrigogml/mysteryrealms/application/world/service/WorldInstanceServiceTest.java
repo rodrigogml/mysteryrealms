@@ -32,6 +32,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Testes do serviço de instância de mundo - RF-IM-01 a RF-IM-05.
@@ -90,7 +92,7 @@ class WorldInstanceServiceTest {
         existing.setIdCharacter(42L);
         when(worldInstanceRepository.findByIdCharacter(42L)).thenReturn(Optional.of(existing));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.createWorldInstance(42L));
 
         assertEquals("world.error.instanceAlreadyExists", ex.getMessage());
@@ -99,7 +101,7 @@ class WorldInstanceServiceTest {
 
     @Test
     void createWorldInstance_personagemInvalido_lancaExcecaoSemConsultarRepositorio() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.createWorldInstance(0L));
 
         assertEquals("world.error.invalidCharacterId", ex.getMessage());
@@ -122,7 +124,7 @@ class WorldInstanceServiceTest {
     @Test
     void loadWorldInstance_instanciaNaoEncontrada_lancaExcecao() {
         when(worldInstanceRepository.findByIdCharacter(99L)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> service.loadWorldInstance(99L));
+        assertThrows(ValidationException.class, () -> service.loadWorldInstance(99L));
     }
 
     @Test
@@ -144,7 +146,7 @@ class WorldInstanceServiceTest {
         instance.setIdCharacter(1L);
         instance.setCurrentTimeMin(-1L);
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.saveWorldInstance(instance));
 
         assertEquals("world.error.invalidCurrentTime", ex.getMessage());
@@ -205,7 +207,7 @@ class WorldInstanceServiceTest {
 
     @Test
     void setQuestState_estadoNulo_lancaExcecaoSemPersistir() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.setQuestState(1L, "quest001", null));
 
         assertEquals("world.error.invalidQuestState", ex.getMessage());
@@ -334,7 +336,7 @@ class WorldInstanceServiceTest {
 
     @Test
     void setMarker_tipoFlagComValorInteiro_lancaExcecao() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.setMarker(1L, "flag001", MarkerType.FLAG, 1));
 
         assertEquals("world.error.invalidMarkerValue", ex.getMessage());
@@ -343,7 +345,7 @@ class WorldInstanceServiceTest {
 
     @Test
     void getMarker_idMarcadorEmBranco_lancaExcecao() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.getMarker(1L, " "));
 
         assertEquals("world.error.invalidMarkerId", ex.getMessage());

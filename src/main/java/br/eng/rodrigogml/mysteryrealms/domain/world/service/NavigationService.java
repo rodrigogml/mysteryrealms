@@ -6,6 +6,8 @@ import br.eng.rodrigogml.mysteryrealms.domain.world.model.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de navegação no mundo — RF-MN-07 a RF-MN-11.
@@ -96,7 +98,7 @@ public final class NavigationService {
      */
     public static long travelTimeMinutes(
             double distAjustadaKm, double velocidadeKmh, int minutesPerHour) {
-        if (velocidadeKmh <= 0) throw new IllegalArgumentException("velocidadeKmh deve ser > 0");
+        if (velocidadeKmh <= 0) throw new ValidationException("world.error.invalidSpeed");
         double horas = distAjustadaKm / velocidadeKmh;
         return Math.max(1L, (long) Math.ceil(horas * minutesPerHour));
     }

@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de aplicação responsável pelo gerenciamento de sessões cooperativas:
@@ -63,7 +65,7 @@ public class CoopSessionService {
         requirePositiveId(hostCharacterId, "coop.error.invalidHostCharacterId");
         requirePositiveId(worldInstanceId, "coop.error.invalidWorldInstanceId");
         if (maxPlayers < 2 || maxPlayers > 4) {
-            throw new IllegalArgumentException("coop.error.invalidMaxPlayers");
+            throw new ValidationException("coop.error.invalidMaxPlayers");
         }
         requireHostWorld(hostCharacterId, worldInstanceId);
 
@@ -97,19 +99,19 @@ public class CoopSessionService {
         requirePositiveId(characterId, "coop.error.invalidCharacterId");
 
         CoopSessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
 
-        if (session.getStatus() != CoopSessionStatus.LOBBY) {
-            throw new IllegalArgumentException("coop.error.sessionNotInLobby");
+        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
+            throw new ValidationException("coop.error.sessionNotActive");
         }
 
         long count = participantRepository.countByIdCoopSessionAndLeftAtIsNull(sessionId);
         if (count >= session.getMaxPlayers()) {
-            throw new IllegalArgumentException("coop.error.playerLimitReached");
+            throw new ValidationException("coop.error.playerLimitReached");
         }
 
         if (participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId).isPresent()) {
-            throw new IllegalArgumentException("coop.error.alreadyInSession");
+            throw new ValidationException("coop.error.alreadyInSession");
         }
 
         CoopParticipantEntity participant = new CoopParticipantEntity();
@@ -132,12 +134,12 @@ public class CoopSessionService {
         requirePositiveId(characterId, "coop.error.invalidCharacterId");
 
         CoopSessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
         requireActiveSession(session);
 
         CoopParticipantEntity participant = participantRepository
                 .findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.participantNotFound"));
 
         participant.setLeftAt(LocalDateTime.now());
         participantRepository.save(participant);
@@ -161,11 +163,11 @@ public class CoopSessionService {
         requirePositiveId(hostCharacterId, "coop.error.invalidHostCharacterId");
 
         CoopSessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
         requireActiveSession(session);
 
         if (!session.getIdHostCharacter().equals(hostCharacterId)) {
-            throw new IllegalArgumentException("coop.error.notHost");
+            throw new ValidationException("coop.error.notHost");
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -306,15 +308,15 @@ public class CoopSessionService {
         requirePositiveId(characterId, "coop.error.invalidCharacterId");
 
         CoopSessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
 
         requireActiveSession(session);
 
         participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, characterId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.participantNotFound"));
 
         return characterRepository.findById(characterId)
-                .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+                .orElseThrow(() -> new ValidationException("character.error.notFound"));
     }
 
     /**
@@ -338,15 +340,15 @@ public class CoopSessionService {
         requireCharacterSnapshot(guestCharacterId, updatedCharacter);
 
         CoopSessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
         requireActiveSession(session);
 
         if (session.getIdHostCharacter().equals(guestCharacterId)) {
-            throw new IllegalArgumentException("coop.error.hostCannotBeGuest");
+            throw new ValidationException("coop.error.hostCannotBeGuest");
         }
 
         participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.participantNotFound"));
 
         characterRepository.save(updatedCharacter);
     }
@@ -369,19 +371,19 @@ public class CoopSessionService {
         requirePositiveId(guestCharacterId, "coop.error.invalidCharacterId");
 
         CoopSessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
 
         requireActiveSession(session);
 
         participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.participantNotFound"));
 
         WorldInstanceEntity guestWorld = worldInstanceRepository.findByIdCharacter(guestCharacterId)
-                .orElseThrow(() -> new IllegalArgumentException("world.error.instanceNotFound"));
+                .orElseThrow(() -> new ValidationException("world.error.instanceNotFound"));
 
         // Garante que a instância do convidado é diferente da instância da sessão (mundo do anfitrião)
         if (guestWorld.getId().equals(session.getIdWorldInstance())) {
-            throw new IllegalStateException("world.error.guestWorldConflict");
+            throw new DomainException("world.error.guestWorldConflict");
         }
 
         return guestWorld;
@@ -407,16 +409,16 @@ public class CoopSessionService {
         requireCharacterSnapshot(guestCharacterId, lastKnownCharacter);
 
         CoopSessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.sessionNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.sessionNotFound"));
         requireActiveSession(session);
 
         if (session.getIdHostCharacter().equals(guestCharacterId)) {
-            throw new IllegalArgumentException("coop.error.hostCannotBeGuest");
+            throw new ValidationException("coop.error.hostCannotBeGuest");
         }
 
         CoopParticipantEntity participant = participantRepository
                 .findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(sessionId, guestCharacterId)
-                .orElseThrow(() -> new IllegalArgumentException("coop.error.participantNotFound"));
+                .orElseThrow(() -> new ValidationException("coop.error.participantNotFound"));
 
         // Persiste os dados pessoais do convidado no ponto da última ação sincronizada
         characterRepository.save(lastKnownCharacter);
@@ -434,8 +436,8 @@ public class CoopSessionService {
      * @throws IllegalArgumentException se a sessão não estiver ativa
      */
     private void requireActiveSession(CoopSessionEntity session) {
-        if (session.getStatus() == CoopSessionStatus.CLOSED) {
-            throw new IllegalArgumentException("coop.error.sessionNotActive");
+        if (session.getStatus() != CoopSessionStatus.ACTIVE) {
+            throw new ValidationException("coop.error.sessionNotActive");
         }
     }
 
@@ -457,21 +459,21 @@ public class CoopSessionService {
 
     private void requireHostWorld(Long hostCharacterId, Long worldInstanceId) {
         WorldInstanceEntity worldInstance = worldInstanceRepository.findById(worldInstanceId)
-                .orElseThrow(() -> new IllegalArgumentException("world.error.instanceNotFound"));
+                .orElseThrow(() -> new ValidationException("world.error.instanceNotFound"));
         if (!hostCharacterId.equals(worldInstance.getIdCharacter())) {
-            throw new IllegalArgumentException("coop.error.hostWorldMismatch");
+            throw new ValidationException("coop.error.hostWorldMismatch");
         }
     }
 
     private void requireCharacterSnapshot(Long expectedCharacterId, CharacterEntity snapshot) {
         if (snapshot == null || !expectedCharacterId.equals(snapshot.getId())) {
-            throw new IllegalArgumentException("coop.error.invalidCharacterSnapshot");
+            throw new ValidationException("coop.error.invalidCharacterSnapshot");
         }
     }
 
     private void requirePositiveId(Long id, String message) {
         if (id == null || id <= 0L) {
-            throw new IllegalArgumentException(message);
+            throw new ValidationException(message);
         }
     }
 }

@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Testes da fórmula de progressão do personagem — RF-PP-02 a RF-PP-08.
@@ -15,8 +17,8 @@ class ProgressionServiceTest {
 
     @Test
     void xpForLevel_lancaExcecaoParaNivelMenorQueUm() {
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.xpForLevel(0));
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.xpForLevel(-1));
+        assertThrows(ValidationException.class, () -> ProgressionService.xpForLevel(0));
+        assertThrows(ValidationException.class, () -> ProgressionService.xpForLevel(-1));
     }
 
     @Test
@@ -46,8 +48,8 @@ class ProgressionServiceTest {
 
     @Test
     void totalXpForLevel_lancaExcecaoParaNivelMenorQueUm() {
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.totalXpForLevel(0));
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.totalXpForLevel(-1));
+        assertThrows(ValidationException.class, () -> ProgressionService.totalXpForLevel(0));
+        assertThrows(ValidationException.class, () -> ProgressionService.totalXpForLevel(-1));
     }
 
     @Test
@@ -66,8 +68,8 @@ class ProgressionServiceTest {
 
     @Test
     void shouldLevelUp_lancaExcecaoParaEntradasInvalidas() {
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.shouldLevelUp(-1L, 1));
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.shouldLevelUp(0L, 0));
+        assertThrows(ValidationException.class, () -> ProgressionService.shouldLevelUp(-1L, 1));
+        assertThrows(ValidationException.class, () -> ProgressionService.shouldLevelUp(0L, 0));
     }
 
     @Test
@@ -95,7 +97,7 @@ class ProgressionServiceTest {
 
     @Test
     void levelFromAccumulatedXp_lancaExcecaoParaXpNegativo() {
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.levelFromAccumulatedXp(-1L));
+        assertThrows(ValidationException.class, () -> ProgressionService.levelFromAccumulatedXp(-1L));
     }
 
     @Test
@@ -187,7 +189,7 @@ class ProgressionServiceTest {
 
     @Test
     void totalPpAtLevel_lancaExcecaoParaNivelMenorQueUm() {
-        assertThrows(IllegalArgumentException.class, () -> ProgressionService.totalPpAtLevel(0));
+        assertThrows(ValidationException.class, () -> ProgressionService.totalPpAtLevel(0));
     }
 
     @Test

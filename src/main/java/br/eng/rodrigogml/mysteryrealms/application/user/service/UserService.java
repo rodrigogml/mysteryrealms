@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de aplicação responsável por todas as operações de usuário:
@@ -125,40 +127,40 @@ public class UserService {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 not available", e);
+            throw new DomainException("system.error.sha256Unavailable", e);
         }
     }
 
     private void validateUsername(String username) {
         if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("user.error.usernameBlank");
+            throw new ValidationException("user.error.usernameBlank");
         }
         if (username.length() < 3) {
-            throw new IllegalArgumentException("user.error.usernameTooShort");
+            throw new ValidationException("user.error.usernameTooShort");
         }
         if (username.chars().anyMatch(Character::isWhitespace)) {
-            throw new IllegalArgumentException("user.error.usernameHasSpaces");
+            throw new ValidationException("user.error.usernameHasSpaces");
         }
     }
 
     private void validateEmail(String email) {
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("user.error.emailBlank");
+            throw new ValidationException("user.error.emailBlank");
         }
         if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
-            throw new IllegalArgumentException("user.error.emailInvalid");
+            throw new ValidationException("user.error.emailInvalid");
         }
     }
 
     private void validatePassword(String password) {
         if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("user.error.passwordBlank");
+            throw new ValidationException("user.error.passwordBlank");
         }
         if (password.length() < 8) {
-            throw new IllegalArgumentException("user.error.passwordTooShort");
+            throw new ValidationException("user.error.passwordTooShort");
         }
         if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*[\\d\\W]).*$")) {
-            throw new IllegalArgumentException("user.error.passwordWeak");
+            throw new ValidationException("user.error.passwordWeak");
         }
     }
 
@@ -178,10 +180,10 @@ public class UserService {
         validatePassword(rawPassword);
 
         if (userRepository.existsByUsername(username)) {
-            throw new IllegalArgumentException("user.error.usernameTaken");
+            throw new ValidationException("user.error.usernameTaken");
         }
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("user.error.emailTaken");
+            throw new ValidationException("user.error.emailTaken");
         }
 
         UserEntity user = new UserEntity();
@@ -214,14 +216,14 @@ public class UserService {
      */
     public UserEntity confirmEmail(String token) {
         EmailConfirmationEntity confirmation = emailConfirmationRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.tokenNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.tokenNotFound"));
 
         if (LocalDateTime.now().isAfter(confirmation.getExpiresAt())) {
-            throw new IllegalArgumentException("user.error.tokenExpired");
+            throw new ValidationException("user.error.tokenExpired");
         }
 
         UserEntity user = userRepository.findById(confirmation.getIdUser())
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         if (confirmation.getType() == EmailConfirmationType.REGISTRATION) {
             user.setEmailConfirmed(true);
@@ -230,11 +232,11 @@ public class UserService {
             String newEmail = confirmation.getNewEmail();
             validateEmail(newEmail);
             if (!user.getEmail().equals(newEmail) && userRepository.existsByEmail(newEmail)) {
-                throw new IllegalArgumentException("user.error.emailTaken");
+                throw new ValidationException("user.error.emailTaken");
             }
             user.setEmail(newEmail);
         } else {
-            throw new IllegalArgumentException("user.error.tokenNotFound");
+            throw new ValidationException("user.error.tokenNotFound");
         }
 
         user = userRepository.save(user);
@@ -254,7 +256,7 @@ public class UserService {
     public LoginResultVO login(String email, String rawPassword, String ipAddress) {
         // TODO detectar dispositivo/IP nao reconhecido para notificacao de seguranca.
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         reconcileExpiredAccountLock(user);
         ensureActiveUser(user);
@@ -263,7 +265,7 @@ public class UserService {
         if (!hashPassword(rawPassword).equals(user.getPasswordHash())) {
             registerLoginAttempt(user.getId(), ipAddress, false);
             checkBruteForce(user);
-            throw new IllegalArgumentException("user.error.passwordMismatch");
+            throw new ValidationException("user.error.passwordMismatch");
         }
 
         registerLoginAttempt(user.getId(), ipAddress, true);
@@ -291,13 +293,13 @@ public class UserService {
      */
     public SessionEntity completeTwoFactorLogin(Long userId, String code) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         reconcileExpiredAccountLock(user);
         ensureActiveUser(user);
         ensureAccountNotLocked(userId);
         if (!validateSecondFactorCode(userId, code)) {
-            throw new IllegalArgumentException("user.error.invalidSecondFactorCode");
+            throw new ValidationException("user.error.invalidSecondFactorCode");
         }
 
         return createSession(userId);
@@ -311,7 +313,7 @@ public class UserService {
      */
     public void logout(String token) {
         SessionEntity session = sessionRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.tokenNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.tokenNotFound"));
         sessionRepository.delete(session);
     }
 
@@ -324,11 +326,11 @@ public class UserService {
      */
     public SessionEntity validateSession(String token) {
         SessionEntity session = sessionRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.tokenNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.tokenNotFound"));
 
         if (!isSessionActive(session)) {
             sessionRepository.delete(session);
-            throw new IllegalArgumentException("user.error.sessionExpired");
+            throw new ValidationException("user.error.sessionExpired");
         }
 
         renewSessionExpiration(session);
@@ -344,21 +346,21 @@ public class UserService {
      */
     public void unlockAccount(Long userId, String code) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         Optional<AccountLockEntity> lock = accountLockRepository.findTopByIdUserOrderByLockedAtDesc(userId);
         if (lock.isEmpty() || LocalDateTime.now().isAfter(lock.get().getUnlockAt())) {
-            throw new IllegalArgumentException("user.error.unlockCodeNotFound");
+            throw new ValidationException("user.error.unlockCodeNotFound");
         }
 
         UnlockCodeEntity unlockCode = findLatestUnlockCode(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.unlockCodeNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.unlockCodeNotFound"));
 
         if (LocalDateTime.now().isAfter(unlockCode.getExpiresAt())) {
-            throw new IllegalArgumentException("user.error.tokenExpired");
+            throw new ValidationException("user.error.tokenExpired");
         }
         if (!unlockCode.getCode().equals(code)) {
-            throw new IllegalArgumentException("user.error.unlockCodeInvalid");
+            throw new ValidationException("user.error.unlockCodeInvalid");
         }
 
         unlockCode.setUsed(true);
@@ -413,7 +415,7 @@ public class UserService {
             user.setStatus(UserStatus.LOCKED);
             userRepository.save(user);
             issueUnlockCode(user.getId());
-            throw new IllegalArgumentException("user.error.accountLocked");
+            throw new ValidationException("user.error.accountLocked");
         }
     }
 
@@ -465,16 +467,16 @@ public class UserService {
      */
     public void resetPassword(String token, String newPassword) {
         PasswordResetEntity reset = passwordResetRepository.findByTokenAndUsedFalse(token)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.tokenNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.tokenNotFound"));
 
         if (LocalDateTime.now().isAfter(reset.getExpiresAt())) {
-            throw new IllegalArgumentException("user.error.tokenExpired");
+            throw new ValidationException("user.error.tokenExpired");
         }
 
         validatePassword(newPassword);
 
         UserEntity user = userRepository.findById(reset.getIdUser())
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         user.setPasswordHash(hashPassword(newPassword));
         user.setStatus(UserStatus.ACTIVE);
@@ -497,10 +499,10 @@ public class UserService {
      */
     public void changePassword(Long userId, String currentPassword, String newPassword) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         if (!hashPassword(currentPassword).equals(user.getPasswordHash())) {
-            throw new IllegalArgumentException("user.error.passwordMismatch");
+            throw new ValidationException("user.error.passwordMismatch");
         }
 
         validatePassword(newPassword);
@@ -519,10 +521,10 @@ public class UserService {
         validateUsername(newUsername);
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         if (userRepository.existsByUsername(newUsername)) {
-            throw new IllegalArgumentException("user.error.usernameTaken");
+            throw new ValidationException("user.error.usernameTaken");
         }
 
         user.setUsername(newUsername);
@@ -540,11 +542,11 @@ public class UserService {
         validateEmail(newEmail);
 
         if (userRepository.existsByEmail(newEmail)) {
-            throw new IllegalArgumentException("user.error.emailTaken");
+            throw new ValidationException("user.error.emailTaken");
         }
 
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         EmailConfirmationEntity confirmation = new EmailConfirmationEntity();
         confirmation.setIdUser(userId);
@@ -566,11 +568,11 @@ public class UserService {
      */
     public String requestAccountDeletion(Long userId, String secondFactorCode) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         Optional<TwoFactorAuthEntity> twoFactorOpt = twoFactorAuthRepository.findByIdUser(userId);
         if (twoFactorOpt.isPresent() && twoFactorOpt.get().isActive() && !validateSecondFactorCode(userId, secondFactorCode)) {
-            throw new IllegalArgumentException("user.error.invalidSecondFactorCode");
+            throw new ValidationException("user.error.invalidSecondFactorCode");
         }
 
         EmailConfirmationEntity confirmation = new EmailConfirmationEntity();
@@ -592,17 +594,17 @@ public class UserService {
      */
     public void confirmAccountDeletion(String token) {
         EmailConfirmationEntity confirmation = emailConfirmationRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.tokenNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.tokenNotFound"));
 
         if (confirmation.getType() != EmailConfirmationType.ACCOUNT_DELETION) {
-            throw new IllegalArgumentException("user.error.tokenNotFound");
+            throw new ValidationException("user.error.tokenNotFound");
         }
         if (LocalDateTime.now().isAfter(confirmation.getExpiresAt())) {
-            throw new IllegalArgumentException("user.error.tokenExpired");
+            throw new ValidationException("user.error.tokenExpired");
         }
 
         UserEntity user = userRepository.findById(confirmation.getIdUser())
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         deleteAccountData(user.getId(), user);
     }
@@ -617,7 +619,7 @@ public class UserService {
      */
     public TwoFactorActivationVO enableTwoFactor(Long userId, TwoFactorMethod method) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         twoFactorAuthRepository.findByIdUser(userId).ifPresent(twoFactorAuthRepository::delete);
         recoveryCodeRepository.deleteAllByIdUser(userId);
@@ -646,7 +648,7 @@ public class UserService {
      */
     public List<String> regenerateRecoveryCodes(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         ensureTwoFactorEnabled(userId);
         recoveryCodeRepository.deleteAllByIdUser(userId);
@@ -662,11 +664,11 @@ public class UserService {
      */
     public void disableTwoFactor(Long userId, String code) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.userNotFound"));
+                .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
         TwoFactorAuthEntity tfa = ensureTwoFactorEnabled(userId);
         if (!validateSecondFactorCode(userId, code)) {
-            throw new IllegalArgumentException("user.error.invalidSecondFactorCode");
+            throw new ValidationException("user.error.invalidSecondFactorCode");
         }
 
         twoFactorAuthRepository.delete(tfa);
@@ -746,19 +748,19 @@ public class UserService {
     private TwoFactorAuthEntity ensureTwoFactorEnabled(Long userId) {
         return twoFactorAuthRepository.findByIdUser(userId)
                 .filter(TwoFactorAuthEntity::isActive)
-                .orElseThrow(() -> new IllegalArgumentException("user.error.twoFactorNotEnabled"));
+                .orElseThrow(() -> new ValidationException("user.error.twoFactorNotEnabled"));
     }
 
     private void ensureActiveUser(UserEntity user) {
         if (user.getStatus() == UserStatus.PENDING_CONFIRMATION || !user.isEmailConfirmed()) {
-            throw new IllegalArgumentException("user.error.userNotActive");
+            throw new ValidationException("user.error.userNotActive");
         }
     }
 
     private void ensureAccountNotLocked(Long userId) {
         Optional<AccountLockEntity> lock = accountLockRepository.findTopByIdUserOrderByLockedAtDesc(userId);
         if (lock.isPresent() && LocalDateTime.now().isBefore(lock.get().getUnlockAt())) {
-            throw new IllegalArgumentException("user.error.accountLocked");
+            throw new ValidationException("user.error.accountLocked");
         }
     }
 
@@ -893,7 +895,7 @@ public class UserService {
                     | (hash[offset + 3] & 0xFF);
             return String.format("%06d", truncated % 1_000_000);
         } catch (Exception e) {
-            throw new IllegalStateException("TOTP generation failed", e);
+            throw new DomainException("system.error.totpGenerationFailed", e);
         }
     }
 }

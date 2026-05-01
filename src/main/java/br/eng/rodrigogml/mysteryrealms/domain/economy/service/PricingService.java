@@ -1,6 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.domain.economy.service;
 
 import br.eng.rodrigogml.mysteryrealms.domain.economy.model.MonetaryValue;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de precificação de itens — RF-EI-02.
@@ -49,7 +51,7 @@ public final class PricingService {
             double fatorVenda) {
 
         if (basePrice == null) {
-            throw new IllegalArgumentException("basePrice não pode ser nulo");
+            throw new ValidationException("economy.error.basePriceRequired");
         }
 
         validateFactor("fatorLugar", fatorLugar);
@@ -58,7 +60,7 @@ public final class PricingService {
         validateFactor("fatorOfertaDemanda", fatorOfertaDemanda);
         validateFactor("fatorVenda", fatorVenda);
         if (fatorVenda > 1.0) {
-            throw new IllegalArgumentException("fatorVenda deve ser <= 1.0, recebido: " + fatorVenda);
+            throw new ValidationException("fatorVenda deve ser <= 1.0, recebido: " + fatorVenda);
         }
 
         double fatorTotal = fatorLugar * fatorReputacao * fatorRelacionamento
@@ -75,7 +77,7 @@ public final class PricingService {
 
     private static void validateFactor(String name, double value) {
         if (!Double.isFinite(value) || value < FACTOR_MIN || value > FACTOR_MAX) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     name + " deve estar em [" + FACTOR_MIN + ", " + FACTOR_MAX + "], recebido: " + value);
         }
     }

@@ -3,6 +3,8 @@ package br.eng.rodrigogml.mysteryrealms.domain.world.service;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.DayPhase;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.Season;
 import br.eng.rodrigogml.mysteryrealms.domain.world.model.WorldConfig;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Serviço de tempo do mundo — RF-MN-12 e RF-MN-13.
@@ -24,7 +26,7 @@ public final class WorldTimeService {
      * @return novo tempo total em minutes
      */
     public static long advanceTime(long tempoAtualMin, long minutosAvancar) {
-        if (minutosAvancar < 0) throw new IllegalArgumentException("minutosAvancar deve ser >= 0");
+        if (minutosAvancar < 0) throw new ValidationException("world.error.invalidAdvanceMinutes");
         return tempoAtualMin + minutosAvancar;
     }
 

@@ -22,6 +22,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 
 /**
  * Testes do serviço de sessões cooperativas — RF-MJ-01 a RF-MJ-07.
@@ -96,12 +98,12 @@ class CoopSessionServiceTest {
 
     @Test
     void createSession_maxPlayersMenorQue2_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class, () -> service.createSession(1L, 1L, 1));
+        assertThrows(ValidationException.class, () -> service.createSession(1L, 1L, 1));
     }
 
     @Test
     void createSession_maxPlayersMaiorQue4_lancaExcecao() {
-        assertThrows(IllegalArgumentException.class, () -> service.createSession(1L, 1L, 5));
+        assertThrows(ValidationException.class, () -> service.createSession(1L, 1L, 5));
     }
 
     @Test
@@ -121,7 +123,7 @@ class CoopSessionServiceTest {
         world.setIdCharacter(99L);
         when(worldInstanceRepository.findById(5L)).thenReturn(Optional.of(world));
 
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.createSession(10L, 5L, 4));
 
         assertEquals("coop.error.hostWorldMismatch", ex.getMessage());
@@ -150,7 +152,7 @@ class CoopSessionServiceTest {
         when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
         when(participantRepository.countByIdCoopSessionAndLeftAtIsNull(1L)).thenReturn(4L);
 
-        assertThrows(IllegalArgumentException.class, () -> service.joinSession(1L, 5L));
+        assertThrows(ValidationException.class, () -> service.joinSession(1L, 5L));
     }
 
     @Test
@@ -159,7 +161,7 @@ class CoopSessionServiceTest {
         session.setStatus(CoopSessionStatus.CLOSED);
         when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
-        assertThrows(IllegalArgumentException.class, () -> service.joinSession(1L, 2L));
+        assertThrows(ValidationException.class, () -> service.joinSession(1L, 2L));
     }
 
     @Test
@@ -171,7 +173,7 @@ class CoopSessionServiceTest {
         CoopParticipantEntity existing = new CoopParticipantEntity();
         when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 2L)).thenReturn(Optional.of(existing));
 
-        assertThrows(IllegalArgumentException.class, () -> service.joinSession(1L, 2L));
+        assertThrows(ValidationException.class, () -> service.joinSession(1L, 2L));
     }
 
     // ── RF-MJ-02: Saída e encerramento ───────────────────────────────────────
@@ -231,7 +233,7 @@ class CoopSessionServiceTest {
         CoopSessionEntity session = activeSession(1L, 1L);
         when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
-        assertThrows(IllegalArgumentException.class, () -> service.closeSession(1L, 99L));
+        assertThrows(ValidationException.class, () -> service.closeSession(1L, 99L));
     }
 
     // ── RF-MJ-06: Limite de 4 jogadores ──────────────────────────────────────
@@ -302,7 +304,7 @@ class CoopSessionServiceTest {
         CharacterEntity snapshot = new CharacterEntity();
         snapshot.setId(1L);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.disconnectGuest(1L, 1L, snapshot));
     }
 
@@ -316,7 +318,7 @@ class CoopSessionServiceTest {
         CharacterEntity snapshot = new CharacterEntity();
         snapshot.setId(2L);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(ValidationException.class,
                 () -> service.disconnectGuest(1L, 2L, snapshot));
     }
 
@@ -361,7 +363,7 @@ class CoopSessionServiceTest {
         session.setStatus(CoopSessionStatus.CLOSED);
         when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
-        assertThrows(IllegalArgumentException.class, () -> service.getParticipantCharacter(1L, 2L));
+        assertThrows(ValidationException.class, () -> service.getParticipantCharacter(1L, 2L));
     }
 
     @Test
@@ -371,7 +373,7 @@ class CoopSessionServiceTest {
         when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 99L))
                 .thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.getParticipantCharacter(1L, 99L));
+        assertThrows(ValidationException.class, () -> service.getParticipantCharacter(1L, 99L));
     }
 
     @Test
@@ -381,7 +383,7 @@ class CoopSessionServiceTest {
         activeParticipant(1L, 2L);
         when(characterRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.getParticipantCharacter(1L, 2L));
+        assertThrows(ValidationException.class, () -> service.getParticipantCharacter(1L, 2L));
     }
 
     // ── RF-MJ-04: Persistência de dados pessoais do convidado ────────────────
@@ -411,7 +413,7 @@ class CoopSessionServiceTest {
         CharacterEntity snapshot = new CharacterEntity();
         snapshot.setId(1L);
 
-        assertThrows(IllegalArgumentException.class, () -> service.syncGuestPersonalData(1L, 1L, snapshot));
+        assertThrows(ValidationException.class, () -> service.syncGuestPersonalData(1L, 1L, snapshot));
     }
 
     @Test
@@ -424,7 +426,7 @@ class CoopSessionServiceTest {
         CharacterEntity snapshot = new CharacterEntity();
         snapshot.setId(99L);
 
-        assertThrows(IllegalArgumentException.class, () -> service.syncGuestPersonalData(1L, 99L, snapshot));
+        assertThrows(ValidationException.class, () -> service.syncGuestPersonalData(1L, 99L, snapshot));
     }
 
     // ── RF-MJ-05: Isolamento da progressão de mundo do convidado ─────────────
@@ -459,7 +461,7 @@ class CoopSessionServiceTest {
         conflictingWorld.setIdCharacter(2L);
         when(worldInstanceRepository.findByIdCharacter(2L)).thenReturn(Optional.of(conflictingWorld));
 
-        assertThrows(IllegalStateException.class, () -> service.getGuestOwnWorldInstance(1L, 2L));
+        assertThrows(DomainException.class, () -> service.getGuestOwnWorldInstance(1L, 2L));
     }
 
     @Test
@@ -469,7 +471,7 @@ class CoopSessionServiceTest {
         when(participantRepository.findByIdCoopSessionAndIdCharacterAndLeftAtIsNull(1L, 99L))
                 .thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.getGuestOwnWorldInstance(1L, 99L));
+        assertThrows(ValidationException.class, () -> service.getGuestOwnWorldInstance(1L, 99L));
     }
 
     @Test
@@ -480,7 +482,7 @@ class CoopSessionServiceTest {
         activeParticipant(1L, 2L);
         when(worldInstanceRepository.findByIdCharacter(2L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> service.getGuestOwnWorldInstance(1L, 2L));
+        assertThrows(ValidationException.class, () -> service.getGuestOwnWorldInstance(1L, 2L));
     }
 
     

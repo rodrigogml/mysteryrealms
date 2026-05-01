@@ -145,7 +145,7 @@ public final class SocialService {
         DialogOption opcao = node.options().stream()
                 .filter(o -> o.optionId().equals(optionId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ValidationException(
                         "opcaoId '" + optionId + "' não encontrado no nó '" + node.dialogId() + "'"));
 
         // 2. Determinar success: se não há teste, success automático
