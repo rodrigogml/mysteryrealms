@@ -1,7 +1,7 @@
 package br.eng.rodrigogml.mysteryrealms.application.user.service;
 
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.UserEntity;
-import org.springframework.beans.factory.annotation.Value;
+import br.eng.rodrigogml.mysteryrealms.config.MysteryRealmsProperties;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -23,15 +23,12 @@ public class EmailService {
      * Cria o serviço com o remetente configurado pelo Spring.
      *
      * @param mailSender remetente de e-mails
-     * @param from endereço remetente da aplicação
-     * @param publicBaseUrl URL pública usada para montar links enviados por e-mail
+     * @param properties propriedades centralizadas da aplicação
      */
-    public EmailService(JavaMailSender mailSender,
-            @Value("${mysteryrealms.mail.from}") String from,
-            @Value("${mysteryrealms.publicBaseUrl}") String publicBaseUrl) {
+    public EmailService(JavaMailSender mailSender, MysteryRealmsProperties properties) {
         this.mailSender = mailSender;
-        this.from = from;
-        this.publicBaseUrl = publicBaseUrl;
+        this.from = properties.getMail().getFrom();
+        this.publicBaseUrl = properties.getPublicBaseUrl();
     }
 
     /**
