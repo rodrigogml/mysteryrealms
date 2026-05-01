@@ -27,6 +27,7 @@ import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.Character;
+import br.eng.rodrigogml.mysteryrealms.domain.character.service.ProgressionService;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -272,6 +273,35 @@ public class CharacterService {
         if (id == null || id <= 0L) {
             throw new IllegalArgumentException(message);
         }
+    }
+
+    /**
+     * Aplica marcos de progressão com base no XP acumulado e persiste o novo nível.
+     *
+     * @param userId identificador do usuário
+     * @param characterId identificador do personagem
+     * @return resultado da progressão aplicada
+     */
+    public ProgressionService.LevelUpResult applyProgressionMilestones(Long userId, Long characterId) {
+        requirePositiveId(userId, "character.error.invalidUserId");
+        requirePositiveId(characterId, "character.error.invalidCharacterId");
+
+        CharacterEntity character = characterRepository.findById(characterId)
+                .orElseThrow(() -> new IllegalArgumentException("character.error.notFound"));
+        if (!character.getIdUser().equals(userId)) {
+            throw new IllegalArgumentException("character.error.notOwned");
+        }
+
+        ProgressionService.LevelUpResult result = ProgressionService
+                .evaluateLevelUp(character.getAccumulatedXp(), character.getCurrentLevel());
+        if (result.levelsGained() == 0) {
+            return result;
+        }
+
+        character.setCurrentLevel(result.targetLevel());
+        character.setBalanceVersion(ProgressionService.BALANCE_VERSION);
+        characterRepository.save(character);
+        return result;
     }
 
     /**

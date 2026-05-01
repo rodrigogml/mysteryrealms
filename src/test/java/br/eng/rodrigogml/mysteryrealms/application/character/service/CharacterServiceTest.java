@@ -25,6 +25,7 @@ import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldQuestSt
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
+import br.eng.rodrigogml.mysteryrealms.domain.character.service.ProgressionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -256,6 +257,21 @@ class CharacterServiceTest {
         CharacterEntity character = buildEntity(1L, 2L, "Frodo");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
         assertThrows(IllegalArgumentException.class, () -> service.renameCharacter(1L, 1L, "Bilbo"));
+    }
+
+    @Test
+    void applyProgressionMilestones_aplicaSubidaDeNivel() {
+        CharacterEntity character = buildEntity(1L, 1L, "Frodo");
+        character.setCurrentLevel(1);
+        character.setAccumulatedXp(ProgressionService.totalXpForLevel(4));
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(characterRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        ProgressionService.LevelUpResult result = service.applyProgressionMilestones(1L, 1L);
+
+        assertEquals(4, result.targetLevel());
+        assertEquals(3, result.levelsGained());
+        verify(characterRepository).save(argThat(c -> c.getCurrentLevel() == 4));
     }
 
     // ── RF-PE-05: Exclusão de personagem ────────────────────────────────────

@@ -105,11 +105,12 @@ public final class CharacterAttributeService {
             int somaFlatPositivo,
             int somaFlatNegativo) {
 
-        double base = dadoArma + modAtributo + bonusRacaClasse + bonusItemDano + bonusPlano;
-        double withPct = base * (1.0 + somaPctPositivo - somaPctNegativo);
-        int withFloor = (int) Math.floor(withPct);
-        int withFlat = withFloor + somaFlatPositivo - somaFlatNegativo;
-        return Math.max(0, withFlat);
+        return calculateCompositeFinalValue(
+                dadoArma + modAtributo + bonusRacaClasse + bonusItemDano + bonusPlano,
+                somaPctPositivo,
+                somaPctNegativo,
+                somaFlatPositivo,
+                somaFlatNegativo);
     }
 
     // ── RF-FP-06.7 ────────────────────────────────────────────────────────────
@@ -129,11 +130,12 @@ public final class CharacterAttributeService {
             int somaFlatPositivo,
             int somaFlatNegativo) {
 
-        double base = baseEsquiva + bonusArmadura + bonusEscudo + bonusItemDefesa + bonusPlano;
-        double withPct = base * (1.0 + somaPctPositivo - somaPctNegativo);
-        int withFloor = (int) Math.floor(withPct);
-        int withFlat = withFloor + somaFlatPositivo - somaFlatNegativo;
-        return Math.max(0, withFlat);
+        return calculateCompositeFinalValue(
+                baseEsquiva + bonusArmadura + bonusEscudo + bonusItemDefesa + bonusPlano,
+                somaPctPositivo,
+                somaPctNegativo,
+                somaFlatPositivo,
+                somaFlatNegativo);
     }
 
     // ── RF-FP-06.8 ────────────────────────────────────────────────────────────
@@ -152,7 +154,20 @@ public final class CharacterAttributeService {
             int somaFlatPositivo,
             int somaFlatNegativo) {
 
-        double base = baseBloqueio + bonusEquipBloqueio + bonusItemBloqueio + bonusPlano;
+        return calculateCompositeFinalValue(
+                baseBloqueio + bonusEquipBloqueio + bonusItemBloqueio + bonusPlano,
+                somaPctPositivo,
+                somaPctNegativo,
+                somaFlatPositivo,
+                somaFlatNegativo);
+    }
+
+    private static int calculateCompositeFinalValue(
+            int base,
+            double somaPctPositivo,
+            double somaPctNegativo,
+            int somaFlatPositivo,
+            int somaFlatNegativo) {
         double withPct = base * (1.0 + somaPctPositivo - somaPctNegativo);
         int withFloor = (int) Math.floor(withPct);
         int withFlat = withFloor + somaFlatPositivo - somaFlatNegativo;

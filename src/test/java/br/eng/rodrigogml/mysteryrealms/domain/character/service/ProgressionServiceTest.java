@@ -279,4 +279,33 @@ class ProgressionServiceTest {
         assertFalse(ProgressionService.isMasteryCycleActive(29));
         assertTrue(ProgressionService.isMasteryCycleActive(30));
     }
+
+    @Test
+    void evaluateLevelUp_semGanho_retornaZeroMarcos() {
+        ProgressionService.LevelUpResult result = ProgressionService.evaluateLevelUp(0L, 1);
+        assertEquals(1, result.targetLevel());
+        assertEquals(0, result.levelsGained());
+        assertEquals(0, result.attributePointsGranted());
+        assertEquals(0, result.talentsGranted());
+        assertEquals(0, result.resourcesGranted());
+    }
+
+    @Test
+    void evaluateLevelUp_comMultiplosNiveis_somaMarcosCorretamente() {
+        long xpNivel12 = ProgressionService.totalXpForLevel(12);
+        ProgressionService.LevelUpResult result = ProgressionService.evaluateLevelUp(xpNivel12, 1);
+        assertEquals(12, result.targetLevel());
+        assertEquals(11, result.levelsGained());
+        assertEquals(10, result.attributePointsGranted());
+        assertEquals(3, result.talentsGranted());
+        assertEquals(4, result.resourcesGranted());
+    }
+
+    @Test
+    void milestoneForLevel_refleteTabelaCentral() {
+        ProgressionService.ProgressionMilestone level12 = ProgressionService.milestoneForLevel(12);
+        assertTrue(level12.attributePointGranted());
+        assertTrue(level12.talentGranted());
+        assertTrue(level12.resourceGranted());
+    }
 }
