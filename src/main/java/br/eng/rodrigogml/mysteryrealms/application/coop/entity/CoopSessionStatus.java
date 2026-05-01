@@ -7,6 +7,8 @@ package br.eng.rodrigogml.mysteryrealms.application.coop.entity;
  * @since 28-04-2026
  */
 public enum CoopSessionStatus {
-    ACTIVE,
+    LOBBY,
+    IN_PROGRESS,
+    PAUSED,
     CLOSED
 }
