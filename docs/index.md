@@ -377,3 +377,11 @@ Documentação de apoio técnico para planejamento e execução da implementaç�
   - [Dados de teste reutilizáveis](./implementacao/suiteMinimaDeTestes.md#dados-de-teste-reutilizáveis)
   - [Meta inicial de cobertura](./implementacao/suiteMinimaDeTestes.md#meta-inicial-de-cobertura)
   - [Próximos passos](./implementacao/suiteMinimaDeTestes.md#próximos-passos)
+
+- [Segurança da Aplicação](./seguranca.md)
+  - [Objetivo](./seguranca.md#objetivo)
+  - [Escopo de auditoria atual](./seguranca.md#escopo-de-auditoria-atual)
+  - [Ações obrigatórias quando houver segredo exposto](./seguranca.md#ações-obrigatórias-quando-houver-segredo-exposto)
+  - [Regras para uso seguro de variáveis de ambiente e credenciais](./seguranca.md#regras-para-uso-seguro-de-variáveis-de-ambiente-e-credenciais)
+  - [Checklist OWASP básico](./seguranca.md#checklist-owasp-básico)
+  - [Procedimento mínimo de revisão por release](./seguranca.md#procedimento-mínimo-de-revisão-por-release)
