@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -350,5 +351,120 @@ class WorldInstanceServiceTest {
 
         assertEquals("world.error.invalidMarkerId", ex.getMessage());
         verify(markerRepository, never()).findByIdWorldInstanceAndMarkerId(any(), any());
+    }
+
+    @Test
+    void createWorldInstance_bootstrapCompletoMantemConsistenciaEntreEntidades() {
+        when(worldInstanceRepository.findByIdCharacter(42L)).thenReturn(Optional.empty());
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> {
+            WorldInstanceEntity entity = i.getArgument(0);
+            if (entity.getId() == null) {
+                entity.setId(100L);
+            }
+            return entity;
+        });
+        when(questStateRepository.findByIdWorldInstanceAndQuestId(100L, "quest.bootstrap")).thenReturn(Optional.empty());
+        when(npcStateRepository.findByIdWorldInstanceAndNpcId(100L, "npc.bootstrap")).thenReturn(Optional.empty());
+        when(locationStateRepository.findByIdWorldInstanceAndLocationId(100L, "loc.bootstrap")).thenReturn(Optional.empty());
+        when(markerRepository.findByIdWorldInstanceAndMarkerId(100L, "flag.bootstrap")).thenReturn(Optional.empty());
+
+        WorldInstanceEntity created = service.createWorldInstance(42L);
+        service.setQuestState(created.getId(), "quest.bootstrap", QuestState.ACTIVE);
+        service.setNpcState(created.getId(), "npc.bootstrap", true, "greeting");
+        service.setLocationState(created.getId(), "loc.bootstrap", true, true);
+        service.setMarker(created.getId(), "flag.bootstrap", MarkerType.FLAG, true);
+
+        ArgumentCaptor<WorldQuestStateEntity> questCaptor = ArgumentCaptor.forClass(WorldQuestStateEntity.class);
+        ArgumentCaptor<WorldNpcStateEntity> npcCaptor = ArgumentCaptor.forClass(WorldNpcStateEntity.class);
+        ArgumentCaptor<WorldLocationStateEntity> locationCaptor = ArgumentCaptor.forClass(WorldLocationStateEntity.class);
+        ArgumentCaptor<WorldMarkerEntity> markerCaptor = ArgumentCaptor.forClass(WorldMarkerEntity.class);
+        verify(questStateRepository).save(questCaptor.capture());
+        verify(npcStateRepository).save(npcCaptor.capture());
+        verify(locationStateRepository).save(locationCaptor.capture());
+        verify(markerRepository).save(markerCaptor.capture());
+
+        assertNotNull(created.getId());
+        assertEquals(created.getId(), questCaptor.getValue().getIdWorldInstance());
+        assertEquals(created.getId(), npcCaptor.getValue().getIdWorldInstance());
+        assertEquals(created.getId(), locationCaptor.getValue().getIdWorldInstance());
+        assertEquals(created.getId(), markerCaptor.getValue().getIdWorldInstance());
+    }
+
+    @Test
+    void loadWorldInstance_recargaMantemConsistenciaDosEstadosPersistidos() {
+        WorldInstanceEntity persisted = new WorldInstanceEntity();
+        persisted.setId(200L);
+        persisted.setIdCharacter(50L);
+        persisted.setCurrentTimeMin(120L);
+        persisted.setCurrentLocationId("loc.saved");
+        when(worldInstanceRepository.findByIdCharacter(50L)).thenReturn(Optional.of(persisted));
+
+        WorldQuestStateEntity quest = new WorldQuestStateEntity();
+        quest.setIdWorldInstance(200L);
+        quest.setQuestId("quest.saved");
+        quest.setState(QuestState.COMPLETED);
+        when(questStateRepository.findByIdWorldInstanceAndQuestId(200L, "quest.saved")).thenReturn(Optional.of(quest));
+
+        WorldNpcStateEntity npc = new WorldNpcStateEntity();
+        npc.setIdWorldInstance(200L);
+        npc.setNpcId("npc.saved");
+        npc.setAlive(false);
+        npc.setDialogState("done");
+        when(npcStateRepository.findByIdWorldInstanceAndNpcId(200L, "npc.saved")).thenReturn(Optional.of(npc));
+
+        WorldLocationStateEntity location = new WorldLocationStateEntity();
+        location.setIdWorldInstance(200L);
+        location.setLocationId("loc.saved");
+        location.setDiscovered(true);
+        location.setAccessible(false);
+        when(locationStateRepository.findByIdWorldInstanceAndLocationId(200L, "loc.saved")).thenReturn(Optional.of(location));
+
+        WorldMarkerEntity marker = new WorldMarkerEntity();
+        marker.setIdWorldInstance(200L);
+        marker.setMarkerId("counter.saved");
+        marker.setMarkerType(MarkerType.COUNTER);
+        marker.setIntValue(8);
+        when(markerRepository.findByIdWorldInstanceAndMarkerId(200L, "counter.saved")).thenReturn(Optional.of(marker));
+
+        WorldInstanceEntity reloaded = service.loadWorldInstance(50L);
+
+        assertEquals(200L, reloaded.getId());
+        assertEquals(120L, reloaded.getCurrentTimeMin());
+        assertEquals("loc.saved", reloaded.getCurrentLocationId());
+        assertEquals(QuestState.COMPLETED, service.getQuestState(200L, "quest.saved").orElseThrow().getState());
+        assertFalse(service.getNpcState(200L, "npc.saved").orElseThrow().isAlive());
+        assertFalse(service.getLocationState(200L, "loc.saved").orElseThrow().isAccessible());
+        assertEquals(8, service.getMarker(200L, "counter.saved").orElseThrow().getIntValue());
+    }
+
+    @Test
+    void estadosSaoIsoladosEntrePersonagensDiferentes() {
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
+        when(worldInstanceRepository.findByIdCharacter(2L)).thenReturn(Optional.empty());
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> {
+            WorldInstanceEntity entity = i.getArgument(0);
+            if (entity.getId() == null) {
+                entity.setId(entity.getIdCharacter() == 1L ? 301L : 302L);
+            }
+            return entity;
+        });
+
+        WorldQuestStateEntity quest1 = new WorldQuestStateEntity();
+        quest1.setIdWorldInstance(301L);
+        quest1.setQuestId("quest.shared");
+        quest1.setState(QuestState.ACTIVE);
+        WorldQuestStateEntity quest2 = new WorldQuestStateEntity();
+        quest2.setIdWorldInstance(302L);
+        quest2.setQuestId("quest.shared");
+        quest2.setState(QuestState.FAILED);
+        when(questStateRepository.findByIdWorldInstanceAndQuestId(301L, "quest.shared")).thenReturn(Optional.of(quest1));
+        when(questStateRepository.findByIdWorldInstanceAndQuestId(302L, "quest.shared")).thenReturn(Optional.of(quest2));
+
+        WorldInstanceEntity w1 = service.createWorldInstance(1L);
+        WorldInstanceEntity w2 = service.createWorldInstance(2L);
+
+        assertNotEquals(w1.getId(), w2.getId());
+        assertEquals(QuestState.ACTIVE, service.getQuestState(w1.getId(), "quest.shared").orElseThrow().getState());
+        assertEquals(QuestState.FAILED, service.getQuestState(w2.getId(), "quest.shared").orElseThrow().getState());
     }
 }
