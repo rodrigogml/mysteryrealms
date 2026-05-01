@@ -25,6 +25,27 @@ public final class ProgressionService {
     private ProgressionService() {}
 
     /**
+     * Snapshot de progressão aplicado em um level-up específico.
+     *
+     * @param level nível atingido
+     * @param attributePointGranted indica ganho de ponto de atributo
+     * @param talentGranted indica ganho de talento
+     * @param resourceGranted indica ganho de recurso
+     */
+    public record ProgressionMilestone(int level, boolean attributePointGranted, boolean talentGranted, boolean resourceGranted) {}
+
+    /**
+     * Resultado consolidado da aplicação de progressão com base no XP acumulado.
+     *
+     * @param targetLevel nível final atingido
+     * @param levelsGained quantidade de níveis ganhos
+     * @param attributePointsGranted total de pontos de atributo concedidos
+     * @param talentsGranted total de talentos concedidos
+     * @param resourcesGranted total de recursos concedidos
+     */
+    public record LevelUpResult(int targetLevel, int levelsGained, int attributePointsGranted, int talentsGranted, int resourcesGranted) {}
+
+    /**
      * XP incremental necessário para avançar do nível {@code n} para o nível {@code n+1}.
      *
      * @param n nível atual
@@ -80,6 +101,41 @@ public final class ProgressionService {
     public static int levelsGained(long xpAccumulated, int currentLevel) {
         if (currentLevel < 1) throw new IllegalArgumentException("Nível atual deve ser >= 1");
         return Math.max(0, levelFromAccumulatedXp(xpAccumulated) - currentLevel);
+    }
+
+    public static ProgressionMilestone milestoneForLevel(int level) {
+        if (level < 2) {
+            return new ProgressionMilestone(level, false, false, false);
+        }
+        return new ProgressionMilestone(level, peaOnLevelUp(level) > 0, talentOnLevelUp(level) > 0, resourceOnLevelUp(level) > 0);
+    }
+
+    public static int talentOnLevelUp(int newLevel) {
+        if (newLevel < 1) return 0;
+        return newLevel % 4 == 0 ? 1 : 0;
+    }
+
+    public static int resourceOnLevelUp(int newLevel) {
+        if (newLevel < 1) return 0;
+        return newLevel % 3 == 0 ? 1 : 0;
+    }
+
+    public static LevelUpResult evaluateLevelUp(long xpAccumulated, int currentLevel) {
+        if (currentLevel < 1) throw new IllegalArgumentException("Nível atual deve ser >= 1");
+        int targetLevel = levelFromAccumulatedXp(xpAccumulated);
+        if (targetLevel <= currentLevel) {
+            return new LevelUpResult(currentLevel, 0, 0, 0, 0);
+        }
+
+        int attributePoints = 0;
+        int talents = 0;
+        int resources = 0;
+        for (int level = currentLevel + 1; level <= targetLevel; level++) {
+            attributePoints += peaOnLevelUp(level);
+            talents += talentOnLevelUp(level);
+            resources += resourceOnLevelUp(level);
+        }
+        return new LevelUpResult(targetLevel, targetLevel - currentLevel, attributePoints, talents, resources);
     }
 
     /**

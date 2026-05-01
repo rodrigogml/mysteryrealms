@@ -155,4 +155,15 @@ class CharacterAttributeServiceTest {
     void calculateFinalBlock_ordemCorretaFloorAntesFlat() {
         assertEquals(12, CharacterAttributeService.calculateFinalBlock(10, 0, 0, 0, 0.15, 0, 1, 0));
     }
+
+    @Test
+    void calculosCompostos_mantemMesmaRegraEntreDanoDefesaEBloqueio() {
+        int damage = CharacterAttributeService.calculateFinalDamage(10, 5, 3, 2, 1, 0.2, 0.1, 4, 2);
+        int defense = CharacterAttributeService.calculateFinalDefense(10, 5, 3, 2, 1, 0.2, 0.1, 4, 2);
+        int block = CharacterAttributeService.calculateFinalBlock(10, 5, 5, 1, 0.2, 0.1, 4, 2);
+
+        assertEquals(25, damage);
+        assertEquals(25, defense);
+        assertEquals(25, block);
+    }
 }
