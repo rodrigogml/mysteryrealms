@@ -9,7 +9,6 @@ import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopParticipa
 import br.eng.rodrigogml.mysteryrealms.application.coop.repository.CoopSessionRepository;
 import br.eng.rodrigogml.mysteryrealms.application.coop.service.CoopSessionService;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.UserEntity;
-import br.eng.rodrigogml.mysteryrealms.application.user.service.EmailService;
 import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanceRepository;
@@ -21,8 +20,12 @@ import br.eng.rodrigogml.mysteryrealms.domain.combat.service.CombatService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.mockito.Mockito.mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -67,8 +70,15 @@ class IntegrationCriticalFlowsTest {
     @Autowired
     private CoopSessionRepository coopSessionRepository;
 
-    @MockBean
-    private EmailService emailService;
+
+
+    @TestConfiguration
+    static class IntegrationTestConfig {
+        @Bean
+        JavaMailSender javaMailSender() {
+            return mock(JavaMailSender.class);
+        }
+    }
 
     @Test
     void shouldCreateUserAndCharacterWithInitialWorldInstance() {

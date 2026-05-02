@@ -1,5 +1,9 @@
 package br.eng.rodrigogml.mysteryrealms.application.character.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterBackpackItemRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterEquippedItemRepository;
@@ -139,8 +143,53 @@ public class CharacterService {
      *                                  ou já existir um personagem com o mesmo nome
      */
     public CharacterEntity createCharacter(Long userId, String name, Race race, CharacterClass characterClass) {
+        return createCharacter(userId, name, "Unknown", Gender.OTHER, 20, race, characterClass);
+    }
+
+    /**
+     * Cria personagem a partir de DTO do wizard de criação.
+     *
+     * @param userId identificador do usuário
+     * @param creation dados de criação
+     * @return personagem criado
+     */
+    public CharacterEntity createCharacter(Long userId, CharacterCreationDTO creation) {
+        requireNonNull(creation, "character.error.invalidPayload");
+        return createCharacter(userId, creation.getName(), creation.getSurname(), creation.getGender(),
+                creation.getInitialAge(), creation.getRace(), creation.getCharacterClass());
+    }
+
+
+    /**
+     * Cria um personagem e o seleciona automaticamente.
+     *
+     * @param userId identificador do usuário
+     * @param creation dados de criação do personagem
+     * @return personagem criado já com último acesso registrado
+     */
+    public CharacterEntity createAndSelectCharacter(Long userId, CharacterCreationDTO creation) {
+        CharacterEntity created = createCharacter(userId, creation);
+        return selectCharacter(userId, created.getId());
+    }
+    /**
+     * Cria um novo personagem com identidade completa do fluxo de criação.
+     *
+     * @param userId o ID do usuário dono do personagem
+     * @param name nome do personagem
+     * @param surname sobrenome do personagem
+     * @param gender gênero do personagem
+     * @param initialAge idade inicial do personagem
+     * @param race raça do personagem
+     * @param characterClass classe do personagem
+     * @return a entidade do personagem criado
+     */
+    public CharacterEntity createCharacter(Long userId, String name, String surname, Gender gender,
+            Integer initialAge, Race race, CharacterClass characterClass) {
         requirePositiveId(userId, "character.error.invalidUserId");
         String normalizedName = normalizeAndValidateCharacterName(name);
+        String normalizedSurname = normalizeAndValidateSurname(surname);
+        Gender validatedGender = requireNonNull(gender, "character.error.invalidGender");
+        Integer validatedInitialAge = normalizeAndValidateInitialAge(initialAge);
         if (characterRepository.countByIdUser(userId) >= 50) {
             throw new ValidationException("character.error.limitReached");
         }
@@ -149,7 +198,7 @@ public class CharacterService {
         }
 
         // Utiliza o domínio para calcular atributos iniciais
-        Character domainChar = new Character(normalizedName, "Unknown", Gender.OTHER, race, characterClass, 20);
+        Character domainChar = new Character(normalizedName, normalizedSurname, validatedGender, race, characterClass, validatedInitialAge);
         AttributeSet attrs = domainChar.getAttributes();
 
         CharacterEntity entity = new CharacterEntity();
@@ -202,9 +251,31 @@ public class CharacterService {
      */
     public List<CharacterEntity> listCharacters(Long userId) {
         requirePositiveId(userId, "character.error.invalidUserId");
-        return characterRepository.findAllByIdUser(userId);
+        return characterRepository.findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(userId);
     }
 
+
+    /**
+     * Lista personagens no formato resumido para tela pós-login.
+     *
+     * @param userId identificador do usuário
+     * @return lista resumida ordenada
+     */
+    public List<CharacterSummaryDTO> listCharacterSummaries(Long userId) {
+        List<CharacterEntity> entities = listCharacters(userId);
+        return entities.stream().map(this::toSummary).toList();
+    }
+
+    private CharacterSummaryDTO toSummary(CharacterEntity entity) {
+        CharacterSummaryDTO summary = new CharacterSummaryDTO();
+        summary.setId(entity.getId());
+        summary.setName(entity.getName());
+        summary.setRace(entity.getRace());
+        summary.setCharacterClass(entity.getCharacterClass());
+        summary.setCurrentLevel(entity.getCurrentLevel());
+        summary.setLastAccessedAt(entity.getLastAccessedAt());
+        return summary;
+    }
     /**
      * Seleciona um personagem para jogar, atualizando a data do último acesso.
      *
@@ -223,6 +294,9 @@ public class CharacterService {
         if (!character.getIdUser().equals(userId)) {
             throw new ValidationException("character.error.notOwned");
         }
+
+        worldInstanceRepository.findByIdCharacter(characterId)
+                .orElseThrow(() -> new ValidationException("character.error.worldInstanceNotFound"));
 
         character.setLastAccessedAt(LocalDateTime.now());
         return characterRepository.save(character);
@@ -271,10 +345,50 @@ public class CharacterService {
         return normalizedName;
     }
 
+
+    private String normalizeAndValidateSurname(String surname) {
+        if (surname == null || surname.isBlank()) {
+            throw new ValidationException("character.error.surnameBlank");
+        }
+
+        String normalizedSurname = surname.trim();
+        if (normalizedSurname.length() > 100) {
+            throw new ValidationException("character.error.surnameTooLong");
+        }
+        return normalizedSurname;
+    }
+
+    private Integer normalizeAndValidateInitialAge(Integer initialAge) {
+        if (initialAge == null || initialAge < 12 || initialAge > 120) {
+            throw new ValidationException("character.error.invalidInitialAge");
+        }
+        return initialAge;
+    }
+
+    private <T> T requireNonNull(T value, String message) {
+        if (value == null) {
+            throw new ValidationException(message);
+        }
+        return value;
+    }
+
     private void requirePositiveId(Long id, String message) {
         if (id == null || id <= 0L) {
             throw new ValidationException(message);
         }
+    }
+
+
+    /**
+     * Renomeia personagem a partir de DTO.
+     *
+     * @param userId identificador do usuário
+     * @param characterId identificador do personagem
+     * @param rename dados da renomeação
+     */
+    public void renameCharacter(Long userId, Long characterId, CharacterRenameDTO rename) {
+        requireNonNull(rename, "character.error.invalidPayload");
+        renameCharacter(userId, characterId, rename.getNewName());
     }
 
     /**
@@ -317,6 +431,30 @@ public class CharacterService {
         deleteCharacter(userId, characterId, false);
     }
 
+
+    /**
+     * Exclui personagem com confirmação textual obrigatória.
+     *
+     * @param userId identificador do usuário
+     * @param characterId identificador do personagem
+     * @param confirmationText confirmação textual com nome exato do personagem
+     */
+    public void deleteCharacter(Long userId, Long characterId, String confirmationText) {
+        deleteCharacter(userId, characterId, true, confirmationText);
+    }
+
+    /**
+     * Exclui personagem usando DTO com confirmação textual.
+     *
+     * @param userId identificador do usuário
+     * @param characterId identificador do personagem
+     * @param deletion confirmação de exclusão
+     */
+    public void deleteCharacter(Long userId, Long characterId, CharacterDeletionDTO deletion) {
+        requireNonNull(deletion, "character.error.invalidPayload");
+        deleteCharacter(userId, characterId, deletion.getConfirmationText());
+    }
+
     /**
      * Exclui permanentemente um personagem e todos os seus dados relacionados.
      *
@@ -327,6 +465,18 @@ public class CharacterService {
      *                                  ou não pertencer ao usuário
      */
     public void deleteCharacter(Long userId, Long characterId, boolean confirmed) {
+        deleteCharacter(userId, characterId, confirmed, null);
+    }
+
+    /**
+     * Exclui permanentemente um personagem com confirmação textual forte.
+     *
+     * @param userId identificador do usuário dono do personagem
+     * @param characterId identificador do personagem
+     * @param confirmed confirmação explícita da ação
+     * @param confirmationText texto de confirmação informado pelo usuário (deve ser igual ao nome)
+     */
+    public void deleteCharacter(Long userId, Long characterId, boolean confirmed, String confirmationText) {
         requirePositiveId(userId, "character.error.invalidUserId");
         requirePositiveId(characterId, "character.error.invalidCharacterId");
 
@@ -341,6 +491,8 @@ public class CharacterService {
             throw new ValidationException("character.error.notOwned");
         }
 
+        validateDeleteConfirmationText(character.getName(), confirmationText);
+
         coopParticipantRepository.deleteAllByIdCharacter(characterId);
         worldInstanceRepository.findByIdCharacter(characterId).ifPresent(this::deleteWorldInstanceGraph);
         npcRelationshipRepository.deleteAllByIdCharacter(characterId);
@@ -350,6 +502,13 @@ public class CharacterService {
         equippedItemRepository.deleteAllByIdCharacter(characterId);
         backpackItemRepository.deleteAllByIdCharacter(characterId);
         characterRepository.delete(character);
+    }
+
+
+    private void validateDeleteConfirmationText(String characterName, String confirmationText) {
+        if (confirmationText == null || !characterName.equals(confirmationText.trim())) {
+            throw new ValidationException("character.error.deleteConfirmationMismatch");
+        }
     }
 
     private void deleteWorldInstanceGraph(WorldInstanceEntity worldInstance) {
