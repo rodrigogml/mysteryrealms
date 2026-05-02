@@ -220,6 +220,23 @@ class CharacterServiceTest {
         verify(worldInstanceRepository).save(argThat(w -> w.getIdCharacter().equals(10L)));
     }
 
+    @Test
+    void createCharacter_comIdentidadeCompleta_persisteCamposInformados() {
+        when(characterRepository.countByIdUser(1L)).thenReturn(0L);
+        when(characterRepository.existsByIdUserAndName(1L, "Eowyn")).thenReturn(false);
+        CharacterEntity saved = buildEntity(11L, 1L, "Eowyn");
+        when(characterRepository.save(any())).thenReturn(saved);
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        service.createCharacter(1L, "Eowyn", "of Rohan", Gender.FEMALE, 22, Race.HUMAN, CharacterClass.WARRIOR);
+
+        verify(characterRepository).save(argThat(c ->
+                "Eowyn".equals(c.getName())
+                        && "of Rohan".equals(c.getSurname())
+                        && Gender.FEMALE == c.getGender()
+                        && c.getInitialAge() == 22));
+    }
+
     // ── RF-PE-03: Listagem e seleção de personagem ───────────────────────────
 
     @Test

@@ -147,49 +147,24 @@ public class CharacterService {
     }
 
     /**
-     * Cria personagem a partir de DTO do wizard de criação.
+     * Cria um novo personagem para o usuário com identidade completa.
      *
-     * @param userId identificador do usuário
-     * @param creation dados de criação
-     * @return personagem criado
-     */
-    public CharacterEntity createCharacter(Long userId, CharacterCreationDTO creation) {
-        requireNonNull(creation, "character.error.invalidPayload");
-        return createCharacter(userId, creation.getName(), creation.getSurname(), creation.getGender(),
-                creation.getInitialAge(), creation.getRace(), creation.getCharacterClass());
-    }
-
-
-    /**
-     * Cria um personagem e o seleciona automaticamente.
-     *
-     * @param userId identificador do usuário
-     * @param creation dados de criação do personagem
-     * @return personagem criado já com último acesso registrado
-     */
-    public CharacterEntity createAndSelectCharacter(Long userId, CharacterCreationDTO creation) {
-        CharacterEntity created = createCharacter(userId, creation);
-        return selectCharacter(userId, created.getId());
-    }
-    /**
-     * Cria um novo personagem com identidade completa do fluxo de criação.
-     *
-     * @param userId o ID do usuário dono do personagem
-     * @param name nome do personagem
-     * @param surname sobrenome do personagem
-     * @param gender gênero do personagem
-     * @param initialAge idade inicial do personagem
-     * @param race raça do personagem
-     * @param characterClass classe do personagem
+     * @param userId         o ID do usuário dono do personagem
+     * @param name           o nome do personagem
+     * @param surname        o sobrenome do personagem
+     * @param gender         o gênero do personagem
+     * @param initialAge     idade inicial do personagem (>= 1)
+     * @param race           a raça do personagem
+     * @param characterClass a classe do personagem
      * @return a entidade do personagem criado
      */
-    public CharacterEntity createCharacter(Long userId, String name, String surname, Gender gender,
-            Integer initialAge, Race race, CharacterClass characterClass) {
+    public CharacterEntity createCharacter(Long userId, String name, String surname, Gender gender, int initialAge,
+            Race race, CharacterClass characterClass) {
         requirePositiveId(userId, "character.error.invalidUserId");
         String normalizedName = normalizeAndValidateCharacterName(name);
-        String normalizedSurname = normalizeAndValidateSurname(surname);
-        Gender validatedGender = requireNonNull(gender, "character.error.invalidGender");
-        Integer validatedInitialAge = normalizeAndValidateInitialAge(initialAge);
+        String normalizedSurname = normalizeAndValidateCharacterSurname(surname);
+        requireValidInitialAge(initialAge);
+        requireNonNullGender(gender);
         if (characterRepository.countByIdUser(userId) >= 50) {
             throw new ValidationException("character.error.limitReached");
         }
@@ -198,7 +173,7 @@ public class CharacterService {
         }
 
         // Utiliza o domínio para calcular atributos iniciais
-        Character domainChar = new Character(normalizedName, normalizedSurname, validatedGender, race, characterClass, validatedInitialAge);
+        Character domainChar = new Character(normalizedName, normalizedSurname, gender, race, characterClass, initialAge);
         AttributeSet attrs = domainChar.getAttributes();
 
         CharacterEntity entity = new CharacterEntity();
@@ -345,12 +320,10 @@ public class CharacterService {
         return normalizedName;
     }
 
-
-    private String normalizeAndValidateSurname(String surname) {
+    private String normalizeAndValidateCharacterSurname(String surname) {
         if (surname == null || surname.isBlank()) {
             throw new ValidationException("character.error.surnameBlank");
         }
-
         String normalizedSurname = surname.trim();
         if (normalizedSurname.length() > 100) {
             throw new ValidationException("character.error.surnameTooLong");
@@ -358,18 +331,16 @@ public class CharacterService {
         return normalizedSurname;
     }
 
-    private Integer normalizeAndValidateInitialAge(Integer initialAge) {
-        if (initialAge == null || initialAge < 12 || initialAge > 120) {
-            throw new ValidationException("character.error.invalidInitialAge");
+    private void requireValidInitialAge(int initialAge) {
+        if (initialAge < 1) {
+            throw new ValidationException("character.error.initialAgeInvalid");
         }
-        return initialAge;
     }
 
-    private <T> T requireNonNull(T value, String message) {
-        if (value == null) {
-            throw new ValidationException(message);
+    private void requireNonNullGender(Gender gender) {
+        if (gender == null) {
+            throw new ValidationException("character.error.genderRequired");
         }
-        return value;
     }
 
     private void requirePositiveId(Long id, String message) {
