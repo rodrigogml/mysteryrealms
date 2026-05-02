@@ -1,5 +1,9 @@
 package br.eng.rodrigogml.mysteryrealms.application.character.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterBackpackItemRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterEquippedItemRepository;
@@ -225,6 +229,28 @@ public class CharacterService {
         return characterRepository.findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(userId);
     }
 
+
+    /**
+     * Lista personagens no formato resumido para tela pós-login.
+     *
+     * @param userId identificador do usuário
+     * @return lista resumida ordenada
+     */
+    public List<CharacterSummaryDTO> listCharacterSummaries(Long userId) {
+        List<CharacterEntity> entities = listCharacters(userId);
+        return entities.stream().map(this::toSummary).toList();
+    }
+
+    private CharacterSummaryDTO toSummary(CharacterEntity entity) {
+        CharacterSummaryDTO summary = new CharacterSummaryDTO();
+        summary.setId(entity.getId());
+        summary.setName(entity.getName());
+        summary.setRace(entity.getRace());
+        summary.setCharacterClass(entity.getCharacterClass());
+        summary.setCurrentLevel(entity.getCurrentLevel());
+        summary.setLastAccessedAt(entity.getLastAccessedAt());
+        return summary;
+    }
     /**
      * Seleciona um personagem para jogar, atualizando a data do último acesso.
      *
@@ -243,6 +269,9 @@ public class CharacterService {
         if (!character.getIdUser().equals(userId)) {
             throw new ValidationException("character.error.notOwned");
         }
+
+        worldInstanceRepository.findByIdCharacter(characterId)
+                .orElseThrow(() -> new ValidationException("character.error.worldInstanceNotFound"));
 
         character.setLastAccessedAt(LocalDateTime.now());
         return characterRepository.save(character);
@@ -320,6 +349,19 @@ public class CharacterService {
         }
     }
 
+
+    /**
+     * Renomeia personagem a partir de DTO.
+     *
+     * @param userId identificador do usuário
+     * @param characterId identificador do personagem
+     * @param rename dados da renomeação
+     */
+    public void renameCharacter(Long userId, Long characterId, CharacterRenameDTO rename) {
+        requireNonNull(rename, "character.error.invalidPayload");
+        renameCharacter(userId, characterId, rename.getNewName());
+    }
+
     /**
      * Aplica marcos de progressão com base no XP acumulado e persiste o novo nível.
      *
@@ -360,6 +402,30 @@ public class CharacterService {
         deleteCharacter(userId, characterId, false);
     }
 
+
+    /**
+     * Exclui personagem com confirmação textual obrigatória.
+     *
+     * @param userId identificador do usuário
+     * @param characterId identificador do personagem
+     * @param confirmationText confirmação textual com nome exato do personagem
+     */
+    public void deleteCharacter(Long userId, Long characterId, String confirmationText) {
+        deleteCharacter(userId, characterId, true, confirmationText);
+    }
+
+    /**
+     * Exclui personagem usando DTO com confirmação textual.
+     *
+     * @param userId identificador do usuário
+     * @param characterId identificador do personagem
+     * @param deletion confirmação de exclusão
+     */
+    public void deleteCharacter(Long userId, Long characterId, CharacterDeletionDTO deletion) {
+        requireNonNull(deletion, "character.error.invalidPayload");
+        deleteCharacter(userId, characterId, deletion.getConfirmationText());
+    }
+
     /**
      * Exclui permanentemente um personagem e todos os seus dados relacionados.
      *
@@ -370,6 +436,18 @@ public class CharacterService {
      *                                  ou não pertencer ao usuário
      */
     public void deleteCharacter(Long userId, Long characterId, boolean confirmed) {
+        deleteCharacter(userId, characterId, confirmed, null);
+    }
+
+    /**
+     * Exclui permanentemente um personagem com confirmação textual forte.
+     *
+     * @param userId identificador do usuário dono do personagem
+     * @param characterId identificador do personagem
+     * @param confirmed confirmação explícita da ação
+     * @param confirmationText texto de confirmação informado pelo usuário (deve ser igual ao nome)
+     */
+    public void deleteCharacter(Long userId, Long characterId, boolean confirmed, String confirmationText) {
         requirePositiveId(userId, "character.error.invalidUserId");
         requirePositiveId(characterId, "character.error.invalidCharacterId");
 
@@ -384,6 +462,8 @@ public class CharacterService {
             throw new ValidationException("character.error.notOwned");
         }
 
+        validateDeleteConfirmationText(character.getName(), confirmationText);
+
         coopParticipantRepository.deleteAllByIdCharacter(characterId);
         worldInstanceRepository.findByIdCharacter(characterId).ifPresent(this::deleteWorldInstanceGraph);
         npcRelationshipRepository.deleteAllByIdCharacter(characterId);
@@ -393,6 +473,13 @@ public class CharacterService {
         equippedItemRepository.deleteAllByIdCharacter(characterId);
         backpackItemRepository.deleteAllByIdCharacter(characterId);
         characterRepository.delete(character);
+    }
+
+
+    private void validateDeleteConfirmationText(String characterName, String confirmationText) {
+        if (confirmationText == null || !characterName.equals(confirmationText.trim())) {
+            throw new ValidationException("character.error.deleteConfirmationMismatch");
+        }
     }
 
     private void deleteWorldInstanceGraph(WorldInstanceEntity worldInstance) {

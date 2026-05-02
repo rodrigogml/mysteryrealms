@@ -1,5 +1,9 @@
 package br.eng.rodrigogml.mysteryrealms.application.character.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterBackpackItemRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterEquippedItemRepository;
@@ -106,7 +110,78 @@ class CharacterServiceTest {
         assertEquals("Aragorn", result.getName());
     }
 
-    // ── RF-PE-02: Criação de personagem ──────────────────────────────────────
+    
+
+    @Test
+    void createCharacter_comDtoDoWizard_criaNormalmente() {
+        when(characterRepository.countByIdUser(1L)).thenReturn(0L);
+        when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
+        CharacterEntity saved = buildEntity(1L, 1L, "Aragorn");
+        when(characterRepository.save(any())).thenReturn(saved);
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        CharacterCreationDTO dto = new CharacterCreationDTO();
+        dto.setName("Aragorn");
+        dto.setSurname("Elessar");
+        dto.setGender(Gender.MALE);
+        dto.setInitialAge(35);
+        dto.setRace(Race.HUMAN);
+        dto.setCharacterClass(CharacterClass.WARRIOR);
+
+        CharacterEntity result = service.createCharacter(1L, dto);
+
+        assertEquals("Aragorn", result.getName());
+    }
+
+    @Test
+    void createCharacter_comIdentidadeCompleta_persisteDadosInformados() {
+        when(characterRepository.countByIdUser(1L)).thenReturn(0L);
+        when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
+        CharacterEntity saved = buildEntity(1L, 1L, "Aragorn");
+        when(characterRepository.save(any())).thenReturn(saved);
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        service.createCharacter(1L, "Aragorn", "Elessar", Gender.MALE, 35, Race.HUMAN, CharacterClass.WARRIOR);
+
+        verify(characterRepository).save(argThat(c -> "Elessar".equals(c.getSurname())
+                && Gender.MALE == c.getGender()
+                && Integer.valueOf(35).equals(c.getInitialAge())));
+    }
+
+    @Test
+    void createAndSelectCharacter_criaESelecionaAutomaticamente() {
+        when(characterRepository.countByIdUser(1L)).thenReturn(0L);
+        when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
+
+        CharacterEntity created = buildEntity(11L, 1L, "Aragorn");
+        when(characterRepository.save(any()))
+                .thenReturn(created)
+                .thenAnswer(i -> i.getArgument(0));
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(characterRepository.findById(11L)).thenReturn(Optional.of(created));
+        when(worldInstanceRepository.findByIdCharacter(11L)).thenReturn(Optional.of(new WorldInstanceEntity()));
+
+        CharacterCreationDTO dto = new CharacterCreationDTO();
+        dto.setName("Aragorn");
+        dto.setSurname("Elessar");
+        dto.setGender(Gender.MALE);
+        dto.setInitialAge(35);
+        dto.setRace(Race.HUMAN);
+        dto.setCharacterClass(CharacterClass.WARRIOR);
+
+        CharacterEntity result = service.createAndSelectCharacter(1L, dto);
+
+        assertNotNull(result.getLastAccessedAt());
+        verify(characterRepository, times(2)).save(any());
+    }
+
+    @Test
+    void createCharacter_idadeInicialInvalida_lancaExcecao() {
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.createCharacter(1L, "Aragorn", "Elessar", Gender.MALE, 9, Race.HUMAN, CharacterClass.WARRIOR));
+        assertEquals("character.error.invalidInitialAge", ex.getMessage());
+    }
+// ── RF-PE-02: Criação de personagem ──────────────────────────────────────
 
     @Test
     void createCharacter_nomeVazio_lancaExcecao() {
@@ -176,6 +251,23 @@ class CharacterServiceTest {
     }
 
     @Test
+    void listCharacterSummaries_retornaDadosEssenciais() {
+        CharacterEntity entity = buildEntity(1L, 5L, "Gimli");
+        entity.setRace(Race.DWARF);
+        entity.setCharacterClass(CharacterClass.WARRIOR);
+        entity.setCurrentLevel(7);
+        when(characterRepository.findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(5L)).thenReturn(List.of(entity));
+
+        List<CharacterSummaryDTO> result = service.listCharacterSummaries(5L);
+
+        assertEquals(1, result.size());
+        assertEquals("Gimli", result.get(0).getName());
+        assertEquals(Race.DWARF, result.get(0).getRace());
+        assertEquals(CharacterClass.WARRIOR, result.get(0).getCharacterClass());
+        assertEquals(7, result.get(0).getCurrentLevel());
+    }
+
+    @Test
     void listCharacters_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.listCharacters(null));
@@ -188,11 +280,24 @@ class CharacterServiceTest {
     void selectCharacter_pertenceAoUsuario_atualizaLastAccessed() {
         CharacterEntity character = buildEntity(1L, 1L, "Frodo");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.of(new WorldInstanceEntity()));
         when(characterRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         CharacterEntity result = service.selectCharacter(1L, 1L);
 
         assertNotNull(result.getLastAccessedAt());
+    }
+
+    @Test
+    void selectCharacter_semInstanciaDeMundo_lancaExcecao() {
+        CharacterEntity character = buildEntity(1L, 1L, "Frodo");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.selectCharacter(1L, 1L));
+
+        assertEquals("character.error.worldInstanceNotFound", ex.getMessage());
     }
 
     @Test
@@ -218,6 +323,19 @@ class CharacterServiceTest {
     }
 
     // ── RF-PE-04: Renomeação de personagem ───────────────────────────────────
+
+    @Test
+    void renameCharacter_comDto_aplicaRenomeacao() {
+        CharacterEntity character = buildEntity(1L, 1L, "Frodo");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(characterRepository.existsByIdUserAndName(1L, "Bilbo")).thenReturn(false);
+
+        CharacterRenameDTO dto = new CharacterRenameDTO();
+        dto.setNewName("Bilbo");
+        service.renameCharacter(1L, 1L, dto);
+
+        verify(characterRepository).save(argThat(c -> "Bilbo".equals(c.getName())));
+    }
 
     @Test
     void renameCharacter_nomeDisponivel_atualizaNome() {
@@ -296,6 +414,44 @@ class CharacterServiceTest {
     // ── RF-PE-05: Exclusão de personagem ────────────────────────────────────
 
     @Test
+    void deleteCharacter_comDto_apagaComSucesso() {
+        CharacterEntity character = buildEntity(1L, 1L, "Sam");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
+
+        CharacterDeletionDTO dto = new CharacterDeletionDTO();
+        dto.setConfirmationText("Sam");
+
+        service.deleteCharacter(1L, 1L, dto);
+
+        verify(characterRepository).delete(character);
+    }
+
+    @Test
+    void deleteCharacter_assinaturaComTexto_apagaComSucesso() {
+        CharacterEntity character = buildEntity(1L, 1L, "Sam");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
+
+        service.deleteCharacter(1L, 1L, "Sam");
+
+        verify(characterRepository).delete(character);
+    }
+
+    @Test
+    void deleteCharacter_confirmacaoTextualInvalida_lancaExcecao() {
+        CharacterEntity character = buildEntity(1L, 1L, "Frodo");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.deleteCharacter(1L, 1L, true, "Sam"));
+
+        assertEquals("character.error.deleteConfirmationMismatch", ex.getMessage());
+    }
+
+
+
+    @Test
     void deleteCharacter_pertenceAoUsuario_removeTodasAsDependencias() {
         CharacterEntity character = buildEntity(1L, 1L, "Sam");
         WorldInstanceEntity worldInstance = new WorldInstanceEntity();
@@ -310,7 +466,7 @@ class CharacterServiceTest {
         when(diaryEntryRepository.findAllByIdWorldInstance(10L)).thenReturn(List.of(diaryEntry));
         when(coopSessionRepository.findAllByIdWorldInstance(10L)).thenReturn(List.of(coopSession));
 
-        service.deleteCharacter(1L, 1L, true);
+        service.deleteCharacter(1L, 1L, true, "Sam");
 
         verify(coopParticipantRepository).deleteAllByIdCharacter(1L);
         verify(coopParticipantRepository).deleteAllByIdCoopSession(200L);
@@ -343,7 +499,7 @@ class CharacterServiceTest {
     void deleteCharacter_naoPertencoAoUsuario_lancaExcecao() {
         CharacterEntity character = buildEntity(1L, 2L, "Sam");
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
-        assertThrows(ValidationException.class, () -> service.deleteCharacter(1L, 1L, true));
+        assertThrows(ValidationException.class, () -> service.deleteCharacter(1L, 1L, true, "Sam"));
     }
 
     @Test
@@ -352,7 +508,7 @@ class CharacterServiceTest {
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
         when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
 
-        service.deleteCharacter(1L, 1L, true);
+        service.deleteCharacter(1L, 1L, true, "Sam");
 
         verify(coopParticipantRepository).deleteAllByIdCharacter(1L);
         verify(worldInstanceRepository, never()).deleteByIdCharacter(1L);
