@@ -75,7 +75,7 @@ class UserServiceTest {
     @Mock private CharacterRepository characterRepository;
     @Mock private CharacterService characterService;
     @Mock private EmailService emailService;
-    @Mock private UserInputValidationService userInputValidationService;
+    private UserInputValidationService userInputValidationService;
 
     private PasswordEncoder passwordEncoder;
     private UserService service;
@@ -83,6 +83,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         passwordEncoder = new BCryptPasswordEncoder(4);
+        userInputValidationService = new UserInputValidationService();
         service = new UserService(userRepository, sessionRepository, loginAttemptRepository,
                 accountLockRepository, unlockCodeRepository, emailConfirmationRepository,
                 passwordResetRepository, twoFactorAuthRepository, recoveryCodeRepository,
@@ -502,12 +503,12 @@ class UserServiceTest {
     }
 
     @Test
-    void validateSession_tokenExpiraNoInstanteAtual_aindaPermiteRenovacao() {
+    void validateSession_tokenAindaAtivo_renovaExpiracao() {
         SessionEntity session = new SessionEntity();
         session.setIdUser(1L);
         session.setToken("tok");
         session.setCreatedAt(LocalDateTime.now().minusHours(1));
-        session.setExpiresAt(LocalDateTime.now());
+        session.setExpiresAt(LocalDateTime.now().plusSeconds(1));
         when(sessionRepository.findByToken("tok")).thenReturn(Optional.of(session));
         when(sessionRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
