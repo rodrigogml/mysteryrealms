@@ -147,6 +147,31 @@ public class CharacterService {
     }
 
     /**
+     * Cria um novo personagem a partir do DTO do fluxo pós-login.
+     *
+     * @param userId o ID do usuário dono do personagem
+     * @param creation dados completos de criação do personagem
+     * @return a entidade do personagem criado
+     */
+    public CharacterEntity createCharacter(Long userId, CharacterCreationDTO creation) {
+        requireNonNull(creation, "character.error.invalidPayload");
+        return createCharacter(userId, creation.getName(), creation.getSurname(), creation.getGender(),
+                creation.getInitialAge(), creation.getRace(), creation.getCharacterClass());
+    }
+
+    /**
+     * Cria um personagem e o seleciona automaticamente.
+     *
+     * @param userId o ID do usuário dono do personagem
+     * @param creation dados completos de criação do personagem
+     * @return a entidade do personagem selecionado
+     */
+    public CharacterEntity createAndSelectCharacter(Long userId, CharacterCreationDTO creation) {
+        CharacterEntity created = createCharacter(userId, creation);
+        return selectCharacter(userId, created.getId());
+    }
+
+    /**
      * Cria um novo personagem para o usuário com identidade completa.
      *
      * @param userId         o ID do usuário dono do personagem
@@ -340,6 +365,12 @@ public class CharacterService {
     private void requireNonNullGender(Gender gender) {
         if (gender == null) {
             throw new ValidationException("character.error.genderRequired");
+        }
+    }
+
+    private void requireNonNull(Object value, String message) {
+        if (value == null) {
+            throw new ValidationException(message);
         }
     }
 

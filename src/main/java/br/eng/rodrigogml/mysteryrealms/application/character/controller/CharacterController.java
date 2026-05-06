@@ -6,6 +6,7 @@ import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRename
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
+import br.eng.rodrigogml.mysteryrealms.application.user.session.AuthenticatedUserContext;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import jakarta.validation.Valid;
@@ -33,41 +34,47 @@ import java.util.List;
 public class CharacterController {
 
     private final CharacterService characterService;
+    private final AuthenticatedUserContext authenticatedUserContext;
 
-    public CharacterController(CharacterService characterService) {
+    public CharacterController(CharacterService characterService, AuthenticatedUserContext authenticatedUserContext) {
         this.characterService = characterService;
+        this.authenticatedUserContext = authenticatedUserContext;
     }
 
     @GetMapping
-    public List<CharacterSummaryDTO> list(@RequestParam Long userId) {
-        return characterService.listCharacterSummaries(userId);
+    public List<CharacterSummaryDTO> list() {
+        return characterService.listCharacterSummaries(authenticatedUserId());
     }
 
     @PostMapping
     @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.CREATED)
-    public CharacterEntity createAndSelect(@RequestParam Long userId, @Valid @RequestBody CharacterCreationDTO creation) {
-        return characterService.createAndSelectCharacter(userId, creation);
+    public CharacterEntity createAndSelect(@Valid @RequestBody CharacterCreationDTO creation) {
+        return characterService.createAndSelectCharacter(authenticatedUserId(), creation);
     }
 
     @PostMapping("/{characterId}/select")
-    public CharacterEntity select(@RequestParam Long userId, @PathVariable Long characterId) {
-        return characterService.selectCharacter(userId, characterId);
+    public CharacterEntity select(@PathVariable Long characterId) {
+        return characterService.selectCharacter(authenticatedUserId(), characterId);
     }
 
     @PatchMapping("/{characterId}/name")
-    public void rename(@RequestParam Long userId, @PathVariable Long characterId, @Valid @RequestBody CharacterRenameDTO rename) {
-        characterService.renameCharacter(userId, characterId, rename);
+    public void rename(@PathVariable Long characterId, @Valid @RequestBody CharacterRenameDTO rename) {
+        characterService.renameCharacter(authenticatedUserId(), characterId, rename);
     }
 
     @DeleteMapping("/{characterId}")
     @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestParam Long userId, @PathVariable Long characterId, @Valid @RequestBody CharacterDeletionDTO deletion) {
-        characterService.deleteCharacter(userId, characterId, deletion);
+    public void delete(@PathVariable Long characterId, @Valid @RequestBody CharacterDeletionDTO deletion) {
+        characterService.deleteCharacter(authenticatedUserId(), characterId, deletion);
     }
 
     @PostMapping("/legacy")
-    public CharacterEntity createLegacy(@RequestParam Long userId, @RequestParam String name,
+    public CharacterEntity createLegacy(@RequestParam String name,
             @RequestParam Race race, @RequestParam CharacterClass characterClass) {
-        return characterService.createCharacter(userId, name, race, characterClass);
+        return characterService.createCharacter(authenticatedUserId(), name, race, characterClass);
+    }
+
+    private Long authenticatedUserId() {
+        return authenticatedUserContext.authenticatedUserId();
     }
 }
