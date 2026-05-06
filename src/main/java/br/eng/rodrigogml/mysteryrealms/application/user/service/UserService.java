@@ -25,14 +25,13 @@ import br.eng.rodrigogml.mysteryrealms.application.user.repository.TwoFactorAuth
 import br.eng.rodrigogml.mysteryrealms.application.user.repository.UnlockCodeRepository;
 import br.eng.rodrigogml.mysteryrealms.application.user.repository.UserRepository;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -81,6 +80,7 @@ public class UserService {
     private final CharacterService characterService;
     private final EmailService emailService;
     private final UserInputValidationService userInputValidationService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Cria o serviço com as dependências necessárias.
@@ -97,6 +97,8 @@ public class UserService {
      * @param characterRepository repositório de personagens
      * @param characterService serviço de personagens para remoção em cascata
      * @param emailService serviço de envio de e-mails transacionais
+     * @param userInputValidationService serviço de validação de entrada de usuário
+     * @param passwordEncoder codificador de senhas e códigos de recuperação
      */
     public UserService(UserRepository userRepository, SessionRepository sessionRepository,
             LoginAttemptRepository loginAttemptRepository, AccountLockRepository accountLockRepository,
@@ -104,7 +106,7 @@ public class UserService {
             PasswordResetRepository passwordResetRepository, TwoFactorAuthRepository twoFactorAuthRepository,
             RecoveryCodeRepository recoveryCodeRepository, CharacterRepository characterRepository,
             CharacterService characterService, EmailService emailService,
-            UserInputValidationService userInputValidationService) {
+            UserInputValidationService userInputValidationService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.sessionRepository = sessionRepository;
         this.loginAttemptRepository = loginAttemptRepository;
@@ -118,20 +120,7 @@ public class UserService {
         this.characterService = characterService;
         this.emailService = emailService;
         this.userInputValidationService = userInputValidationService;
-    }
-
-    private String hashPassword(String raw) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(raw.getBytes(StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hash) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new DomainException("system.error.sha256Unavailable", e);
-        }
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -160,7 +149,7 @@ public class UserService {
         UserEntity user = new UserEntity();
         user.setUsername(username);
         user.setEmail(email);
-        user.setPasswordHash(hashPassword(rawPassword));
+        user.setPasswordHash(passwordEncoder.encode(rawPassword));
         user.setEmailConfirmed(false);
         user.setStatus(UserStatus.PENDING_CONFIRMATION);
         user.setCreatedAt(LocalDateTime.now());
@@ -233,7 +222,7 @@ public class UserService {
         ensureActiveUser(user);
         ensureAccountNotLocked(user.getId());
 
-        if (!hashPassword(rawPassword).equals(user.getPasswordHash())) {
+        if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
             registerLoginAttempt(user.getId(), ipAddress, false);
             checkBruteForce(user);
             throw new ValidationException("user.error.passwordMismatch");
@@ -449,7 +438,7 @@ public class UserService {
         UserEntity user = userRepository.findById(reset.getIdUser())
                 .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
-        user.setPasswordHash(hashPassword(newPassword));
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
         user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
 
@@ -472,12 +461,12 @@ public class UserService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ValidationException("user.error.userNotFound"));
 
-        if (!hashPassword(currentPassword).equals(user.getPasswordHash())) {
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
             throw new ValidationException("user.error.passwordMismatch");
         }
 
         userInputValidationService.validatePassword(newPassword);
-        user.setPasswordHash(hashPassword(newPassword));
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
@@ -703,10 +692,9 @@ public class UserService {
             }
         }
 
-        String codeHash = hashPassword(code);
         List<RecoveryCodeEntity> unused = recoveryCodeRepository.findAllByIdUserAndUsedFalse(userId);
         for (RecoveryCodeEntity rc : unused) {
-            if (rc.getCodeHash().equals(codeHash)) {
+            if (passwordEncoder.matches(code, rc.getCodeHash())) {
                 rc.setUsed(true);
                 recoveryCodeRepository.save(rc);
                 return true;
@@ -780,7 +768,8 @@ public class UserService {
 
             RecoveryCodeEntity codeEntity = new RecoveryCodeEntity();
             codeEntity.setIdUser(userId);
-            codeEntity.setCodeHash(hashPassword(plain));
+            // Recovery codes are stored with the same one-way PasswordEncoder used for passwords.
+            codeEntity.setCodeHash(passwordEncoder.encode(plain));
             codeEntity.setUsed(false);
             recoveryCodeRepository.save(codeEntity);
         }

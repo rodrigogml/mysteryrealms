@@ -30,6 +30,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -75,14 +77,16 @@ class UserServiceTest {
     @Mock private EmailService emailService;
     @Mock private UserInputValidationService userInputValidationService;
 
+    private PasswordEncoder passwordEncoder;
     private UserService service;
 
     @BeforeEach
     void setUp() {
+        passwordEncoder = new BCryptPasswordEncoder(4);
         service = new UserService(userRepository, sessionRepository, loginAttemptRepository,
                 accountLockRepository, unlockCodeRepository, emailConfirmationRepository,
                 passwordResetRepository, twoFactorAuthRepository, recoveryCodeRepository,
-                characterRepository, characterService, emailService, userInputValidationService);
+                characterRepository, characterService, emailService, userInputValidationService, passwordEncoder);
     }
 
     @Test
@@ -99,6 +103,10 @@ class UserServiceTest {
         UserEntity result = service.register("jogador1", "jogador@email.com", "Senha123!");
 
         assertEquals(UserStatus.PENDING_CONFIRMATION, result.getStatus());
+        ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepository).save(userCaptor.capture());
+        assertTrue(passwordEncoder.matches("Senha123!", userCaptor.getValue().getPasswordHash()));
+        assertFalse("Senha123!".equals(userCaptor.getValue().getPasswordHash()));
         verify(emailConfirmationRepository).save(any(EmailConfirmationEntity.class));
         verify(emailService).sendRegistrationConfirmation(eq(saved), any());
     }
@@ -874,7 +882,7 @@ class UserServiceTest {
 
         RecoveryCodeEntity code = new RecoveryCodeEntity();
         code.setIdUser(1L);
-        code.setCodeHash("ff664cc51251778d99d96f5948ae09bb440c6d0d45610c315b69b0a67d64daa8");
+        code.setCodeHash(passwordEncoder.encode("RECOVERY1"));
         code.setUsed(false);
         when(recoveryCodeRepository.findAllByIdUserAndUsedFalse(1L)).thenReturn(List.of(code));
         when(recoveryCodeRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -976,7 +984,7 @@ class UserServiceTest {
         user.setId(1L);
         user.setUsername("jogador1");
         user.setEmail("jogador@email.com");
-        user.setPasswordHash("e8d3af75ae4bc94a8632b75fa79d56e600e9efce2b4f1dcdecd4713d29400a47");
+        user.setPasswordHash(passwordEncoder.encode("Senha123!"));
         user.setEmailConfirmed(true);
         user.setStatus(UserStatus.ACTIVE);
         user.setCreatedAt(LocalDateTime.now());
