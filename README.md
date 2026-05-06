@@ -8,7 +8,7 @@ Este README foi organizado para acelerar o onboarding de novos contribuidores.
 
 Antes de iniciar, garanta que você possui:
 
-- Java 21 (JDK)
+- Java 25 (JDK)
 - Maven 3.9+
 - MySQL 9.0 em execução localmente
 - Git
@@ -115,7 +115,7 @@ Essas variáveis são obrigatórias e, se ausentes/inválidas, o startup falha.
 
 **Verificar:**
 
-- Versão do Java (use Java 21).
+- Versão do Java (use Java 25, alinhado ao `pom.xml` e ao CI).
 - Banco local com credenciais e timezone alinhados ao `application.properties`.
 - Execução prévia de `mvn clean test` para limpar resíduos.
 
