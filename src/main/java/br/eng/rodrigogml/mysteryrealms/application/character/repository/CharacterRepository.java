@@ -24,12 +24,12 @@ public interface CharacterRepository extends JpaRepository<CharacterEntity, Long
     List<CharacterEntity> findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(Long idUser);
 
     /**
-     * Lista todos os personagens de um usuário ordenados por último acesso e criação.
+     * Lista todos os personagens de um usuário sem ordenação específica.
      *
      * @param idUser o ID do usuário
-     * @return lista de personagens ordenada
+     * @return lista de personagens
      */
-    List<CharacterEntity> findAllByIdUserOrderByLastAccessedAtDescCreatedAtDesc(Long idUser);
+    List<CharacterEntity> findAllByIdUser(Long idUser);
 
     /**
      * Conta os personagens de um usuário.
