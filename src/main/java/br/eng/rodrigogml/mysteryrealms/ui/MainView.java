@@ -60,10 +60,10 @@ public class MainView extends VerticalLayout {
     private static class CharacterWizardDraft {
         private String name;
         private String surname;
-        private String gender;
+        private Gender gender;
         private Integer initialAge;
-        private String race;
-        private String characterClass;
+        private Race race;
+        private CharacterClass characterClass;
     }
 
     private final UserService userService;
@@ -318,10 +318,10 @@ public class MainView extends VerticalLayout {
         CharacterWizardDraft storedDraft = (CharacterWizardDraft) VaadinSession.getCurrent().getAttribute(UiSessionAttributes.CHARACTER_WIZARD_DRAFT);
         final CharacterWizardDraft draft = storedDraft == null ? new CharacterWizardDraft() : storedDraft;
         if (storedDraft == null) {
-            draft.gender = "OTHER";
+            draft.gender = Gender.OTHER;
             draft.initialAge = 20;
-            draft.race = "HUMAN";
-            draft.characterClass = "WARRIOR";
+            draft.race = Race.HUMAN;
+            draft.characterClass = CharacterClass.WARRIOR;
         }
 
         TextField name = new TextField(message("ui.character.name"));
@@ -330,18 +330,23 @@ public class MainView extends VerticalLayout {
         TextField surname = new TextField(message("ui.character.surname"));
         surname.setRequiredIndicatorVisible(true);
         if (draft.surname != null) { surname.setValue(draft.surname); }
-        Select<String> gender = new Select<>("MALE", "FEMALE", "OTHER");
+        Select<Gender> gender = new Select<>();
+        gender.setItems(Gender.values());
         gender.setLabel(message("ui.character.gender"));
-        gender.setValue(draft.gender == null ? "OTHER" : draft.gender);
+        gender.setValue(draft.gender == null ? Gender.OTHER : draft.gender);
         IntegerField initialAge = new IntegerField(message("ui.character.initialAge"));
         initialAge.setRequiredIndicatorVisible(true);
         initialAge.setValue(draft.initialAge == null ? 20 : draft.initialAge);
-        Select<String> race = new Select<>("HUMAN", "ELF", "DWARF");
+        Select<Race> race = new Select<>();
+        race.setItems(Race.values());
+        race.setItemLabelGenerator(Race::getName);
         race.setLabel(message("ui.character.race"));
-        race.setValue(draft.race == null ? "HUMAN" : draft.race);
-        Select<String> characterClass = new Select<>("WARRIOR", "MAGE", "HUNTER", "CLERIC", "ROGUE");
+        race.setValue(draft.race == null ? Race.HUMAN : draft.race);
+        Select<CharacterClass> characterClass = new Select<>();
+        characterClass.setItems(CharacterClass.values());
+        characterClass.setItemLabelGenerator(CharacterClass::getName);
         characterClass.setLabel(message("ui.character.class"));
-        characterClass.setValue(draft.characterClass == null ? "WARRIOR" : draft.characterClass);
+        characterClass.setValue(draft.characterClass == null ? CharacterClass.WARRIOR : draft.characterClass);
 
         Paragraph step = new Paragraph(message("ui.character.wizardStepIdentity"));
         VerticalLayout content = new VerticalLayout(step, name, surname, gender, initialAge);
@@ -388,9 +393,9 @@ public class MainView extends VerticalLayout {
             content.removeAll();
 
             Character preview = new Character(name.getValue().trim(), surname.getValue().trim(),
-                    Gender.valueOf(gender.getValue()),
-                    Race.valueOf(race.getValue()),
-                    CharacterClass.valueOf(characterClass.getValue()),
+                    gender.getValue(),
+                    race.getValue(),
+                    characterClass.getValue(),
                     initialAge.getValue());
             AttributeSet attrs = preview.getAttributes();
             Paragraph attributesPreview = new Paragraph(message("ui.character.wizardAttrPreview",
@@ -398,7 +403,8 @@ public class MainView extends VerticalLayout {
                     attrs.perception(), attrs.charisma(), attrs.willpower()));
 
             content.add(step, race, characterClass,
-                    new Paragraph(message("ui.character.wizardReview", name.getValue(), surname.getValue(), gender.getValue(), initialAge.getValue(), race.getValue(), characterClass.getValue())),
+                    new Paragraph(message("ui.character.wizardReview", name.getValue(), surname.getValue(), gender.getValue(),
+                            initialAge.getValue(), race.getValue().getName(), characterClass.getValue().getName())),
                     attributesPreview);
             back.setVisible(true);
             next.setVisible(false);
@@ -419,10 +425,10 @@ public class MainView extends VerticalLayout {
                 CharacterCreationDTO dto = new CharacterCreationDTO();
                 dto.setName(name.getValue());
                 dto.setSurname(surname.getValue());
-                dto.setGender(Gender.valueOf(gender.getValue()));
+                dto.setGender(gender.getValue());
                 dto.setInitialAge(initialAge.getValue());
-                dto.setRace(Race.valueOf(race.getValue()));
-                dto.setCharacterClass(CharacterClass.valueOf(characterClass.getValue()));
+                dto.setRace(race.getValue());
+                dto.setCharacterClass(characterClass.getValue());
                 characterService.createAndSelectCharacter(userId, dto);
                 VaadinSession.getCurrent().setAttribute(UiSessionAttributes.CHARACTER_WIZARD_DRAFT, null);
                 dialog.close();
