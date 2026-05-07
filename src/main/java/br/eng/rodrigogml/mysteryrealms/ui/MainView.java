@@ -6,6 +6,9 @@ import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRename
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.SessionEntity;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.Character;
 import br.eng.rodrigogml.mysteryrealms.application.user.service.LoginResultVO;
@@ -13,6 +16,7 @@ import br.eng.rodrigogml.mysteryrealms.application.user.entity.TwoFactorMethod;
 import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
 import br.eng.rodrigogml.mysteryrealms.common.error.ErrorMapperService;
 import br.eng.rodrigogml.mysteryrealms.common.error.ErrorResponseVO;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
@@ -51,9 +55,7 @@ import java.util.List;
 @Route("")
 public class MainView extends VerticalLayout {
 
-    private static final String SESSION_TOKEN_ATTRIBUTE = "mysteryrealms.authToken";
-    private static final String CHARACTER_WIZARD_DRAFT_ATTRIBUTE = "mysteryrealms.characterWizardDraft";
-
+    private static final String SESSION_TOKEN_ATTRIBUTE = UiSessionAttributes.AUTH_TOKEN;
 
     private static class CharacterWizardDraft {
         private String name;
@@ -88,14 +90,14 @@ public class MainView extends VerticalLayout {
 
     private void render() {
         removeAll();
-        String token = (String) VaadinSession.getCurrent().getAttribute(SESSION_TOKEN_ATTRIBUTE);
+        String token = (String) VaadinSession.getCurrent().getAttribute(UiSessionAttributes.AUTH_TOKEN);
         if (token != null) {
             try {
                 SessionEntity session = userService.validateSession(token);
                 renderAuthenticated(session);
                 return;
             } catch (RuntimeException ex) {
-                VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, null);
+                VaadinSession.getCurrent().setAttribute(UiSessionAttributes.AUTH_TOKEN, null);
             }
         }
         renderAccess();
@@ -170,7 +172,7 @@ public class MainView extends VerticalLayout {
                     openSecondFactorDialog(result, email.getValue(), password.getValue());
                     return;
                 }
-                VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, result.session().getToken());
+                VaadinSession.getCurrent().setAttribute(UiSessionAttributes.AUTH_TOKEN, result.session().getToken());
                 renderAuthenticated(result.session());
             } catch (RuntimeException ex) {
                 showStandardError(ex);
@@ -202,7 +204,7 @@ public class MainView extends VerticalLayout {
         Button confirm = new Button(message("ui.login.secondFactorConfirm"), event -> {
             try {
                 SessionEntity session = userService.completeTwoFactorLogin(pendingResult[0].userId(), code.getValue());
-                VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, session.getToken());
+                VaadinSession.getCurrent().setAttribute(UiSessionAttributes.AUTH_TOKEN, session.getToken());
                 dialog.close();
                 renderAuthenticated(session);
             } catch (RuntimeException ex) {
@@ -246,7 +248,7 @@ public class MainView extends VerticalLayout {
         H1 title = new H1(message("ui.app.title"));
         Paragraph status = new Paragraph(message("ui.game.ready", session.getIdUser()));
         Button logout = new Button(message("ui.logout.submit"), event -> {
-            String token = (String) VaadinSession.getCurrent().getAttribute(SESSION_TOKEN_ATTRIBUTE);
+            String token = (String) VaadinSession.getCurrent().getAttribute(UiSessionAttributes.AUTH_TOKEN);
             if (token != null) {
                 try {
                     userService.logout(token);
@@ -254,7 +256,7 @@ public class MainView extends VerticalLayout {
                     showStandardError(ex);
                 }
             }
-            VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, null);
+            VaadinSession.getCurrent().setAttribute(UiSessionAttributes.AUTH_TOKEN, null);
             renderAccess();
         });
 
@@ -313,7 +315,7 @@ public class MainView extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle(message("ui.character.wizardTitle"));
 
-        CharacterWizardDraft storedDraft = (CharacterWizardDraft) VaadinSession.getCurrent().getAttribute(CHARACTER_WIZARD_DRAFT_ATTRIBUTE);
+        CharacterWizardDraft storedDraft = (CharacterWizardDraft) VaadinSession.getCurrent().getAttribute(UiSessionAttributes.CHARACTER_WIZARD_DRAFT);
         final CharacterWizardDraft draft = storedDraft == null ? new CharacterWizardDraft() : storedDraft;
         if (storedDraft == null) {
             draft.gender = "OTHER";
@@ -359,7 +361,7 @@ public class MainView extends VerticalLayout {
             draft.initialAge = initialAge.getValue();
             draft.race = race.getValue();
             draft.characterClass = characterClass.getValue();
-            VaadinSession.getCurrent().setAttribute(CHARACTER_WIZARD_DRAFT_ATTRIBUTE, draft);
+            VaadinSession.getCurrent().setAttribute(UiSessionAttributes.CHARACTER_WIZARD_DRAFT, draft);
         };
         Runnable refreshWizardState = () -> {
             boolean validIdentity = validateWizardIdentity(name, surname, initialAge);
@@ -386,9 +388,9 @@ public class MainView extends VerticalLayout {
             content.removeAll();
 
             Character preview = new Character(name.getValue().trim(), surname.getValue().trim(),
-                    br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender.valueOf(gender.getValue()),
-                    br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race.valueOf(race.getValue()),
-                    br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass.valueOf(characterClass.getValue()),
+                    Gender.valueOf(gender.getValue()),
+                    Race.valueOf(race.getValue()),
+                    CharacterClass.valueOf(characterClass.getValue()),
                     initialAge.getValue());
             AttributeSet attrs = preview.getAttributes();
             Paragraph attributesPreview = new Paragraph(message("ui.character.wizardAttrPreview",
@@ -417,12 +419,12 @@ public class MainView extends VerticalLayout {
                 CharacterCreationDTO dto = new CharacterCreationDTO();
                 dto.setName(name.getValue());
                 dto.setSurname(surname.getValue());
-                dto.setGender(br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender.valueOf(gender.getValue()));
+                dto.setGender(Gender.valueOf(gender.getValue()));
                 dto.setInitialAge(initialAge.getValue());
-                dto.setRace(br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race.valueOf(race.getValue()));
-                dto.setCharacterClass(br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass.valueOf(characterClass.getValue()));
+                dto.setRace(Race.valueOf(race.getValue()));
+                dto.setCharacterClass(CharacterClass.valueOf(characterClass.getValue()));
                 characterService.createAndSelectCharacter(userId, dto);
-                VaadinSession.getCurrent().setAttribute(CHARACTER_WIZARD_DRAFT_ATTRIBUTE, null);
+                VaadinSession.getCurrent().setAttribute(UiSessionAttributes.CHARACTER_WIZARD_DRAFT, null);
                 dialog.close();
                 Notification.show(message("ui.character.created"));
                 render();
@@ -447,28 +449,26 @@ public class MainView extends VerticalLayout {
         Paragraph title = new Paragraph(summary.getName() + " - " + summary.getRace() + " / "
                 + summary.getCharacterClass() + " Lv." + summary.getCurrentLevel());
 
-        Button select = new Button(message("ui.character.select"), e -> {
-            try {
-                characterService.selectCharacter(userId, summary.getId());
-                Notification.show(message("ui.character.selected"));
-                render();
-            } catch (RuntimeException ex) {
-                showStandardError(ex);
-            }
-        });
-        Button play = new Button(message("ui.character.play"), e -> {
-            try {
-                characterService.selectCharacter(userId, summary.getId());
-                Notification.show(message("ui.character.playing", summary.getName()));
-            } catch (RuntimeException ex) {
-                showStandardError(ex);
-            }
-        });
+        Button select = new Button(message("ui.character.select"), e -> selectCharacterAndNavigate(userId, summary,
+                message("ui.character.selected")));
+        Button play = new Button(message("ui.character.play"), e -> selectCharacterAndNavigate(userId, summary,
+                message("ui.character.playing", summary.getName())));
         Button rename = new Button(message("ui.character.rename"), e -> openRenameDialog(userId, summary));
         Button delete = new Button(message("ui.character.delete"), e -> openDeleteDialog(userId, summary));
 
         card.add(title, new HorizontalLayout(play, select, rename, delete));
         return card;
+    }
+
+    private void selectCharacterAndNavigate(Long userId, CharacterSummaryDTO summary, String notificationMessage) {
+        try {
+            characterService.selectCharacter(userId, summary.getId());
+            VaadinSession.getCurrent().setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, summary.getId());
+            Notification.show(notificationMessage);
+            UI.getCurrent().navigate("game");
+        } catch (RuntimeException ex) {
+            showStandardError(ex);
+        }
     }
 
     private void openRenameDialog(Long userId, CharacterSummaryDTO summary) {
