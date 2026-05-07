@@ -8,7 +8,7 @@ USE mysteryrealms;
 -- PERSONAGENS
 -- ============================================================
 ALTER TABLE character
-    ADD CONSTRAINT chk_character_initialAge_positive CHECK (initialAge > 0),
+    ADD CONSTRAINT chk_character_initialAge_bounds CHECK (initialAge >= 12 AND initialAge <= 120),
     ADD CONSTRAINT chk_character_level_positive CHECK (currentLevel >= 1),
     ADD CONSTRAINT chk_character_xp_nonNegative CHECK (accumulatedXp >= 0),
     ADD CONSTRAINT chk_character_fatigue_bounds CHECK (minFatigue <= currentFatigue AND currentFatigue <= maxFatigue),

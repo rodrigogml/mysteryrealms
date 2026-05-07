@@ -82,8 +82,8 @@ public class Character {
             throw new IllegalArgumentException("raca não pode ser nula");
         if (classe == null)
             throw new IllegalArgumentException("classe não pode ser nula");
-        if (initialAge < 1)
-            throw new IllegalArgumentException("idadeInicial deve ser >= 1, recebido: " + initialAge);
+        if (initialAge < 12 || initialAge > 120)
+            throw new IllegalArgumentException("idadeInicial deve estar entre 12 e 120, recebido: " + initialAge);
 
         this.name = name;
         this.surname = surname;

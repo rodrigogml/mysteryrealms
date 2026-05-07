@@ -183,7 +183,7 @@ public class CharacterService {
      * @param name           o nome do personagem
      * @param surname        o sobrenome do personagem
      * @param gender         o gênero do personagem
-     * @param initialAge     idade inicial do personagem (>= 1)
+     * @param initialAge     idade inicial do personagem (12 a 120, inclusive)
      * @param race           a raça do personagem
      * @param characterClass a classe do personagem
      * @return a entidade do personagem criado
@@ -358,7 +358,7 @@ public class CharacterService {
     }
 
     private void requireValidInitialAge(int initialAge) {
-        if (initialAge < 1) {
+        if (initialAge < 12 || initialAge > 120) {
             throw new ValidationException("character.error.initialAgeInvalid");
         }
     }

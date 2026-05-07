@@ -17,7 +17,7 @@ O sistema deve armazenar os seguintes campos de identidade do personagem:
 | `genero` | enum | Sim | Valores: `MASCULINO`, `FEMININO`, `OUTRO`. |
 | `raca` | enum | Sim | Conforme RF-FP-07. |
 | `classe` | enum | Sim | Conforme RF-FP-08. |
-| `idadeInicial` | inteiro | Sim | `>= 1`. |
+| `idadeInicial` | inteiro | Sim | Regra oficial: entre `12` e `120`, inclusive. |
 
 ---
 
