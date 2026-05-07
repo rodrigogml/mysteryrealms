@@ -171,12 +171,25 @@ class CharacterServiceTest {
     }
 
     @Test
-    void createCharacter_idadeInicialInvalida_lancaExcecao() {
+    void createCharacter_idadeInicialAbaixoDoMinimo_lancaExcecao() {
         ValidationException ex = assertThrows(ValidationException.class,
-                () -> service.createCharacter(1L, "Aragorn", "Elessar", Gender.MALE, 9, Race.HUMAN, CharacterClass.WARRIOR));
-        assertEquals("character.error.invalidInitialAge", ex.getMessage());
+                () -> service.createCharacter(1L, "Aragorn", "Elessar", Gender.MALE, 11,
+                        Race.HUMAN, CharacterClass.WARRIOR));
+
+        assertEquals("character.error.initialAgeInvalid", ex.getMessage());
+        verify(characterRepository, never()).countByIdUser(anyLong());
     }
-// ── RF-PE-02: Criação de personagem ──────────────────────────────────────
+
+    @Test
+    void createCharacter_idadeInicialAcimaDoMaximo_lancaExcecao() {
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.createCharacter(1L, "Aragorn", "Elessar", Gender.MALE, 121,
+                        Race.HUMAN, CharacterClass.WARRIOR));
+
+        assertEquals("character.error.initialAgeInvalid", ex.getMessage());
+        verify(characterRepository, never()).countByIdUser(anyLong());
+    }
+    // ── RF-PE-02: Criação de personagem ──────────────────────────────────────
 
     @Test
     void createCharacter_nomeVazio_lancaExcecao() {

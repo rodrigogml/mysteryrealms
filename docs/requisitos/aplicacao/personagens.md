@@ -18,6 +18,7 @@ Requisitos funcionais relacionados à criação, gerenciamento e seleção de pe
   - Nome do personagem (obrigatório, único por usuário).
   - Raça (seleção a partir das raças jogáveis definidas em `fichaDoPersonagem.md`).
   - Classe (seleção a partir das classes jogáveis definidas em `fichaDoPersonagem.md`).
+  - Idade inicial (obrigatória), seguindo a regra oficial de `12` a `120` anos, inclusive.
 - Ao criar o personagem, o sistema deve:
   - Inicializar a ficha do personagem com os valores base da raça e classe selecionadas.
   - Criar uma nova instância de mundo vinculada a esse personagem (ver `instanciaDeMundo.md`).

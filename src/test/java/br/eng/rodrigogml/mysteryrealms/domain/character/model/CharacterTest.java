@@ -50,9 +50,15 @@ class CharacterTest {
     }
 
     @Test
-    void character_idadeInvalidaLancaExcecao() {
+    void character_idadeAbaixoDoMinimoLancaExcecao() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Character("Aragorn", "Elessar", Gender.MALE, Race.HUMAN, CharacterClass.WARRIOR, 0));
+                () -> new Character("Aragorn", "Elessar", Gender.MALE, Race.HUMAN, CharacterClass.WARRIOR, 11));
+    }
+
+    @Test
+    void character_idadeAcimaDoMaximoLancaExcecao() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Character("Aragorn", "Elessar", Gender.MALE, Race.HUMAN, CharacterClass.WARRIOR, 121));
     }
 
     @Test
