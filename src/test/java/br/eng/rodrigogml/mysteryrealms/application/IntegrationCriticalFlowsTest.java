@@ -1,5 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.application;
 
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterRepository;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
@@ -14,9 +15,10 @@ import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEnt
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldInstanceRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.service.WorldInstanceService;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
-import br.eng.rodrigogml.mysteryrealms.support.TestDataFactory;
 import br.eng.rodrigogml.mysteryrealms.domain.combat.service.CombatService;
+import br.eng.rodrigogml.mysteryrealms.support.TestDataFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -88,9 +90,7 @@ class IntegrationCriticalFlowsTest {
         TestDataFactory.CharacterCreationData characterData = TestDataFactory.warrior("Arannis");
         CharacterEntity character = characterService.createCharacter(
                 user.getId(),
-                characterData.name(),
-                characterData.race(),
-                characterData.characterClass());
+                characterCreation(characterData.name(), characterData.race(), characterData.characterClass()));
 
         assertNotNull(character.getId());
         assertEquals(user.getId(), character.getIdUser());
@@ -102,12 +102,16 @@ class IntegrationCriticalFlowsTest {
         TestDataFactory.RegistrationData hostRegistration = TestDataFactory.registration("host");
         UserEntity hostUser = userService.register(hostRegistration.username(), hostRegistration.email(), hostRegistration.password());
         TestDataFactory.CharacterCreationData hostData = TestDataFactory.warrior("Host");
-        CharacterEntity host = characterService.createCharacter(hostUser.getId(), hostData.name(), hostData.race(), hostData.characterClass());
+        CharacterEntity host = characterService.createCharacter(
+                hostUser.getId(),
+                characterCreation(hostData.name(), hostData.race(), hostData.characterClass()));
 
         TestDataFactory.RegistrationData guestRegistration = TestDataFactory.registration("guest");
         UserEntity guestUser = userService.register(guestRegistration.username(), guestRegistration.email(), guestRegistration.password());
         TestDataFactory.CharacterCreationData guestData = TestDataFactory.mage("Guest");
-        CharacterEntity guest = characterService.createCharacter(guestUser.getId(), guestData.name(), guestData.race(), guestData.characterClass());
+        CharacterEntity guest = characterService.createCharacter(
+                guestUser.getId(),
+                characterCreation(guestData.name(), guestData.race(), guestData.characterClass()));
 
         WorldInstanceEntity hostWorld = worldInstanceService.loadWorldInstance(host.getId());
         CoopSessionEntity session = coopSessionService.createSession(host.getId(), hostWorld.getId(), 2);
@@ -122,8 +126,12 @@ class IntegrationCriticalFlowsTest {
     @Test
     void shouldPersistCharacterStateAfterCombatAction() {
         UserEntity user = userService.register("combatUser", "combat@example.com", "StrongP@ss1");
-        CharacterEntity attacker = characterService.createCharacter(user.getId(), "Attacker", Race.HUMAN, CharacterClass.WARRIOR);
-        CharacterEntity defender = characterService.createCharacter(user.getId(), "Defender", Race.DWARF, CharacterClass.CLERIC);
+        CharacterEntity attacker = characterService.createCharacter(
+                user.getId(),
+                characterCreation("Attacker", Race.HUMAN, CharacterClass.WARRIOR));
+        CharacterEntity defender = characterService.createCharacter(
+                user.getId(),
+                characterCreation("Defender", Race.DWARF, CharacterClass.CLERIC));
 
         int rawDamage = 20;
         int block = 10;
@@ -137,5 +145,16 @@ class IntegrationCriticalFlowsTest {
         CharacterEntity reloaded = characterRepository.findById(defender.getId()).orElseThrow();
         assertEquals(expectedHp, reloaded.getHealthPoints());
         assertNotNull(attacker.getId());
+    }
+
+    private CharacterCreationDTO characterCreation(String name, Race race, CharacterClass characterClass) {
+        CharacterCreationDTO dto = new CharacterCreationDTO();
+        dto.setName(name);
+        dto.setSurname("Integration");
+        dto.setGender(Gender.OTHER);
+        dto.setInitialAge(20);
+        dto.setRace(race);
+        dto.setCharacterClass(characterClass);
+        return dto;
     }
 }

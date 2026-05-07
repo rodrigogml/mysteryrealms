@@ -95,7 +95,7 @@ class CharacterServiceTest {
     void createCharacter_limiteAtingido_lancaExcecao() {
         when(characterRepository.countByIdUser(1L)).thenReturn(50L);
         assertThrows(ValidationException.class,
-                () -> service.createCharacter(1L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
+                () -> service.createCharacter(1L, characterCreation("Aragorn", Race.HUMAN, CharacterClass.WARRIOR)));
     }
 
     @Test
@@ -104,13 +104,12 @@ class CharacterServiceTest {
         when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
         CharacterEntity saved = buildEntity(1L, 1L, "Aragorn");
         when(characterRepository.save(any())).thenReturn(saved);
-        CharacterEntity result = service.createCharacter(1L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR);
+        CharacterEntity result = service.createCharacter(1L, characterCreation("Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
 
         assertNotNull(result);
         assertEquals("Aragorn", result.getName());
     }
 
-    
 
     @Test
     void createCharacter_comDtoDoWizard_criaNormalmente() {
@@ -194,14 +193,14 @@ class CharacterServiceTest {
     @Test
     void createCharacter_nomeVazio_lancaExcecao() {
         ValidationException ex = assertThrows(ValidationException.class,
-                () -> service.createCharacter(1L, "", Race.HUMAN, CharacterClass.WARRIOR));
+                () -> service.createCharacter(1L, characterCreation("", Race.HUMAN, CharacterClass.WARRIOR)));
         assertEquals("character.error.nameBlank", ex.getMessage());
     }
 
     @Test
     void createCharacter_usuarioInvalido_lancaExcecaoSemConsultarRepositorio() {
         ValidationException ex = assertThrows(ValidationException.class,
-                () -> service.createCharacter(0L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
+                () -> service.createCharacter(0L, characterCreation("Aragorn", Race.HUMAN, CharacterClass.WARRIOR)));
 
         assertEquals("character.error.invalidUserId", ex.getMessage());
         verify(characterRepository, never()).countByIdUser(anyLong());
@@ -212,7 +211,7 @@ class CharacterServiceTest {
         when(characterRepository.countByIdUser(1L)).thenReturn(0L);
         when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(true);
         assertThrows(ValidationException.class,
-                () -> service.createCharacter(1L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
+                () -> service.createCharacter(1L, characterCreation("Aragorn", Race.HUMAN, CharacterClass.WARRIOR)));
     }
 
     @Test
@@ -221,7 +220,7 @@ class CharacterServiceTest {
         when(characterRepository.existsByIdUserAndName(1L, "Legolas")).thenReturn(false);
         CharacterEntity saved = buildEntity(10L, 1L, "Legolas");
         when(characterRepository.save(any())).thenReturn(saved);
-        service.createCharacter(1L, "Legolas", Race.ELF, CharacterClass.HUNTER);
+        service.createCharacter(1L, characterCreation("Legolas", Race.ELF, CharacterClass.HUNTER));
 
         verify(worldInstanceService).createWorldInstance(10L);
     }
@@ -540,6 +539,17 @@ class CharacterServiceTest {
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
+
+    private CharacterCreationDTO characterCreation(String name, Race race, CharacterClass characterClass) {
+        CharacterCreationDTO dto = new CharacterCreationDTO();
+        dto.setName(name);
+        dto.setSurname("Testson");
+        dto.setGender(Gender.OTHER);
+        dto.setInitialAge(20);
+        dto.setRace(race);
+        dto.setCharacterClass(characterClass);
+        return dto;
+    }
 
     private CharacterEntity buildEntity(Long id, Long idUser, String name) {
         CharacterEntity c = new CharacterEntity();
