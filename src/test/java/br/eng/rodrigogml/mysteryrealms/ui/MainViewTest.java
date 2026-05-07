@@ -12,6 +12,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.dom.Element;
+import com.vaadin.flow.function.DeploymentConfiguration;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +32,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,8 +44,8 @@ class MainViewTest {
     private static class TestVaadinSession extends VaadinSession {
         private final ReentrantLock lock = new ReentrantLock();
 
-        TestVaadinSession() {
-            super(null);
+        TestVaadinSession(VaadinService service) {
+            super(service);
         }
 
         @Override
@@ -64,13 +69,20 @@ class MainViewTest {
     @Mock private ErrorMapperService errorMapperService;
 
     private VaadinSession session;
+    private UI ui;
 
     @BeforeEach
     void setUp() {
-        session = new TestVaadinSession();
+        VaadinService service = mock(VaadinService.class);
+        DeploymentConfiguration configuration = mock(DeploymentConfiguration.class);
+        when(configuration.isProductionMode()).thenReturn(true);
+        when(service.getDeploymentConfiguration()).thenReturn(configuration);
+        session = new TestVaadinSession(service);
         session.lock();
         VaadinSession.setCurrent(session);
-        UI.setCurrent(new UI());
+        ui = new UI();
+        ui.getInternals().setSession(session);
+        UI.setCurrent(ui);
     }
 
     @AfterEach
@@ -97,6 +109,52 @@ class MainViewTest {
 
         assertEquals("tok-2fa", session.getAttribute(sessionTokenAttribute()));
         verify(userService).completeTwoFactorLogin(1L, "123456");
+    }
+
+
+    @Test
+    void login_comSegundoFator_codigoInvalido_marcaCampoComErro() {
+        LoginResultVO secondFactor = LoginResultVO.secondFactorRequired(1L, TwoFactorMethod.EMAIL, "123456");
+        when(userService.completeTwoFactorLogin(1L, "000000"))
+                .thenThrow(new RuntimeException("invalid second factor"));
+
+        MainView view = new MainView(userService, characterService, messages(), errorMapperService);
+
+        Dialog dialog = view.openSecondFactorDialog(secondFactor, "jogador@email.com", "Senha123!");
+        TextField code = textField(dialog, "Authentication code");
+        code.setValue("000000");
+        button(dialog, "Confirm").click();
+
+        assertTrue(code.isInvalid());
+        assertEquals("Invalid code", code.getErrorMessage());
+    }
+
+    @Test
+    void login_comSegundoFator_emailPermiteReenvioDeCodigo() {
+        LoginResultVO secondFactor = LoginResultVO.secondFactorRequired(1L, TwoFactorMethod.EMAIL, "123456");
+        LoginResultVO resent = LoginResultVO.secondFactorRequired(1L, TwoFactorMethod.EMAIL, "654321");
+        when(userService.login("jogador@email.com", "Senha123!", "0.0.0.0")).thenReturn(resent);
+
+        MainView view = new MainView(userService, characterService, messages(), errorMapperService);
+
+        Dialog dialog = view.openSecondFactorDialog(secondFactor, "jogador@email.com", "Senha123!");
+        Button resend = button(dialog, "Resend code");
+
+        assertTrue(resend.isVisible());
+        resend.click();
+
+        verify(userService).login("jogador@email.com", "Senha123!", "0.0.0.0");
+    }
+
+    @Test
+    void login_comSegundoFatorTotp_naoExibeReenvio() {
+        LoginResultVO secondFactor = LoginResultVO.secondFactorRequired(1L, TwoFactorMethod.TOTP, null);
+
+        MainView view = new MainView(userService, characterService, messages(), errorMapperService);
+
+        Dialog dialog = view.openSecondFactorDialog(secondFactor, "jogador@email.com", "Senha123!");
+
+        assertFalse(button(dialog, "Resend code").isVisible());
     }
 
     private StaticMessageSource messages() {
