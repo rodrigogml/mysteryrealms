@@ -256,6 +256,10 @@ Requisitos que traduzem as regras da Mecânica do Jogo em comportamentos impleme
 
 ## [Mundo e Navegação](./mundo/estruturaDeLocalizacao.md)
 - [Estrutura de Localização](./mundo/estruturaDeLocalizacao.md)
+- [Localização Inicial](./mundo/localizacaoInicial.md)
+  - [Localidade inicial canônica](./mundo/localizacaoInicial.md#localidade-inicial-canônica)
+  - [Regras de bootstrap](./mundo/localizacaoInicial.md#regras-de-bootstrap)
+  - [Seed mínimo por instância](./mundo/localizacaoInicial.md#seed-mínimo-por-instância)
 - [Estrutura Temporal](./mundo/estruturaTemporal.md)
 - [Mapa e Movimentação](./mundo/mapaEMovimentacao.md)
 - [Modelos de Ficha](./mundo/modelosDeFicha.md)
@@ -328,6 +332,7 @@ Requisitos que traduzem as regras da Mecânica do Jogo em comportamentos impleme
 ### Mundo
 - [Requisitos: Mundo e Navegação](./requisitos/mecanica/mundoENavegacao.md)
 - [Mundo: Estrutura de Localização](./mundo/estruturaDeLocalizacao.md)
+- [Mundo: Localização Inicial](./mundo/localizacaoInicial.md)
 - [Mundo: Mapa e Movimentação](./mundo/mapaEMovimentacao.md)
 - [Mundo: Estrutura Temporal](./mundo/estruturaTemporal.md)
 - [Mundo: Modelos de Ficha](./mundo/modelosDeFicha.md)

@@ -26,6 +26,7 @@ import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldLocatio
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldMarkerRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldNpcStateRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldQuestStateRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.service.WorldInstanceService;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
@@ -63,6 +64,7 @@ class CharacterServiceTest {
     @Mock private CharacterEquippedItemRepository equippedItemRepository;
     @Mock private CharacterBackpackItemRepository backpackItemRepository;
     @Mock private WorldInstanceRepository worldInstanceRepository;
+    @Mock private WorldInstanceService worldInstanceService;
     @Mock private WorldQuestStateRepository worldQuestStateRepository;
     @Mock private WorldNpcStateRepository worldNpcStateRepository;
     @Mock private WorldLocationStateRepository worldLocationStateRepository;
@@ -81,7 +83,7 @@ class CharacterServiceTest {
         service = new CharacterService(characterRepository, npcRelationshipRepository,
                 localityReputationRepository, factionReputationRepository, skillPointsRepository,
                 equippedItemRepository, backpackItemRepository, worldInstanceRepository,
-                worldQuestStateRepository, worldNpcStateRepository, worldLocationStateRepository,
+                worldInstanceService, worldQuestStateRepository, worldNpcStateRepository, worldLocationStateRepository,
                 worldMarkerRepository, diaryEntryRepository, diaryImpactRelationshipRepository,
                 diaryImpactReputationRepository, diaryImpactMarkerRepository,
                 coopSessionRepository, coopParticipantRepository);
@@ -102,8 +104,6 @@ class CharacterServiceTest {
         when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
         CharacterEntity saved = buildEntity(1L, 1L, "Aragorn");
         when(characterRepository.save(any())).thenReturn(saved);
-        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
         CharacterEntity result = service.createCharacter(1L, "Aragorn", Race.HUMAN, CharacterClass.WARRIOR);
 
         assertNotNull(result);
@@ -118,8 +118,6 @@ class CharacterServiceTest {
         when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
         CharacterEntity saved = buildEntity(1L, 1L, "Aragorn");
         when(characterRepository.save(any())).thenReturn(saved);
-        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
         CharacterCreationDTO dto = new CharacterCreationDTO();
         dto.setName("Aragorn");
         dto.setSurname("Elessar");
@@ -139,8 +137,6 @@ class CharacterServiceTest {
         when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
         CharacterEntity saved = buildEntity(1L, 1L, "Aragorn");
         when(characterRepository.save(any())).thenReturn(saved);
-        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
         service.createCharacter(1L, "Aragorn", "Elessar", Gender.MALE, 35, Race.HUMAN, CharacterClass.WARRIOR);
 
         verify(characterRepository).save(argThat(c -> "Elessar".equals(c.getSurname())
@@ -157,7 +153,6 @@ class CharacterServiceTest {
         when(characterRepository.save(any()))
                 .thenReturn(created)
                 .thenAnswer(i -> i.getArgument(0));
-        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
         when(characterRepository.findById(11L)).thenReturn(Optional.of(created));
         when(worldInstanceRepository.findByIdCharacter(11L)).thenReturn(Optional.of(new WorldInstanceEntity()));
 
@@ -213,11 +208,9 @@ class CharacterServiceTest {
         when(characterRepository.existsByIdUserAndName(1L, "Legolas")).thenReturn(false);
         CharacterEntity saved = buildEntity(10L, 1L, "Legolas");
         when(characterRepository.save(any())).thenReturn(saved);
-        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
         service.createCharacter(1L, "Legolas", Race.ELF, CharacterClass.HUNTER);
 
-        verify(worldInstanceRepository).save(argThat(w -> w.getIdCharacter().equals(10L)));
+        verify(worldInstanceService).createWorldInstance(10L);
     }
 
     @Test
@@ -226,8 +219,6 @@ class CharacterServiceTest {
         when(characterRepository.existsByIdUserAndName(1L, "Eowyn")).thenReturn(false);
         CharacterEntity saved = buildEntity(11L, 1L, "Eowyn");
         when(characterRepository.save(any())).thenReturn(saved);
-        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
         service.createCharacter(1L, "Eowyn", "of Rohan", Gender.FEMALE, 22, Race.HUMAN, CharacterClass.WARRIOR);
 
         verify(characterRepository).save(argThat(c ->

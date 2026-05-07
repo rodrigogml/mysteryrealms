@@ -17,3 +17,4 @@ spring.mail.properties.mail.smtp.starttls.enable=${MYSTERYREALMS_MAIL_SMTP_START
 
 mysteryrealms.mail.from=${MYSTERYREALMS_MAIL_FROM}
 mysteryrealms.publicBaseUrl=${MYSTERYREALMS_PUBLIC_BASE_URL}
+mysteryrealms.world.startingLocationId=${MYSTERYREALMS_WORLD_STARTING_LOCATION_ID:zona_langur_praca_das_vozes}
