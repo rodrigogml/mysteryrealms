@@ -7,8 +7,6 @@ import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummar
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.session.AuthenticatedUserContext;
-import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
-import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -66,12 +63,6 @@ public class CharacterController {
     @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long characterId, @Valid @RequestBody CharacterDeletionDTO deletion) {
         characterService.deleteCharacter(authenticatedUserId(), characterId, deletion);
-    }
-
-    @PostMapping("/legacy")
-    public CharacterEntity createLegacy(@RequestParam String name,
-            @RequestParam Race race, @RequestParam CharacterClass characterClass) {
-        return characterService.createCharacter(authenticatedUserId(), name, race, characterClass);
     }
 
     private Long authenticatedUserId() {

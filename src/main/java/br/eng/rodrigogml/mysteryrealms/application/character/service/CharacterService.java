@@ -137,21 +137,6 @@ public class CharacterService {
     }
 
     /**
-     * Cria um novo personagem para o usuário, inicializando atributos a partir da raça e classe.
-     *
-     * @param userId         o ID do usuário dono do personagem
-     * @param name           o nome do personagem
-     * @param race           a raça do personagem
-     * @param characterClass a classe do personagem
-     * @return a entidade do personagem criado
-     * @throws IllegalArgumentException se o nome for inválido, o limite de personagens for atingido
-     *                                  ou já existir um personagem com o mesmo nome
-     */
-    public CharacterEntity createCharacter(Long userId, String name, Race race, CharacterClass characterClass) {
-        return createCharacter(userId, name, "Unknown", Gender.OTHER, 20, race, characterClass);
-    }
-
-    /**
      * Cria um novo personagem a partir do DTO do fluxo pós-login.
      *
      * @param userId o ID do usuário dono do personagem
