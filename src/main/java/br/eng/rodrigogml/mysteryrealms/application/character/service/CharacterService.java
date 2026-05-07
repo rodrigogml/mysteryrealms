@@ -3,6 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.application.character.service;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDTOMapper;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSelectionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
@@ -262,18 +263,7 @@ public class CharacterService {
      */
     public List<CharacterSummaryDTO> listCharacterSummaries(Long userId) {
         List<CharacterEntity> entities = listCharacters(userId);
-        return entities.stream().map(this::toSummary).toList();
-    }
-
-    private CharacterSummaryDTO toSummary(CharacterEntity entity) {
-        CharacterSummaryDTO summary = new CharacterSummaryDTO();
-        summary.setId(entity.getId());
-        summary.setName(entity.getName());
-        summary.setRace(entity.getRace());
-        summary.setCharacterClass(entity.getCharacterClass());
-        summary.setCurrentLevel(entity.getCurrentLevel());
-        summary.setLastAccessedAt(entity.getLastAccessedAt());
-        return summary;
+        return entities.stream().map(CharacterDTOMapper::toSummary).toList();
     }
     /**
      * Seleciona um personagem para jogar, atualizando a data do último acesso.
@@ -312,20 +302,7 @@ public class CharacterService {
         CharacterEntity character = selectCharacter(userId, characterId);
         WorldInstanceEntity worldInstance = worldInstanceRepository.findByIdCharacter(characterId)
                 .orElseThrow(() -> new ValidationException("character.error.worldInstanceNotFound"));
-        return toSelection(character, worldInstance);
-    }
-
-    private CharacterSelectionDTO toSelection(CharacterEntity character, WorldInstanceEntity worldInstance) {
-        CharacterSelectionDTO selection = new CharacterSelectionDTO();
-        selection.setCharacterId(character.getId());
-        selection.setWorldInstanceId(worldInstance.getId());
-        selection.setLastAccessedAt(character.getLastAccessedAt());
-        selection.setCharacterName(character.getName());
-        selection.setRace(character.getRace());
-        selection.setCharacterClass(character.getCharacterClass());
-        selection.setCurrentLevel(character.getCurrentLevel());
-        selection.setCurrentLocationId(worldInstance.getCurrentLocationId());
-        return selection;
+        return CharacterDTOMapper.toSelection(character, worldInstance);
     }
 
     /**

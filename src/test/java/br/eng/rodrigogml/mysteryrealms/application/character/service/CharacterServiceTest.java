@@ -3,6 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.application.character.service;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSelectionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterBackpackItemRepository;
@@ -289,6 +290,33 @@ class CharacterServiceTest {
         CharacterEntity result = service.selectCharacter(1L, 1L);
 
         assertNotNull(result.getLastAccessedAt());
+    }
+
+
+    @Test
+    void selectCharacterForGame_retornaDtoComCamposParaProximaTela() {
+        CharacterEntity character = buildEntity(1L, 1L, "Frodo");
+        character.setRace(Race.HUMAN);
+        character.setCharacterClass(CharacterClass.ROGUE);
+        character.setCurrentLevel(3);
+        WorldInstanceEntity worldInstance = new WorldInstanceEntity();
+        worldInstance.setId(7L);
+        worldInstance.setIdCharacter(1L);
+        worldInstance.setCurrentLocationId("zona_langur_praca_das_vozes");
+        when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
+        when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.of(worldInstance));
+        when(characterRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        CharacterSelectionDTO result = service.selectCharacterForGame(1L, 1L);
+
+        assertEquals(1L, result.getCharacterId());
+        assertEquals("Frodo", result.getName());
+        assertEquals(Race.HUMAN, result.getRace());
+        assertEquals(CharacterClass.ROGUE, result.getCharacterClass());
+        assertEquals(3, result.getCurrentLevel());
+        assertNotNull(result.getLastAccessedAt());
+        assertEquals(7L, result.getWorldInstanceId());
+        assertEquals("zona_langur_praca_das_vozes", result.getCurrentLocationId());
     }
 
     @Test

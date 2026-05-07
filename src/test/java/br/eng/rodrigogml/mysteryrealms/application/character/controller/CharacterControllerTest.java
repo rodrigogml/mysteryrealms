@@ -78,7 +78,7 @@ class CharacterControllerTest {
                 .andExpect(jsonPath("$.characterId").value(99L))
                 .andExpect(jsonPath("$.worldInstanceId").value(7L))
                 .andExpect(jsonPath("$.lastAccessedAt").exists())
-                .andExpect(jsonPath("$.characterName").value("Aragorn"))
+                .andExpect(jsonPath("$.name").value("Aragorn"))
                 .andExpect(jsonPath("$.race").value("HUMAN"))
                 .andExpect(jsonPath("$.characterClass").value("WARRIOR"))
                 .andExpect(jsonPath("$.currentLevel").value(1))
@@ -99,7 +99,7 @@ class CharacterControllerTest {
                 .andExpect(jsonPath("$.characterId").value(1L))
                 .andExpect(jsonPath("$.worldInstanceId").value(3L))
                 .andExpect(jsonPath("$.lastAccessedAt").exists())
-                .andExpect(jsonPath("$.characterName").value("Aragorn"))
+                .andExpect(jsonPath("$.name").value("Aragorn"))
                 .andExpect(jsonPath("$.race").value("HUMAN"))
                 .andExpect(jsonPath("$.characterClass").value("WARRIOR"))
                 .andExpect(jsonPath("$.currentLevel").value(1))
@@ -172,7 +172,7 @@ class CharacterControllerTest {
         selection.setCharacterId(characterId);
         selection.setWorldInstanceId(worldInstanceId);
         selection.setLastAccessedAt(LocalDateTime.of(2026, 5, 7, 12, 0));
-        selection.setCharacterName("Aragorn");
+        selection.setName("Aragorn");
         selection.setRace(Race.HUMAN);
         selection.setCharacterClass(CharacterClass.WARRIOR);
         selection.setCurrentLevel(1);

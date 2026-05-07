@@ -16,7 +16,7 @@ public class CharacterSelectionDTO {
     private Long characterId;
     private Long worldInstanceId;
     private LocalDateTime lastAccessedAt;
-    private String characterName;
+    private String name;
     private Race race;
     private CharacterClass characterClass;
     private Integer currentLevel;
@@ -46,12 +46,12 @@ public class CharacterSelectionDTO {
         this.lastAccessedAt = lastAccessedAt;
     }
 
-    public String getCharacterName() {
-        return characterName;
+    public String getName() {
+        return name;
     }
 
-    public void setCharacterName(String characterName) {
-        this.characterName = characterName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Race getRace() {
