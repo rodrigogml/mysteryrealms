@@ -9,6 +9,7 @@ import br.eng.rodrigogml.mysteryrealms.application.user.entity.SessionEntity;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.Character;
 import br.eng.rodrigogml.mysteryrealms.application.user.service.LoginResultVO;
+import br.eng.rodrigogml.mysteryrealms.application.user.entity.TwoFactorMethod;
 import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
 import br.eng.rodrigogml.mysteryrealms.common.error.ErrorMapperService;
 import br.eng.rodrigogml.mysteryrealms.common.error.ErrorResponseVO;
@@ -166,7 +167,7 @@ public class MainView extends VerticalLayout {
             try {
                 LoginResultVO result = userService.login(email.getValue(), password.getValue(), clientIpAddress());
                 if (result.status() == LoginResultVO.Status.SECOND_FACTOR_REQUIRED) {
-                    Notification.show(message("ui.login.secondFactorRequired"));
+                    openSecondFactorDialog(result, email.getValue(), password.getValue());
                     return;
                 }
                 VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, result.session().getToken());
@@ -180,6 +181,55 @@ public class MainView extends VerticalLayout {
         form.setPadding(false);
         form.setWidthFull();
         return form;
+    }
+
+    Dialog openSecondFactorDialog(LoginResultVO initialResult, String email, String password) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle(message("ui.login.secondFactorTitle"));
+
+        TextField code = new TextField(message("ui.login.secondFactorCode"));
+        code.setWidthFull();
+        code.setAutofocus(true);
+
+        Paragraph hint = new Paragraph(message("ui.login.secondFactorRequired"));
+        VerticalLayout content = new VerticalLayout(hint, code);
+        content.setPadding(false);
+        content.setWidthFull();
+
+        LoginResultVO[] pendingResult = { initialResult };
+
+        Button confirm = new Button(message("ui.login.secondFactorConfirm"), event -> {
+            try {
+                SessionEntity session = userService.completeTwoFactorLogin(pendingResult[0].userId(), code.getValue());
+                VaadinSession.getCurrent().setAttribute(SESSION_TOKEN_ATTRIBUTE, session.getToken());
+                dialog.close();
+                renderAuthenticated(session);
+            } catch (RuntimeException ex) {
+                code.setInvalid(true);
+                code.setErrorMessage(message("ui.login.secondFactorInvalidCode"));
+                Notification.show(message("ui.login.secondFactorInvalidCode"));
+            }
+        });
+
+        Button resend = new Button(message("ui.login.secondFactorResend"), event -> {
+            try {
+                LoginResultVO resentResult = userService.login(email, password, clientIpAddress());
+                if (resentResult.status() == LoginResultVO.Status.SECOND_FACTOR_REQUIRED) {
+                    pendingResult[0] = resentResult;
+                    code.clear();
+                    code.setInvalid(false);
+                    Notification.show(message("ui.login.secondFactorResent"));
+                }
+            } catch (RuntimeException ex) {
+                showStandardError(ex);
+            }
+        });
+        resend.setVisible(initialResult.secondFactorMethod() == TwoFactorMethod.EMAIL);
+
+        dialog.add(content);
+        dialog.getFooter().add(resend, confirm);
+        dialog.open();
+        return dialog;
     }
 
     private void renderAuthenticated(SessionEntity session) {

@@ -422,6 +422,27 @@ class UserServiceTest {
     }
 
     @Test
+    void completeTwoFactorLogin_codigoInvalido_lancaExcecaoENaoCriaSessao() {
+        UserEntity user = activeUser();
+        TwoFactorAuthEntity tfa = new TwoFactorAuthEntity();
+        tfa.setIdUser(1L);
+        tfa.setMethod(TwoFactorMethod.EMAIL);
+        tfa.setActive(true);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(accountLockRepository.findTopByIdUserOrderByLockedAtDesc(1L)).thenReturn(Optional.empty());
+        when(twoFactorAuthRepository.findByIdUser(1L)).thenReturn(Optional.of(tfa));
+        when(unlockCodeRepository.findTopByIdUserAndUsedFalseOrderByExpiresAtDesc(1L)).thenReturn(Optional.empty());
+        when(recoveryCodeRepository.findAllByIdUserAndUsedFalse(1L)).thenReturn(Collections.emptyList());
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.completeTwoFactorLogin(1L, "000000"));
+
+        assertEquals("user.error.invalidSecondFactorCode", ex.getMessage());
+        verify(sessionRepository, never()).save(any());
+    }
+
+    @Test
     void completeTwoFactorLogin_usuarioNaoAtivo_lancaExcecao() {
         UserEntity user = new UserEntity();
         user.setId(1L);
