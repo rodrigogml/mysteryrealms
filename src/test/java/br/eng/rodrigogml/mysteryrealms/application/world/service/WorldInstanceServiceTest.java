@@ -1,5 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.application.world.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.DiaryEntryEntity;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.MarkerType;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.QuestState;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
 import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
@@ -73,17 +75,39 @@ class WorldInstanceServiceTest {
 
         assertEquals(42L, result.getIdCharacter());
         assertEquals(0L, result.getCurrentTimeMin());
-        assertNull(result.getCurrentLocationId());
+        assertEquals(WorldInstanceService.STARTING_LOCATION_ID, result.getCurrentLocationId());
+
+        ArgumentCaptor<WorldLocationStateEntity> locationCaptor = ArgumentCaptor.forClass(WorldLocationStateEntity.class);
+        verify(locationStateRepository).save(locationCaptor.capture());
+        assertEquals(WorldInstanceService.STARTING_LOCATION_ID, locationCaptor.getValue().getLocationId());
+        assertTrue(locationCaptor.getValue().isDiscovered());
+        assertTrue(locationCaptor.getValue().isAccessible());
+
+        ArgumentCaptor<WorldMarkerEntity> markerCaptor = ArgumentCaptor.forClass(WorldMarkerEntity.class);
+        verify(markerRepository).save(markerCaptor.capture());
+        assertEquals("mk_mundo_instanciaCriada", markerCaptor.getValue().getMarkerId());
+        assertEquals(MarkerType.FLAG, markerCaptor.getValue().getMarkerType());
+        assertTrue(markerCaptor.getValue().getFlagValue());
+
+        ArgumentCaptor<DiaryEntryEntity> diaryCaptor = ArgumentCaptor.forClass(DiaryEntryEntity.class);
+        verify(diaryEntryRepository).save(diaryCaptor.capture());
+        assertEquals("diary_mundo_inicio", diaryCaptor.getValue().getEntryId());
+        assertEquals("D1-00:00", diaryCaptor.getValue().getGameDate());
     }
 
     @Test
     void createWorldInstance_tempoInicialZero() {
         when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.empty());
-        when(worldInstanceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(worldInstanceRepository.save(any())).thenAnswer(i -> {
+            WorldInstanceEntity w = i.getArgument(0);
+            w.setId(1L);
+            return w;
+        });
 
         WorldInstanceEntity result = service.createWorldInstance(1L);
 
         assertEquals(0L, result.getCurrentTimeMin());
+        assertEquals(WorldInstanceService.STARTING_LOCATION_ID, result.getCurrentLocationId());
     }
 
     @Test
@@ -169,6 +193,9 @@ class WorldInstanceServiceTest {
 
         assertNotEquals(w1.getId(), w2.getId());
         assertNotEquals(w1.getIdCharacter(), w2.getIdCharacter());
+        verify(locationStateRepository, times(2)).save(any());
+        verify(markerRepository, times(2)).save(any());
+        verify(diaryEntryRepository, times(2)).save(any());
     }
 
     @Test
@@ -380,14 +407,16 @@ class WorldInstanceServiceTest {
         ArgumentCaptor<WorldMarkerEntity> markerCaptor = ArgumentCaptor.forClass(WorldMarkerEntity.class);
         verify(questStateRepository).save(questCaptor.capture());
         verify(npcStateRepository).save(npcCaptor.capture());
-        verify(locationStateRepository).save(locationCaptor.capture());
-        verify(markerRepository).save(markerCaptor.capture());
+        verify(locationStateRepository, times(2)).save(locationCaptor.capture());
+        verify(markerRepository, times(2)).save(markerCaptor.capture());
 
         assertNotNull(created.getId());
         assertEquals(created.getId(), questCaptor.getValue().getIdWorldInstance());
         assertEquals(created.getId(), npcCaptor.getValue().getIdWorldInstance());
-        assertEquals(created.getId(), locationCaptor.getValue().getIdWorldInstance());
-        assertEquals(created.getId(), markerCaptor.getValue().getIdWorldInstance());
+        assertTrue(locationCaptor.getAllValues().stream()
+                .allMatch(location -> created.getId().equals(location.getIdWorldInstance())));
+        assertTrue(markerCaptor.getAllValues().stream()
+                .allMatch(marker -> created.getId().equals(marker.getIdWorldInstance())));
     }
 
     @Test

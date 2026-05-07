@@ -1,5 +1,6 @@
 package br.eng.rodrigogml.mysteryrealms.application.world.service;
 
+import br.eng.rodrigogml.mysteryrealms.application.world.entity.DiaryEntryEntity;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.MarkerType;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.QuestState;
 import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
@@ -14,9 +15,11 @@ import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldMarkerR
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldNpcStateRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldQuestStateRepository;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import br.eng.rodrigogml.mysteryrealms.common.exception.DomainException;
 import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
@@ -31,6 +34,19 @@ import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 @Service
 @Transactional
 public class WorldInstanceService {
+
+    public static final String STARTING_LOCATION_ID = "zona_langur_praca_das_vozes";
+
+    private static final String INITIAL_DIARY_ENTRY_ID = "diary_mundo_inicio";
+    private static final String INITIAL_DIARY_TITLE = "Chegada a Langur";
+    private static final String INITIAL_DIARY_SUMMARY = "A jornada começou na Praça das Vozes, ponto inicial conhecido e acessível em Langur.";
+    private static final String INITIAL_DIARY_GAME_DATE = "D1-00:00";
+    private static final String INITIAL_DIARY_DIALOG_ID = "dlg_world_bootstrap";
+    private static final String INITIAL_DIARY_OPTION_ID = "op_start";
+    private static final String INITIAL_WORLD_CREATED_MARKER_ID = "mk_mundo_instanciaCriada";
+
+    @Value("${mysteryrealms.world.startingLocationId:" + STARTING_LOCATION_ID + "}")
+    private String startingLocationId = STARTING_LOCATION_ID;
 
     private final WorldInstanceRepository worldInstanceRepository;
     private final WorldQuestStateRepository questStateRepository;
@@ -79,8 +95,12 @@ public class WorldInstanceService {
         WorldInstanceEntity instance = new WorldInstanceEntity();
         instance.setIdCharacter(characterId);
         instance.setCurrentTimeMin(0);
-        instance.setCurrentLocationId(null);
-        return worldInstanceRepository.save(instance);
+        instance.setCurrentLocationId(startingLocationId);
+        WorldInstanceEntity savedInstance = worldInstanceRepository.save(instance);
+
+        seedInitialWorldState(savedInstance);
+
+        return savedInstance;
     }
 
     /**
@@ -278,6 +298,48 @@ public class WorldInstanceService {
         }
 
         markerRepository.save(entity);
+    }
+
+
+    private void seedInitialWorldState(WorldInstanceEntity instance) {
+        Long worldInstanceId = instance.getId();
+        requirePositiveId(worldInstanceId, "world.error.invalidWorldInstanceId");
+
+        createInitialLocationState(worldInstanceId);
+        createInitialMarker(worldInstanceId);
+        createInitialDiaryEntry(worldInstanceId);
+    }
+
+    private void createInitialLocationState(Long worldInstanceId) {
+        WorldLocationStateEntity locationState = new WorldLocationStateEntity();
+        locationState.setIdWorldInstance(worldInstanceId);
+        locationState.setLocationId(startingLocationId);
+        locationState.setDiscovered(true);
+        locationState.setAccessible(true);
+        locationStateRepository.save(locationState);
+    }
+
+    private void createInitialMarker(Long worldInstanceId) {
+        WorldMarkerEntity marker = new WorldMarkerEntity();
+        marker.setIdWorldInstance(worldInstanceId);
+        marker.setMarkerId(INITIAL_WORLD_CREATED_MARKER_ID);
+        marker.setMarkerType(MarkerType.FLAG);
+        marker.setFlagValue(true);
+        marker.setIntValue(null);
+        markerRepository.save(marker);
+    }
+
+    private void createInitialDiaryEntry(Long worldInstanceId) {
+        DiaryEntryEntity diaryEntry = new DiaryEntryEntity();
+        diaryEntry.setIdWorldInstance(worldInstanceId);
+        diaryEntry.setEntryId(INITIAL_DIARY_ENTRY_ID);
+        diaryEntry.setTitle(INITIAL_DIARY_TITLE);
+        diaryEntry.setSummary(INITIAL_DIARY_SUMMARY);
+        diaryEntry.setGameDate(INITIAL_DIARY_GAME_DATE);
+        diaryEntry.setDialogId(INITIAL_DIARY_DIALOG_ID);
+        diaryEntry.setOptionId(INITIAL_DIARY_OPTION_ID);
+        diaryEntry.setCreatedAt(LocalDateTime.now());
+        diaryEntryRepository.save(diaryEntry);
     }
 
     private void requirePositiveId(Long id, String message) {

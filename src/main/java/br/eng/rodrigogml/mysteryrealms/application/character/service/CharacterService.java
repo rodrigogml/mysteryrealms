@@ -26,6 +26,7 @@ import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldLocatio
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldMarkerRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldNpcStateRepository;
 import br.eng.rodrigogml.mysteryrealms.application.world.repository.WorldQuestStateRepository;
+import br.eng.rodrigogml.mysteryrealms.application.world.service.WorldInstanceService;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
@@ -60,6 +61,7 @@ public class CharacterService {
     private final CharacterEquippedItemRepository equippedItemRepository;
     private final CharacterBackpackItemRepository backpackItemRepository;
     private final WorldInstanceRepository worldInstanceRepository;
+    private final WorldInstanceService worldInstanceService;
     private final WorldQuestStateRepository worldQuestStateRepository;
     private final WorldNpcStateRepository worldNpcStateRepository;
     private final WorldLocationStateRepository worldLocationStateRepository;
@@ -82,6 +84,7 @@ public class CharacterService {
      * @param equippedItemRepository       repositório de itens equipados
      * @param backpackItemRepository       repositório de itens na mochila
      * @param worldInstanceRepository      repositório de instâncias de mundo
+     * @param worldInstanceService          serviço de bootstrap da instância de mundo
      * @param worldQuestStateRepository    repositório de estados de quests do mundo
      * @param worldNpcStateRepository      repositório de estados de NPCs do mundo
      * @param worldLocationStateRepository repositório de estados de localidades do mundo
@@ -101,6 +104,7 @@ public class CharacterService {
             CharacterEquippedItemRepository equippedItemRepository,
             CharacterBackpackItemRepository backpackItemRepository,
             WorldInstanceRepository worldInstanceRepository,
+            WorldInstanceService worldInstanceService,
             WorldQuestStateRepository worldQuestStateRepository,
             WorldNpcStateRepository worldNpcStateRepository,
             WorldLocationStateRepository worldLocationStateRepository,
@@ -119,6 +123,7 @@ public class CharacterService {
         this.equippedItemRepository = equippedItemRepository;
         this.backpackItemRepository = backpackItemRepository;
         this.worldInstanceRepository = worldInstanceRepository;
+        this.worldInstanceService = worldInstanceService;
         this.worldQuestStateRepository = worldQuestStateRepository;
         this.worldNpcStateRepository = worldNpcStateRepository;
         this.worldLocationStateRepository = worldLocationStateRepository;
@@ -233,12 +238,8 @@ public class CharacterService {
         entity.setLastAccessedAt(null);
         entity = characterRepository.save(entity);
 
-        // Cria a instância de mundo inicial para o personagem
-        WorldInstanceEntity worldInstance = new WorldInstanceEntity();
-        worldInstance.setIdCharacter(entity.getId());
-        worldInstance.setCurrentTimeMin(0);
-        worldInstance.setCurrentLocationId(null);
-        worldInstanceRepository.save(worldInstance);
+        // Centraliza o bootstrap inicial da instância de mundo.
+        worldInstanceService.createWorldInstance(entity.getId());
 
         return entity;
     }

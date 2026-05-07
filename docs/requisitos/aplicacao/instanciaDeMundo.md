@@ -20,6 +20,15 @@ Requisitos funcionais relacionados ao ciclo de vida e ao isolamento da instânci
 ## RF-IM-02 — Estado inicial do mundo
 
 - Ao criar um personagem, a instância de mundo é inicializada com o estado canônico inicial do mundo de Mystery Realms.
+- A criação da instância deve ser centralizada no serviço de aplicação responsável por instâncias de mundo.
+- O serviço de personagens não deve montar manualmente a entidade de instância de mundo nem duplicar regras de bootstrap.
+- A instância criada deve preencher `currentLocationId` com uma origem navegável válida.
+- A origem inicial canônica deve seguir a definição de `STARTING_LOCATION_ID` documentada em [`docs/mundo/localizacaoInicial.md`](../../mundo/localizacaoInicial.md).
+- A origem inicial deve iniciar descoberta e acessível no estado da instância.
+- O bootstrap deve criar o seed mínimo da instância, incluindo:
+  - Entrada de diário inicial.
+  - Marcadores necessários para indicar que o mundo foi inicializado.
+  - Estado de localidade descoberta e acessível para a origem inicial.
 - Todos os NPCs, missões e localidades partem de seus valores de início de jogo.
 - O estado inicial não pode ser influenciado por instâncias de outros personagens do mesmo usuário.
 
