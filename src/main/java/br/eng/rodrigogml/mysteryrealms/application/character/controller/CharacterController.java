@@ -3,8 +3,8 @@ package br.eng.rodrigogml.mysteryrealms.application.character.controller;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSelectionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
-import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.session.AuthenticatedUserContext;
 import jakarta.validation.Valid;
@@ -45,13 +45,13 @@ public class CharacterController {
 
     @PostMapping
     @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.CREATED)
-    public CharacterEntity createAndSelect(@Valid @RequestBody CharacterCreationDTO creation) {
-        return characterService.createAndSelectCharacter(authenticatedUserId(), creation);
+    public CharacterSelectionDTO createAndSelect(@Valid @RequestBody CharacterCreationDTO creation) {
+        return characterService.createAndSelectCharacterForGame(authenticatedUserId(), creation);
     }
 
     @PostMapping("/{characterId}/select")
-    public CharacterEntity select(@PathVariable Long characterId) {
-        return characterService.selectCharacter(authenticatedUserId(), characterId);
+    public CharacterSelectionDTO select(@PathVariable Long characterId) {
+        return characterService.selectCharacterForGame(authenticatedUserId(), characterId);
     }
 
     @PatchMapping("/{characterId}/name")
