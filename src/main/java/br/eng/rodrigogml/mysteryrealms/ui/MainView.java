@@ -188,6 +188,7 @@ public class MainView extends VerticalLayout {
         dialog.setHeaderTitle(message("ui.login.secondFactorTitle"));
 
         TextField code = new TextField(message("ui.login.secondFactorCode"));
+        code.setId("login-second-factor-code");
         code.setWidthFull();
         code.setAutofocus(true);
 
@@ -210,6 +211,7 @@ public class MainView extends VerticalLayout {
                 Notification.show(message("ui.login.secondFactorInvalidCode"));
             }
         });
+        confirm.setId("login-second-factor-confirm");
 
         Button resend = new Button(message("ui.login.secondFactorResend"), event -> {
             try {
@@ -224,6 +226,7 @@ public class MainView extends VerticalLayout {
                 showStandardError(ex);
             }
         });
+        resend.setId("login-second-factor-resend");
         resend.setVisible(initialResult.secondFactorMethod() == TwoFactorMethod.EMAIL);
 
         dialog.add(content);
