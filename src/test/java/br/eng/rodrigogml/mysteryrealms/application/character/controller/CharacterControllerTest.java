@@ -2,10 +2,12 @@ package br.eng.rodrigogml.mysteryrealms.application.character.controller;
 
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSelectionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
-import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.session.AuthenticatedUserContext;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
+import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,29 +67,47 @@ class CharacterControllerTest {
     }
 
     @Test
-    void createAndSelect_retorna201_usandoUsuarioAutenticadoSemUserIdNaRequest() throws Exception {
-        CharacterEntity entity = new CharacterEntity();
-        entity.setId(99L);
-        when(characterService.createAndSelectCharacter(eq(AUTHENTICATED_USER_ID), any())).thenReturn(entity);
+    void createAndSelect_retorna201_comContratoDeSelecaoSemExporEntidade() throws Exception {
+        CharacterSelectionDTO selection = selectionDTO(99L, 7L);
+        when(characterService.createAndSelectCharacterForGame(eq(AUTHENTICATED_USER_ID), any())).thenReturn(selection);
 
         mockMvc.perform(post("/api/characters")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Aragorn\",\"surname\":\"Elessar\",\"gender\":\"MALE\",\"initialAge\":35,\"race\":\"HUMAN\",\"characterClass\":\"WARRIOR\"}"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.characterId").value(99L))
+                .andExpect(jsonPath("$.worldInstanceId").value(7L))
+                .andExpect(jsonPath("$.lastAccessedAt").exists())
+                .andExpect(jsonPath("$.characterName").value("Aragorn"))
+                .andExpect(jsonPath("$.race").value("HUMAN"))
+                .andExpect(jsonPath("$.characterClass").value("WARRIOR"))
+                .andExpect(jsonPath("$.currentLevel").value(1))
+                .andExpect(jsonPath("$.currentLocationId").value("zona_langur_praca_das_vozes"))
+                .andExpect(jsonPath("$.idUser").doesNotExist())
+                .andExpect(jsonPath("$.strength").doesNotExist());
 
-        verify(characterService).createAndSelectCharacter(eq(AUTHENTICATED_USER_ID), any());
+        verify(characterService).createAndSelectCharacterForGame(eq(AUTHENTICATED_USER_ID), any());
     }
 
     @Test
-    void select_retorna200_usandoUsuarioAutenticadoSemUserIdNaRequest() throws Exception {
-        CharacterEntity entity = new CharacterEntity();
-        entity.setId(1L);
-        when(characterService.selectCharacter(AUTHENTICATED_USER_ID, 1L)).thenReturn(entity);
+    void select_retorna200_comContratoDeSelecaoSemExporEntidade() throws Exception {
+        CharacterSelectionDTO selection = selectionDTO(1L, 3L);
+        when(characterService.selectCharacterForGame(AUTHENTICATED_USER_ID, 1L)).thenReturn(selection);
 
         mockMvc.perform(post("/api/characters/1/select"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.characterId").value(1L))
+                .andExpect(jsonPath("$.worldInstanceId").value(3L))
+                .andExpect(jsonPath("$.lastAccessedAt").exists())
+                .andExpect(jsonPath("$.characterName").value("Aragorn"))
+                .andExpect(jsonPath("$.race").value("HUMAN"))
+                .andExpect(jsonPath("$.characterClass").value("WARRIOR"))
+                .andExpect(jsonPath("$.currentLevel").value(1))
+                .andExpect(jsonPath("$.currentLocationId").value("zona_langur_praca_das_vozes"))
+                .andExpect(jsonPath("$.idUser").doesNotExist())
+                .andExpect(jsonPath("$.strength").doesNotExist());
 
-        verify(characterService).selectCharacter(AUTHENTICATED_USER_ID, 1L);
+        verify(characterService).selectCharacterForGame(AUTHENTICATED_USER_ID, 1L);
     }
 
     @Test
@@ -110,13 +132,13 @@ class CharacterControllerTest {
 
     @Test
     void select_personagemDeOutroUsuario_retorna400() throws Exception {
-        when(characterService.selectCharacter(AUTHENTICATED_USER_ID, 99L))
+        when(characterService.selectCharacterForGame(AUTHENTICATED_USER_ID, 99L))
                 .thenThrow(new ValidationException("character.error.notOwned"));
 
         mockMvc.perform(post("/api/characters/99/select"))
                 .andExpect(status().isBadRequest());
 
-        verify(characterService).selectCharacter(AUTHENTICATED_USER_ID, 99L);
+        verify(characterService).selectCharacterForGame(AUTHENTICATED_USER_ID, 99L);
     }
 
     @Test
@@ -143,5 +165,18 @@ class CharacterControllerTest {
                 .andExpect(status().isBadRequest());
 
         verify(characterService).deleteCharacter(eq(AUTHENTICATED_USER_ID), eq(99L), any(CharacterDeletionDTO.class));
+    }
+
+    private CharacterSelectionDTO selectionDTO(Long characterId, Long worldInstanceId) {
+        CharacterSelectionDTO selection = new CharacterSelectionDTO();
+        selection.setCharacterId(characterId);
+        selection.setWorldInstanceId(worldInstanceId);
+        selection.setLastAccessedAt(LocalDateTime.of(2026, 5, 7, 12, 0));
+        selection.setCharacterName("Aragorn");
+        selection.setRace(Race.HUMAN);
+        selection.setCharacterClass(CharacterClass.WARRIOR);
+        selection.setCurrentLevel(1);
+        selection.setCurrentLocationId("zona_langur_praca_das_vozes");
+        return selection;
     }
 }

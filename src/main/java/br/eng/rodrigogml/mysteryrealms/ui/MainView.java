@@ -4,6 +4,7 @@ import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreati
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.SessionEntity;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
@@ -98,6 +99,7 @@ public class MainView extends VerticalLayout {
                 return;
             } catch (RuntimeException ex) {
                 VaadinSession.getCurrent().setAttribute(UiSessionAttributes.AUTH_TOKEN, null);
+                VaadinSession.getCurrent().setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, null);
             }
         }
         renderAccess();
@@ -257,6 +259,7 @@ public class MainView extends VerticalLayout {
                 }
             }
             VaadinSession.getCurrent().setAttribute(UiSessionAttributes.AUTH_TOKEN, null);
+            VaadinSession.getCurrent().setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, null);
             renderAccess();
         });
 
@@ -429,11 +432,12 @@ public class MainView extends VerticalLayout {
                 dto.setInitialAge(initialAge.getValue());
                 dto.setRace(race.getValue());
                 dto.setCharacterClass(characterClass.getValue());
-                characterService.createAndSelectCharacter(userId, dto);
+                CharacterEntity created = characterService.createAndSelectCharacter(userId, dto);
+                VaadinSession.getCurrent().setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, created.getId());
                 VaadinSession.getCurrent().setAttribute(UiSessionAttributes.CHARACTER_WIZARD_DRAFT, null);
                 dialog.close();
                 Notification.show(message("ui.character.created"));
-                render();
+                UI.getCurrent().navigate("game");
             } catch (RuntimeException ex) {
                 showStandardError(ex);
             }

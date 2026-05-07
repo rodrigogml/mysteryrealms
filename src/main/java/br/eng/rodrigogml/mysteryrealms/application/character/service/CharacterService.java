@@ -3,6 +3,7 @@ package br.eng.rodrigogml.mysteryrealms.application.character.service;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreationDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSelectionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
 import br.eng.rodrigogml.mysteryrealms.application.character.repository.CharacterBackpackItemRepository;
@@ -162,6 +163,18 @@ public class CharacterService {
     }
 
     /**
+     * Cria um personagem e retorna o contrato de seleção para iniciar o jogo via REST.
+     *
+     * @param userId o ID do usuário dono do personagem
+     * @param creation dados completos de criação do personagem
+     * @return DTO com dados mínimos da seleção de personagem
+     */
+    public CharacterSelectionDTO createAndSelectCharacterForGame(Long userId, CharacterCreationDTO creation) {
+        CharacterEntity created = createCharacter(userId, creation);
+        return selectCharacterForGame(userId, created.getId());
+    }
+
+    /**
      * Cria um novo personagem para o usuário com identidade completa.
      *
      * @param userId         o ID do usuário dono do personagem
@@ -286,6 +299,33 @@ public class CharacterService {
 
         character.setLastAccessedAt(LocalDateTime.now());
         return characterRepository.save(character);
+    }
+
+    /**
+     * Seleciona um personagem e retorna o contrato REST mínimo para iniciar a tela de jogo.
+     *
+     * @param userId      o ID do usuário
+     * @param characterId o ID do personagem
+     * @return DTO com identificadores persistidos e dados mínimos de apresentação
+     */
+    public CharacterSelectionDTO selectCharacterForGame(Long userId, Long characterId) {
+        CharacterEntity character = selectCharacter(userId, characterId);
+        WorldInstanceEntity worldInstance = worldInstanceRepository.findByIdCharacter(characterId)
+                .orElseThrow(() -> new ValidationException("character.error.worldInstanceNotFound"));
+        return toSelection(character, worldInstance);
+    }
+
+    private CharacterSelectionDTO toSelection(CharacterEntity character, WorldInstanceEntity worldInstance) {
+        CharacterSelectionDTO selection = new CharacterSelectionDTO();
+        selection.setCharacterId(character.getId());
+        selection.setWorldInstanceId(worldInstance.getId());
+        selection.setLastAccessedAt(character.getLastAccessedAt());
+        selection.setCharacterName(character.getName());
+        selection.setRace(character.getRace());
+        selection.setCharacterClass(character.getCharacterClass());
+        selection.setCurrentLevel(character.getCurrentLevel());
+        selection.setCurrentLocationId(worldInstance.getCurrentLocationId());
+        return selection;
     }
 
     /**

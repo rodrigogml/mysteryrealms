@@ -31,6 +31,13 @@ Requisitos funcionais relacionados à criação, gerenciamento e seleção de pe
   - Nome, raça, classe e nível.
   - Data do último acesso com aquele personagem.
 - O usuário deve selecionar um personagem para iniciar ou retomar uma sessão de jogo.
+- A seleção de personagem não deve ser persistida como preferência permanente no servidor.
+  - O servidor deve persistir apenas o efeito auditável da seleção: a atualização de `lastAccessedAt` do personagem.
+  - A UI Vaadin deve guardar o personagem selecionado na sessão de UI pelo atributo `mysteryrealms.selectedCharacterId`.
+  - Clientes REST puros podem manter o `characterId` selecionado no próprio cliente e reenviá-lo quando iniciarem fluxos de jogo.
+- A API REST de criação com seleção e de seleção de personagem deve retornar um DTO de seleção, e não a entidade de banco `CharacterEntity` diretamente.
+  - O DTO deve conter, no mínimo, `characterId`, `worldInstanceId`, `lastAccessedAt` e dados mínimos para iniciar a tela de jogo.
+  - Dados mínimos iniciais incluem nome do personagem, raça, classe, nível atual e localidade atual da instância de mundo.
 
 ---
 
