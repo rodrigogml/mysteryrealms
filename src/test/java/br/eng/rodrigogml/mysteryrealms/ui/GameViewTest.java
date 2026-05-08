@@ -28,7 +28,10 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,17 +87,33 @@ class GameViewTest {
     }
 
     @Test
-    void render_comPersonagemSelecionado_carregaSnapshotEExibeEstadoInicial() {
+    void render_comPersonagemSelecionado_carregaSnapshotSomenteLeituraEExibeEstadoInicial() {
         session.setAttribute(UiSessionAttributes.AUTH_TOKEN, "tok");
         session.setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, 10L);
-        when(gameSessionService.loadSnapshot("tok", 10L)).thenReturn(snapshot());
+        when(gameSessionService.loadSnapshotForSelectedCharacter("tok", 10L)).thenReturn(snapshot());
 
         GameView view = new GameView(gameSessionService, messages(), errorMapperService);
 
         assertEquals("Current location: zona_langur_praca_das_vozes", paragraph(view, "Current location").getText());
         assertEquals("Current time: Day 1, 1:15", paragraph(view, "Current time").getText());
         assertFalse(button(view, "Explore").isEnabled());
-        verify(gameSessionService).loadSnapshot("tok", 10L);
+        verify(gameSessionService).loadSnapshotForSelectedCharacter("tok", 10L);
+        verify(gameSessionService, never()).loadSnapshot("tok", 10L);
+        verifyNoMoreInteractions(gameSessionService);
+    }
+
+    @Test
+    void render_repetidoNaRotaGame_naoUsaFluxoMutavelDeSelecao() {
+        session.setAttribute(UiSessionAttributes.AUTH_TOKEN, "tok");
+        session.setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, 10L);
+        when(gameSessionService.loadSnapshotForSelectedCharacter("tok", 10L)).thenReturn(snapshot());
+
+        new GameView(gameSessionService, messages(), errorMapperService);
+        new GameView(gameSessionService, messages(), errorMapperService);
+
+        verify(gameSessionService, times(2)).loadSnapshotForSelectedCharacter("tok", 10L);
+        verify(gameSessionService, never()).loadSnapshot("tok", 10L);
+        verifyNoMoreInteractions(gameSessionService);
     }
 
     private GameSnapshotDTO snapshot() {
