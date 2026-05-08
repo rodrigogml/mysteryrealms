@@ -1,11 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.ui;
 
-import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
-import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
-import br.eng.rodrigogml.mysteryrealms.application.user.entity.SessionEntity;
-import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
-import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
-import br.eng.rodrigogml.mysteryrealms.application.world.service.WorldInstanceService;
+import br.eng.rodrigogml.mysteryrealms.application.game.dto.GameActionDTO;
+import br.eng.rodrigogml.mysteryrealms.application.game.dto.GameSnapshotDTO;
+import br.eng.rodrigogml.mysteryrealms.application.game.service.GameSessionService;
 import br.eng.rodrigogml.mysteryrealms.common.error.ErrorMapperService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -22,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.support.StaticMessageSource;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -59,9 +57,7 @@ class GameViewTest {
         }
     }
 
-    @Mock private UserService userService;
-    @Mock private CharacterService characterService;
-    @Mock private WorldInstanceService worldInstanceService;
+    @Mock private GameSessionService gameSessionService;
     @Mock private ErrorMapperService errorMapperService;
 
     private VaadinSession session;
@@ -88,31 +84,37 @@ class GameViewTest {
     }
 
     @Test
-    void render_comPersonagemSelecionado_carregaMundoEExibeEstadoInicial() {
+    void render_comPersonagemSelecionado_carregaSnapshotEExibeEstadoInicial() {
         session.setAttribute(UiSessionAttributes.AUTH_TOKEN, "tok");
         session.setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, 10L);
-        SessionEntity authenticated = new SessionEntity();
-        authenticated.setIdUser(1L);
-        when(userService.validateSession("tok")).thenReturn(authenticated);
-        CharacterEntity character = new CharacterEntity();
-        character.setId(10L);
-        character.setIdUser(1L);
-        character.setName("Arlen");
-        when(characterService.selectCharacter(1L, 10L)).thenReturn(character);
-        WorldInstanceEntity worldInstance = new WorldInstanceEntity();
-        worldInstance.setIdCharacter(10L);
-        worldInstance.setCurrentTimeMin(75L);
-        worldInstance.setCurrentLocationId(null);
-        when(worldInstanceService.loadWorldInstance(10L)).thenReturn(worldInstance);
+        when(gameSessionService.loadSnapshot("tok", 10L)).thenReturn(snapshot());
 
-        GameView view = new GameView(userService, characterService, worldInstanceService, messages(), errorMapperService);
+        GameView view = new GameView(gameSessionService, messages(), errorMapperService);
 
-        assertEquals("Current location: Unknown location", paragraph(view, "Current location").getText());
+        assertEquals("Current location: zona_langur_praca_das_vozes", paragraph(view, "Current location").getText());
         assertEquals("Current time: Day 1, 1:15", paragraph(view, "Current time").getText());
         assertFalse(button(view, "Explore").isEnabled());
-        verify(userService).validateSession("tok");
-        verify(characterService).selectCharacter(1L, 10L);
-        verify(worldInstanceService).loadWorldInstance(10L);
+        verify(gameSessionService).loadSnapshot("tok", 10L);
+    }
+
+    private GameSnapshotDTO snapshot() {
+        GameSnapshotDTO snapshot = new GameSnapshotDTO();
+        snapshot.setCharacterId(10L);
+        snapshot.setWorldInstanceId(20L);
+        snapshot.setCharacterName("Arlen");
+        snapshot.setCurrentLocationId("zona_langur_praca_das_vozes");
+        snapshot.setCurrentTimeMin(75L);
+        snapshot.setActions(List.of(blockedAction("explore", "ui.game.actionExplore")));
+        return snapshot;
+    }
+
+    private GameActionDTO blockedAction(String actionId, String labelMessageKey) {
+        GameActionDTO action = new GameActionDTO();
+        action.setActionId(actionId);
+        action.setLabelMessageKey(labelMessageKey);
+        action.setAvailable(false);
+        action.setBlockedReasonMessageKey("ui.game.contentUnavailable");
+        return action;
     }
 
     private StaticMessageSource messages() {

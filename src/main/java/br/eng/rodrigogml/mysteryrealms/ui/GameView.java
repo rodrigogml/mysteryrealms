@@ -1,11 +1,8 @@
 package br.eng.rodrigogml.mysteryrealms.ui;
 
-import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
-import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
-import br.eng.rodrigogml.mysteryrealms.application.user.entity.SessionEntity;
-import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
-import br.eng.rodrigogml.mysteryrealms.application.world.entity.WorldInstanceEntity;
-import br.eng.rodrigogml.mysteryrealms.application.world.service.WorldInstanceService;
+import br.eng.rodrigogml.mysteryrealms.application.game.dto.GameActionDTO;
+import br.eng.rodrigogml.mysteryrealms.application.game.dto.GameSnapshotDTO;
+import br.eng.rodrigogml.mysteryrealms.application.game.service.GameSessionService;
 import br.eng.rodrigogml.mysteryrealms.common.error.ErrorMapperService;
 import br.eng.rodrigogml.mysteryrealms.common.error.ErrorResponseVO;
 import com.vaadin.flow.component.UI;
@@ -34,27 +31,20 @@ import org.springframework.context.i18n.LocaleContextHolder;
 @Route("game")
 public class GameView extends VerticalLayout {
 
-    private final UserService userService;
-    private final CharacterService characterService;
-    private final WorldInstanceService worldInstanceService;
+    private final GameSessionService gameSessionService;
     private final MessageSource messageSource;
     private final ErrorMapperService errorMapperService;
 
     /**
      * Cria a view de jogo com os serviços necessários para autenticação e carregamento de mundo.
      *
-     * @param userService serviço de usuários
-     * @param characterService serviço de personagens
-     * @param worldInstanceService serviço de instâncias de mundo
+     * @param gameSessionService serviço de snapshot da sessão de jogo
      * @param messageSource mensagens internacionalizadas
      * @param errorMapperService serviço de mapeamento de erros
      */
-    public GameView(UserService userService, CharacterService characterService,
-            WorldInstanceService worldInstanceService, MessageSource messageSource,
+    public GameView(GameSessionService gameSessionService, MessageSource messageSource,
             ErrorMapperService errorMapperService) {
-        this.userService = userService;
-        this.characterService = characterService;
-        this.worldInstanceService = worldInstanceService;
+        this.gameSessionService = gameSessionService;
         this.messageSource = messageSource;
         this.errorMapperService = errorMapperService;
         setSizeFull();
@@ -73,16 +63,14 @@ public class GameView extends VerticalLayout {
         }
 
         try {
-            SessionEntity authenticatedSession = userService.validateSession(token);
             Long selectedCharacterId = (Long) session.getAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID);
             if (selectedCharacterId == null) {
                 Notification.show(message("ui.game.noSelectedCharacter"));
                 navigateToStart();
                 return;
             }
-            CharacterEntity character = characterService.selectCharacter(authenticatedSession.getIdUser(), selectedCharacterId);
-            WorldInstanceEntity worldInstance = worldInstanceService.loadWorldInstance(selectedCharacterId);
-            renderGameShell(character, worldInstance);
+            GameSnapshotDTO snapshot = gameSessionService.loadSnapshot(token, selectedCharacterId);
+            renderGameShell(snapshot);
         } catch (RuntimeException ex) {
             showStandardError(ex);
             session.setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, null);
@@ -90,7 +78,7 @@ public class GameView extends VerticalLayout {
         }
     }
 
-    private void renderGameShell(CharacterEntity character, WorldInstanceEntity worldInstance) {
+    private void renderGameShell(GameSnapshotDTO snapshot) {
         VerticalLayout shell = new VerticalLayout();
         shell.setWidthFull();
         shell.setMaxWidth("900px");
@@ -99,40 +87,41 @@ public class GameView extends VerticalLayout {
         shell.getStyle().set("margin", "0 auto");
 
         H1 title = new H1(message("ui.game.title"));
-        H2 characterName = new H2(message("ui.game.characterName", character.getName()));
-        Paragraph location = new Paragraph(message("ui.game.currentLocation", locationLabel(worldInstance)));
-        Paragraph currentTime = new Paragraph(message("ui.game.currentTime", formatWorldTime(worldInstance.getCurrentTimeMin())));
-        Paragraph status = new Paragraph(contentStatus(worldInstance));
+        H2 characterName = new H2(message("ui.game.characterName", snapshot.getCharacterName()));
+        Paragraph location = new Paragraph(message("ui.game.currentLocation", locationLabel(snapshot)));
+        Paragraph currentTime = new Paragraph(message("ui.game.currentTime", formatWorldTime(snapshot.getCurrentTimeMin())));
+        Paragraph status = new Paragraph(contentStatus(snapshot));
 
-        HorizontalLayout actions = new HorizontalLayout(
-                disabledAction("ui.game.actionExplore"),
-                disabledAction("ui.game.actionTravel"),
-                disabledAction("ui.game.actionRest"));
+        HorizontalLayout actions = new HorizontalLayout();
+        snapshot.getActions().forEach(action -> actions.add(actionButton(action)));
 
         Button back = new Button(message("ui.game.backToCharacters"), event -> UI.getCurrent().navigate(""));
         shell.add(title, characterName, location, currentTime, status, actions, back);
         add(shell);
     }
 
-    private Button disabledAction(String messageKey) {
-        Button action = new Button(message(messageKey));
-        action.setEnabled(false);
+    private Button actionButton(GameActionDTO snapshotAction) {
+        Button action = new Button(message(snapshotAction.getLabelMessageKey()));
+        action.setEnabled(snapshotAction.isAvailable());
         return action;
     }
 
-    private String locationLabel(WorldInstanceEntity worldInstance) {
-        String currentLocationId = worldInstance.getCurrentLocationId();
+    private String locationLabel(GameSnapshotDTO snapshot) {
+        String currentLocationId = snapshot.getCurrentLocationId();
         if (currentLocationId == null || currentLocationId.isBlank()) {
             return message("ui.game.locationUnknown");
         }
         return currentLocationId;
     }
 
-    private String contentStatus(WorldInstanceEntity worldInstance) {
-        if (worldInstance.getCurrentLocationId() == null || worldInstance.getCurrentLocationId().isBlank()) {
-            return message("ui.game.emptyWorldState");
-        }
-        return message("ui.game.contentUnavailable");
+    private String contentStatus(GameSnapshotDTO snapshot) {
+        return snapshot.getActions().stream()
+                .filter(action -> !action.isAvailable())
+                .map(GameActionDTO::getBlockedReasonMessageKey)
+                .filter(messageKey -> messageKey != null && !messageKey.isBlank())
+                .findFirst()
+                .map(this::message)
+                .orElseGet(() -> message("ui.game.contentUnavailable"));
     }
 
     private String formatWorldTime(long currentTimeMin) {
