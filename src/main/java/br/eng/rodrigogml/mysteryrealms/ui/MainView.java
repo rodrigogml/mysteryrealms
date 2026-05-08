@@ -4,19 +4,20 @@ import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterCreati
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterDeletionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterRenameDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSummaryDTO;
-import br.eng.rodrigogml.mysteryrealms.application.character.entity.CharacterEntity;
+import br.eng.rodrigogml.mysteryrealms.application.character.dto.CharacterSelectionDTO;
 import br.eng.rodrigogml.mysteryrealms.application.character.service.CharacterService;
 import br.eng.rodrigogml.mysteryrealms.application.user.entity.SessionEntity;
+import br.eng.rodrigogml.mysteryrealms.application.user.entity.TwoFactorMethod;
+import br.eng.rodrigogml.mysteryrealms.application.user.service.LoginResultVO;
+import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
+import br.eng.rodrigogml.mysteryrealms.common.error.ErrorMapperService;
+import br.eng.rodrigogml.mysteryrealms.common.error.ErrorResponseVO;
+import br.eng.rodrigogml.mysteryrealms.common.exception.ValidationException;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.CharacterClass;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Gender;
 import br.eng.rodrigogml.mysteryrealms.domain.character.enums.Race;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.AttributeSet;
 import br.eng.rodrigogml.mysteryrealms.domain.character.model.Character;
-import br.eng.rodrigogml.mysteryrealms.application.user.service.LoginResultVO;
-import br.eng.rodrigogml.mysteryrealms.application.user.entity.TwoFactorMethod;
-import br.eng.rodrigogml.mysteryrealms.application.user.service.UserService;
-import br.eng.rodrigogml.mysteryrealms.common.error.ErrorMapperService;
-import br.eng.rodrigogml.mysteryrealms.common.error.ErrorResponseVO;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -432,8 +433,8 @@ public class MainView extends VerticalLayout {
                 dto.setInitialAge(initialAge.getValue());
                 dto.setRace(race.getValue());
                 dto.setCharacterClass(characterClass.getValue());
-                CharacterEntity created = characterService.createAndSelectCharacter(userId, dto);
-                VaadinSession.getCurrent().setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, created.getId());
+                CharacterSelectionDTO selection = characterService.createAndSelectCharacterForGame(userId, dto);
+                storeSelectionContract(selection);
                 VaadinSession.getCurrent().setAttribute(UiSessionAttributes.CHARACTER_WIZARD_DRAFT, null);
                 dialog.close();
                 Notification.show(message("ui.character.created"));
@@ -472,13 +473,28 @@ public class MainView extends VerticalLayout {
 
     private void selectCharacterAndNavigate(Long userId, CharacterSummaryDTO summary, String notificationMessage) {
         try {
-            characterService.selectCharacter(userId, summary.getId());
-            VaadinSession.getCurrent().setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID, summary.getId());
+            CharacterSelectionDTO selection = characterService.selectCharacterForGame(userId, summary.getId());
+            storeSelectionContract(selection);
             Notification.show(notificationMessage);
             UI.getCurrent().navigate("game");
         } catch (RuntimeException ex) {
             showStandardError(ex);
         }
+    }
+
+    private void storeSelectionContract(CharacterSelectionDTO selection) {
+        if (selection == null || selection.getCharacterId() == null) {
+            throw new ValidationException("character.error.invalidCharacterId");
+        }
+        if (selection.getWorldInstanceId() == null) {
+            throw new ValidationException("character.error.worldInstanceNotFound");
+        }
+        if (isBlank(selection.getCurrentLocationId())) {
+            throw new ValidationException("world.error.currentLocationStateNotFound");
+        }
+
+        VaadinSession.getCurrent().setAttribute(UiSessionAttributes.SELECTED_CHARACTER_ID,
+                selection.getCharacterId());
     }
 
     private void openRenameDialog(Long userId, CharacterSummaryDTO summary) {
