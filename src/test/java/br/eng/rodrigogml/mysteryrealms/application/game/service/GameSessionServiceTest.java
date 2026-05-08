@@ -18,11 +18,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,13 +49,15 @@ class GameSessionServiceTest {
     void loadSnapshot_comEstadoIntegro_retornaContratoDaTelaDeJogo() {
         SessionEntity session = new SessionEntity();
         session.setIdUser(1L);
+        CharacterEntity character = character();
+        LocalDateTime lastAccessedAt = character.getLastAccessedAt();
         when(userService.validateSession("tok")).thenReturn(session);
-        when(characterRepository.findById(10L)).thenReturn(Optional.of(character()));
+        when(characterRepository.findById(10L)).thenReturn(Optional.of(character));
         when(worldInstanceRepository.findByIdCharacter(10L)).thenReturn(Optional.of(worldInstance()));
         when(worldLocationStateRepository.findByIdWorldInstanceAndLocationId(20L, "zona_langur_praca_das_vozes"))
                 .thenReturn(Optional.of(locationState()));
 
-        GameSnapshotDTO snapshot = service.loadSnapshot("tok", 10L);
+        GameSnapshotDTO snapshot = service.loadSnapshotForSelectedCharacter("tok", 10L);
 
         assertEquals(10L, snapshot.getCharacterId());
         assertEquals(20L, snapshot.getWorldInstanceId());
@@ -69,6 +75,8 @@ class GameSessionServiceTest {
         assertEquals(6, snapshot.getMorale());
         assertEquals(3, snapshot.getActions().size());
         assertFalse(snapshot.getActions().get(0).isAvailable());
+        assertEquals(lastAccessedAt, character.getLastAccessedAt());
+        verify(characterRepository, never()).save(any(CharacterEntity.class));
     }
 
     @Test
@@ -79,7 +87,7 @@ class GameSessionServiceTest {
         when(characterRepository.findById(10L)).thenReturn(Optional.of(character()));
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> service.loadSnapshot("tok", 10L));
+                () -> service.loadSnapshotForSelectedCharacter("tok", 10L));
 
         assertEquals("character.error.notOwned", exception.getErrorKey());
     }
@@ -95,7 +103,7 @@ class GameSessionServiceTest {
                 .thenReturn(Optional.empty());
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> service.loadSnapshot("tok", 10L));
+                () -> service.loadSnapshotForSelectedCharacter("tok", 10L));
 
         assertEquals("world.error.currentLocationStateNotFound", exception.getErrorKey());
     }
@@ -114,6 +122,7 @@ class GameSessionServiceTest {
         character.setHungerPct(12.5);
         character.setThirstPct(8.0);
         character.setMorale(6);
+        character.setLastAccessedAt(LocalDateTime.of(2026, 5, 8, 12, 0));
         return character;
     }
 

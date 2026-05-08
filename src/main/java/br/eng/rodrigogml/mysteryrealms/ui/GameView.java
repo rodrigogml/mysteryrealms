@@ -69,7 +69,7 @@ public class GameView extends VerticalLayout {
                 navigateToStart();
                 return;
             }
-            GameSnapshotDTO snapshot = gameSessionService.loadSnapshot(token, selectedCharacterId);
+            GameSnapshotDTO snapshot = gameSessionService.loadSnapshotForSelectedCharacter(token, selectedCharacterId);
             renderGameShell(snapshot);
         } catch (RuntimeException ex) {
             showStandardError(ex);

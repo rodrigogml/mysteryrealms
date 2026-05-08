@@ -54,13 +54,14 @@ public class GameSessionService {
     }
 
     /**
-     * Carrega o contrato de aplicação da tela de jogo para um personagem selecionado.
+     * Carrega o contrato de aplicação da tela de jogo para um personagem já selecionado.
+     * Esta leitura valida sessão e posse sem renovar {@link CharacterEntity#getLastAccessedAt()}.
      *
      * @param authToken token da sessão autenticada
      * @param selectedCharacterId identificador do personagem selecionado na UI
      * @return snapshot pronto para renderização da tela de jogo
      */
-    public GameSnapshotDTO loadSnapshot(String authToken, Long selectedCharacterId) {
+    public GameSnapshotDTO loadSnapshotForSelectedCharacter(String authToken, Long selectedCharacterId) {
         if (authToken == null || authToken.isBlank()) {
             throw new ValidationException("user.error.invalidSession");
         }
@@ -71,17 +72,43 @@ public class GameSessionService {
             throw new ValidationException("user.error.invalidSession");
         }
 
-        CharacterEntity character = characterRepository.findById(selectedCharacterId)
-                .orElseThrow(() -> new ValidationException("character.error.notFound"));
-        if (!authenticatedSession.getIdUser().equals(character.getIdUser())) {
-            throw new ValidationException("character.error.notOwned");
-        }
-
+        CharacterEntity character = getOwnedCharacterForGame(authenticatedSession.getIdUser(), selectedCharacterId);
         WorldInstanceEntity worldInstance = worldInstanceRepository.findByIdCharacter(selectedCharacterId)
                 .orElseThrow(() -> new ValidationException("world.error.instanceNotFound"));
         WorldLocationStateEntity currentLocation = loadCurrentLocation(worldInstance);
 
         return toSnapshot(character, worldInstance, currentLocation);
+    }
+
+    /**
+     * Carrega o contrato de aplicação da tela de jogo sem efeitos colaterais de seleção.
+     *
+     * @param authToken token da sessão autenticada
+     * @param selectedCharacterId identificador do personagem selecionado na UI
+     * @return snapshot pronto para renderização da tela de jogo
+     */
+    public GameSnapshotDTO loadSnapshot(String authToken, Long selectedCharacterId) {
+        return loadSnapshotForSelectedCharacter(authToken, selectedCharacterId);
+    }
+
+    /**
+     * Obtém um personagem do usuário para leitura durante o jogo.
+     * Este método valida posse, mas não persiste atualização de último acesso.
+     *
+     * @param userId identificador do usuário dono do personagem
+     * @param characterId identificador do personagem
+     * @return personagem validado para leitura de jogo
+     */
+    public CharacterEntity getOwnedCharacterForGame(Long userId, Long characterId) {
+        requirePositiveId(userId, "character.error.invalidUserId");
+        requirePositiveId(characterId, "character.error.invalidCharacterId");
+
+        CharacterEntity character = characterRepository.findById(characterId)
+                .orElseThrow(() -> new ValidationException("character.error.notFound"));
+        if (!userId.equals(character.getIdUser())) {
+            throw new ValidationException("character.error.notOwned");
+        }
+        return character;
     }
 
     private WorldLocationStateEntity loadCurrentLocation(WorldInstanceEntity worldInstance) {
