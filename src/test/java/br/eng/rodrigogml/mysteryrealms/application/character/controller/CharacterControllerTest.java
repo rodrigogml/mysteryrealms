@@ -83,6 +83,7 @@ class CharacterControllerTest {
                 .andExpect(jsonPath("$.characterClass").value("WARRIOR"))
                 .andExpect(jsonPath("$.currentLevel").value(1))
                 .andExpect(jsonPath("$.currentLocationId").value("zona_langur_praca_das_vozes"))
+                .andExpect(jsonPath("$.currentTimeMin").value(720L))
                 .andExpect(jsonPath("$.idUser").doesNotExist())
                 .andExpect(jsonPath("$.strength").doesNotExist());
 
@@ -104,6 +105,7 @@ class CharacterControllerTest {
                 .andExpect(jsonPath("$.characterClass").value("WARRIOR"))
                 .andExpect(jsonPath("$.currentLevel").value(1))
                 .andExpect(jsonPath("$.currentLocationId").value("zona_langur_praca_das_vozes"))
+                .andExpect(jsonPath("$.currentTimeMin").value(720L))
                 .andExpect(jsonPath("$.idUser").doesNotExist())
                 .andExpect(jsonPath("$.strength").doesNotExist());
 
@@ -177,6 +179,7 @@ class CharacterControllerTest {
         selection.setCharacterClass(CharacterClass.WARRIOR);
         selection.setCurrentLevel(1);
         selection.setCurrentLocationId("zona_langur_praca_das_vozes");
+        selection.setCurrentTimeMin(720L);
         return selection;
     }
 }

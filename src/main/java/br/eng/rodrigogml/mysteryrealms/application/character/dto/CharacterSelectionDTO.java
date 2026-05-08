@@ -21,6 +21,7 @@ public class CharacterSelectionDTO {
     private CharacterClass characterClass;
     private Integer currentLevel;
     private String currentLocationId;
+    private Long currentTimeMin;
 
     public Long getCharacterId() {
         return characterId;
@@ -84,5 +85,13 @@ public class CharacterSelectionDTO {
 
     public void setCurrentLocationId(String currentLocationId) {
         this.currentLocationId = currentLocationId;
+    }
+
+    public Long getCurrentTimeMin() {
+        return currentTimeMin;
+    }
+
+    public void setCurrentTimeMin(Long currentTimeMin) {
+        this.currentTimeMin = currentTimeMin;
     }
 }
