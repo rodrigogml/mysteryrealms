@@ -315,7 +315,7 @@ public class MainView extends VerticalLayout {
     }
 
 
-    private void openCreateWizardDialog(Long userId) {
+    Dialog openCreateWizardDialog(Long userId) {
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle(message("ui.character.wizardTitle"));
 
@@ -447,6 +447,7 @@ public class MainView extends VerticalLayout {
         dialog.add(content);
         dialog.getFooter().add(cancel, back, next, confirm);
         dialog.open();
+        return dialog;
     }
 
     private VerticalLayout characterCard(Long userId, CharacterSummaryDTO summary) {
