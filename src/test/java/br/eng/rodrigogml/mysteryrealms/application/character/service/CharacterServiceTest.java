@@ -156,18 +156,37 @@ class CharacterServiceTest {
         when(characterRepository.findById(11L)).thenReturn(Optional.of(created));
         when(worldInstanceRepository.findByIdCharacter(11L)).thenReturn(Optional.of(new WorldInstanceEntity()));
 
-        CharacterCreationDTO dto = new CharacterCreationDTO();
-        dto.setName("Aragorn");
-        dto.setSurname("Elessar");
-        dto.setGender(Gender.MALE);
-        dto.setInitialAge(35);
-        dto.setRace(Race.HUMAN);
-        dto.setCharacterClass(CharacterClass.WARRIOR);
-
-        CharacterEntity result = service.createAndSelectCharacter(1L, dto);
+        CharacterEntity result = service.createAndSelectCharacter(1L,
+                characterCreation("Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
 
         assertNotNull(result.getLastAccessedAt());
         verify(characterRepository, times(2)).save(any());
+    }
+
+    @Test
+    void createAndSelectCharacterForGame_retornaDtoComTempoAtualDoMundo() {
+        when(characterRepository.countByIdUser(1L)).thenReturn(0L);
+        when(characterRepository.existsByIdUserAndName(1L, "Aragorn")).thenReturn(false);
+
+        CharacterEntity created = buildEntity(11L, 1L, "Aragorn");
+        when(characterRepository.save(any()))
+                .thenReturn(created)
+                .thenAnswer(i -> i.getArgument(0));
+        when(characterRepository.findById(11L)).thenReturn(Optional.of(created));
+        WorldInstanceEntity worldInstance = new WorldInstanceEntity();
+        worldInstance.setId(13L);
+        worldInstance.setIdCharacter(11L);
+        worldInstance.setCurrentLocationId("zona_langur_praca_das_vozes");
+        worldInstance.setCurrentTimeMin(540L);
+        when(worldInstanceRepository.findByIdCharacter(11L)).thenReturn(Optional.of(worldInstance));
+
+        CharacterSelectionDTO result = service.createAndSelectCharacterForGame(1L,
+                characterCreation("Aragorn", Race.HUMAN, CharacterClass.WARRIOR));
+
+        assertEquals(11L, result.getCharacterId());
+        assertEquals(13L, result.getWorldInstanceId());
+        assertEquals("zona_langur_praca_das_vozes", result.getCurrentLocationId());
+        assertEquals(540L, result.getCurrentTimeMin());
     }
 
     @Test
@@ -303,6 +322,7 @@ class CharacterServiceTest {
         worldInstance.setId(7L);
         worldInstance.setIdCharacter(1L);
         worldInstance.setCurrentLocationId("zona_langur_praca_das_vozes");
+        worldInstance.setCurrentTimeMin(720L);
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
         when(worldInstanceRepository.findByIdCharacter(1L)).thenReturn(Optional.of(worldInstance));
         when(characterRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -317,6 +337,7 @@ class CharacterServiceTest {
         assertNotNull(result.getLastAccessedAt());
         assertEquals(7L, result.getWorldInstanceId());
         assertEquals("zona_langur_praca_das_vozes", result.getCurrentLocationId());
+        assertEquals(720L, result.getCurrentTimeMin());
     }
 
     @Test

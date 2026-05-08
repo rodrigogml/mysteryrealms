@@ -36,6 +36,7 @@ public final class CharacterDTOMapper {
         if (worldInstance != null) {
             selection.setWorldInstanceId(worldInstance.getId());
             selection.setCurrentLocationId(worldInstance.getCurrentLocationId());
+            selection.setCurrentTimeMin(worldInstance.getCurrentTimeMin());
         }
         return selection;
     }
