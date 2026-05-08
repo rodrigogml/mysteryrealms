@@ -11,6 +11,18 @@
   - [Plano de implementação (tarefas)](./implementacao/fluxoCriacaoDePersonagem.md#plano-de-implementação-tarefas)
   - [Critérios de pronto (DoD)](./implementacao/fluxoCriacaoDePersonagem.md#critérios-de-pronto-dod)
 
+
+- [Tela de Jogo Após Criação do Personagem](./implementacao/telaDeJogoAposCriacao.md)
+  - [Objetivo](./implementacao/telaDeJogoAposCriacao.md#objetivo)
+  - [Premissas vigentes](./implementacao/telaDeJogoAposCriacao.md#premissas-vigentes)
+  - [Fluxo esperado após criar o personagem](./implementacao/telaDeJogoAposCriacao.md#fluxo-esperado-após-criar-o-personagem)
+  - [Fluxo esperado ao iniciar com personagem existente](./implementacao/telaDeJogoAposCriacao.md#fluxo-esperado-ao-iniciar-com-personagem-existente)
+  - [Contrato mínimo de backend para a tela de jogo](./implementacao/telaDeJogoAposCriacao.md#contrato-mínimo-de-backend-para-a-tela-de-jogo)
+  - [Composição sugerida da tela de jogo](./implementacao/telaDeJogoAposCriacao.md#composição-sugerida-da-tela-de-jogo)
+  - [Sequência técnica sugerida](./implementacao/telaDeJogoAposCriacao.md#sequência-técnica-sugerida)
+  - [Lacunas antes de implementar ações reais](./implementacao/telaDeJogoAposCriacao.md#lacunas-antes-de-implementar-ações-reais)
+  - [Critérios de pronto da primeira versão jogável](./implementacao/telaDeJogoAposCriacao.md#critérios-de-pronto-da-primeira-versão-jogável)
+
 - [Roadmap do Projeto](./roadmap.md)
   - [Objetivo](./roadmap.md#objetivo)
   - [Backlog agrupado por épico](./roadmap.md#backlog-agrupado-por-épico)
